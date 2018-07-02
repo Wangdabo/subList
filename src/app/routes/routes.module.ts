@@ -23,8 +23,8 @@ import { Exception500Component } from './exception/500.component';
 import { UtilityService } from '../service/utils.service';
 
 // 清单页面
-import { LaunchApplyComponent } from '../../../../seniorList/src/app/routes/listManagement/launch-apply/launch-apply.component';
-import { SubListComponent } from '../../../../seniorList/src/app/routes/listManagement/sub-list/sub-list.component';
+import { LaunchApplyComponent } from '../../../../subList/src/app/routes/listManagement/launch-apply/launch-apply.component';
+import { SubListComponent } from '../../../../subList/src/app/routes/listManagement/sub-list/sub-list.component';
 
 // 公共封装组件
 import { ListComponent} from '../component/list/list.component';
