@@ -1,0 +1,299 @@
+{
+  "treeData": [
+    {
+      "label": "TIS项目开发组",
+      "data": "Documents Folder",
+      "expandedIcon": "fa-folder-open",
+      "collapsedIcon": "fa-folder",
+      "guid": "null",
+      "isLeaf": false,
+      "children": [
+        {
+          "label": "跟工作组",
+          "data": "Work Folder",
+          "expandedIcon": "fa-folder-open",
+          "collapsedIcon": "fa-folder",
+          "isLeaf": false,
+          "guid": "1007176245806391297" ,
+          "groupCode": "GROUP0100000008",
+          "groupName": "跟工作组一",
+          "groupType": "normal",
+          "groupStatus": "running",
+          "children": [
+            {
+              "label": "子工作组名称",
+              "icon": "fa-file-word-o",
+              "data": "Expenses Document",
+              "isLeaf": true,
+              "guid": "1007179295669379073" ,
+              "groupCode": "GROUP0100000009",
+               "groupName": "子工作组名称",
+               "groupType": "normal",
+              "groupStatus": "running"
+            },
+            {
+              "label": "平台2组",
+              "icon": "fa-file-word-o",
+              "data": "Resume Document",
+              "isLeaf": true
+            }
+          ]
+        },
+        {
+          "label": "RCT组",
+          "data": "Home Folder",
+          "expandedIcon": "fa-folder-open",
+          "collapsedIcon": "fa-folder",
+          "isLeaf": false,
+          "children": [
+            {
+              "label": "RCTA组",
+              "icon": "fa-file-word-o",
+              "data": "Invoices for this month",
+              "isLeaf": true
+            }
+          ]
+        },
+        {
+              "label": "应用组",
+              "data": "Work Folder",
+              "expandedIcon": "fa-folder-open",
+              "collapsedIcon": "fa-folder",
+              "isLeaf": false,
+              "children": [
+                  {
+                      "label": "应用1组",
+                      "icon": "fa-file-word-o",
+                      "data": "Expenses Document",
+                      "isLeaf": true
+                  },
+                  {
+                      "label": "应用2组",
+                      "icon": "fa-file-word-o",
+                      "data": "Resume Document",
+                      "isLeaf": true
+                  }
+              ]
+          },
+        {
+              "label": "1618组开发组",
+              "data": "Home Folder",
+              "expandedIcon": "fa-folder-open",
+              "collapsedIcon": "fa-folder",
+              "isLeaf": false,
+              "children": [
+                  {
+                      "label": "1618",
+                      "icon": "fa-file-word-o",
+                      "data": "Invoices for this month",
+                      "isLeaf": true
+                  }
+              ]
+          },
+        {
+              "label": "PAD开发组",
+              "data": "Home Folder",
+              "expandedIcon": "fa-folder-open",
+              "collapsedIcon": "fa-folder",
+              "isLeaf": false
+          }
+      ]
+    }
+  ],
+  "listData": [
+      {
+          "attrType": "行为类型",
+          "attrKey": "test",
+          "attrValue": "测试",
+          "memo": "测试而已别着急",
+          "id": 1
+      },
+      {
+          "attrType": "行为类型",
+          "attrKey": "test2",
+          "attrValue": "测试2",
+          "memo": "测试行为2",
+          "id": 2
+      },
+      {
+          "attrType": "行为类型",
+          "attrKey": "test3",
+          "attrValue": "测试3",
+          "memo": "测试行为3",
+          "id": 3
+      },
+      {
+          "attrType": "行为类型",
+          "attrKey": "test4",
+          "attrValue": "测试4",
+          "memo": "测试行为4",
+          "id": 4
+      }
+  ],
+  "orgTreeData": [
+        {
+            "label": "企业名称",
+            "data": "Documents Folder",
+            "expandedIcon": "fa-folder-open",
+            "collapsedIcon": "fa-folder",
+            "isLeaf": false,
+            "children": [
+                {
+                    "label": "机构A-1",
+                    "data": "Work Folder",
+                    "expandedIcon": "fa-folder-open",
+                    "collapsedIcon": "fa-folder",
+                    "isLeaf": false
+                },
+                {
+                    "label": "机构A-2",
+                    "data": "Work Folder",
+                    "expandedIcon": "fa-folder-open",
+                    "collapsedIcon": "fa-folder",
+                    "isLeaf": false
+                },
+                {
+                    "label": "机构A-3",
+                    "data": "Work Folder",
+                    "expandedIcon": "fa-folder-open",
+                    "collapsedIcon": "fa-folder",
+                    "isLeaf": false,
+                    "children": [
+                        {
+                            "label": "机构A-3-1",
+                            "icon": "fa-file-word-o",
+                            "data": "Expenses Document",
+                            "isLeaf": true
+                        },
+                        {
+                            "label": "机构A-3-2",
+                            "icon": "fa-file-word-o",
+                            "data": "Resume Document",
+                            "isLeaf": true
+                        }
+                    ]
+                },
+                {
+                    "label": "A层菜单1",
+                    "data": "Home Folder",
+                    "expandedIcon": "fa-folder-open",
+                    "collapsedIcon": "fa-folder",
+                    "isLeaf": false,
+                    "children": [
+                        {
+                            "label": "A菜单-1",
+                            "icon": "fa-file-word-o",
+                            "data": "Invoices for this month",
+                            "isLeaf": true
+                        }
+                    ]
+                },
+                {
+                    "label": "A层菜单2",
+                    "data": "Home Folder",
+                    "expandedIcon": "fa-folder-open",
+                    "collapsedIcon": "fa-folder",
+                    "isLeaf": false,
+                    "children": [
+                        {
+                            "label": "A菜单2-1",
+                            "icon": "fa-file-word-o",
+                            "data": "Invoices for this month",
+                            "isLeaf": true
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+  "roleData": [
+        {
+            "label": "默认角色分组",
+            "data": "Documents Folder",
+            "expandedIcon": "fa-folder-open",
+            "collapsedIcon": "fa-folder",
+            "isLeaf": false,
+            "children": [
+                {
+                    "label": "角色A1",
+                    "data": "Work Folder",
+                    "expandedIcon": "fa-folder-open",
+                    "collapsedIcon": "fa-folder",
+                    "isLeaf": false,
+                    "children": [
+                        {
+                            "label": "角色AA1",
+                            "icon": "fa-file-word-o",
+                            "data": "Expenses Document",
+                            "isLeaf": true
+                        },
+                        {
+                            "label": "角色AA2",
+                            "icon": "fa-file-word-o",
+                            "data": "Resume Document",
+                            "isLeaf": true
+                        }
+                    ]
+                },
+                {
+                    "label": "角色A2",
+                    "data": "Home Folder",
+                    "expandedIcon": "fa-folder-open",
+                    "collapsedIcon": "fa-folder",
+                    "isLeaf": false,
+                    "children": [
+                        {
+                            "label": "角色A22",
+                            "icon": "fa-file-word-o",
+                            "data": "Invoices for this month",
+                            "isLeaf": true
+                        }
+                    ]
+                },
+                {
+                    "label": "角色A3",
+                    "data": "Work Folder",
+                    "expandedIcon": "fa-folder-open",
+                    "collapsedIcon": "fa-folder",
+                    "isLeaf": false,
+                    "children": [
+                        {
+                            "label": "角色A33",
+                            "icon": "fa-file-word-o",
+                            "data": "Expenses Document",
+                            "isLeaf": true
+                        },
+                        {
+                            "label": "角色A44",
+                            "icon": "fa-file-word-o",
+                            "data": "Resume Document",
+                            "isLeaf": true
+                        }
+                    ]
+                },
+                {
+                    "label": "角色A4",
+                    "data": "Home Folder",
+                    "expandedIcon": "fa-folder-open",
+                    "collapsedIcon": "fa-folder",
+                    "isLeaf": false,
+                    "children": [
+                        {
+                            "label": "角色A44",
+                            "icon": "fa-file-word-o",
+                            "data": "Invoices for this month",
+                            "isLeaf": true
+                        }
+                    ]
+                },
+                {
+                    "label": "角色A5",
+                    "data": "Home Folder",
+                    "expandedIcon": "fa-folder-open",
+                    "collapsedIcon": "fa-folder",
+                    "isLeaf": false
+                }
+            ]
+        }
+    ]
+}

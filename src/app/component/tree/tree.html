@@ -1,0 +1,26 @@
+<nz-input   id="searchaVal" [nzType]="'search'"  [(ngModel)]="searsh"   [nzPlaceHolder]="title"  style="margin-bottom: 10px;" ></nz-input>
+
+<!--有拖动的树-->
+<p-tree *ngIf="!nodrop" [value]="files" [title]="searchTitle"  draggableNodes="true"  droppableNodes="true"
+        (onNodeSelect)="NodeSelect($event)"
+        (onNodeContextMenuSelect)="RightSelect($event)"
+        (onNodeExpand)="Unfold($event)"
+        (onNodeDrop)="select($event)"
+        selectionMode="single"
+        [contextMenu]="cm"
+        [(selection)]="selectedFiles"></p-tree>
+
+
+<!--没有拖动的树-->
+<p-tree  *ngIf="nodrop" [value]="files" [title]="searchTitle"
+        (onNodeSelect)="NodeSelect($event)"
+        (onNodeContextMenuSelect)="RightSelect($event)"
+        (onNodeExpand)="Unfold($event)"
+        (onNodeDrop)="select($event)"
+        selectionMode="single"
+        [contextMenu]="cm"
+        [(selection)]="selectedFiles"></p-tree>
+
+<p-contextMenu #cm [model]="items"></p-contextMenu>
+
+

@@ -1,0 +1,37 @@
+{
+    "app": {
+        "name": "Alain",
+        "description": "Ng-zorro admin panel front-end framework"
+    },
+    "user": {
+        "name": "Admin",
+        "avatar": "./assets/img/zorro.svg",
+        "email": "cipchk@qq.com"
+    },
+    "menu": [
+        {
+         "text": "主导航",
+        "i18n": "dashboard/v1",
+        "link": "/dashboard/v1",
+        "group": true,
+         "hideInBreadcrumb": true,
+        "children": [
+            {
+                "text": "清单管理",
+                "i18n": "listManagement",
+                "link": "/listManagement",
+                "icon": "anticon anticon-area-chart",
+                "children": [{
+                    "text": "提清单",
+                    "link": "/subList",
+                    "i18n": "subList"
+                },{
+                    "text": "投放申请",
+                    "link": "/launchApply",
+                    "i18n": "launchApply"
+                }
+                ]
+            }
+        ]}
+    ]
+}

@@ -1,0 +1,304 @@
+<pro-header ></pro-header>
+
+<!--引入list组件-->
+<div class="ui-g">
+    <div class="ui-g-3" >
+        <nz-card [nzBordered]="false">
+            <div nz-row  [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
+                <div nz-col [nzSpan]="24" class="mb-md">
+                    <div nz-form-item class="d-flex">
+                        <div nz-form-label><label>工作项:</label></div>
+                        <div style="margin-left: 1%; margin-top:-1%" nz-form-control class="flex-1">
+                            <!--<nz-input [nzType]="'search'" [nzPlaceHolder]="'请选择工作项'" [(ngModel)]="search"    (nzOnSearch)="onSearch($event)"></nz-input>-->
+                            <nz-select style="width:100%" [(ngModel)]="workItmseach" name="workItmseach" (ngModelChange)="checkSelect(workItmseach)"  [nzSize]="'large'" [nzPlaceHolder]="'选择工作项'" nzId="workItmseach">
+                                <nz-option  *ngFor="let i of workItem;" [nzLabel]="i.itemName" [nzValue]="i.guid"></nz-option>
+                            </nz-select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <nz-collapseset *ngIf="active" nzAccordion  (nzActiveChange) = 'nzActive()'>
+                <nz-collapse [nzTitle]="'工作项信息'" [nzActive]="true">
+                    <div nz-row  [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
+                        <div nz-col [nzSpan]="24" class="mb-md">
+                            <div  nz-form-item class="d-flex" style="font-size: 18px;">
+                                <div class="ad-desc-list__term ng-star-inserted">名称:</div>
+                                <div class="ad-desc-list__detail ng-star-inserted">{{workItemInfo.itemName}}</div>
+                            </div>
+                        </div>
+                        <div nz-col [nzSpan]="24" class="mb-md">
+                            <div  nz-form-item class="d-flex" style="font-size: 18px;">
+                                <div class="ad-desc-list__term ng-star-inserted">需求编号:</div>
+                                <div class="ad-desc-list__detail ng-star-inserted">{{workItemInfo.seqno}}</div>
+                            </div>
+                        </div>
+                        <div nz-col [nzSpan]="24" class="mb-md">
+                            <div  nz-form-item class="d-flex" style="font-size: 18px;">
+                                <div class="ad-desc-list__term ng-star-inserted">负责人:</div>
+                                <div class="ad-desc-list__detail ng-star-inserted">{{workItemInfo.owner}}</div>
+                            </div>
+                        </div>
+                        <div nz-col [nzSpan]="24" class="mb-md">
+                            <div  nz-form-item class="d-flex" style="font-size: 18px;">
+                                <div class="ad-desc-list__term ng-star-inserted">收到需求时间:</div>
+                                <div class="ad-desc-list__detail ng-star-inserted">{{workItemInfo.receiveTime}}</div>
+                            </div>
+                        </div>
+                        <div nz-col [nzSpan]="24" class="mb-md">
+                            <div  nz-form-item class="d-flex" style="font-size: 18px;">
+                                <div class="ad-desc-list__term ng-star-inserted">计划投产时间:</div>
+                                <div class="ad-desc-list__detail ng-star-inserted">{{workItemInfo.deliveryplanTime}}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </nz-collapse>
+                <nz-collapse [nzTitle]="'开发成员'" [nzActive]="false">
+                    <div nz-row  [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
+                        <div  *ngFor="let b of workItemInfo.developers"  nz-col [nzSpan]="24" class="mb-md">
+                            <div class="ad-desc-list__detail ng-star-inserted">{{b}}</div>
+                        </div>
+                    </div>
+
+                </nz-collapse>
+                <nz-collapse [nzTitle]="'开发分支'" [nzActive]="false">
+                    <div nz-row  [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
+                        <div   nz-col [nzSpan]="24" class="mb-md">
+                            <div class="ad-desc-list__detail ng-star-inserted">{{branchDetail}}</div>
+                        </div>
+                    </div>
+                </nz-collapse>
+            </nz-collapseset>
+
+
+            <div nz-row  *ngIf="active" style="margin-top: 3%;"  [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
+                <div  nz-col [nzSpan]="8" [nzOffset]="'8'" class="mb-md">
+                    <button    nz-button  (click)="listreset()"  [nzType]="'primary'" [nzSize]="'large'">
+                        <span>清单整理</span>
+                    </button>
+                </div>
+            </div>
+
+        </nz-card>
+    </div>
+    <div class="ui-g-9">
+        <nz-card  *ngIf="reset" [nzBordered]="false">
+            <form nz-form (ngSubmit)="seach()" [nzLayout]="'inline'">
+                <div nz-row  [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
+                    <div nz-col [nzSpan]="8" class="mb-md">
+                        <div nz-form-item class="d-flex">
+                            <div nz-form-label><label>开发人员</label></div>
+                            <div nz-form-control class="flex-1">
+                                <nz-input [(ngModel)]="mergeilsItem.developer" name="developer" [nzSize]="'large'" [nzPlaceHolder]="'开发人员'" nzId="developer"></nz-input>
+                            </div>
+                        </div>
+                    </div>
+                    <div nz-col [nzSpan]="8" class="mb-md">
+                        <div nz-form-item class="d-flex">
+                            <div nz-form-label><label>代码名称</label></div>
+                            <div nz-form-control class="flex-1">
+                                <nz-input [(ngModel)]="mergeilsItem.programName" name="programName" [nzSize]="'large'" [nzPlaceHolder]="'代码名称'" nzId="programName"></nz-input>
+                            </div>
+                        </div>
+                    </div>
+                    <div nz-col [nzSpan]="expandForm ? 24 : 8" class="mb-md" [class.text-right]="expandForm">
+                        <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="loading"  [nzSize]="'large'">查询</button>
+                        <button nz-button type="reset" (click)="getData()" [nzSize]="'large'" class="mx-sm">重置</button>
+                        <a (click)="expandForm=!expandForm">
+                            {{expandForm ? '收起' : '展开'}}
+                            <i class="anticon" [class.anticon-down]="!expandForm" [class.anticon-up]="expandForm"></i>
+                        </a>
+                    </div>
+                </div>
+            </form>
+            <div style="margin: 2%  0px">
+                <button  style="margin-right: 1%"   nz-button  (click)="Supplementary()"  [nzType]="'primary'" [nzSize]="'large'">
+                    <i class="anticon anticon-plus"></i>
+                    <span>补录清单</span>
+                </button>
+                <button  style="margin-right: 1%"   nz-button  (click)="Serve()"  [nzType]="'primary'" [nzSize]="'large'">
+                    <!--<i class="{{s.icon}}"></i>-->
+                    <span>投放申请</span>
+                </button>
+            </div>
+            <nz-collapseset  nzAccordion>
+               <!-- <nz-collapse *ngFor="let i of textList; let l = index" [nzTitle]="i.name" [nzActive]="true">
+                    <div  nz-col [nzSpan]="24" class="mb-md">
+                        <div  nz-col [nzSpan]="12" nz-form-item class="d-flex">
+                            <div nz-form-label><label>导出类型:</label></div>
+                            <div nz-form-control class="flex-1">
+                                <nz-checkbox-group [(ngModel)]="i.exportType"></nz-checkbox-group>
+                            </div>
+                        </div>
+
+                        <div nz-col [nzSpan]="12" nz-form-item class="d-flex">
+                            <div nz-form-label><label>部署到:</label></div>
+                            <div nz-form-control class="flex-1">
+                                <nz-checkbox-group [(ngModel)]="i.deployToType"></nz-checkbox-group>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div nz-col [nzSpan]="24" class="mb-md">
+                        <app-list  style="margin-top:20px;"  #child [initDate]="i.dataList" [showAdd]="showAdd" [buttons] ='buttons' (addCreat)="addHandler($event)" (buttonData)="buttonDataHandler($event)" (pageNumber)="monitorHandler($event)"
+                                   (deleatData)="deleatData($event)"  [isPagination]="isPagination" (isActive)="isActive($event)" (buttonEvent)="buttonEvent($event)" (selectedRow)="selectedRow($event)" [headerDate]="headerData"
+                                   [moreData]="moreData" [total]="i.total"></app-list>
+                    </div>
+                </nz-collapse> -->
+
+                <nz-collapse *ngFor="let i of textcssList; let l = index" [nzTitle]="i.projectName" [nzActive]="true">
+                   <div *ngFor="let s of i.deliveryPatchDetails;">
+                       <!--只有才config的时候 才会选择 其他都是默认显示-->
+                   <!--    <div  nz-col [nzSpan]="24" class="mb-md">
+                           <div  nz-col [nzSpan]="12" nz-form-item class="d-flex">
+                           <div nz-form-label><label>导出类型:</label></div>
+                           <div nz-form-control class="flex-1">
+                               <nz-checkbox-group [(ngModel)]="i.exportType"></nz-checkbox-group>
+                           </div>
+                       </div>
+
+                           <div nz-col [nzSpan]="12" nz-form-item class="d-flex">
+                               <div nz-form-label><label>部署到:</label></div>
+                               <div nz-form-control class="flex-1">
+                                   <nz-checkbox-group [(ngModel)]="i.deployToType"></nz-checkbox-group>
+                               </div>
+                           </div>
+                   </div>-->
+                       <div  nz-col [nzSpan]="24" class="mb-md" >
+                           <div  nz-col [nzSpan]="12" nz-form-item class="d-flex">
+                               <div nz-form-label><label>导出类型</label></div>
+                               <div style="margin-top: 5px" class="ad-desc-list__detail ng-star-inserted">{{s.patchType}}</div>
+                           </div>
+
+                           <div nz-col [nzSpan]="12" nz-form-item class="d-flex">
+                               <div nz-form-label><label>部署到</label></div>
+                               <div style="margin-top: 5px" class="ad-desc-list__detail ng-star-inserted">{{s.deployWhere}}</div>
+                           </div>
+                       </div>
+                       <div nz-col [nzSpan]="24" class="mb-md">
+                           <app-list  style="margin-top:20px;"  #child [initDate]="s.fileList" [showAdd]="showAdd" [buttons] ='buttons' (addCreat)="addHandler($event)" (buttonData)="buttonDataHandler($event)" (pageNumber)="monitorHandler($event)"
+                                      (deleatData)="deleatData($event)"  [isPagination]="isPagination" (isActive)="isActive($event)" (buttonEvent)="buttonEvent($event)" (selectedRow)="selectedRow($event)" [headerDate]="headerData"
+                                      [moreData]="moreData" ></app-list>
+                       </div>
+                   </div>
+                </nz-collapse>
+
+
+               <!-- <nz-collapse  [nzTitle]="'/com.primeton.ibs.common.message'" [nzActive]="true">
+                    <div  nz-col [nzSpan]="24" class="mb-md">
+                        <div  nz-col [nzSpan]="12" nz-form-item class="d-flex">
+                            <div nz-form-label><label for="itemType">导出类型:</label></div>
+                            <div nz-form-control class="flex-1">
+                                <nz-checkbox-group [(ngModel)]="exportType"></nz-checkbox-group>
+                            </div>
+                        </div>
+                        <div nz-col [nzSpan]="12" nz-form-item class="d-flex">
+                            <div nz-form-label><label for="itemType">部署到:</label></div>
+                            <div nz-form-control class="flex-1">
+                                <nz-checkbox-group [(ngModel)]="deployToType"></nz-checkbox-group>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div nz-col [nzSpan]="24" class="mb-md">
+                        <app-list  style="margin-top:20px;"  #child [initDate]="data" [showAdd]="showAdd" [buttons] ='buttons' (addCreat)="addHandler($event)" (buttonData)="buttonDataHandler($event)" (pageNumber)="monitorHandler($event)"
+                                   (deleatData)="deleatData($event)"  [isPagination]="isPagination" (isActive)="isActive($event)" (buttonEvent)="buttonEvent($event)" (selectedRow)="selectedRow($event)" [headerDate]="headerData"
+                                   [moreData]="moreData" [total]="total"></app-list>
+                    </div>
+                </nz-collapse>
+
+                <nz-collapse  [nzTitle]="'/com.primeton.ibs.tws.ds'" [nzActive]="false">
+                    <div  nz-col [nzSpan]="24" class="mb-md">
+                        <div  nz-col [nzSpan]="12" nz-form-item class="d-flex">
+                            <div nz-form-label><label for="itemType">导出类型:</label></div>
+                            <div nz-form-control class="flex-1">
+                                <nz-checkbox-group [(ngModel)]="exportType"></nz-checkbox-group>
+                            </div>
+                        </div>
+                        <div nz-col [nzSpan]="12" nz-form-item class="d-flex">
+                            <div nz-form-label><label for="itemType">部署到:</label></div>
+                            <div nz-form-control class="flex-1">
+                                <nz-checkbox-group [(ngModel)]="deployToType"></nz-checkbox-group>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div nz-col [nzSpan]="24" class="mb-md">
+                        <app-list  style="margin-top:20px;"  #child [initDate]="data" [showAdd]="showAdd" [buttons] ='buttons' (addCreat)="addHandler($event)" (buttonData)="buttonDataHandler($event)" (pageNumber)="monitorHandler($event)"
+                                   (deleatData)="deleatData($event)"  [isPagination]="isPagination" (isActive)="isActive($event)" (buttonEvent)="buttonEvent($event)" (selectedRow)="selectedRow($event)" [headerDate]="headerData"
+                                   [moreData]="moreData" [total]="total"></app-list>
+                    </div>
+                </nz-collapse>-->
+
+
+
+
+            </nz-collapseset>
+        </nz-card>
+    </div>
+</div>
+
+
+
+<!-- 投放申请-->
+<nz-modal [nzVisible]="modalVisible"  [nzWidth]="1024" [nzTitle]="'投放申请 请指定投放日期和环境'"   [nzContent]="dictModal"
+          (nzOnCancel)="modalVisible=false" (nzOnOk)="save()">
+    <ng-template #dictModal>
+        <div nz-row [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
+            <div nz-col [nzSpan]="12" class="mb-md">
+                <div nz-form-item class="d-flex">
+                    <div nz-form-label class="alignment"><label for="no">投放日期</label></div>
+                    <div nz-form-control class="flex-1">
+                        <nz-datepicker [(ngModel)]="deliveryTime" [nzFormat]="'YYYY-MM-DD'"    name="deliveryTime" [nzSize]="'large'" [nzPlaceHolder]="'投放日期'" nzId="deliveryTime" class="d-block"></nz-datepicker>
+                    </div>
+                </div>
+            </div>
+            <div nz-col [nzSpan]="24" class="mb-md">
+                <div nz-form-item class="d-flex">
+                    <div nz-form-label><label for="itemType">投放到:</label></div>
+                    <div nz-form-control class="flex-1">
+                        <!--    <div class="ui-g-12"  *ngFor="let s of text;let l = index">
+                                <p-checkbox class="ui-g-3" name="{{s.label}}" value="{{s.value}}" label="{{s.label}}" [(ngModel)]="s.check" ></p-checkbox>
+                                <div class="ui-g-2"  *ngFor="let t of s.time; let d = index">
+                                 &lt;!&ndash;   <p-radioButton  name="{{t.keys}}" value="{{t.times}}"  label="{{t.times}}" [(ngModel)]="t.check"></p-radioButton>&ndash;&gt;
+                                    &lt;!&ndash;<nz-radio-group   [(ngModel)]="t.check">
+                                        <label nz-radio  [nzValue]="t.keys" [nzDisabled]="!s.check">
+                                            <span>{{t.times}}</span>
+                                        </label>
+                                    </nz-radio-group>&ndash;&gt;
+                                </div>
+                            </div>-->
+                        <div nz-col [nzSpan]="24" class="mb-md" *ngFor="let s of text;let l = index">
+                            <div nz-col [nzSpan]="6">
+                                <label  nz-checkbox  [(ngModel)]="s.check">&nbsp;&nbsp;<span>{{s.value}}</span></label>
+                            </div>
+                               <div nz-col [nzSpan]="18"   >
+                                   <div nz-col [nzSpan]="6" *ngFor="let t of s.time; let d = index">
+                                       <!--<input style="margin-top: 10px;" name="t.keys"   ng-model="t.check"    type="radio" />&nbsp;{{t.times}}-->
+                                     <!--  <label nz-radio [nzValue]="s.value" [nzDisabled]="!s.check"  [(ngModel)]="t.check">
+                                           <span>{{t.times}}</span>
+                                       </label>-->
+                                       <nz-radio-group [(ngModel)]="selectedCities">
+                                           <label nz-radio  [nzDisabled]="!s.check"  [nzValue]="s.value">
+                                                <span>{{t.times}}</span>
+                                           </label>
+                                       </nz-radio-group>
+                                   </div>
+                               </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div nz-col [nzSpan]="24" class="mb-md">
+                <div nz-form-item class="d-flex">
+                    <div nz-form-label><label for="itemDesc">投放说明:</label></div>
+                    <div nz-form-control class="flex-1">
+                        <nz-input [(ngModel)]="deliveryDesc"  nzAutosize=true nzType="textarea" name="deliveryDesc" [nzSize]="'large'" [nzPlaceHolder]="'投放说明'" nzId="deliveryDesc"></nz-input>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </ng-template>
+</nz-modal>
