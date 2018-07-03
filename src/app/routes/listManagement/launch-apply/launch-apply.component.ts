@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , Inject } from '@angular/core';
 import { _HttpClient } from '@delon/theme';
 import { DeliveryModule} from '../../../service/delivent/deliveryModule';
 import {UtilityService} from '../../../service/utils.service';
 import {appConfig} from '../../../service/common';
 import {NzModalService, NzNotificationService} from 'ng-zorro-antd';
 import {Router} from '@angular/router';
-
+import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
 @Component({
   selector: 'app-launch-apply',
   templateUrl: './launch-apply.component.html',
+  styleUrls: ['./launch-apply.component.less'],
 })
 export class LaunchApplyComponent implements OnInit {
 
@@ -17,11 +18,13 @@ export class LaunchApplyComponent implements OnInit {
         private router: Router,
         private utilityService: UtilityService,
         private modal: NzModalService,
-        private nznot: NzNotificationService
+        private nznot: NzNotificationService,
+        @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
     ) { }
-
+    token: any;
     ngOnInit() {
-        this.getData();
+        this.token  = this.tokenService.get().token;
+        this.getData(1);
         this.showAdd = true;
     }
 
@@ -34,6 +37,7 @@ export class LaunchApplyComponent implements OnInit {
     deliverItem: DeliveryModule = new  DeliveryModule();
     deliveryTime: any; // 投放日期
 
+    pageTotal: number; // 翻页总数
     dliveryResult = [
         {key: '0', value: '申请中'},
         {key: 'S', value: '成功'},
@@ -49,14 +53,15 @@ export class LaunchApplyComponent implements OnInit {
 
 
     data: any[] = []; // 表格数据
+
     headerData = [  // 配置表头内容
-        { value: '工作项', key: 'guidWorkitem', isclick: true },
-        { value: '别名', key: 'applyAlias', isclick: false },
-        { value: '投放时间', key: 'deliveryTime', isclick: false },
-        { value: '运行环境', key: 'guidProfiles', isclick: false },
-        { value: '申请人', key: 'proposer', isclick: false },
-        { value: '投放结果', key: 'deliveryResult', isclick: false },
-        { value: '程序数量', key: 'number', isclick: false },
+        { value: '工作项', key: 'guidWorkitem', isclick: true, radio: false },
+        { value: '别名', key: 'applyAlias', isclick: false, radio: false},
+        { value: '投放时间', key: 'deliveryTime', isclick: false, radio: false },
+        { value: '运行环境', key: 'guidProfiles', isclick: false, radio: false },
+        { value: '申请人', key: 'proposer', isclick: false, radio: false },
+        { value: '投放结果', key: 'deliveryResult', isclick: false, radio: false },
+        { value: '程序数量', key: 'number', isclick: false, radio: false },
     ];
     // 传入按钮层
     moreData = {
@@ -69,50 +74,80 @@ export class LaunchApplyComponent implements OnInit {
     test: string;
     page: any;
     total: number;
+    pages: number;
 
 
+    getData(index) {
 
-    getData() {
-        this.data = [
-            {guidWorkitem: '1618 国际结算迁移', applyAlias:'第一次投放', deliveryTime: '2018-06-16',  guidProfiles:'SIT',proposer: '黄锡华', deliveryResult: '成功', number: 5 },
-            {guidWorkitem: '1618 国际结算迁移', applyAlias:'第二次投放', deliveryTime: '2018-06-16',  guidProfiles:'SIT',proposer: '陈育爽', deliveryResult: '成功', number: 2 },
-            {guidWorkitem: '柜面无纸化', applyAlias:'补充提交', deliveryTime: '2018-06-16',  guidProfiles:'SIT',proposer: '李宁', deliveryResult: '申请中', number: 3 },
-            {guidWorkitem: '1618 国际结算迁移', applyAlias:'第一次投放', deliveryTime: '2018-06-16',  guidProfiles:'SIT',proposer: '黄锡华', deliveryResult: '成功', number: 10 },
-            {guidWorkitem: '1618 柜面无纸化', applyAlias:'第一次投放', deliveryTime: '2018-06-16',  guidProfiles:'SIT Dev',proposer: '鲍成杰', deliveryResult: '申请中', number: 4 },
-            {guidWorkitem: '柜面无纸化', applyAlias:'第一次投放', deliveryTime: '2018-06-16',  guidProfiles:'SIT Dev',proposer: '鲍成杰', deliveryResult: '申请中', number: 4 },
-            {guidWorkitem: '1618 柜面无纸化', applyAlias:'第二次投放', deliveryTime: '2018-06-16',  guidProfiles:'SIT Dev',proposer: '鲍成杰', deliveryResult: '失败', number: 4 },
-            {guidWorkitem: '1618 柜面无纸化', applyAlias:'第一次投放', deliveryTime: '2018-06-16',  guidProfiles:'SIT Dev',proposer: '鲍成杰', deliveryResult: '申请中', number: 4 },
-            {guidWorkitem: '柜面无纸化', applyAlias:'补充提交', deliveryTime: '2018-06-16',  guidProfiles:'SIT Dev',proposer: '李宁', deliveryResult: '成功', number: 4 },
-        ]
-        for(var i =0; i< this.data.length; i++) {
-            if (this.data[i].deliveryResult !== '成功') {
-                // 后期根据条件判断添加
-                this.data[i].buttonData = [ '打回','', ' ', '失败', '', ' ', '成功'];
+        const page = {
+            page : {
+                size: 10,
+                current : index
             }
-        }
-        this.total = 50;
+        };
+        this.utilityService.postData(appConfig.testUrl  + appConfig.API.list, page, { Authorization: this.token})
+            .map(res => res.json())
+            .subscribe(
+                (val) => {
+                    this.data = val.result.records;
+                    this.total = val.result.total;//总数
+                    this.pageTotal = val.result.pages * 10;//页码
+                    for ( var i = 0; i < this.data.length; i++) {
+                        // this.data[i].deliveryTime = this.getDate(this.data[i].deliveryTime);
+                    }
+
+                },
+            );
+
     }
 
 
+      //时间处理
+      //   getDate(time) {
+      //      var str = parseInt(time);
+      //       if (!str) {
+      //           theDate = " ";
+      //       }else {
+      //           var oDate = new Date(str);
+      //           var oYear = oDate.getFullYear();
+      //           var oMonth = oDate.getMonth() + 1;
+      //           oMonth = oMonth >= 10? oMonth : '0' + oMonth;
+      //           var oDay = oDate.getDate();
+      //           oDay = oDay >= 10? oDay : '0' + oDay;
+      //           var theDate = oYear + "-" + oMonth  + "-" + oDay;
+      //       }
+      //       return theDate;
+      //   }
 
     // 列表组件传过来的内容
     addHandler(event) {
-
+         console.log(event)
         if (event === 'merge') {
-            this.mergeVisible = true;
+
+            this.utilityService.postData(appConfig.testUrl  + appConfig.API.mergeInfo, {}, { Authorization: this.token})
+                .map(res => res.json())
+                .subscribe(
+                    (val) => {
+
+                    },
+                );
+            this.mergeisVisible = true
+            // this.mergeVisible = true;
+
         } else if (event === 'checking') {
            this.modalVisible = true; // 打开核对弹出框
         } else if (event === 'export') {
             this.isVisible = true;
+            this.workItem = false;
         } else {
             console.log(event)
-            console.log('详情界面')
+            console.log('详情界面');
         }
     }
 
     // 列表传入的翻页数据
     monitorHandler(event) {
-
+       this.getData(event);
     }
 
     // 接受子组件删除的数据 单条还是多条
@@ -123,19 +158,20 @@ export class LaunchApplyComponent implements OnInit {
     // 按钮点击事件
     buttonEvent(event) {
         console.log(event);
-        if (event.names === '失败') {
-            alert('失败的方法')
-        } else if (event.names === '打回') {
-            alert('打回的方法')
-        } else if (event.names === '成功') {
-            alert('成功的方法')
-        }
+        // if (event.names === '失败') {
+        //     alert('失败的方法')
+        // } else if (event.names === '打回') {
+        //     alert('打回的方法')
+        // } else if (event.names === '成功') {
+        //     alert('成功的方法')
+        // }
 
     }
 
     // 列表按钮方法
     buttonDataHandler(event) {
-        console.log(event)
+
+        console.log(event);
 
     }
 
@@ -143,7 +179,7 @@ export class LaunchApplyComponent implements OnInit {
 
     // 处理行为代码，跳转、弹出框、其他交互
     isActive(event) {
-        console.log(event)
+        console.log(event);
     }
 
 
@@ -176,6 +212,9 @@ export class LaunchApplyComponent implements OnInit {
         this.checkVisible = true; // 打开核对弹出框
     }
 
+    getdatas() {
+
+    }
 
 
     // 状态
@@ -201,6 +240,7 @@ export class LaunchApplyComponent implements OnInit {
     //打印界面
     isVisible = false; // 默认关闭
     workItem = false;
+    mergeisVisible = false;
 
     checkOptionsOne  = [
         { label: 'TWS改版', value: 'TWS' },
@@ -221,6 +261,9 @@ export class LaunchApplyComponent implements OnInit {
     determine() {
         console.log('确定成功');
         this.mergeVisible = false;
+    }
+    moreclick() {
+        console.log('sssss');
     }
 
 

@@ -50,6 +50,8 @@ export class ListComponent implements OnInit {
     buttons: any;
     @Input() // 输入属性,接受父组件传入的数据
     isPagination: any;
+    @Input() // 输入属性,接受父组件传入的数据
+    pageTotal: number;
 
 
     data: any[] = [];

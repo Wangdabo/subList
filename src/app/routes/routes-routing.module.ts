@@ -22,6 +22,7 @@ import { Exception500Component } from './exception/500.component';
 // 提交清单页面
 import { LaunchApplyComponent } from '../../../../subList/src/app/routes/listManagement/launch-apply/launch-apply.component';
 import { SubListComponent } from '../../../../subList/src/app/routes/listManagement/sub-list/sub-list.component';
+import { SProfilesComponent } from '../../../../subList/src/app/routes/listManagement/s-profiles/s-profiles.component';
 
 
 
@@ -37,6 +38,7 @@ const routes: Routes = [
             // 投放申请路由
             { path: 'subList', component: SubListComponent },
             { path: 'launchApply', component: LaunchApplyComponent },
+            { path: 'sProfiles', component: SProfilesComponent },
         ]
     },
     // passport

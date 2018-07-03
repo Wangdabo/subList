@@ -70,7 +70,7 @@ export class SubListComponent implements OnInit {
     ngOnInit() {
         this.active = false;
         this.reset = false;
-        this.token  = this.tokenService.get().token // 绑定token
+        this.token  = this.tokenService.get().token; // 绑定token
         this.getworkData();
     }
 
@@ -81,6 +81,7 @@ export class SubListComponent implements OnInit {
             .subscribe(
                 (val) => {
                     this.workItem = val.result;
+
                 }
             );
     }

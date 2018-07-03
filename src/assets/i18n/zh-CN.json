@@ -6,5 +6,6 @@
     "dashboard/v1":"首页",
     "listManagement": "清单管理",
     "subList": "提清单",
-    "launchApply": "投放申请"
+    "launchApply": "投放申请",
+    "sProfiles": "运行环境"
 }
