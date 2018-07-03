@@ -51,6 +51,8 @@ export class SubListComponent implements OnInit {
     workItemInfo: any; // 工作组详情
     branchDetail: any; // 分支信息
     deleteId: string;
+    splicingObj: any; //  拼接的数据
+    elementScice: any; // 环境数据
 
     // 多选框数据
     // 导出类型
@@ -76,11 +78,11 @@ export class SubListComponent implements OnInit {
         this.reset = false;
         this.token  = this.tokenService.get().token; // 绑定token
         this.getworkData();
+        this.getcheckOptionOne();
     }
 
     // 调用初始化工作项信息
     getworkData() {
-        console.log(this.token)
         this.utilityService.getData(appConfig.testUrl  + appConfig.API.sWorkitem, {}, {Authorization: this.token})
             .subscribe(
                 (val) => {
@@ -178,7 +180,6 @@ export class SubListComponent implements OnInit {
 
                     this.textcssList = val.result;
                     for (let i = 0; i < this.textcssList.length; i ++) {
-                        console.log(this.textcssList[i])
                         if (this.textcssList[i].projectType !== 'C') { // 说明是config工程，需要让用户手动选择
                             this.textcssList[i].headerData = [  // 配置表头内容
                                 { value: '程序名称', key: 'programName', isclick: true, radio: false },
@@ -197,7 +198,6 @@ export class SubListComponent implements OnInit {
                                     this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchArray = this.arrarObj(this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchArray);
                                     this.textcssList[i].deliveryPatchDetails[j].fileList[n].buttonData = ['删除', '', ' ', '详情'];
                                     this.textcssList[i].deliveryPatchDetails[j].fileList[n].commitDate = moment(this.textcssList[i].deliveryPatchDetails[j].fileList[n].commitDate).format('YYYY-MM-DD HH:mm:ss');
-                                    console.log(this.textcssList[i].deliveryPatchDetails[j].fileList[n])
                                 }
                             }
                         } else {
@@ -303,35 +303,47 @@ export class SubListComponent implements OnInit {
         { label: '无纸化',  value: 'wu' }
     ]
 
-    text = [
-        {label: 'SIT Dev - 开发集成测试', value: 'TWS',
-            time:
-                [
-                    {times: 'A', key: 'cd'},
-                    {times: 'B',  key: 'cd'},
-                    {times: 'C',  key: 'cd'}]},
-        {label: '国际结算', value: '1618', time:[{times: '13:00', key: 'cs'},{times: '15:00', key: 'cs'},{times: '17:00', key: 'cs'}]},
-        {label: '无纸化', value: 'wu', time:[{times: '11:00', key: 'dw'},{times: '16:00', key: 'dw'}, {times: '20:00', key: 'dw'}]},
-    ]
 
+    // 合并投放接口调用
+    getcheckOptionOne() {
 
+        this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfiles, {}, {Authorization: this.token})
+            .subscribe(
+                (val) => {
+
+                    this.elementScice = val.result;
+
+                    for (let i = 0; i < this.elementScice.length; i++) {
+                        this.elementScice[i].packTiming = this.elementScice[i].packTiming.split(',');
+                        this.elementScice[i].Timing  = []
+                        for ( let s = 0; s < this.elementScice[i].packTiming.length; s ++) {
+                            let obj = {
+                                time: this.elementScice[i].packTiming[s]
+                            };
+                            this.elementScice[i].Timing.push(obj);
+                        }
+                    }
+                    // 拼接
+                }
+            );
+    }
+
+    // 投放申请
     save() {
-        let arr = [];
-        /*for(let i = 0; i < this.text.length; i ++ ) {
-            let obj = {};
-           if(this.text[i].check && this.text[i].check.length !== 0) {
-               obj.projectId = this.text[i].check.join('');
-               for( let s = 0; s < this.text[i].time.length; s ++ ) {
-                   if (this.text[i].time[s].check) {
-                      obj.times = this.text[i].time[s].check;
-                   }
-               }
-               arr.push(obj)
-           }
+       let profiles = [];
+        for (let i = 0; i < this.elementScice.length; i ++) {
+            if (this.elementScice[i].check && this.elementScice[i].times) {
+                console.log(this.elementScice[i]) ;
+                let obj = {
+                    guidProfiles: this.elementScice[i].guid,
+                    packTiming: this.elementScice[i].times,
+                    name: this.elementScice[i].manager,
+                };
+                profiles.push(obj);
+            }
         }
-        console.log(arr)*/
 
-        let objsss = true;
+        let objsss = true; // 前端判定是否正确
 
         /*拼数据*/
         let array = [];
@@ -389,19 +401,20 @@ export class SubListComponent implements OnInit {
 
         console.log(array);
         console.log(objsss);
-        let objs = {
+        this.splicingObj = {
             guidBranch : this.bransguid,
             dliveryAddRequest: {
                 applyAlias: this.deliveryName,
-                profiles: [{guidProfiles: '1', packTiming: '12:00'} , {guidProfiles: '2', packTiming: '09:00'}],
+                profiles: profiles,
                 deliveryDesc: this.deliveryDesc,
                 deliveryTime: moment(this.deliveryTime).format('YYYY-MM-DD')
             },
             deliveryList: array,
         };
 
-        if (objsss) {
-             this.utilityService.postData(appConfig.testUrl  + appConfig.API.sDeliveryList +  '/deliveryAnd', objs, {Authorization: this.token})
+        console.log(this.splicingObj); // 打印结果
+       /* if (objsss) {
+             this.utilityService.postData(appConfig.testUrl  + appConfig.API.sDeliveryList +  '/deliveryAnd', this.splicingObj, {Authorization: this.token})
             .subscribe(
                 (val) => {
                     this.nznot.create('success', val.msg , val.msg);
@@ -410,7 +423,7 @@ export class SubListComponent implements OnInit {
             );
         } else {
             this.nznot.create('error', '请检查是否勾选工程或者信息是否全部填写', '请检查是否勾选工程或者信息是否全部填写');
-        }
+        }*/
 
 
 
