@@ -38,7 +38,7 @@ export class UtilityService {
         myHeaders.append('Content-Type', 'application/json');
         for (const key in myheaders) {
             myHeaders.append(key, myheaders[key]);
-        };
+        }
         return this.http.post(url, options, { headers: myHeaders });
 
     }

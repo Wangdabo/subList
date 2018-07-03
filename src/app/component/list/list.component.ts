@@ -54,6 +54,8 @@ export class ListComponent implements OnInit {
     parsentList: any;
     @Input() // 输入属性,接受父组件传入的数据
     parsentbool: any;
+    pageTotal: number;
+
 
     data: any[] = [];
 

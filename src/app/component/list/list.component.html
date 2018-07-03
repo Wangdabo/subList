@@ -37,7 +37,8 @@
 </div>
 
 <!-- 如果是异步的列表，必须使用nzAjaxData的-->
-<nz-table #nzTable [nzAjaxData]="initDate" [nzTotal]="total" [nzPageSize]="q.ps" [nzLoading]="loading"
+<nz-table #nzTable [nzAjaxData]="initDate" [nzTotal]="pageTotal"
+          [nzPageSize]="q.ps" [nzLoading]="loading"
           [nzIsPagination]="isPagination"
           (nzPageIndexChange)="pageChange($event)"
           [nzPageIndex]='q.pi'>

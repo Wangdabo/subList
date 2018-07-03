@@ -14,6 +14,9 @@ export let appConfig = {
         logout: '/logout', // 登出
         sWorkitem: '/sWorkitem', // 查询工作项
         sDeliveryList: '/sDeliveryList', // 整理清单
+
+        list: '/deliveries/list', //
+        mergeInfo: '/deliveries/merge/info' // 合并投放清单信息
     },
 
 
