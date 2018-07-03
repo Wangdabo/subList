@@ -50,7 +50,10 @@ export class ListComponent implements OnInit {
     buttons: any;
     @Input() // 输入属性,接受父组件传入的数据
     isPagination: any;
-
+    @Input() // 输入属性,接受父组件传入的数据
+    parsentList: any;
+    @Input() // 输入属性,接受父组件传入的数据
+    parsentbool: any;
 
     data: any[] = [];
 
@@ -86,7 +89,7 @@ export class ListComponent implements OnInit {
         this.headerDate = this.headerDate;
         this.moreData = this.moreData; // 绑定更多数据
 
-        console.log(this.isPagination);
+        console.log(this.initDate);
     }
 
 
@@ -98,13 +101,28 @@ export class ListComponent implements OnInit {
         }
     }
 
-    buttonClick(event, Name) {
+    buttonClick(event, Name, index) {
         if (Name) {
             event.names = Name;
-            this.buttonEvent.emit(event); // 点击了修改，打开弹出框，把修改的数据传递过去
+            if (this.parsentbool ) { // 如果是true则传递两个
+                const obj = {
+                    data: event,
+                    parList: this.parsentList,
+                    index: index,
+                }
+                console.log(obj)
+                this.buttonEvent.emit(obj); // 点击了修改，打开弹出框，把修改的数据传递过去
+            } else {
+                console.log('正常的')
+                this.buttonEvent.emit(event); // 点击了修改，打开弹出框，把修改的数据传递过去
+            }
+
         } else {
             this.buttonEvent.emit(event); // 点击了修改，打开弹出框，把修改的数据传递过去
         }
+
+
+
 
     }
 

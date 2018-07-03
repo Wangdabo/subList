@@ -66,15 +66,48 @@
         -->
         <td *ngFor="let d of headerDate;let s = index">
             <!-- 利用ngClass 来完成是否可以点击跳转等行为 -->
-            <span [ngClass]="{'active': d.isclick, 'noactive': !d.isclick}" class="active" (click)="isClick(d,i)">{{initDate[l][d.key]}}</span>
+            <span *ngIf="!d.radio" [ngClass]="{'active': d.isclick, 'noactive': !d.isclick}" class="active" (click)="isClick(d,i)">{{initDate[l][d.key]}}</span>
             <!--还是要写方法，因为不一定是路由跳转还有可能弹出框以及其他的交易，所以写一个方法吧
             <a *ngIf="d.isclick"  [routerLink]="['/APPlication']"  [queryParams]="data[l]">{{data[l][d.key]}}</a>-->
+
+            <span *ngIf="d.radio">
+                <!--因为ngIf和ngFor不能在同一行中使用，所以要分行来用，为什么不用div而是用ng-container，是因为div受样式或者说全局样式干扰，<ng-container>是不受任何干扰的。-->
+               <ng-container *ngIf = "d.type == 'deployArray'">
+                   <nz-select
+                            style="width: 200px;"
+                           nzAllowClear
+                           [nzPlaceHolder]="'选择环境'"
+                           [(ngModel)]="initDate[l].deploySelect"
+                           nzShowSearch>
+                          <nz-option
+                              *ngFor="let t of initDate[l].deployArray"
+                              [nzLabel]="t.label"
+                              [nzValue]="t.value">
+                          </nz-option>
+                    </nz-select>
+               </ng-container>
+                <ng-container *ngIf="d.type !== 'deployArray'" >
+                    <nz-select
+                        style="width: 200px;"
+                        nzAllowClear
+                        [nzPlaceHolder]="'导出到'"
+                        [(ngModel)]="initDate[l].patchSelect"
+                        nzShowSearch>
+                          <nz-option
+                              *ngFor="let t of initDate[l].patchArray"
+                              [nzLabel]="t.label"
+                              [nzValue]="t.value">
+                          </nz-option>
+                    </nz-select>
+               </ng-container>
+            </span>
         </td>
+
         <td nz-td>
             <a *ngIf="!showAdd" style="color:#108ee9;" (click)="add(i)">修改</a>&nbsp;
             <!--查看日志详情页面-->
             <a *ngIf="showAdd" style="color:#108ee9;" (click)="add(i)">{{configTitle}}</a>&nbsp;
-            <a *ngFor="let c of i.buttonData" style="color:#108ee9;" (click)="buttonClick(i, c)">{{c}}&nbsp;</a>&nbsp;
+            <a *ngFor="let c of i.buttonData" style="color:#108ee9;" (click)="buttonClick(i, c, l)">{{c}}&nbsp;</a>&nbsp;
         </td>
     </tr>
     </tbody>

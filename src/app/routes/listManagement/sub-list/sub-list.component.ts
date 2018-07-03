@@ -8,6 +8,7 @@ import { MergelistModuleergeList} from '../../../service/delivent/mergelistModul
 import { SettingsService } from '@delon/theme';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
 import * as moment from 'moment';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-sub-list',
@@ -43,10 +44,13 @@ export class SubListComponent implements OnInit {
     bransguid: string;
 
     deliveryDesc: string; // 投放说明
+    deliveryTime: any; // 投放时间
+    deliveryName: string; // 投放别名
     mergeilsItem: MergelistModuleergeList = new MergelistModuleergeList();
     workItem: any; // 工作组List
     workItemInfo: any; // 工作组详情
     branchDetail: any; // 分支信息
+    deleteId: string;
 
     // 多选框数据
     // 导出类型
@@ -88,13 +92,13 @@ export class SubListComponent implements OnInit {
 
     // 下拉框选择
     checkSelect(event) {
-
+        console.log(event)
         for (var i = 0; i < this.workItem.length; i ++ ) {
-            if(this.workItem[i].guid === event) {
+            if (this.workItem[i].guid === event) {
                 this.workItemInfo = this.workItem[i];
             }
         }
-        this.workItemInfo.developers = this.workItemInfo.developers.split(",")
+        this.workItemInfo.developers = this.workItemInfo.developers.split(',')
         this.active = true; // 打开弹框
         this.showAdd = true; // 默认没有新增
 
@@ -102,7 +106,6 @@ export class SubListComponent implements OnInit {
         this.utilityService.getData(appConfig.testUrl  + appConfig.API.sWorkitem + '/'+ event + '/branchDetail', {}, {Authorization: this.token})
             .subscribe(
                 (val) => {
-                    console.log(val)
                     this.branchDetail  = val.result.fullPath;
                     this.bransguid = val.result.guid;
                 }
@@ -136,11 +139,7 @@ export class SubListComponent implements OnInit {
     data: any[] = []; // 表格数据
     showAdd: boolean;
     headerData = [  // 配置表头内容
-        { value: '程序名称', key: 'programName', isclick: true },
-        { value: '提交人', key: 'author', isclick: false },
-        { value: '变动类型', key: 'commitType', isclick: false },
-        { value: '当前版本', key: 'deliveryVersion', isclick: false },
-        { value: '时间', key: 'commitDate', isclick: false },
+
     ];
     // 传入按钮层
     moreData = {
@@ -157,107 +156,80 @@ export class SubListComponent implements OnInit {
     modalVisible = false; // 投放申请弹框
 
     textcssList: any;
+    // 数组转换特定格式
+    arrarObj(event) {
+        let listArray = [];
+        for ( let i = 0 ; i <  event.length;  i++) {
+            let obj = {
+                value: event[i],
+                label: event[i],
+            };
+            listArray.push(obj);
+        }
+        return listArray;
+    }
+
     getData() {
         // 请求信息
         this.utilityService.getData(appConfig.testUrl  + appConfig.API.sDeliveryList + '/'+ this.bransguid + '/history', {}, {Authorization: this.token})
             .subscribe(
                 (val) => {
-                    console.log(val);
+
                     this.textcssList = val.result;
-                    for(let i = 0; i < this.textcssList.length; i ++) {
-                        /*this.textcssList[i].exportType = [
-                            { label: 'jar', value: 'jar', checked: false },
-                            { label: 'plugin', value: 'plugin', checked: false },
-                            { label: 'ecd', value: 'ecd', checked: false },
-                            { label: 'epd', value: 'epd', checked: false },
-                            { label: 'war', value: 'war', checked: false },
-                        ];
-                        this.textcssList[i].deployToType = [
-                            { label: 'tws', value: 'tws', checked: false },
-                            { label: 'bs', value: 'bs', checked: false },
-                            { label: 'vm', value: 'vm', checked: false },
-                            { label: '数据库', value: 'mysql', checked: false },
-                        ];*/
-                        for (let j =0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
-                            // 只有在config的时候 才需要转数组
-                            // this.textcssList[i].deliveryPatchDetails[j].patchType = 'ecd,epd'
-                            // this.textcssList[i].deliveryPatchDetails[j].patchType =  this.textcssList[i].deliveryPatchDetails[j].patchType.split(',');
-                            console.log(this.textcssList[i].deliveryPatchDetails[j])
-                            for ( let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
-                                this.textcssList[i].deliveryPatchDetails[j].fileList[n].buttonData = ['删除', '', ' ', '详情'];
-                                this.textcssList[i].deliveryPatchDetails[j].fileList[n].commitDate = moment(this.textcssList[i].deliveryPatchDetails[j].fileList[n].commitDate).format('YYYY-MM-DD HH:mm:ss');
+                    for (let i = 0; i < this.textcssList.length; i ++) {
+                        console.log(this.textcssList[i])
+                        if (this.textcssList[i].projectType !== 'C') { // 说明是config工程，需要让用户手动选择
+                            this.textcssList[i].headerData = [  // 配置表头内容
+                                { value: '程序名称', key: 'programName', isclick: true, radio: false },
+                                { value: '提交人', key: 'author', isclick: false, radio: false  },
+                                { value: '变动类型', key: 'commitType', isclick: false, radio: false  },
+                                { value: '当前版本', key: 'deliveryVersion', isclick: false, radio: false  },
+                                { value: '时间', key: 'commitDate', isclick: false, radio: false  },
+                                { value: '部署到', key: 'deployWhere', isclick: false, radio: true, type: 'deployArray' },
+                                { value: '导出到', key: 'patchType', isclick: false, radio: true, type: 'patchArray'  },
+                            ];
+                            for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
+                                for ( let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
+                                    this.textcssList[i].deliveryPatchDetails[j].fileList[n].deployArray = _.cloneDeep(this.textcssList[i].deliveryPatchDetails[j].fileList[n].deployWhere.split(','));
+                                    this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchArray = this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchType.split(',');
+                                    this.textcssList[i].deliveryPatchDetails[j].fileList[n].deployArray = this.arrarObj(this.textcssList[i].deliveryPatchDetails[j].fileList[n].deployArray);
+                                    this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchArray = this.arrarObj(this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchArray);
+                                    this.textcssList[i].deliveryPatchDetails[j].fileList[n].buttonData = ['删除', '', ' ', '详情'];
+                                    this.textcssList[i].deliveryPatchDetails[j].fileList[n].commitDate = moment(this.textcssList[i].deliveryPatchDetails[j].fileList[n].commitDate).format('YYYY-MM-DD HH:mm:ss');
+                                    console.log(this.textcssList[i].deliveryPatchDetails[j].fileList[n])
+                                }
+                            }
+                        } else {
+                            this.textcssList[i].headerData = [  // 配置表头内容
+                                { value: '程序名称', key: 'programName', isclick: true, radio: false },
+                                { value: '提交人', key: 'author', isclick: false, radio: false },
+                                { value: '变动类型', key: 'commitType', isclick: false, radio: false },
+                                { value: '当前版本', key: 'deliveryVersion', isclick: false, radio: false },
+                                { value: '时间', key: 'commitDate', isclick: false, radio: false },
+                            ];
+                            for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
+                                for ( let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
+                                    this.textcssList[i].deliveryPatchDetails[j].fileList[n].buttonData = ['删除', '', ' ', '详情'];
+                                    this.textcssList[i].deliveryPatchDetails[j].fileList[n].commitDate = moment(this.textcssList[i].deliveryPatchDetails[j].fileList[n].commitDate).format('YYYY-MM-DD HH:mm:ss');
+                                }
                             }
                         }
+
                     }
                 }
             );
-       /* this.textcssList = [
-            {
-                name: '/com.primeton.ibs.common.message',
-                Active: true,
-                list: [
-                    {
-                        exportType: [
-                            { label: 'jar', value: 'jar', checked: true },
-                            { label: 'plugin', value: 'plugin', checked: false },
-                            { label: 'ecd', value: 'ecd', checked: false },
-                            { label: 'epd', value: 'epd', checked: false },
-                            { label: 'war', value: 'war', checked: false },
-                        ],
-                        deployToType: [
-                            { label: 'tws', value: 'tws', checked: false },
-                            { label: 'bs', value: 'bs', checked: false },
-                            { label: 'vm', value: 'vm', checked: false },
-                            { label: '数据库', value: 'mysql', checked: false },
-                        ],
-                        dataList: [
-                            {appName: 'com.primeton.ibs.common.message/src/com/primeton/i.../message/MessageDefinitionModelLoader.java', appCode:'shiyunl1', appType: '修改',  isopen:'782 -> 820'},
-                            {appName: 'com.primeton.ibs.common.message/src/com/primeton/i.../message/MessageDefinitionModelLoader.java', appCode:'shiyunl2', appType: '增加',  isopen:'782 -> 820'},
-                            {appName: 'com.primeton.ibs.common.message/src/com/primeton/i.../message/MessageDefinitionModelLoader.java', appCode:'shiyunl3', appType: '删除',  isopen:'782 -> 820'},
-                            {appName: 'com.primeton.ibs.common.message/src/com/primeton/i.../message/MessageDefinitionModelLoader.java', appCode:'shiyunl4', appType: '删除',  isopen:'782 -> 820'},
-                            {appName: 'com.primeton.ibs.common.message/src/com/primeton/i.../message/MessageDefinitionModelLoader.java', appCode:'shiyunl5', appType: '增加',  isopen:'782 -> 820'},
-                            {appName: 'com.primeton.ibs.common.message/src/com/primeton/i.../message/MessageDefinitionModelLoader.java', appCode:'shiyunl6', appType: '删除',  isopen:'782 -> 820'},
-                            {appName: 'com.primeton.ibs.common.message/src/com/primeton/i.../message/MessageDefinitionModelLoader.java', appCode:'shiyunl7', appType: '修改',  isopen:'782 -> 820'},
-                        ],
-                    },
-                    {
-                        exportType: [
-                            { label: 'jar', value: 'jar', checked: true },
-                            { label: 'plugin', value: 'plugin', checked: true },
-                            { label: 'ecd', value: 'ecd', checked: true },
-                            { label: 'epd', value: 'epd', checked: true },
-                            { label: 'war', value: 'war', checked: true },
-                        ],
-                        deployToType: [
-                            { label: 'tws', value: 'tws', checked: true },
-                            { label: 'bs', value: 'bs', checked: false },
-                            { label: 'vm', value: 'vm', checked: false },
-                            { label: '数据库', value: 'mysql', checked: false },
-                        ],
-                        dataList: [
-                            {appName: 'com.primeton.ibs.common.message/src/com/primeton/i.../message/MessageDefinitionModelLoader.java', appCode:'shiyunl8', appType: '修改',  isopen:'782 -> 820'}
-                        ],
-                    }
-                ],
-
-                total: 7,
-            },
-        ]*/
-
-
-
     }
     // 列表组件传过来的内容
     addHandler(event) {
         console.log(event)
         if (event === 'merge') {
-            console.log('合并投放')
+            console.log('合并投放');
         } else if (event === 'checking') {
-            console.log('合并成功')
+            console.log('合并成功');
         } else if (event === 'export') {
-            alert('导出成功')
+            alert('导出成功');
         } else {
-            console.log('修改界面')
+            console.log('修改界面');
         }
     }
 
@@ -274,18 +246,27 @@ export class SubListComponent implements OnInit {
     // 按钮点击事件
     buttonEvent(event) {
         console.log(event)
+        if (event.data.names === '删除') {
+            this.deleteId = event.index;
+            console.log(this.deleteId);
+            event.parList.fileList.splice(this.deleteId, 1);
+            console.log(event.parList.fileList);
+        } else {
+            console.log('详情');
+        }
+
     }
 
     // 列表按钮方法
     buttonDataHandler(event) {
-        console.log(event)
+        console.log(event);
     }
 
 
 
     // 处理行为代码，跳转、弹出框、其他交互
     isActive(event) {
-        console.log(event)
+        console.log(event);
     }
 
 
@@ -294,14 +275,13 @@ export class SubListComponent implements OnInit {
     }
 
     seach() {
-        console.log('点我干嘛')
+        console.log('点我干嘛');
     }
 
 
     // 补录清单方法
     Supplementary() {
-        console.log(1)
-        console.log(this.textList); // 选择的会有checked属性 为true
+        console.log(1);
     }
 
 
@@ -329,13 +309,12 @@ export class SubListComponent implements OnInit {
                     {times: 'A', key: 'cd'},
                     {times: 'B',  key: 'cd'},
                     {times: 'C',  key: 'cd'}]},
-        {label: '国际结算', value: '1618', time:[{times: '13:00',key: 'cs'},{times: '15:00',key: 'cs'},{times: '17:00',key: 'cs'}]},
-        {label: '无纸化', value: 'wu', time:[{times: '11:00',key: 'dw'},{times: '16:00',key: 'dw'},{times: '20:00',key: 'dw'}]},
+        {label: '国际结算', value: '1618', time:[{times: '13:00', key: 'cs'},{times: '15:00', key: 'cs'},{times: '17:00', key: 'cs'}]},
+        {label: '无纸化', value: 'wu', time:[{times: '11:00', key: 'dw'},{times: '16:00', key: 'dw'}, {times: '20:00', key: 'dw'}]},
     ]
 
 
     save() {
-        console.log(this.text)
         let arr = [];
         /*for(let i = 0; i < this.text.length; i ++ ) {
             let obj = {};
@@ -350,6 +329,90 @@ export class SubListComponent implements OnInit {
            }
         }
         console.log(arr)*/
+
+        let objsss = true;
+
+        /*拼数据*/
+        let array = [];
+        for (let i = 0; i < this.textcssList.length; i ++) {
+            if (this.textcssList[i].projectType !== 'C') { // 说明是config工程，需要让用户手动选择
+                for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
+                    for ( let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
+                        if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].checked) {
+                            objsss = true;
+                            if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].commitType === '新增') {
+                                this.textcssList[i].deliveryPatchDetails[j].fileList[n].commitType = 'A';
+                            } else if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].commitType === '删除') {
+                                this.textcssList[i].deliveryPatchDetails[j].fileList[n].commitType = 'D';
+                            }else if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].commitType === '修改') {
+                                this.textcssList[i].deliveryPatchDetails[j].fileList[n].commitType = 'M';
+                            }
+                            if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].deployWhere !== undefined && this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchSelect !== undefined) {
+                                this.textcssList[i].deliveryPatchDetails[j].fileList[n].deployWhere = this.textcssList[i].deliveryPatchDetails[j].fileList[n].deploySelect;
+                                this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchType = this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchSelect;
+
+                            } else {
+                                objsss = false;
+                            }
+
+                            console.log(this.textcssList[i].deliveryPatchDetails[j].fileList[n].deploySelect)
+                            // 处理转换逻辑，把radio选中的给后台
+                            array.push(this.textcssList[i].deliveryPatchDetails[j].fileList[n]);
+                        } else {
+                            objsss = false;
+                        }
+                    }
+                }
+            } else {
+                for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
+                    for ( let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
+                        if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].checked) {
+                            objsss = true;
+                            if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].commitType === '新增') {
+                                this.textcssList[i].deliveryPatchDetails[j].fileList[n].commitType = 'A';
+                            } else if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].commitType === '删除') {
+                                this.textcssList[i].deliveryPatchDetails[j].fileList[n].commitType = 'D';
+                            }else if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].commitType === '修改') {
+                                this.textcssList[i].deliveryPatchDetails[j].fileList[n].commitType = 'M';
+                            }
+
+                            array.push(this.textcssList[i].deliveryPatchDetails[j].fileList[n]);
+                        } else {
+                            objsss = false;
+                        }
+                    }
+                }
+            }
+
+        }
+
+        console.log(array);
+        console.log(objsss);
+        let objs = {
+            guidBranch : this.bransguid,
+            dliveryAddRequest: {
+                applyAlias: this.deliveryName,
+                profiles: [{guidProfiles: '1', packTiming: '12:00'} , {guidProfiles: '2', packTiming: '09:00'}],
+                deliveryDesc: this.deliveryDesc,
+                deliveryTime: moment(this.deliveryTime).format('YYYY-MM-DD')
+            },
+            deliveryList: array,
+        };
+
+        if (objsss) {
+             this.utilityService.postData(appConfig.testUrl  + appConfig.API.sDeliveryList +  '/deliveryAnd', objs, {Authorization: this.token})
+            .subscribe(
+                (val) => {
+                    this.nznot.create('success', val.msg , val.msg);
+                    this.modalVisible = false;
+                }
+            );
+        } else {
+            this.nznot.create('error', '请检查是否勾选工程或者信息是否全部填写', '请检查是否勾选工程或者信息是否全部填写');
+        }
+
+
+
     }
 }
 
