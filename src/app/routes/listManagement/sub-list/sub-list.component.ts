@@ -399,6 +399,7 @@ export class SubListComponent implements OnInit {
             },
             deliveryList: array,
         };
+        console.log(objs);
 
         if (objsss) {
              this.utilityService.postData(appConfig.testUrl  + appConfig.API.sDeliveryList +  '/deliveryAnd', objs, {Authorization: this.token})

@@ -168,6 +168,7 @@ export class ListComponent implements OnInit {
         this.table.data.forEach(i => {
             if (!i.disabled) i.checked = value;
         });
+       console.log(value);
         this.refreshStatus();
     }
 

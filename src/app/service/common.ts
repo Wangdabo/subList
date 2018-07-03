@@ -17,6 +17,7 @@ export let appConfig = {
 
         list: '/deliveries/list', //
         mergeInfo: '/deliveries/merge/info' // 合并投放清单信息
+
     },
 
 

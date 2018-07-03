@@ -53,7 +53,7 @@ export class LaunchApplyComponent implements OnInit {
 
 
     data: any[] = []; // 表格数据
-
+    mergeList: any[] = [];
     headerData = [  // 配置表头内容
         { value: '工作项', key: 'guidWorkitem', isclick: true, radio: false },
         { value: '别名', key: 'applyAlias', isclick: false, radio: false},
@@ -89,11 +89,13 @@ export class LaunchApplyComponent implements OnInit {
             .map(res => res.json())
             .subscribe(
                 (val) => {
+
                     this.data = val.result.records;
+
                     this.total = val.result.total;//总数
                     this.pageTotal = val.result.pages * 10;//页码
                     for ( var i = 0; i < this.data.length; i++) {
-                        // this.data[i].deliveryTime = this.getDate(this.data[i].deliveryTime);
+                        this.data[i].deliveryTime = this.getDate(this.data[i].deliveryTime);
                     }
 
                 },
@@ -103,35 +105,48 @@ export class LaunchApplyComponent implements OnInit {
 
 
       //时间处理
-      //   getDate(time) {
-      //      var str = parseInt(time);
-      //       if (!str) {
-      //           theDate = " ";
-      //       }else {
-      //           var oDate = new Date(str);
-      //           var oYear = oDate.getFullYear();
-      //           var oMonth = oDate.getMonth() + 1;
-      //           oMonth = oMonth >= 10? oMonth : '0' + oMonth;
-      //           var oDay = oDate.getDate();
-      //           oDay = oDay >= 10? oDay : '0' + oDay;
-      //           var theDate = oYear + "-" + oMonth  + "-" + oDay;
-      //       }
-      //       return theDate;
-      //   }
+        getDate(time) {
+           var str = parseInt(time);
+            if (!str) {
+                theDate = " ";
+            }else {
+                var oDate = new Date(str);
+                var oYear = oDate.getFullYear();
+                var oMonth = oDate.getMonth() + 1;
+                oMonth = oMonth >= 10? oMonth : '0' + oMonth;
+                var oDay = oDate.getDate();
+                oDay = oDay >= 10? oDay : '0' + oDay;
+                var theDate = oYear + "-" + oMonth  + "-" + oDay;
+            }
+            return theDate;
+        }
 
     // 列表组件传过来的内容
     addHandler(event) {
-         console.log(event)
+         console.log( this.data )
         if (event === 'merge') {
+            for ( var i = 0; i < this.data.length; i++) {
 
-            this.utilityService.postData(appConfig.testUrl  + appConfig.API.mergeInfo, {}, { Authorization: this.token})
-                .map(res => res.json())
-                .subscribe(
-                    (val) => {
+                    if (this.data[i].checked === true) {
+                        this.mergeList.push(this.data[i].guid);
+                    }
 
-                    },
-                );
-            this.mergeisVisible = true
+
+            }
+            if (this.mergeList.length == 0){
+                this.nznot.create('error', '请检查是否勾选工程', '请检查是否勾选工程');
+                return;
+            }
+
+            //
+            // this.utilityService.postData(appConfig.testUrl  + appConfig.API.mergeInfo, {}, { Authorization: this.token})
+            //     .map(res => res.json())
+            //     .subscribe(
+            //         (val) => {
+            //
+            //         },
+            //     );
+            this.mergeisVisible = true;
             // this.mergeVisible = true;
 
         } else if (event === 'checking') {
@@ -211,7 +226,9 @@ export class LaunchApplyComponent implements OnInit {
         this.modalVisible = false; // 关闭选择框
         this.checkVisible = true; // 打开核对弹出框
     }
+    savemergeisInfo () {
 
+    }
     getdatas() {
 
     }
@@ -246,8 +263,17 @@ export class LaunchApplyComponent implements OnInit {
         { label: 'TWS改版', value: 'TWS' },
         { label: '1618 国际结算', value: '1618' },
         { label: '无纸化',  value: 'wu' }
-    ]
-
+    ];
+    text = [
+        {label: 'SIT Dev - 开发集成测试', value: 'TWS',
+            time:
+                [
+                    {times: 'A', key: 'cd'},
+                    {times: 'B',  key: 'cd'},
+                    {times: 'C',  key: 'cd'}]},
+        {label: '国际结算', value: '1618', time:[{times: '13:00', key: 'cs'},{times: '15:00', key: 'cs'},{times: '17:00', key: 'cs'}]},
+        {label: '无纸化', value: 'wu', time:[{times: '11:00', key: 'dw'},{times: '16:00', key: 'dw'}, {times: '20:00', key: 'dw'}]},
+    ];
 
     handleOk() {
         console.log(this.deliverItem);

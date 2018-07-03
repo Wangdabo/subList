@@ -45,7 +45,11 @@
     <thead nz-thead>
     <tr>
         <th nz-th [nzCheckbox]="true">
-            <label nz-checkbox [(ngModel)]="allChecked" [nzIndeterminate]="indeterminate" (ngModelChange)="checkAll($event)"></label>
+            <label nz-checkbox [(ngModel)]="allChecked"
+                   [nzIndeterminate]="indeterminate"
+                   (ngModelChange)="checkAll($event)">
+
+            </label>
         </th>
         <th *ngFor="let d of headerDate" nz-th>
             <span>{{d.value}}</span>
