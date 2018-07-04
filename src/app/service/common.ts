@@ -17,7 +17,8 @@ export let appConfig = {
         sProfiles: '/sProfiles/list',  // 投放申请查询
 
         list: '/deliveries/list', //
-        mergeInfo: '/deliveries/merge/info' // 合并投放清单信息
+        mergeInfo: '/deliveries/merge/info', // 合并投放清单信息
+        merge: '/deliveries/merge'
 
     },
 

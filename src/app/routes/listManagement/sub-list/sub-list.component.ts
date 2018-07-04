@@ -411,7 +411,7 @@ export class SubListComponent implements OnInit {
             },
             deliveryList: array,
         };
-        console.log(objs);
+        // console.log(objs);
 
         console.log(this.splicingObj); // 打印结果
        /* if (objsss) {

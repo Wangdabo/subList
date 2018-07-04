@@ -23,8 +23,10 @@ export class LaunchApplyComponent implements OnInit {
         @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
     ) { }
     token: any;
+    userName: string;
     ngOnInit() {
         this.token  = this.tokenService.get().token;
+        this.userName = this.tokenService.get().name;
         this.getData(1);
         this.showAdd = true;
     }
@@ -56,13 +58,14 @@ export class LaunchApplyComponent implements OnInit {
     data: any[] = []; // 表格数据
     mergeList: any[] = [];
     mergeListInfo: any[] = [];
-    headerData = [  // 配置表头内容
+    profiles: any[] = [];
+    headerDate = [  // 配置表头内容
         { value: '工作项', key: 'guidWorkitem', isclick: true, radio: false },
         { value: '别名', key: 'applyAlias', isclick: false, radio: false},
         { value: '投放时间', key: 'deliveryTime', isclick: false, radio: false },
         { value: '运行环境', key: 'guidProfiles', isclick: false, radio: false },
         { value: '申请人', key: 'proposer', isclick: false, radio: false },
-        { value: '投放结果', key: 'deliveryResult ', isclick: false, radio: false },
+        { value: '投放结果', key: 'deliveryResult', isclick: false, radio: false },
         { value: '程序数量', key: 'number', isclick: false, radio: false },
     ];
     // 传入按钮层
@@ -77,9 +80,14 @@ export class LaunchApplyComponent implements OnInit {
     page: any;
     total: number;
     pages: number;
+    elementScice: any; // 环境数据
+    branches: any[] = []; // 合并清单分支数组
+    patchCount: any[] = []; // 投放小计
+    detailList: any[] = []; // 合并清单代码数组
+    profilesData: any;
 
 
-    getData(index) {
+        getData(index) {
 
         const page = {
             page : {
@@ -92,6 +100,7 @@ export class LaunchApplyComponent implements OnInit {
             .subscribe(
                 (val) => {
                     this.data = val.result.records;
+                    console.log(this.data);
                     this.total = val.result.total;//总数
                     this.pageTotal = val.result.pages * 10;//页码
                     for ( var i = 0; i < this.data.length; i++) {
@@ -107,7 +116,7 @@ export class LaunchApplyComponent implements OnInit {
 
     // 列表组件传过来的内容
     addHandler(event) {
-        console.log( this.data )
+
 
         if (event === 'merge') {
             this.mergeListInfo = [];
@@ -135,6 +144,26 @@ export class LaunchApplyComponent implements OnInit {
                 this.mergeList.push(this.mergeListInfo[i].guid);
             }
 
+            this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfiles, {}, {Authorization: this.token})
+                .subscribe(
+                    (val) => {
+                        this.mergeisVisible = true;
+                        this.elementScice = val.result;
+
+                        for (let i = 0; i < this.elementScice.length; i++) {
+                            this.elementScice[i].packTiming = this.elementScice[i].packTiming.split(',');
+                            this.elementScice[i].Timing  = []
+                            for ( let s = 0; s < this.elementScice[i].packTiming.length; s ++) {
+                                let obj = {
+                                    time: this.elementScice[i].packTiming[s]
+                                };
+                                this.elementScice[i].Timing.push(obj);
+                            }
+                        }
+                        // 拼接
+                    }
+                );
+
             // const obj = {
             //     mergeList: this.mergeList
             // };
@@ -147,7 +176,7 @@ export class LaunchApplyComponent implements OnInit {
             //
             //         },
             //     );
-            this.mergeisVisible = true;
+
             // this.mergeVisible = true;
 
         } else if (event === 'checking') {
@@ -173,7 +202,7 @@ export class LaunchApplyComponent implements OnInit {
 
     // 按钮点击事件
     buttonEvent(event) {
-        console.log(event);
+        // console.log(event);
         // if (event.names === '失败') {
         //     alert('失败的方法')
         // } else if (event.names === '打回') {
@@ -187,7 +216,7 @@ export class LaunchApplyComponent implements OnInit {
     // 列表按钮方法
     buttonDataHandler(event) {
 
-        console.log(event);
+        // console.log(event);
 
     }
 
@@ -195,7 +224,7 @@ export class LaunchApplyComponent implements OnInit {
 
     // 处理行为代码，跳转、弹出框、其他交互
     isActive(event) {
-        console.log(event);
+        // console.log(event);
     }
 
 
@@ -227,25 +256,67 @@ export class LaunchApplyComponent implements OnInit {
         this.modalVisible = false; // 关闭选择框
         this.checkVisible = true; // 打开核对弹出框
     }
+
     savemergeisInfo () {
+      console.log(this.elementScice)
+        this.profiles = [];
+        for (let i = 0; i < this.elementScice.length; i ++) {
+            if (this.elementScice[i].check && this.elementScice[i].times) {
+                let obj = {
+                    guidProfiles: this.elementScice[i].guid,
+                    packTiming: this.elementScice[i].times,
+                    name: this.elementScice[i].manager,
+                    profilesName: this.elementScice[i].profilesName
+                };
+                this.profiles.push(obj);
+            }
+        }
+
+        if ( this.profiles.length == 0) {
+            this.nznot.create('error', '请选择投放环境', '请选择投放环境');
+            return;
+        }
+        this.deliveryTime = moment(this.deliveryTime).format('YYYY-MM-DD');
         const obj = {
             mergeList: this.mergeList,
-            deliveryTime: moment(this.deliveryTime).format('YYYY-MM-DD'),
-            profiles: [
-                {
-                    guidProfiles: '2',
-                    packTiming: '09:00'
-                }
-            ]
+            deliveryTime:  this.deliveryTime,
+            profiles:  this.profiles
 
         };
+
         this.mergeisVisible = false;
+       let index = 0;
+       let kkk = '' ;
+
         this.utilityService.postData(appConfig.testUrl  + appConfig.API.mergeInfo, obj, { Authorization: this.token})
             .map(res => res.json())
             .subscribe(
                 (val) => {
+                     console.log(val)
+                    if (val.code == 200) {
+                         this.profilesData = obj;
+                         this.detailList = val.result.detailList;
+                         this.branches = val.result.branches;
+                         this.patchCount = val.result.patchCount;
+                        this.mergeisVisible = false;
+                         this.mergeVisible = true;
 
-                    console.log(val);
+                        for  (let i = 0; i < this.detailList.length; i ++) {
+                            for (let j = 0; j <= this.detailList[i].deliveryPatchDetails.length; j ++) {
+                                for (let x = 0; x <= this.detailList[i].deliveryPatchDetails[j].fileList.length; x ++) {
+                                           if (this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath) {
+                                               index = this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath.indexOf(this.detailList[i].projectName);
+                                               this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath = this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath.substring(index, index.toString().length - 1);
+                                           }
+
+                                }
+
+                            }
+                        }
+                     }else {
+                         this.nznot.create('error', val.msg, val.msg);
+                     }
+
                 },
             );
 
@@ -275,10 +346,24 @@ export class LaunchApplyComponent implements OnInit {
     // 关闭核对清单
     checkSave() {
         this.checkVisible = false;
+        this.mergeVisible = false;
+        this.utilityService.postData(appConfig.testUrl  + appConfig.API.merge, this.profilesData, { Authorization: this.token})
+            .map(res => res.json())
+            .subscribe(
+                (val) => {
+                    console.log(val)
+                    if (val.code == 200) {
+                        this.nznot.create('success', val.msg, val.msg);
+                    }else {
+                        this.nznot.create('error', val.msg, val.msg);
+                    }
+
+                },
+            );
     }
 
 
-    //打印界面
+    // 打印界面
     isVisible = false; // 默认关闭
     workItem = false;
     mergeisVisible = false;
