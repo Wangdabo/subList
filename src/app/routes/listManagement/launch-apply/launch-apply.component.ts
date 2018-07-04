@@ -298,19 +298,18 @@ export class LaunchApplyComponent implements OnInit {
                          this.detailList = val.result.detailList;
                          this.branches = val.result.branches;
                          this.patchCount = val.result.patchCount;
-                        this.mergeisVisible = false;
+                         this.mergeisVisible = false;
                          this.mergeVisible = true;
 
                         for  (let i = 0; i < this.detailList.length; i ++) {
-                            for (let j = 0; j <= this.detailList[i].deliveryPatchDetails.length; j ++) {
-                                for (let x = 0; x <= this.detailList[i].deliveryPatchDetails[j].fileList.length; x ++) {
+                            for (let j = 0; j < this.detailList[i].deliveryPatchDetails.length; j ++) {
+                                console.log(this.detailList[i].deliveryPatchDetails[j]);
+                                for (let x = 0; x < this.detailList[i].deliveryPatchDetails[j].fileList.length; x ++) {
                                            if (this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath) {
                                                index = this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath.indexOf(this.detailList[i].projectName);
                                                this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath = this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath.substring(index, index.toString().length - 1);
                                            }
-
                                 }
-
                             }
                         }
                      }else {
