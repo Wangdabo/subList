@@ -30,8 +30,8 @@
                 <div nz-form-item class="d-flex">
                     <div nz-form-label><label>投放结果</label></div>
                     <div nz-form-control class="flex-1">
-                        <nz-select style="width:100%" [(ngModel)]="deliverItem.dliveryResult"  name="dliveryResult" [nzSize]="'large'" [nzPlaceHolder]="'投放结果'" nzId="dliveryResult">
-                            <nz-option  *ngFor="let i of dliveryResult;" [nzLabel]="i.value" [nzValue]="i.key"></nz-option>
+                        <nz-select style="width:100%" [(ngModel)]="deliverItem.deliveryResult"  name="dliveryResult" [nzSize]="'large'" [nzPlaceHolder]="'投放结果'" nzId="dliveryResult">
+                            <nz-option  *ngFor="let i of deliveryResult;" [nzLabel]="i.value" [nzValue]="i.key"></nz-option>
                         </nz-select>
                     </div>
                 </div>

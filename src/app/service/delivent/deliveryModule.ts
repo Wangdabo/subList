@@ -10,8 +10,8 @@ export class DeliveryModule {
     public proposer: string;
 
     // 投放结果 delivery_result
-    public dliveryResult: any;
-
+    // public dliveryResult: any;
+    public deliveryResult: any;
     // 运行环境
     public environment: string;
 }

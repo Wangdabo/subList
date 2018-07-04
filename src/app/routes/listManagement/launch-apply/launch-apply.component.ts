@@ -6,10 +6,11 @@ import {appConfig} from '../../../service/common';
 import {NzModalService, NzNotificationService} from 'ng-zorro-antd';
 import {Router} from '@angular/router';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
+import * as moment from 'moment';
 @Component({
-  selector: 'app-launch-apply',
-  templateUrl: './launch-apply.component.html',
-  styleUrls: ['./launch-apply.component.less'],
+    selector: 'app-launch-apply',
+    templateUrl: './launch-apply.component.html',
+    styleUrls: ['./launch-apply.component.less'],
 })
 export class LaunchApplyComponent implements OnInit {
 
@@ -38,7 +39,7 @@ export class LaunchApplyComponent implements OnInit {
     deliveryTime: any; // 投放日期
 
     pageTotal: number; // 翻页总数
-    dliveryResult = [
+    deliveryResult = [
         {key: '0', value: '申请中'},
         {key: 'S', value: '成功'},
         {key: 'F', value: '失败'},
@@ -54,13 +55,14 @@ export class LaunchApplyComponent implements OnInit {
 
     data: any[] = []; // 表格数据
     mergeList: any[] = [];
+    mergeListInfo: any[] = [];
     headerData = [  // 配置表头内容
         { value: '工作项', key: 'guidWorkitem', isclick: true, radio: false },
         { value: '别名', key: 'applyAlias', isclick: false, radio: false},
         { value: '投放时间', key: 'deliveryTime', isclick: false, radio: false },
         { value: '运行环境', key: 'guidProfiles', isclick: false, radio: false },
         { value: '申请人', key: 'proposer', isclick: false, radio: false },
-        { value: '投放结果', key: 'deliveryResult', isclick: false, radio: false },
+        { value: '投放结果', key: 'deliveryResult ', isclick: false, radio: false },
         { value: '程序数量', key: 'number', isclick: false, radio: false },
     ];
     // 传入按钮层
@@ -89,13 +91,11 @@ export class LaunchApplyComponent implements OnInit {
             .map(res => res.json())
             .subscribe(
                 (val) => {
-
                     this.data = val.result.records;
-
                     this.total = val.result.total;//总数
                     this.pageTotal = val.result.pages * 10;//页码
                     for ( var i = 0; i < this.data.length; i++) {
-                        this.data[i].deliveryTime = this.getDate(this.data[i].deliveryTime);
+                        this.data[i].deliveryTime = moment(this.data[i].deliveryTime).format('YYYY-MM-DD');
                     }
 
                 },
@@ -104,39 +104,40 @@ export class LaunchApplyComponent implements OnInit {
     }
 
 
-      //时间处理
-        getDate(time) {
-           var str = parseInt(time);
-            if (!str) {
-                theDate = " ";
-            }else {
-                var oDate = new Date(str);
-                var oYear = oDate.getFullYear();
-                var oMonth = oDate.getMonth() + 1;
-                oMonth = oMonth >= 10? oMonth : '0' + oMonth;
-                var oDay = oDate.getDate();
-                oDay = oDay >= 10? oDay : '0' + oDay;
-                var theDate = oYear + "-" + oMonth  + "-" + oDay;
-            }
-            return theDate;
-        }
 
     // 列表组件传过来的内容
     addHandler(event) {
-         console.log( this.data )
+        console.log( this.data )
+
         if (event === 'merge') {
+            this.mergeListInfo = [];
+            this.mergeList = [];
             for ( var i = 0; i < this.data.length; i++) {
-
-                    if (this.data[i].checked === true) {
-                        this.mergeList.push(this.data[i].guid);
-                    }
-
-
+                // 清空数组
+                if (this.data[i].checked === true) {
+                    this.mergeListInfo.push(this.data[i]);
+                }
             }
-            if (this.mergeList.length == 0){
+            if (this.mergeListInfo.length == 0){
                 this.nznot.create('error', '请检查是否勾选工程', '请检查是否勾选工程');
                 return;
             }
+            for ( var i = 0; i < this.mergeListInfo.length; i++) {
+
+                if (this.mergeListInfo[0].guidProfiles != this.mergeListInfo[i].guidProfiles){
+                    this.nznot.create('error', '合并项目运行环境必须一致', '合并项目运行环境必须一致');
+                    return;
+                }
+                if (this.mergeListInfo[i].deliveryResult != '成功'){
+                    this.nznot.create('error', '只能合并投放结果为成功的项目', '只能合并投放结果为成功的项目');
+                    return;
+                }
+                this.mergeList.push(this.mergeListInfo[i].guid);
+            }
+
+            // const obj = {
+            //     mergeList: this.mergeList
+            // };
 
             //
             // this.utilityService.postData(appConfig.testUrl  + appConfig.API.mergeInfo, {}, { Authorization: this.token})
@@ -150,7 +151,7 @@ export class LaunchApplyComponent implements OnInit {
             // this.mergeVisible = true;
 
         } else if (event === 'checking') {
-           this.modalVisible = true; // 打开核对弹出框
+            this.modalVisible = true; // 打开核对弹出框
         } else if (event === 'export') {
             this.isVisible = true;
             this.workItem = false;
@@ -162,7 +163,7 @@ export class LaunchApplyComponent implements OnInit {
 
     // 列表传入的翻页数据
     monitorHandler(event) {
-       this.getData(event);
+        this.getData(event);
     }
 
     // 接受子组件删除的数据 单条还是多条
@@ -227,6 +228,29 @@ export class LaunchApplyComponent implements OnInit {
         this.checkVisible = true; // 打开核对弹出框
     }
     savemergeisInfo () {
+        const obj = {
+            mergeList: this.mergeList,
+            deliveryTime: moment(this.deliveryTime).format('YYYY-MM-DD'),
+            profiles: [
+                {
+                    guidProfiles: '2',
+                    packTiming: '09:00'
+                }
+            ]
+
+        };
+        this.mergeisVisible = false;
+        this.utilityService.postData(appConfig.testUrl  + appConfig.API.mergeInfo, obj, { Authorization: this.token})
+            .map(res => res.json())
+            .subscribe(
+                (val) => {
+
+                    console.log(val);
+                },
+            );
+
+
+        console.log(obj);
 
     }
     getdatas() {
