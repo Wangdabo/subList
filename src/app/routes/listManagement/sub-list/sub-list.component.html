@@ -207,41 +207,20 @@
                 <div nz-form-item class="d-flex">
                     <div nz-form-label><label for="itemType">投放到:</label></div>
                     <div nz-form-control class="flex-1">
-                        <!--    <div class="ui-g-12"  *ngFor="let s of text;let l = index">
-                                <p-checkbox class="ui-g-3" name="{{s.label}}" value="{{s.value}}" label="{{s.label}}" [(ngModel)]="s.check" ></p-checkbox>
-                                <div class="ui-g-2"  *ngFor="let t of s.time; let d = index">
-                                 &lt;!&ndash;   <p-radioButton  name="{{t.keys}}" value="{{t.times}}"  label="{{t.times}}" [(ngModel)]="t.check"></p-radioButton>&ndash;&gt;
-                                    &lt;!&ndash;<nz-radio-group   [(ngModel)]="t.check">
-                                        <label nz-radio  [nzValue]="t.keys" [nzDisabled]="!s.check">
-                                            <span>{{t.times}}</span>
-                                        </label>
-                                    </nz-radio-group>&ndash;&gt;
-                                </div>
-                            </div>-->
-                        <div nz-col [nzSpan]="24" class="mb-md" *ngFor="let s of text;let l = index">
+                        <div nz-col [nzSpan]="24" class="mb-md" *ngFor="let s of elementScice ;let l = index">
                             <div nz-col [nzSpan]="6">
-                                <label  nz-checkbox  [(ngModel)]="s.check">&nbsp;&nbsp;<span>{{s.value}}</span></label>
+                                <label  nz-checkbox  [(ngModel)]="s.check">&nbsp;&nbsp;<span>{{s.profilesName}}</span></label>
                             </div>
-                               <div nz-col [nzSpan]="18"   >
-                                   <div nz-col [nzSpan]="6" *ngFor="let t of s.time; let d = index">
-                                       <input style="margin-top: 10px;" disabled="!s.check" [name]="t.key"   ng-model="t.check"    type="radio" />&nbsp;{{t.times}}
-
+                               <div nz-col [nzSpan]="18">
+                                   <div nz-col [nzSpan]="6" *ngFor="let t of s.Timing; let d = index" >
+                                       <input style="margin-top: 10px;" [disabled]="!s.check"   [(ngModel)]="s.times"   [value]="t.time"   [name]="s.profilesName"
+                                              type="radio" />&nbsp;{{t.time}}
                                    </div>
                                </div>
                         </div>
                     </div>
                 </div>
             </div>
-       <!--     <div nz-col [nzSpan]="24" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label><label for="itemDesc">投放说明:</label></div>
-                    <div nz-form-control class="flex-1">
-                        <nz-input [(ngModel)]="deliveryDesc"  nzAutosize=true nzType="textarea" name="deliveryDesc" [nzSize]="'large'" [nzPlaceHolder]="'投放说明'" nzId="deliveryDesc"></nz-input>
-                    </div>
-                </div>
-            </div>-->
-
-
         </div>
     </ng-template>
 </nz-modal>
