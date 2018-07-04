@@ -1,5 +1,10 @@
 <pro-header ></pro-header>
 
+<style>
+    table tr th, table tr td { border:1px solid #ccc; height: 30px;line-height: 30px}
+</style>
+
+
 <!--引入list组件-->
 <div class="ui-g">
     <div class="ui-g-3" >
@@ -122,40 +127,9 @@
                 </button>
             </div>
             <nz-collapseset  nzAccordion>
-
                 <nz-collapse *ngFor="let i of textcssList; let l1 = index" [nzTitle]="i.projectName" [nzActive]="true">
                    <div *ngFor="let s of i.deliveryPatchDetails; let l2 = index;">
                        <!--只有才config的时候 才会选择 其他都是默认显示-->
-                    <!--   <div *ngIf="i.projectType ==='S' || i.projectType ==='D' " nz-col [nzSpan]="24" class="mb-md">
-                           <div  nz-col [nzSpan]="12" nz-form-item class="d-flex">
-                                   <div nz-form-label><label>导出类型</label></div>
-                                   <div nz-form-control class="flex-1">
-                                       <div *ngFor="let g of s.fileList;">
-                                           <nz-radio-group [(ngModel)]="g.deploySelect">
-                                              <span  *ngFor="let p of g.deployWhere;">
-                                                    <label  nz-radio   [nzValue]='p.value'>
-                                                        <span>{{p.label}}</span>
-                                                    </label>
-                                                </span>
-                                           </nz-radio-group>
-                                       </div>
-                                   </div>
-                            </div>
-                           <div nz-col [nzSpan]="12" nz-form-item class="d-flex">
-                               <div nz-form-label><label>部署到:</label></div>
-                               <div nz-form-control class="flex-1">
-                                   <div *ngFor="let g of s.fileList;">
-                                       <nz-radio-group [(ngModel)]="g.patchSelect">
-                                              <span  *ngFor="let p of g.patchType;">
-                                                    <label  nz-radio    [nzValue]='p.value'>
-                                                        <span>{{p.label}}</span>
-                                                    </label>
-                                                </span>
-                                       </nz-radio-group>
-                                   </div>
-                               </div>
-                           </div>
-                       </div>-->
                        <div *ngIf="i.projectType ==='C'" nz-col [nzSpan]="24" class="mb-md" >
                            <div  nz-col [nzSpan]="12" nz-form-item class="d-flex">
                                <div nz-form-label><label>导出类型</label></div>
@@ -221,6 +195,133 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </ng-template>
+</nz-modal>
+
+
+
+<nz-modal [nzVisible]="infoVisible"  [nzWidth]="1024" [nzTitle]="'工作项投放申请'"   [nzContent]="infoModal"
+          (nzOnCancel)="infoVisible=false" (nzOnOk)="subSave()">
+    <ng-template #infoModal>
+        <div nz-row [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
+                <div nz-col [nzSpan]="24" class="mb-md">
+                    <div class="ad-desc-list__term ng-star-inserted">投放计划:</div>
+            </div>
+            <div nz-col [nzSpan]="20"   *ngFor="let i of copysplicingObj.dliveryAddRequest.profiles"    class="mb-md">
+                <div nz-col [nzSpan]="6"  nz-form-item class="d-flex">
+                    <div>{{copysplicingObj.dliveryAddRequest.deliveryTime}}&nbsp;&nbsp;{{i.packTiming}}</div>
+                </div>
+                <div nz-col [nzSpan]="3"  nz-form-item class="d-flex">
+                    <div>{{i.profilesName}}</div>
+                </div>
+                <div nz-col [nzSpan]="3"  nz-form-item class="d-flex">
+                    <div>{{i.name}}</div>
+                </div>
+            </div>
+
+
+            <div nz-col [nzSpan]="24" class="mb-md">
+                <div  nz-form-item class="d-flex">
+                    <div class="ad-desc-list__term ng-star-inserted">工作项:</div>
+                    <div class="ad-desc-list__detail ng-star-inserted">{{copysplicingObj.itemName}}</div>
+                </div>
+            </div>
+
+            <div nz-col [nzSpan]="8" class="mb-md">
+                <div  nz-form-item class="d-flex">
+                    <div class="ad-desc-list__term ng-star-inserted">申请人:</div>
+                    <div class="ad-desc-list__detail ng-star-inserted">{{copysplicingObj.userName}}</div>
+                </div>
+            </div>
+            <div nz-col [nzSpan]="24" class="mb-md">
+                <div  nz-form-item class="d-flex">
+                    <div class="ad-desc-list__term ng-star-inserted">开发分支:</div>
+                    <div class="ad-desc-list__detail ng-star-inserted">{{copysplicingObj.branchDetail}}</div>
+                </div>
+            </div>
+            <div nz-col [nzSpan]="24" class="mb-md">
+                    <div nz-col [nzSpan]="24"  class="ad-desc-list__term ng-star-inserted">投放小计:</div>
+                    <div nz-col [nzSpan]="20"  [nzOffset]="3"  class="ad-desc-list__detail ng-star-inserted">jar包数 :2个</div>
+                    <div nz-col [nzSpan]="20" [nzOffset]="3" class="ad-desc-list__detail ng-star-inserted">ecd包数 :1个</div>
+                    <div nz-col [nzSpan]="20" [nzOffset]="3" class="ad-desc-list__detail ng-star-inserted">epd包数  :0个</div>
+                    <div nz-col [nzSpan]="20" [nzOffset]="3" class="ad-desc-list__detail ng-star-inserted">SQL文件数   :1个</div>
+
+            </div>
+            <div nz-col [nzSpan]="24" class="mb-md">
+                <div  nz-form-item class="d-flex">
+                    <div class="ad-desc-list__term ng-star-inserted">投放明细:</div>
+                </div>
+            </div>
+
+            <!-- 列表 -->
+            <div  nz-col [nzSpan]="24" class="mb-md" *ngFor="let d of copytextList" >
+                <ng-container *ngFor="let t of d.deliveryPatchDetails">
+                    <table style="margin:30px 0px;"  *ngIf="t.fileList.length > 0">
+                        <tbody nz-col [nzSpan]="24" style="text-align: center;" >
+                        <tr nz-col [nzSpan]="24">
+                            <td nz-col [nzSpan]="8">工程名</td>
+                            <td nz-col [nzSpan]="16">{{d.projectName}}</td>
+                        </tr>
+                        <tr nz-col [nzSpan]="24">
+                            <td nz-col [nzSpan]="8">编译为</td>
+                            <td nz-col [nzSpan]="16">{{t.deployWhere}}</td>
+                        </tr>
+                        <tr nz-col [nzSpan]="24">
+                            <td nz-col [nzSpan]="8">部署到</td>
+                            <td nz-col [nzSpan]="16">{{t.patchType}}</td>
+                        </tr>
+                        <tr nz-col [nzSpan]="24">
+                            <td nz-col [nzSpan]="15">代码</td>
+                            <td nz-col [nzSpan]="3">变动类型</td>
+                            <td nz-col [nzSpan]="3">最新版本</td>
+                            <td nz-col [nzSpan]="3">开发人员</td>
+                        </tr>
+                        <tr nz-col [nzSpan]="24"  *ngFor="let s of t.fileList">
+                            <td style="text-overflow: ellipsis; overflow: hidden;white-space: nowrap" nz-col [nzSpan]="15">{{s.fullPath}}</td>
+                            <td nz-col [nzSpan]="3"> {{ s.commitType ==='A' && '新增' || s.commitType ==='D' && '删除' || d.commitType ==='M' && '修改'}}</td>
+                            <td nz-col [nzSpan]="3">{{s.deliveryVersion}}</td>
+                            <td nz-col [nzSpan]="3">{{s.author}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </ng-container>
+
+            </div>
+
+
+            <!--<div  nz-col [nzSpan]="24" class="mb-md" *ngFor="let d of copysplicingObj.deliveryList" >
+                <table style="margin:30px 0px;">
+                    <tbody nz-col [nzSpan]="24" style="text-align: center;" >
+                    <tr nz-col [nzSpan]="24">
+                        <td nz-col [nzSpan]="8">工程名</td>
+                        <td nz-col [nzSpan]="16">{{d.partOfProject}}</td>
+                    </tr>
+                    <tr nz-col [nzSpan]="24">
+                        <td nz-col [nzSpan]="8">编译为</td>
+                        <td nz-col [nzSpan]="16">{{d.patchSelect}}</td>
+                    </tr>
+                    <tr nz-col [nzSpan]="24">
+                        <td nz-col [nzSpan]="8">部署到</td>
+                        <td nz-col [nzSpan]="16">{{d.deployWhere}}</td>
+                    </tr>
+                    <tr nz-col [nzSpan]="24">
+                        <td nz-col [nzSpan]="15">代码</td>
+                        <td nz-col [nzSpan]="3">变动类型</td>
+                        <td nz-col [nzSpan]="3">最新版本</td>
+                        <td nz-col [nzSpan]="3">开发人员</td>
+                    </tr>
+                    <tr nz-col [nzSpan]="24">
+                        <td style="text-overflow: ellipsis; overflow: hidden;white-space: nowrap" nz-col [nzSpan]="15">{{d.fullPath}}</td>
+                        <td nz-col [nzSpan]="3"> {{ d.commitType ==='A' && '新增' || d.commitType ==='D' && '删除' || d.commitType ==='M' && '修改'}}</td>
+                        <td nz-col [nzSpan]="3">{{d.deliveryVersion}}</td>
+                        <td nz-col [nzSpan]="3">{{d.author}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>-->
+
+
         </div>
     </ng-template>
 </nz-modal>
