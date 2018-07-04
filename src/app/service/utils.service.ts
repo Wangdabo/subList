@@ -16,7 +16,7 @@ export class UtilityService {
     getData(url: string, options?: any, myheaders?: any): Observable<any> {
         // 配置请求头
         const myHeaders: Headers = new Headers();
-        console.log(myHeaders)
+
 
         for (const key in myheaders) {
             myHeaders.append(key, myheaders[key]);
