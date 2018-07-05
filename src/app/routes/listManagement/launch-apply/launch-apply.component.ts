@@ -105,6 +105,8 @@ export class LaunchApplyComponent implements OnInit {
                     this.pageTotal = val.result.pages * 10;//页码
                     for ( var i = 0; i < this.data.length; i++) {
                         this.data[i].deliveryTime = moment(this.data[i].deliveryTime).format('YYYY-MM-DD');
+                        this.data[i].guidProfiles = this.data[i].guidProfiles.target;
+                        this.data[i].guidWorkitem = this.data[i].guidWorkitem.target;
                     }
 
                 },
