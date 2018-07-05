@@ -33,6 +33,10 @@
                     "text": "运行环境",
                     "link": "/sProfiles",
                     "i18n": "sProfiles"
+                },{
+                    "text": "增删记录",
+                    "link": "/adRecord",
+                    "i18n": "adRecord"
                 }
                 ]
             }
