@@ -347,8 +347,10 @@ export class SubListComponent implements OnInit {
 
         /*拼数据*/
         let array = [];
+
         for (let i = 0; i < this.textcssList.length; i ++) {
             if (this.textcssList[i].projectType !== 'C') { // 说明是config工程，需要让用户手动选择
+                console.log('1')
                 for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
                     for ( let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
                         if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].checked) {
@@ -374,6 +376,7 @@ export class SubListComponent implements OnInit {
                         } else {
                             objsss = false;
                         }
+
                     }
                 }
             } else {

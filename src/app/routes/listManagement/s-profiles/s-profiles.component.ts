@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { _HttpClient } from '@delon/theme';
 import { DeliveryModule} from '../../../service/delivent/deliveryModule';
 import {UtilityService} from '../../../service/utils.service';
 import {appConfig} from '../../../service/common';
 import {NzModalService, NzNotificationService} from 'ng-zorro-antd';
 import {Router} from '@angular/router';
+import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
+
 
 @Component({
     selector: 'app-s-profiles',
@@ -17,10 +19,12 @@ export class SProfilesComponent implements OnInit {
         private router: Router,
         private utilityService: UtilityService,
         private modal: NzModalService,
-        private nznot: NzNotificationService
+        private nznot: NzNotificationService,
+    @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
     ) { }
-
+   token: any;
     ngOnInit() {
+        this.token  = this.tokenService.get().token;
         this.getData();
         this.showAdd = true;
     }
@@ -33,7 +37,7 @@ export class SProfilesComponent implements OnInit {
     // 信息
     deliverItem: DeliveryModule = new  DeliveryModule();
     deliveryTime: any; // 投放日期
-
+    elementScice: any[] = [];
     dliveryResult = [
         {key: '0', value: '否'},
         {key: '1', value: '是'}
@@ -47,7 +51,7 @@ export class SProfilesComponent implements OnInit {
 
 
     data: any[] = []; // 表格数据
-    headerData = [  // 配置表头内容
+    headerDate = [  // 配置表头内容
         { value: '环境代码', key: 'profilesCode', isclick: true },
         { value: '环境名称', key: 'profilesName', isclick: false },
         { value: '主机IP', key: 'hostIp', isclick: false },
@@ -69,28 +73,20 @@ export class SProfilesComponent implements OnInit {
     test: string;
     page: any;
     total: number;
+    pageTotal: number;
 
 
 
     getData() {
-        this.data = [
-            {guidWorkitem: '1618 国际结算迁移', applyAlias:'第一次投放', deliveryTime: '2018-06-16',  guidProfiles:'SIT',proposer: '黄锡华', deliveryResult: '成功', number: 5 },
-            {guidWorkitem: '1618 国际结算迁移', applyAlias:'第二次投放', deliveryTime: '2018-06-16',  guidProfiles:'SIT',proposer: '陈育爽', deliveryResult: '成功', number: 2 },
-            {guidWorkitem: '柜面无纸化', applyAlias:'补充提交', deliveryTime: '2018-06-16',  guidProfiles:'SIT',proposer: '李宁', deliveryResult: '申请中', number: 3 },
-            {guidWorkitem: '1618 国际结算迁移', applyAlias:'第一次投放', deliveryTime: '2018-06-16',  guidProfiles:'SIT',proposer: '黄锡华', deliveryResult: '成功', number: 10 },
-            {guidWorkitem: '1618 柜面无纸化', applyAlias:'第一次投放', deliveryTime: '2018-06-16',  guidProfiles:'SIT Dev',proposer: '鲍成杰', deliveryResult: '申请中', number: 4 },
-            {guidWorkitem: '柜面无纸化', applyAlias:'第一次投放', deliveryTime: '2018-06-16',  guidProfiles:'SIT Dev',proposer: '鲍成杰', deliveryResult: '申请中', number: 4 },
-            {guidWorkitem: '1618 柜面无纸化', applyAlias:'第二次投放', deliveryTime: '2018-06-16',  guidProfiles:'SIT Dev',proposer: '鲍成杰', deliveryResult: '失败', number: 4 },
-            {guidWorkitem: '1618 柜面无纸化', applyAlias:'第一次投放', deliveryTime: '2018-06-16',  guidProfiles:'SIT Dev',proposer: '鲍成杰', deliveryResult: '申请中', number: 4 },
-            {guidWorkitem: '柜面无纸化', applyAlias:'补充提交', deliveryTime: '2018-06-16',  guidProfiles:'SIT Dev',proposer: '李宁', deliveryResult: '成功', number: 4 },
-        ]
-        for(var i =0; i< this.data.length; i++) {
-            if (this.data[i].deliveryResult !== '成功') {
-                // 后期根据条件判断添加
-                this.data[i].buttonData = [ '打回','', ' ', '失败', '', ' ', '成功'];
-            }
-        }
-        this.total = 50;
+        this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfiles, {}, {Authorization: this.token})
+            .subscribe(
+                (val) => {
+                    this.data = val.result;
+                    this.total = this.data.length; // 总数
+                    this.pageTotal = parseInt(this.data.length / 10) * 10; // 页码
+                    // 拼接
+                }
+            );
     }
 
 
@@ -106,7 +102,7 @@ export class SProfilesComponent implements OnInit {
             this.isVisible = true;
         } else {
             console.log(event)
-            console.log('详情界面')
+            console.log('详情界面');
         }
     }
 
@@ -143,7 +139,7 @@ export class SProfilesComponent implements OnInit {
 
     // 处理行为代码，跳转、弹出框、其他交互
     isActive(event) {
-        console.log(event)
+        console.log(event);
     }
 
 
@@ -198,7 +194,7 @@ export class SProfilesComponent implements OnInit {
     }
 
 
-    //打印界面
+    // 打印界面
     isVisible = false; // 默认关闭
     workItem = false;
 
