@@ -460,8 +460,10 @@ export class SubListComponent implements OnInit {
         /*拼数据*/
         let objsss = false; // 前端判定是否正确
         let array = [];
+
         for (let i = 0; i < this.textcssList.length; i ++) {
             if (this.textcssList[i].projectType !== 'C') { // 说明是config工程，需要让用户手动选择
+                console.log('1')
                 for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
                     for ( let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
                         if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].checked) {
@@ -480,6 +482,7 @@ export class SubListComponent implements OnInit {
                             // 处理转换逻辑，把radio选中的给后台
                             array.push(this.textcssList[i].deliveryPatchDetails[j].fileList[n]);
                         }
+
                     }
                 }
             } else {

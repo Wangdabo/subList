@@ -69,8 +69,8 @@
     <!--列表组件-->
 
     <app-list #child [initDate]="data" [configTitle]="configTitle" [showAdd]="showAdd" [isPagination]="isPagination"  [buttons] ='buttons' (addCreat)="addHandler($event)" (buttonData)="buttonDataHandler($event)" (pageNumber)="monitorHandler($event)"
-              (deleatData)="deleatData($event)" (isActive)="isActive($event)" (buttonEvent)="buttonEvent($event)" (selectedRow)="selectedRow($event)" [headerDate]="headerData"
-              [moreData]="moreData" [total]="total"></app-list>
+              (deleatData)="deleatData($event)" (isActive)="isActive($event)" (buttonEvent)="buttonEvent($event)" (selectedRow)="selectedRow($event)" [headerDate]="headerDate"
+              [moreData]="moreData" [total]="total"  [pageTotal] = 'pageTotal'></app-list>
 </nz-card>
 
 <!-- 核对合并清单 -->

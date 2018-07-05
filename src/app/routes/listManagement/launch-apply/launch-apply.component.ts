@@ -276,6 +276,7 @@ export class LaunchApplyComponent implements OnInit {
         let url = '';
         let profiles = '';
         let packTiming = '';
+        console.log(this.elementScice)
         for (let i = 0; i < this.elementScice.length; i ++) {
             if (this.elementScice[i].check && this.elementScice[i].times) {
                 profiles = this.elementScice[i].guid;
