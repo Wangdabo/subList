@@ -35,6 +35,7 @@ export class NoopInterceptor implements HttpInterceptor {
         return next.handle(authReq || req).map(event => {
             // 拦截响应
             if (event instanceof HttpResponse) {
+                console.log(event.status)
                 if (event.status === 401) {
                     this.$router.navigate(['']).then(() => {});
                 }

@@ -34,7 +34,9 @@ export class LaunchApplyComponent implements OnInit {
     showAdd: boolean; // 是否有修改
     configTitle = '详情'
     modalVisible = false;
+    checkModalVisible = false;
     mergeVisible = false; // 合并投放弹窗
+    checkListVisible = false; // 核查清单弹出
     isPagination = true; // 是否有分页
     // 信息
     deliverItem: DeliveryModule = new  DeliveryModule();
@@ -85,6 +87,7 @@ export class LaunchApplyComponent implements OnInit {
     patchCount: any[] = []; // 投放小计
     detailList: any[] = []; // 合并清单代码数组
     profilesData: any;
+    checkModal: any[] = []; // 核查清单数据
 
 
         getData(index) {
@@ -99,15 +102,18 @@ export class LaunchApplyComponent implements OnInit {
             .map(res => res.json())
             .subscribe(
                 (val) => {
-                    this.data = val.result.records;
-                    console.log(this.data);
-                    this.total = val.result.total;//总数
-                    this.pageTotal = val.result.pages * 10;//页码
-                    for ( var i = 0; i < this.data.length; i++) {
-                        this.data[i].deliveryTime = moment(this.data[i].deliveryTime).format('YYYY-MM-DD');
-                        this.data[i].guidProfiles = this.data[i].guidProfiles.target;
-                        this.data[i].guidWorkitem = this.data[i].guidWorkitem.target;
+                    if (val) {
+                        this.data = val.result.records;
+                        console.log(this.data);
+                        this.total = val.result.total;//总数
+                        this.pageTotal = val.result.pages * 10;//页码
+                        for ( var i = 0; i < this.data.length; i++) {
+                            this.data[i].deliveryTime = moment(this.data[i].deliveryTime).format('YYYY-MM-DD');
+                            this.data[i].guidProfiles = this.data[i].guidProfiles.target;
+                            this.data[i].guidWorkitem = this.data[i].guidWorkitem.target;
+                        }
                     }
+
 
                 },
             );
@@ -123,7 +129,7 @@ export class LaunchApplyComponent implements OnInit {
         if (event === 'merge') {
             this.mergeListInfo = [];
             this.mergeList = [];
-            for ( var i = 0; i < this.data.length; i++) {
+            for ( let i = 0; i < this.data.length; i++) {
                 // 清空数组
                 if (this.data[i].checked === true) {
                     this.mergeListInfo.push(this.data[i]);
@@ -166,23 +172,30 @@ export class LaunchApplyComponent implements OnInit {
                     }
                 );
 
-            // const obj = {
-            //     mergeList: this.mergeList
-            // };
-
-            //
-            // this.utilityService.postData(appConfig.testUrl  + appConfig.API.mergeInfo, {}, { Authorization: this.token})
-            //     .map(res => res.json())
-            //     .subscribe(
-            //         (val) => {
-            //
-            //         },
-            //     );
-
-            // this.mergeVisible = true;
 
         } else if (event === 'checking') {
-            this.modalVisible = true; // 打开核对弹出框
+            this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfiles, {}, {Authorization: this.token})
+                .subscribe(
+                    (val) => {
+
+                        this.elementScice = val.result;
+
+                        for (let i = 0; i < this.elementScice.length; i++) {
+                            this.elementScice[i].packTiming = this.elementScice[i].packTiming.split(',');
+                            this.elementScice[i].Timing  = []
+                            for ( let s = 0; s < this.elementScice[i].packTiming.length; s ++) {
+                                let obj = {
+                                    time: this.elementScice[i].packTiming[s]
+                                };
+                                this.elementScice[i].Timing.push(obj);
+                            }
+                        }
+                        // 拼接
+                    }
+                );
+            this.checkModalVisible = true; // 打开核对弹出框
+
+
         } else if (event === 'export') {
             this.isVisible = true;
             this.workItem = false;
@@ -258,9 +271,54 @@ export class LaunchApplyComponent implements OnInit {
         this.modalVisible = false; // 关闭选择框
         this.checkVisible = true; // 打开核对弹出框
     }
+    // 核查确定
+    saveCheck() {
+        let url = '';
+        let profiles = '';
+        let packTiming = '';
+        for (let i = 0; i < this.elementScice.length; i ++) {
+            if (this.elementScice[i].check && this.elementScice[i].times) {
+                profiles = this.elementScice[i].guid;
+                packTiming = this.elementScice[i].times;
+
+            }
+        }
+        if (profiles !== '' && packTiming !== '') {
+            url = appConfig.testUrl + '/checks/profiles/' + profiles + '/packTiming/' + packTiming;
+        }else {
+            this.nznot.create('error', '请选择运行环境！',' 请选择运行环境！');
+            return;
+        }
+      // console.log(url);
+
+        this.utilityService.postData( url, {}, {Authorization: this.token})
+            .subscribe(
+                (val) => {
+                    if (val.code === '200') {
+                          this.checkListVisible = true;
+                          this.checkModal = val.result.records;
+                          console.log(this.checkModal);
+                    }else {
+                        this.nznot.create('error', val.msg, val.msg);
+                    }
+                     console.log(val);
+                }
+            );
+        this.checkModalVisible = false; // 打开核对弹出框
+    //
+    }
+
+    onChange(item) {
+        for (let i = 0; i < this.elementScice.length; i ++) {
+            if (this.elementScice[i].guid !== item && this.elementScice[i].check === true) {
+                this.elementScice[i].check = false;
+            }
+        }
+
+    }
 
     savemergeisInfo () {
-      console.log(this.elementScice)
+
         this.profiles = [];
         for (let i = 0; i < this.elementScice.length; i ++) {
             if (this.elementScice[i].check && this.elementScice[i].times) {
