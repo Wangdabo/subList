@@ -198,8 +198,8 @@ export class SubListComponent implements OnInit {
                                 { value: '变动类型', key: 'commitType', isclick: false, radio: false  },
                                 { value: '当前版本', key: 'deliveryVersion', isclick: false, radio: false  },
                                 { value: '时间', key: 'commitDate', isclick: false, radio: false  },
-                                { value: '部署到', key: 'deployWhere', isclick: false, radio: true, type: 'deployArray' },
-                                { value: '导出到', key: 'patchType', isclick: false, radio: true, type: 'patchArray'  },
+                                { value: '导出为', key: 'patchType', isclick: false, radio: true, type: 'patchArray'  },
+                                { value: '部署为', key: 'deployWhere', isclick: false, radio: true, type: 'deployArray' },
                             ];
                             for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
                                 for ( let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
@@ -308,8 +308,6 @@ export class SubListComponent implements OnInit {
                             if ( !_.isUndefined(this.textcssList[i].deliveryPatchDetails[j].fileList[n].deployWhere) && !_.isUndefined(this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchSelect)) {
                                 this.isGou = true;
                             }
-                        } else {
-                            this.isGou = false;
                         }
                     }
                 }
@@ -318,10 +316,7 @@ export class SubListComponent implements OnInit {
                     for ( let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
                         if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].checked) {
                             this.isGou = true;
-                        } else {
-                            this.isGou = false;
                         }
-                        console.log(this.isGou);
                     }
                 }
             }
@@ -382,35 +377,76 @@ export class SubListComponent implements OnInit {
                 this.profiles.push(obj);
             }
         }
+        // 第一次相同的
+        var fildNewList = [];
+        var filsNewList = [];
+        // 完全相同
+
+
+        var deploySelect; // 导出
 
         if (!_.isUndefined(this.deliveryTime) && !_.isUndefined(this.deliveryName) && this.profiles.length > 0) { // 如果日期和下面的事件都选择了
             this.dataChange();
             this.infoVisible = true;
-
             //  处理数据用来展示, 把没有选中的删除掉
-            console.log(this.copytextList)
-            _.forEach(this.copytextList , function (value) { // 若一个参数，返回的便是其value值
-                console.log(value)
+            _.forEach(this.copytextList , function (value, index) { // 若一个参数，返回的便是其value值
                 _.forEach(value.deliveryPatchDetails , function (value1) {
                     _.remove(value1.fileList, function(n) {
                         return n.checked !== true;
                     });
+                    if (value.projectType === 'D') {
+                        var alldArray = [];
+                        var twodNewList;
+                        for ( let i = 0; i < value1.fileList.length; i ++) {
+                            twodNewList = value1.fileList[i].patchSelect; // jar  部署类型
+                            fildNewList[twodNewList] = fildNewList[twodNewList] || (fildNewList[twodNewList] = []); // 断裂 如果前面是false。那就执行后面的，就相当于判断filNewList[twoNewList]是否是undefined
+                            fildNewList[twodNewList].push(value1.fileList[i]);
+                        }
+                        for (let key in fildNewList) {
+                            var obj = [];
+                            for (let s = 0; s < fildNewList[key].length; s++) {
+                                deploySelect = fildNewList[key][s].deploySelect; // 拿到了每一项
+                                obj[deploySelect] = obj[deploySelect] || ( obj[deploySelect] = []);
+                                obj[deploySelect].push(fildNewList[key][s]);
+                            }
+                            for (let k in obj) {
+                                alldArray.push(obj[k]);
+                            }
+                        }
+                        value.groupArray = alldArray;
+                    } else if (value.projectType === 'S') {
+                        var  allsArray = [];
+                        var twosNewList;
+                        var filst;
+                        for ( let i = 0; i < value1.fileList.length; i ++) {
+                            twosNewList = value1.fileList[i].patchSelect; // jar  部署类型
+                            filsNewList[twosNewList] = filsNewList[twosNewList] || (filsNewList[twosNewList] = []); // 断裂 如果前面是false。那就执行后面的，就相当于判断filNewList[twoNewList]是否是undefined
+                            filsNewList[twosNewList].push(value1.fileList[i]);
+                        }
+                        for (let key in filsNewList) {
+                            var obj = [];
+                            for (let s = 0; s < filsNewList[key].length; s++) {
+                                deploySelect = filsNewList[key][s].deploySelect; // 拿到了每一项
+                                obj[deploySelect] = obj[deploySelect] || ( obj[deploySelect] = []);
+                                obj[deploySelect].push(filsNewList[key][s]);
+                            }
+                            for (let k in obj) {
+                                allsArray.push(obj[k]); // 我拼成的数组 目前我是直接等于
+                            }
 
-                    if (value.projectType !== 'C') { // 如果不是c那就代表要单独处理
-                        console.log(value1.fileList);
+
+                        }
+                        value.groupArray = allsArray;
+
                     }
-
                 });
+                console.log(value);
             });
 
-            /* this.utilityService.postData(appConfig.testUrl  + appConfig.API.sDeliveryList +  '/deliveryAnd', this.splicingObj, {Authorization: this.token})
-            .subscribe(
-                (val) => {
-                    this.nznot.create('success', val.msg , val.msg);
-                    this.modalVisible = false;
-                }
-            );*/
+
+            console.log(this.copytextList)
             this.modalVisible = false;
+
         } else {
             this.nznot.create('error', '请检查信息是否全部填写', '请检查信息是否全部填写');
         }
@@ -485,7 +521,13 @@ export class SubListComponent implements OnInit {
 
 
     subSave() {
-
+        /* this.utilityService.postData(appConfig.testUrl  + appConfig.API.sDeliveryList +  '/deliveryAnd', this.splicingObj, {Authorization: this.token})
+                   .subscribe(
+                       (val) => {
+                           this.nznot.create('success', val.msg , val.msg);
+                           this.modalVisible = false;
+                       }
+                   );*/
 
     }
 }
