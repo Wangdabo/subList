@@ -256,36 +256,74 @@
 
             <!-- 列表 -->
             <div  nz-col [nzSpan]="24" class="mb-md" *ngFor="let d of copytextList" >
-                <ng-container *ngFor="let t of d.deliveryPatchDetails">
-                    <table style="margin:30px 0px;"  *ngIf="t.fileList.length > 0">
-                        <tbody nz-col [nzSpan]="24" style="text-align: center;" >
-                        <tr nz-col [nzSpan]="24">
-                            <td nz-col [nzSpan]="8">工程名</td>
-                            <td nz-col [nzSpan]="16">{{d.projectName}}</td>
-                        </tr>
-                        <tr nz-col [nzSpan]="24">
-                            <td nz-col [nzSpan]="8">编译为</td>
-                            <td nz-col [nzSpan]="16">{{t.deployWhere}}</td>
-                        </tr>
-                        <tr nz-col [nzSpan]="24">
-                            <td nz-col [nzSpan]="8">部署到</td>
-                            <td nz-col [nzSpan]="16">{{t.patchType}}</td>
-                        </tr>
-                        <tr nz-col [nzSpan]="24">
-                            <td nz-col [nzSpan]="15">代码</td>
-                            <td nz-col [nzSpan]="3">变动类型</td>
-                            <td nz-col [nzSpan]="3">最新版本</td>
-                            <td nz-col [nzSpan]="3">开发人员</td>
-                        </tr>
-                        <tr nz-col [nzSpan]="24"  *ngFor="let s of t.fileList">
-                            <td style="text-overflow: ellipsis; overflow: hidden;white-space: nowrap" nz-col [nzSpan]="15">{{s.fullPath}}</td>
-                            <td nz-col [nzSpan]="3"> {{ s.commitType ==='A' && '新增' || s.commitType ==='D' && '删除' || d.commitType ==='M' && '修改'}}</td>
-                            <td nz-col [nzSpan]="3">{{s.deliveryVersion}}</td>
-                            <td nz-col [nzSpan]="3">{{s.author}}</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                <ng-container *ngIf = "d.projectType === 'C'">
+                    <ng-container *ngFor="let t of d.deliveryPatchDetails">
+                        <table style="margin:30px 0px;"  *ngIf="t.fileList.length > 0">
+                            <tbody nz-col [nzSpan]="24" style="text-align: center;" >
+                            <tr nz-col [nzSpan]="24">
+                                <td nz-col [nzSpan]="8">工程名</td>
+                                <td nz-col [nzSpan]="16">{{d.projectName}}</td>
+                            </tr>
+                            <tr nz-col [nzSpan]="24">
+                                <td nz-col [nzSpan]="8">编译为</td>
+                                <td nz-col [nzSpan]="16">{{t.deployWhere}}</td>
+                            </tr>
+                            <tr nz-col [nzSpan]="24">
+                                <td nz-col [nzSpan]="8">部署到</td>
+                                <td nz-col [nzSpan]="16">{{t.patchType}}</td>
+                            </tr>
+                            <tr nz-col [nzSpan]="24">
+                                <td nz-col [nzSpan]="15">代码</td>
+                                <td nz-col [nzSpan]="3">变动类型</td>
+                                <td nz-col [nzSpan]="3">最新版本</td>
+                                <td nz-col [nzSpan]="3">开发人员</td>
+                            </tr>
+                            <tr nz-col [nzSpan]="24"  *ngFor="let s of t.fileList">
+                                <td style="text-overflow: ellipsis; overflow: hidden;white-space: nowrap" nz-col [nzSpan]="15">{{s.fullPath}}</td>
+                                <td nz-col [nzSpan]="3"> {{ s.commitType ==='A' && '新增' || s.commitType ==='D' && '删除' || d.commitType ==='M' && '修改' }}</td>
+                                <td nz-col [nzSpan]="3">{{s.deliveryVersion}}</td>
+                                <td nz-col [nzSpan]="3">{{s.author}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </ng-container>
                 </ng-container>
+                <ng-container *ngIf = "d.projectType === 'S' || d.projectType === 'D'">
+                    <ng-container *ngFor="let a of d.groupArray; let i = index">
+                        <table style="margin:30px 0px;">
+                            <tbody nz-col [nzSpan]="24" style="text-align: center;" >
+                            <tr nz-col [nzSpan]="24">
+                                <td nz-col [nzSpan]="8">工程名1</td>
+                                <td nz-col [nzSpan]="16">{{d.projectName}}</td>
+                            </tr>
+                            <tr nz-col [nzSpan]="24">
+                                <td nz-col [nzSpan]="8">编译为</td>
+                                <td nz-col [nzSpan]="16">{{a[0].deploySelect}}</td>
+                            </tr>
+                            <tr nz-col [nzSpan]="24">
+                                <td nz-col [nzSpan]="8">部署到</td>
+                                <td nz-col [nzSpan]="16">{{a[0].patchSelect}}</td>
+                            </tr>
+                            <tr nz-col [nzSpan]="24">
+                                <td nz-col [nzSpan]="15">代码</td>
+                                <td nz-col [nzSpan]="3">变动类型</td>
+                                <td nz-col [nzSpan]="3">最新版本</td>
+                                <td nz-col [nzSpan]="3">开发人员</td>
+                            </tr>
+                            <tr nz-col [nzSpan]="24"  *ngFor="let s of a">
+                                <td style="text-overflow: ellipsis; overflow: hidden;white-space: nowrap" nz-col [nzSpan]="15">{{s.fullPath}}</td>
+                                <td nz-col [nzSpan]="3"> {{s.commitType}}</td>
+                                <td nz-col [nzSpan]="3">{{s.deliveryVersion}}</td>
+                                <td nz-col [nzSpan]="3">{{s.author}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </ng-container>
+                </ng-container>
+
+
+
 
             </div>
 
