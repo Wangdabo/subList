@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { _HttpClient } from '@delon/theme';
 import { DeliveryModule} from '../../../service/delivent/deliveryModule';
 import {UtilityService} from '../../../service/utils.service';
 import {appConfig} from '../../../service/common';
 import {NzModalService, NzNotificationService} from 'ng-zorro-antd';
 import {Router} from '@angular/router';
+import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
+import * as moment from 'moment';
 
 @Component({
     selector: 'app-ad-record',
@@ -17,12 +19,18 @@ export class AdRecordComponent implements OnInit {
         private router: Router,
         private utilityService: UtilityService,
         private modal: NzModalService,
-        private nznot: NzNotificationService
+        private nznot: NzNotificationService,
+       @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
     ) { }
 
+
+   token: any;
+    list: any[] = [];
     ngOnInit() {
-        this.getData();
+        this.token  = this.tokenService.get().token;
+        this.getData(1);
         this.showAdd = true;
+
     }
 
     showAdd: boolean; // 是否有修改
@@ -33,6 +41,7 @@ export class AdRecordComponent implements OnInit {
     // 信息
     deliverItem: DeliveryModule = new  DeliveryModule();
     deliveryTime: any; // 投放日期
+    pageTotal: number;
 
     dliveryResult = [
         {key: '0', value: '否'},
@@ -47,15 +56,12 @@ export class AdRecordComponent implements OnInit {
 
 
     data: any[] = []; // 表格数据
-    headerData = [  // 配置表头内容
-        { value: '环境代码', key: 'profilesCode', isclick: true },
-        { value: '环境名称', key: 'profilesName', isclick: false },
-        { value: '主机IP', key: 'hostIp', isclick: false },
-        { value: '安装路径', key: 'installPath', isclick: false },
-        { value: '版本控制用户', key: 'csvUser', isclick: false },
-        // { value: '版本控制密码', key: 'csvPwd', isclick: false },
-        { value: '是否允许投放', key: 'isAllowDelivery', isclick: false },
-        { value: '环境管理人员', key: 'manager', isclick: false },
+    headerDate = [  // 配置表头内容
+        { value: '别名', key: 'checkAlias', isclick: true },
+        { value: '核查时间', key: 'checkDate', isclick: false },
+        { value: '核查状态', key: 'checkStatus', isclick: false },
+        { value: '核查人', key: 'checkUser', isclick: false },
+        { value: '运行环境', key: 'guidProfiles', isclick: false },
         { value: '打包窗口', key: 'packTiming', isclick: false },
     ];
     // 传入按钮层
@@ -70,16 +76,36 @@ export class AdRecordComponent implements OnInit {
     page: any;
     total: number;
 
+ // demo= [
+ //     { key: '1', value: '查看概况1' },
+ //     { key: '2', value: '查看概况2' },
+ //     { key: '2', value: '查看概况1' },
+ //     { key: '4', value: '查看概况2' },
+ //     { key: '4', value: '查看概况3' },
+ //     { key: '4', value: '查看概况3' },
+ //     { key: '7', value: '查看概况2' },
+ //
+ // ]
 
-
-    getData() {
-        let page = 1;
-
+    getData(index) {
+        const page = {
+            page : {
+                size: 10,
+                current : index
+            }
+        };
         this.utilityService.postData(appConfig.testUrl  + appConfig.API.checklist, page, { Authorization: this.token})
             .map(res => res.json())
             .subscribe(
                 (val) => {
-                    console.log(val);
+                    this.data = val.result.records;
+                    this.data = val.result.records;
+                    console.log(this.data);
+                    this.total = val.result.total;//总数
+                    this.pageTotal = val.result.pages * 10;//页码
+                    for ( let i = 0; i < this.data.length; i++) {
+                        this.data[i].checkDate = moment(this.data[i].checkDate).format('YYYY-MM-DD');
+                    }
 
 
                 },
@@ -123,7 +149,7 @@ export class AdRecordComponent implements OnInit {
 
     // 列表传入的翻页数据
     monitorHandler(event) {
-
+     this.getData(event);
     }
 
     // 接受子组件删除的数据 单条还是多条
@@ -154,7 +180,7 @@ export class AdRecordComponent implements OnInit {
 
     // 处理行为代码，跳转、弹出框、其他交互
     isActive(event) {
-        console.log(event)
+        console.log(event);
     }
 
 
@@ -209,7 +235,7 @@ export class AdRecordComponent implements OnInit {
     }
 
 
-    //打印界面
+    // 打印界面
     isVisible = false; // 默认关闭
     workItem = false;
 

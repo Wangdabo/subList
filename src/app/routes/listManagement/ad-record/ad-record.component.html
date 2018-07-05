@@ -8,69 +8,69 @@
 <!--引入list组件-->
 <nz-card [nzBordered]="false">
     <!--  form表单搜索 -->
-    <form nz-form (ngSubmit)="search()" [nzLayout]="'inline'">
-        <div nz-row  [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
-            <div nz-col [nzSpan]="8" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label><label>环境代码</label></div>
-                    <div nz-form-control class="flex-1">
-                        <nz-input [(ngModel)]="deliverItem.guidWorkitem" name="guidWorkitem" [nzSize]="'large'" [nzPlaceHolder]="'环境代码'" nzId="guidWorkitem"></nz-input>
-                    </div>
-                </div>
-            </div>
-            <div nz-col [nzSpan]="8" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label><label>环境名称</label></div>
-                    <div nz-form-control class="flex-1">
-                        <nz-input [(ngModel)]="deliverItem.proposer" name="proposer" [nzSize]="'large'" [nzPlaceHolder]="'环境名称'" nzId="proposer"></nz-input>
-                    </div>
-                </div>
-            </div>
+    <!--<form nz-form (ngSubmit)="search()" [nzLayout]="'inline'">-->
+        <!--<div nz-row  [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">-->
+            <!--<div nz-col [nzSpan]="8" class="mb-md">-->
+                <!--<div nz-form-item class="d-flex">-->
+                    <!--<div nz-form-label><label>环境代码</label></div>-->
+                    <!--<div nz-form-control class="flex-1">-->
+                        <!--<nz-input [(ngModel)]="deliverItem.guidWorkitem" name="guidWorkitem" [nzSize]="'large'" [nzPlaceHolder]="'环境代码'" nzId="guidWorkitem"></nz-input>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div nz-col [nzSpan]="8" class="mb-md">-->
+                <!--<div nz-form-item class="d-flex">-->
+                    <!--<div nz-form-label><label>环境名称</label></div>-->
+                    <!--<div nz-form-control class="flex-1">-->
+                        <!--<nz-input [(ngModel)]="deliverItem.proposer" name="proposer" [nzSize]="'large'" [nzPlaceHolder]="'环境名称'" nzId="proposer"></nz-input>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
 
-            <div nz-col [nzSpan]="8" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label><label>主机IP</label></div>
-                    <div nz-form-control class="flex-1">
-                        <nz-input [(ngModel)]="deliverItem.proposer" name="proposer" [nzSize]="'large'" [nzPlaceHolder]="'主机IP'" nzId="proposer"></nz-input>
-                    </div>
-                </div>
-            </div>
+            <!--<div nz-col [nzSpan]="8" class="mb-md">-->
+                <!--<div nz-form-item class="d-flex">-->
+                    <!--<div nz-form-label><label>主机IP</label></div>-->
+                    <!--<div nz-form-control class="flex-1">-->
+                        <!--<nz-input [(ngModel)]="deliverItem.proposer" name="proposer" [nzSize]="'large'" [nzPlaceHolder]="'主机IP'" nzId="proposer"></nz-input>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
 
-            <div nz-col [nzSpan]="8" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label><label>版本控制用户</label></div>
-                    <div nz-form-control class="flex-1">
-                        <nz-input [(ngModel)]="deliverItem.proposer" name="proposer" [nzSize]="'large'" [nzPlaceHolder]="'版本控制用户'" nzId="proposer"></nz-input>
-                    </div>
-                </div>
-            </div>
+            <!--<div nz-col [nzSpan]="8" class="mb-md">-->
+                <!--<div nz-form-item class="d-flex">-->
+                    <!--<div nz-form-label><label>版本控制用户</label></div>-->
+                    <!--<div nz-form-control class="flex-1">-->
+                        <!--<nz-input [(ngModel)]="deliverItem.proposer" name="proposer" [nzSize]="'large'" [nzPlaceHolder]="'版本控制用户'" nzId="proposer"></nz-input>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
 
-            <div nz-col [nzSpan]="8" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label><label>是否允许投放</label></div>
-                    <div nz-form-control class="flex-1">
-                        <nz-select style="width:100%" [(ngModel)]="deliverItem.dliveryResult"  name="dliveryResult" [nzSize]="'large'" [nzPlaceHolder]="'是否允许投放'" nzId="dliveryResult">
-                            <nz-option  *ngFor="let i of dliveryResult;" [nzLabel]="i.value" [nzValue]="i.key"></nz-option>
-                        </nz-select>
-                    </div>
-                </div>
-            </div>
+            <!--<div nz-col [nzSpan]="8" class="mb-md">-->
+                <!--<div nz-form-item class="d-flex">-->
+                    <!--<div nz-form-label><label>是否允许投放</label></div>-->
+                    <!--<div nz-form-control class="flex-1">-->
+                        <!--<nz-select style="width:100%" [(ngModel)]="deliverItem.dliveryResult"  name="dliveryResult" [nzSize]="'large'" [nzPlaceHolder]="'是否允许投放'" nzId="dliveryResult">-->
+                            <!--<nz-option  *ngFor="let i of dliveryResult;" [nzLabel]="i.value" [nzValue]="i.key"></nz-option>-->
+                        <!--</nz-select>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
 
-            <div nz-col [nzSpan]="expandForm ? 24 : 8" class="mb-md" [class.text-right]="expandForm">
-                <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="loading" [nzSize]="'large'">查询</button>
-                <button nz-button type="reset" (click)="getData()" [nzSize]="'large'" class="mx-sm">重置</button>
-                <a (click)="expandForm=!expandForm">
-                    {{expandForm ? '收起' : '展开'}}
-                    <i class="anticon" [class.anticon-down]="!expandForm" [class.anticon-up]="expandForm"></i>
-                </a>
-            </div>
-        </div>
-    </form>
+            <!--<div nz-col [nzSpan]="expandForm ? 24 : 8" class="mb-md" [class.text-right]="expandForm">-->
+                <!--<button nz-button type="submit" [nzType]="'primary'" [nzLoading]="loading" [nzSize]="'large'">查询</button>-->
+                <!--<button nz-button type="reset" (click)="getData()" [nzSize]="'large'" class="mx-sm">重置</button>-->
+                <!--<a (click)="expandForm=!expandForm">-->
+                    <!--{{expandForm ? '收起' : '展开'}}-->
+                    <!--<i class="anticon" [class.anticon-down]="!expandForm" [class.anticon-up]="expandForm"></i>-->
+                <!--</a>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</form>-->
     <!--列表组件-->
 
     <app-list #child [initDate]="data" [configTitle]="configTitle" [showAdd]="showAdd" [isPagination]="isPagination"  [buttons] ='buttons' (addCreat)="addHandler($event)" (buttonData)="buttonDataHandler($event)" (pageNumber)="monitorHandler($event)"
-              (deleatData)="deleatData($event)" (isActive)="isActive($event)" (buttonEvent)="buttonEvent($event)" (selectedRow)="selectedRow($event)" [headerDate]="headerData"
-              [moreData]="moreData" [total]="total"></app-list>
+              (deleatData)="deleatData($event)" (isActive)="isActive($event)" (buttonEvent)="buttonEvent($event)" (selectedRow)="selectedRow($event)" [headerDate]="headerDate"
+              [moreData]="moreData" [total]="total" [pageTotal] = 'pageTotal'></app-list>
 </nz-card>
 
 <!-- 核对合并清单 -->
