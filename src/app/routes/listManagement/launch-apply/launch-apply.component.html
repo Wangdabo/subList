@@ -194,11 +194,11 @@
 
 
             <div  nz-col [nzSpan]="24" class="mb-md">
-                    <button  nz-col [nzSpan]="4"  [nzOffset]="'3'" nz-button  (click)="returns(j.guid,F)"  [nzType]="'primary'" [nzSize]="'large'">
+                    <button  nz-col [nzSpan]="4"  [nzOffset]="'3'" nz-button  (click)="returns(j.delivery.guid,0)"  [nzType]="'primary'" [nzSize]="'large'">
                         <span>打回</span>
                     </button>
 
-                    <button   nz-col  [nzSpan]="4"  [nzOffset]="'3'" nz-button  (click)="returns(j.guid,S)"  [nzType]="'primary'" [nzSize]="'large'">
+                    <button   nz-col  [nzSpan]="4"  [nzOffset]="'3'" nz-button  (click)="returns(j.delivery.guid,1)"  [nzType]="'primary'" [nzSize]="'large'">
                         <span>成功</span>
                     </button>
                     <!--<button  nz-col [nzSpan]="4"  [nzOffset]="'3'"  nz-button  (click)="errors()"  [nzType]="'primary'" [nzSize]="'large'">-->
@@ -210,10 +210,11 @@
     </ng-template>
 </nz-modal>
 
-<nz-modal [nzVisible]="isVisible" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter">
-    <ng-template #modalTitle>
-        <textarea row="4" nz-input [(ngModel)]="inputValue"></textarea>
-    </ng-template>
+<nz-modal  [nzVisible]="istextVisible"  (nzOnCancel)="istextVisible=false" [nzTitle]="modaltextTitle" [nzContent]="modaltextTitle" [nzFooter]="modalFooter">
+    <!--<ng-template #modaltextTitle>-->
+        <textarea row="4"  [(ngModel)]="inputValue"></textarea>
+        <button (click)="returns(guid,1)">点我</button>
+    <!--</ng-template>-->
 </nz-modal>
 
 <!-- 打印-->

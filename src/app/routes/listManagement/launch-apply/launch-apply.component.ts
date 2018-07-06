@@ -39,6 +39,7 @@ export class LaunchApplyComponent implements OnInit {
     mergeVisible = false; // 合并投放弹窗
     checkListVisible = false; // 核查清单弹出
     isPagination = true; // 是否有分页
+    istextVisible = false;
     // 信息
     deliverItem: DeliveryModule = new  DeliveryModule();
     deliveryTime: any; // 投放日期
@@ -92,7 +93,7 @@ export class LaunchApplyComponent implements OnInit {
     profilesData: any;
     checkModalData: any[] = []; // 核查清单数据
     mergeListData: any[] = []; // 核查有异议的数据
-
+    inputValue = '';
 
         getData(index) {
 
@@ -284,7 +285,6 @@ export class LaunchApplyComponent implements OnInit {
         let url = '';
         let profiles = '';
         let packTiming = '';
-        console.log(this.elementScice)
         for (let i = 0; i < this.elementScice.length; i ++) {
             if (this.elementScice[i].check && this.elementScice[i].times) {
                 profiles = this.elementScice[i].guid;
@@ -311,12 +311,9 @@ export class LaunchApplyComponent implements OnInit {
                           this.checkModalData = val.result.deliveryDetails;
                           this.mergeListData  = val.result.mergeLists;
                         for  (let i = 0; i < this.mergeListData.length; i ++) {
-                            console.log(this.mergeListData[i].fullPath)
-                            console.log(this.mergeListData[i].partOfProject)
                             if (this.mergeListData[i].fullPath) {
                                 indexs = this.mergeListData[i].fullPath.indexOf(this.mergeListData[i].partOfProject);
                                 this.mergeListData[i].fullPath = this.mergeListData[i].fullPath.substring(indexs, this.mergeListData[i].fullPath.length);
-                                console.log(this.mergeListData[i].fullPath);
                             }
                         }
                          for  (let i = 0; i < this.checkModalData.length; i ++) {
@@ -336,7 +333,6 @@ export class LaunchApplyComponent implements OnInit {
                 }
                 ,
                 (error) => {
-                    console.log(error)
                     this.nznot.create('error', '异常', '异常');
                 }
             );
@@ -382,7 +378,6 @@ export class LaunchApplyComponent implements OnInit {
 
         this.mergeisVisible = false;
        let index = 0;
-       let kkk = '' ;
 
         this.utilityService.postData(appConfig.testUrl  + appConfig.API.mergeInfo, obj, { Authorization: this.token})
             .map(res => res.json())
@@ -415,43 +410,43 @@ export class LaunchApplyComponent implements OnInit {
             )
         ;
 
-
-        console.log(obj);
-
     }
     getdatas() {
 
     }
-
+    guid: any;
 
     // 状态
-    returns(item , status) {
-   console.log(item , status);
-   let  url = appConfig.testUrl + '/checks/delivery/' + item + '/result';
+    returns(item , S ) {
 
-        const obj = {
-            result : "",
-            desc : ""
-        };
-        this.utilityService.postData( url, {}, {Authorization: this.token})
-            .map(res => res.json())
-            .subscribe(
-                (val) => {
-                    console.log(val);
+   if ( S === 0) {
+       this.guid = item;
+       this.istextVisible = true;
 
+   }else {
+       let  url = appConfig.testUrl + '/checks/delivery/' + item + '/result';
+       const obj = {
+           result : S,
+           desc : this.inputValue
+       };
+       this.utilityService.postData( url, obj, {Authorization: this.token})
+           .map(res => res.json())
+           .subscribe(
+               (val) => {
+                   console.log(val);
+               }
+               ,
+               (error) => {
+                   console.log(error);
+                   this.nznot.create('error', '异常', '异常');
+               }
+           );
+   }
 
-
-                }
-                ,
-                (error) => {
-                    console.log(error)
-                    this.nznot.create('error', '异常', '异常');
-                }
-            );
 
     }
 
-    sussess() {
+    sussess(item , status) {
 
     }
 
