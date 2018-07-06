@@ -56,7 +56,8 @@ export class ListComponent implements OnInit {
     parsentbool: any;
     @Input() // 输入属性,接受父组件传入的数据
     pageTotal: number;
-
+    @Input() // 输入属性,接受父组件传入的数据
+    deleteTitle: string;
 
     data: any[] = [];
 

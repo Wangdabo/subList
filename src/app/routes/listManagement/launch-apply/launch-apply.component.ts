@@ -6,6 +6,7 @@ import {appConfig} from '../../../service/common';
 import {NzModalService, NzNotificationService} from 'ng-zorro-antd';
 import {Router} from '@angular/router';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
+// import { catchError, map, tap } from 'rxjs/operators';
 import * as moment from 'moment';
 @Component({
     selector: 'app-launch-apply',
@@ -62,13 +63,15 @@ export class LaunchApplyComponent implements OnInit {
     mergeListInfo: any[] = [];
     profiles: any[] = [];
     headerDate = [  // 配置表头内容
-        { value: '工作项', key: 'guidWorkitem', isclick: true, radio: false },
         { value: '别名', key: 'applyAlias', isclick: false, radio: false},
+        { value: '工作项', key: 'guidWorkitem', isclick: true, radio: false },
         { value: '投放时间', key: 'deliveryTime', isclick: false, radio: false },
         { value: '运行环境', key: 'guidProfiles', isclick: false, radio: false },
+        { value: '打包窗口', key: 'packTiming', isclick: false, radio: false },
         { value: '申请人', key: 'proposer', isclick: false, radio: false },
         { value: '投放结果', key: 'deliveryResult', isclick: false, radio: false },
         { value: '程序数量', key: 'number', isclick: false, radio: false },
+
     ];
     // 传入按钮层
     moreData = {
@@ -87,7 +90,8 @@ export class LaunchApplyComponent implements OnInit {
     patchCount: any[] = []; // 投放小计
     detailList: any[] = []; // 合并清单代码数组
     profilesData: any;
-    checkModal: any[] = []; // 核查清单数据
+    checkModalData: any[] = []; // 核查清单数据
+    mergeListData: any[] = []; // 核查有异议的数据
 
 
         getData(index) {
@@ -102,12 +106,13 @@ export class LaunchApplyComponent implements OnInit {
             .map(res => res.json())
             .subscribe(
                 (val) => {
-                    if (val) {
+                    console.log(val)
+                    if (val.code == 200) {
                         this.data = val.result.records;
                         console.log(this.data);
-                        this.total = val.result.total;//总数
-                        this.pageTotal = val.result.pages * 10;//页码
-                        for ( var i = 0; i < this.data.length; i++) {
+                        this.total = val.result.total; // 总数
+                        this.pageTotal = val.result.pages * 10; // 页码
+                        for ( let i = 0; i < this.data.length; i++) {
                             this.data[i].deliveryTime = moment(this.data[i].deliveryTime).format('YYYY-MM-DD');
                             this.data[i].guidProfiles = this.data[i].guidProfiles.target;
                             this.data[i].guidWorkitem = this.data[i].guidWorkitem.target;
@@ -116,6 +121,9 @@ export class LaunchApplyComponent implements OnInit {
 
 
                 },
+                (error) => {
+                    console.log(error);
+                }
             );
 
     }
@@ -290,19 +298,46 @@ export class LaunchApplyComponent implements OnInit {
             this.nznot.create('error', '请选择运行环境！', '请选择运行环境！');
             return;
         }
-      // console.log(url);
 
+  let index = '';
+        let indexs = '';
         this.utilityService.postData( url, {}, {Authorization: this.token})
+            .map(res => res.json())
             .subscribe(
                 (val) => {
+                    console.log(val)
                     if (val.code === '200') {
                           this.checkListVisible = true;
-                          this.checkModal = val.result.records;
-                          console.log(this.checkModal);
-                    }else {
-                        this.nznot.create('error', val.msg, val.msg);
+                          this.checkModalData = val.result.deliveryDetails;
+                          this.mergeListData  = val.result.mergeLists;
+                        for  (let i = 0; i < this.mergeListData.length; i ++) {
+                            console.log(this.mergeListData[i].fullPath)
+                            console.log(this.mergeListData[i].partOfProject)
+                            if (this.mergeListData[i].fullPath) {
+                                indexs = this.mergeListData[i].fullPath.indexOf(this.mergeListData[i].partOfProject);
+                                this.mergeListData[i].fullPath = this.mergeListData[i].fullPath.substring(indexs, this.mergeListData[i].fullPath.length);
+                                console.log(this.mergeListData[i].fullPath);
+                            }
+                        }
+                         for  (let i = 0; i < this.checkModalData.length; i ++) {
+                            for (let j = 0; j < this.checkModalData[i].detailList.length; j ++) {
+                                for (let x = 0; x < this.checkModalData[i].detailList[j].deliveryPatchDetails.length; x ++) {
+                                    for (let  y = 0; y < this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList.length; y ++) {
+                                        if (this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath) {
+                                            index = this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.indexOf(this.checkModalData[i].detailList[j].projectName);
+                                            this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath = this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.substring(index, this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.length);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
                     }
-                     console.log(val);
+                }
+                ,
+                (error) => {
+                    console.log(error)
+                    this.nznot.create('error', '异常', '异常');
                 }
             );
         this.checkModalVisible = false; // 打开核对弹出框
@@ -353,7 +388,6 @@ export class LaunchApplyComponent implements OnInit {
             .map(res => res.json())
             .subscribe(
                 (val) => {
-                     console.log(val)
                     if (val.code == 200) {
                          this.profilesData = obj;
                          this.detailList = val.result.detailList;
@@ -364,11 +398,10 @@ export class LaunchApplyComponent implements OnInit {
 
                         for  (let i = 0; i < this.detailList.length; i ++) {
                             for (let j = 0; j < this.detailList[i].deliveryPatchDetails.length; j ++) {
-                                console.log(this.detailList[i].deliveryPatchDetails[j]);
                                 for (let x = 0; x < this.detailList[i].deliveryPatchDetails[j].fileList.length; x ++) {
                                            if (this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath) {
                                                index = this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath.indexOf(this.detailList[i].projectName);
-                                               this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath = this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath.substring(index, index.toString().length - 1);
+                                               this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath = this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath.substring(index, this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath.length - 1);
                                            }
                                 }
                             }
@@ -378,7 +411,9 @@ export class LaunchApplyComponent implements OnInit {
                      }
 
                 },
-            );
+
+            )
+        ;
 
 
         console.log(obj);
@@ -390,7 +425,29 @@ export class LaunchApplyComponent implements OnInit {
 
 
     // 状态
-    returns() {
+    returns(item , status) {
+   console.log(item , status);
+   let  url = appConfig.testUrl + '/checks/delivery/' + item + '/result';
+
+        const obj = {
+            result : "",
+            desc : ""
+        };
+        this.utilityService.postData( url, {}, {Authorization: this.token})
+            .map(res => res.json())
+            .subscribe(
+                (val) => {
+                    console.log(val);
+
+
+
+                }
+                ,
+                (error) => {
+                    console.log(error)
+                    this.nznot.create('error', '异常', '异常');
+                }
+            );
 
     }
 
