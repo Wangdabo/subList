@@ -71,6 +71,7 @@ export class LaunchApplyComponent implements OnInit {
         { value: '打包窗口', key: 'packTiming', isclick: false, radio: false },
         { value: '申请人', key: 'proposer', isclick: false, radio: false },
         { value: '投放结果', key: 'deliveryResult', isclick: false, radio: false },
+        { value: '申请类型', key: 'deliveryType', isclick: false, radio: false },
         { value: '程序数量', key: 'number', isclick: false, radio: false },
 
     ];
@@ -107,7 +108,7 @@ export class LaunchApplyComponent implements OnInit {
             .map(res => res.json())
             .subscribe(
                 (val) => {
-                    console.log(val)
+
                     if (val.code == 200) {
                         this.data = val.result.records;
                         console.log(this.data);
@@ -421,19 +422,34 @@ export class LaunchApplyComponent implements OnInit {
 
    if ( S === 0) {
        this.guid = item;
+
        this.istextVisible = true;
 
    }else {
        let  url = appConfig.testUrl + '/checks/delivery/' + item + '/result';
+       if (S === 1) {
+           S = 'S';
+       }else {
+           S = 'F';
+       }
        const obj = {
-           result : S,
-           desc : this.inputValue
+               result : S,
+               desc : this.inputValue
        };
+
+
        this.utilityService.postData( url, obj, {Authorization: this.token})
            .map(res => res.json())
            .subscribe(
                (val) => {
                    console.log(val);
+
+                   if (val.code == 200){
+                       this.istextVisible = false;
+                       this.checkListVisible = false;
+                       this.nznot.create('success', val.msg, val.msg);
+                   }
+
                }
                ,
                (error) => {
