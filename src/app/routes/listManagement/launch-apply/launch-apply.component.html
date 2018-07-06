@@ -211,10 +211,10 @@
 </nz-modal>
 
 <nz-modal  [nzVisible]="istextVisible"  (nzOnCancel)="istextVisible=false" [nzTitle]="modaltextTitle" [nzContent]="modaltextTitle" [nzFooter]="modalFooter">
-    <!--<ng-template #modaltextTitle>-->
+    <ng-template #modaltextTitle>
         <textarea row="4"  [(ngModel)]="inputValue"></textarea>
         <button (click)="returns(guid,1)">点我</button>
-    <!--</ng-template>-->
+    </ng-template>
 </nz-modal>
 
 <!-- 打印-->
