@@ -2,10 +2,10 @@
  * @author gyjlovelh
  * @createTime 2017/10/8
  */
-import { Injectable, Inject} from '@angular/core'
-import { Router } from '@angular/router'
-import { HttpInterceptor, HttpEvent, HttpHandler, HttpRequest, HttpResponse } from '@angular/common/http'
-import { Observable } from 'rxjs/Observable'
+import { Injectable, Inject} from '@angular/core';
+import { Router } from '@angular/router';
+import { HttpInterceptor, HttpEvent, HttpHandler, HttpRequest, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
@@ -26,16 +26,17 @@ export class NoopInterceptor implements HttpInterceptor {
      * @returns {Observable<HttpEvent<any>>}
      */
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        console.log(req)
         // 拦截请求
-        let token = this.tokenService.get().token // 绑定token
+        const token = 'css'; // 绑定token
         let authReq = null;
         if (token) {
-            authReq = req.clone({ setHeaders: { 'Authorization': token}});
+            authReq = req.clone({ setHeaders: { 'asdd': token}});
         }
         return next.handle(authReq || req).map(event => {
+
             // 拦截响应
             if (event instanceof HttpResponse) {
-                console.log(event.status)
                 if (event.status === 401) {
                     this.$router.navigate(['']).then(() => {});
                 }

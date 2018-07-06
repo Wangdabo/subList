@@ -87,7 +87,9 @@ export function StartupServiceFactory(startupService: StartupService): Function 
     providers: [
         { provide: LOCALE_ID, useValue: 'zh-Hans'},
         { provide: HTTP_INTERCEPTORS, useClass: SimpleInterceptor, multi: true},
+        //  http拦截器
         { provide: HTTP_INTERCEPTORS, useClass: DefaultInterceptor, multi: true},
+        // 国际化
         { provide: ALAIN_I18N_TOKEN, useClass: I18NService, multi: false },
         StartupService,
         {

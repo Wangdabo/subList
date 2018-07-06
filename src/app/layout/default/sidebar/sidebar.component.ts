@@ -9,5 +9,6 @@ import { SettingsService } from '@delon/theme';
 export class SidebarComponent {
     constructor(public settings: SettingsService, public msgSrv: NzMessageService) {
        console.log(settings);
+
     }
 }

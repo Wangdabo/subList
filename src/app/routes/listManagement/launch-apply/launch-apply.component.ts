@@ -287,7 +287,7 @@ export class LaunchApplyComponent implements OnInit {
         if (profiles !== '' && packTiming !== '') {
             url = appConfig.testUrl + '/checks/profiles/' + profiles + '/packTiming/' + packTiming;
         }else {
-            this.nznot.create('error', '请选择运行环境！',' 请选择运行环境！');
+            this.nznot.create('error', '请选择运行环境！', '请选择运行环境！');
             return;
         }
       // console.log(url);

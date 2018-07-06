@@ -60,8 +60,8 @@
                 </nz-collapse>
                 <nz-collapse [nzTitle]="'开发成员'" [nzActive]="false">
                     <div nz-row  [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
-                        <div  *ngFor="let b of workItemInfo.developers"  nz-col [nzSpan]="24" class="mb-md">
-                            <div class="ad-desc-list__detail ng-star-inserted">{{b}}</div>
+                        <div  *ngFor="let b of workItemInfo.copyinfos"  nz-col [nzSpan]="24" class="mb-md">
+                            <div class="ad-desc-list__detail ng-star-inserted" style="font-size: 18px;">{{b}}</div>
                         </div>
                     </div>
 
@@ -69,7 +69,7 @@
                 <nz-collapse [nzTitle]="'开发分支'" [nzActive]="false">
                     <div nz-row  [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
                         <div   nz-col [nzSpan]="24" class="mb-md">
-                            <div class="ad-desc-list__detail ng-star-inserted">{{branchDetail}}</div>
+                            <div  style="word-wrap: break-word;word-break: normal;font-size: 18px; " class="ad-desc-list__detail ng-star-inserted">{{branchDetail}}</div>
                         </div>
                     </div>
                 </nz-collapse>
@@ -279,8 +279,8 @@
                                 <td nz-col [nzSpan]="3">开发人员</td>
                             </tr>
                             <tr nz-col [nzSpan]="24"  *ngFor="let s of t.fileList">
-                                <td style="text-overflow: ellipsis; overflow: hidden;white-space: nowrap" nz-col [nzSpan]="15">{{s.fullPath}}</td>
-                                <td nz-col [nzSpan]="3"> {{ s.commitType ==='A' && '新增' || s.commitType ==='D' && '删除' || d.commitType ==='M' && '修改' }}</td>
+                                <td style="text-overflow: ellipsis; overflow: hidden;white-space: nowrap" nz-col [nzSpan]="15">{{s.fullName}}</td>
+                                <td nz-col [nzSpan]="3"> {{s.commitType}}</td>
                                 <td nz-col [nzSpan]="3">{{s.deliveryVersion}}</td>
                                 <td nz-col [nzSpan]="3">{{s.author}}</td>
                             </tr>
@@ -311,8 +311,8 @@
                                 <td nz-col [nzSpan]="3">开发人员</td>
                             </tr>
                             <tr nz-col [nzSpan]="24"  *ngFor="let s of a">
-                                <td style="text-overflow: ellipsis; overflow: hidden;white-space: nowrap" nz-col [nzSpan]="15">{{s.fullPath}}</td>
-                                <td nz-col [nzSpan]="3"> {{s.commitType}}</td>
+                                <td style="text-overflow: ellipsis; overflow: hidden;white-space: nowrap" nz-col [nzSpan]="15">{{s.fullName}}</td>
+                                <td nz-col [nzSpan]="3"> {{ s.commitType}}</td>
                                 <td nz-col [nzSpan]="3">{{s.deliveryVersion}}</td>
                                 <td nz-col [nzSpan]="3">{{s.author}}</td>
                             </tr>
