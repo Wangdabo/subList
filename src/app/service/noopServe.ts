@@ -2,10 +2,10 @@
  * @author gyjlovelh
  * @createTime 2017/10/8
  */
-import { Injectable, Inject} from '@angular/core'
-import { Router } from '@angular/router'
+import { Injectable, Inject} from '@angular/core';
+import { Router } from '@angular/router';
 import { HttpInterceptor, HttpEvent, HttpHandler, HttpRequest, HttpResponse } from '@angular/common/http'
-import { Observable } from 'rxjs/Observable'
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
@@ -27,7 +27,7 @@ export class NoopInterceptor implements HttpInterceptor {
      */
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         // 拦截请求
-        let token = this.tokenService.get().token // 绑定token
+        let token = this.tokenService.get().token; // 绑定token
         let authReq = null;
         if (token) {
             authReq = req.clone({ setHeaders: { 'Authorization': token}});

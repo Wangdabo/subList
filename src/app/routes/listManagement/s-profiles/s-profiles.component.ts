@@ -84,7 +84,7 @@ export class SProfilesComponent implements OnInit {
                     console.log(val)
                     this.data = val.result;
                     this.total = this.data.length; // 总数
-                    this.pageTotal = parseInt(this.data.length / 10) * 10; // 页码
+                    // this.pageTotal = parseInt(this.data.length / 10) * 10; // 页码
                     // 拼接
                 }
             );

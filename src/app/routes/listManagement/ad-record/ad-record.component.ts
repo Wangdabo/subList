@@ -34,7 +34,7 @@ export class AdRecordComponent implements OnInit {
     }
 
     showAdd: boolean; // 是否有修改
-    configTitle = '详情'
+    configTitle = '详情';
     modalVisible = false;
     mergeVisible = false; // 合并投放弹窗
     isPagination = true; // 是否有分页
@@ -99,35 +99,19 @@ export class AdRecordComponent implements OnInit {
             .subscribe(
                 (val) => {
                     this.data = val.result.records;
-                    this.data = val.result.records;
-                    console.log(this.data);
-                    this.total = val.result.total;//总数
-                    this.pageTotal = val.result.pages * 10;//页码
+                    console.log(this.data)
+
+                    this.total = val.result.total; // 总数
+                    this.pageTotal = val.result.pages * 10; // 页码
                     for ( let i = 0; i < this.data.length; i++) {
                         this.data[i].checkDate = moment(this.data[i].checkDate).format('YYYY-MM-DD');
+                       this.data[i].guidProfiles =  this.data[i].guidProfiles.target;
+                       this.data[i].buttonData = ['删除'];
                     }
 
 
                 },
             );
-        // this.data = [
-        //     {guidWorkitem: '1618 国际结算迁移', applyAlias:'第一次投放', deliveryTime: '2018-06-16',  guidProfiles:'SIT',proposer: '黄锡华', deliveryResult: '成功', number: 5 },
-        //     {guidWorkitem: '1618 国际结算迁移', applyAlias:'第二次投放', deliveryTime: '2018-06-16',  guidProfiles:'SIT',proposer: '陈育爽', deliveryResult: '成功', number: 2 },
-        //     {guidWorkitem: '柜面无纸化', applyAlias:'补充提交', deliveryTime: '2018-06-16',  guidProfiles:'SIT',proposer: '李宁', deliveryResult: '申请中', number: 3 },
-        //     {guidWorkitem: '1618 国际结算迁移', applyAlias:'第一次投放', deliveryTime: '2018-06-16',  guidProfiles:'SIT',proposer: '黄锡华', deliveryResult: '成功', number: 10 },
-        //     {guidWorkitem: '1618 柜面无纸化', applyAlias:'第一次投放', deliveryTime: '2018-06-16',  guidProfiles:'SIT Dev',proposer: '鲍成杰', deliveryResult: '申请中', number: 4 },
-        //     {guidWorkitem: '柜面无纸化', applyAlias:'第一次投放', deliveryTime: '2018-06-16',  guidProfiles:'SIT Dev',proposer: '鲍成杰', deliveryResult: '申请中', number: 4 },
-        //     {guidWorkitem: '1618 柜面无纸化', applyAlias:'第二次投放', deliveryTime: '2018-06-16',  guidProfiles:'SIT Dev',proposer: '鲍成杰', deliveryResult: '失败', number: 4 },
-        //     {guidWorkitem: '1618 柜面无纸化', applyAlias:'第一次投放', deliveryTime: '2018-06-16',  guidProfiles:'SIT Dev',proposer: '鲍成杰', deliveryResult: '申请中', number: 4 },
-        //     {guidWorkitem: '柜面无纸化', applyAlias:'补充提交', deliveryTime: '2018-06-16',  guidProfiles:'SIT Dev',proposer: '李宁', deliveryResult: '成功', number: 4 },
-        // ]
-        // for(var i =0; i< this.data.length; i++) {
-        //     if (this.data[i].deliveryResult !== '成功') {
-        //         // 后期根据条件判断添加
-        //         this.data[i].buttonData = [ '打回','', ' ', '失败', '', ' ', '成功'];
-        //     }
-        // }
-        // this.total = 50;
     }
 
 
@@ -159,14 +143,16 @@ export class AdRecordComponent implements OnInit {
 
     // 按钮点击事件
     buttonEvent(event) {
-        console.log(event);
-        if (event.names === '失败') {
+        console.log(event.name);
+        if (event.names === '删除') {
             alert('失败的方法');
         } else if (event.names === '打回') {
             alert('打回的方法');
         } else if (event.names === '成功') {
             alert('成功的方法');
         }
+
+
 
     }
 
