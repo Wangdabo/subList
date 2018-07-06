@@ -109,6 +109,8 @@ export class SubListComponent implements OnInit {
         for (var i = 0; i < this.workItem.length; i ++ ) {
             if (this.workItem[i].guid === event) {
                 this.workItemInfo = this.workItem[i];
+                this.workItemInfo.receiveTime = moment(this.workItemInfo.receiveTime).format('YYYY-MM-DD HH:mm:ss');
+                this.workItemInfo.deliveryplanTime = moment(this.workItemInfo.deliveryplanTime).format('YYYY-MM-DD HH:mm:ss');
             }
         }
         this.workItemInfo.developers = this.workItemInfo.developers.split(',')
@@ -260,10 +262,6 @@ export class SubListComponent implements OnInit {
     buttonEvent(event) {
         console.log(event)
         if (event.data.names === '删除') {
-            /* this.deleteId = event.index;
-             console.log(this.deleteId);
-             event.parList.fileList.splice(this.deleteId, 1);
-             console.log(event.parList.fileList);*/
         } else {
             console.log('详情');
         }
@@ -382,7 +380,6 @@ export class SubListComponent implements OnInit {
         var filsNewList = [];
         // 完全相同
 
-
         var deploySelect; // 导出
 
         if (!_.isUndefined(this.deliveryTime) && !_.isUndefined(this.deliveryName) && this.profiles.length > 0) { // 如果日期和下面的事件都选择了
@@ -440,7 +437,7 @@ export class SubListComponent implements OnInit {
 
                     }
                 });
-                console.log(value);
+                console.log(value); // 明天计算总量即可
             });
 
 
@@ -521,13 +518,13 @@ export class SubListComponent implements OnInit {
 
 
     subSave() {
-        /* this.utilityService.postData(appConfig.testUrl  + appConfig.API.sDeliveryList +  '/deliveryAnd', this.splicingObj, {Authorization: this.token})
+         this.utilityService.postData(appConfig.testUrl  + appConfig.API.sDeliveryList +  '/deliveryAndDeliveryList', this.splicingObj, {Authorization: this.token})
                    .subscribe(
                        (val) => {
                            this.nznot.create('success', val.msg , val.msg);
                            this.modalVisible = false;
                        }
-                   );*/
+                   );
 
     }
 }
