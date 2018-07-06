@@ -81,6 +81,7 @@ export class SProfilesComponent implements OnInit {
         this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfiles, {}, {Authorization: this.token})
             .subscribe(
                 (val) => {
+                    console.log(val)
                     this.data = val.result;
                     this.total = this.data.length; // 总数
                     this.pageTotal = parseInt(this.data.length / 10) * 10; // 页码
