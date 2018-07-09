@@ -143,6 +143,8 @@ export class SubListComponent implements OnInit {
     modalVisible = false; // 投放申请弹框
 
     textcssList: any;
+
+    calculatedArray: any; // 合计的数组
     // 数组转换特定格式
     arrarObj(event) {
         let listArray = [];
@@ -318,8 +320,6 @@ export class SubListComponent implements OnInit {
         }
         // 初始化数据
         this.deliveryTime = moment(new Date()).format('YYYY-MM-DD');
-        this.deliveryName = '';
-
         this.getcheckOptionOne();
 
     }
@@ -336,6 +336,66 @@ export class SubListComponent implements OnInit {
 
 
     profiles: any;
+
+    // 计算合计
+    calculatedTotal(event) {
+        let totalArray = []
+        _.forEach(event , function (value) {
+            if (value.projectType !== 'C') { // 如果不是默认的，代表congig和default
+                if (!appConfig.isNull(value.groupArray)) { // 不为空
+                    _.forEach(value.groupArray , function (value1) {
+                        _.forEach(value1 , function (value2) {
+                            if (!appConfig.isNull(value2.patchSelect)) {
+                                let obj = {
+                                    key: value2.patchSelect,
+                                    total: value1.length
+                                };
+                                totalArray.push(obj);
+                            }
+                        })
+                    });
+                }
+
+            } else {
+                _.forEach(value.deliveryPatchDetails , function (value3) {
+                    console.log(value3)
+                    _.forEach(value3.fileList , function (value4) {
+                        console.log(value4)
+                        let obj = {
+                            key: value4.patchType,
+                            total: 1
+                        };
+                        totalArray.push(obj);
+                    })
+                });
+            }
+        });
+
+        console.log(totalArray)
+        let newArr = [];
+        for (let i in totalArray) {
+            if (typeof(newArr[totalArray[i].key]) === 'undefined') {
+                newArr[totalArray[i].key] = 0;
+            }
+            newArr[totalArray[i].key] += totalArray[i].total;
+        }
+
+        console.log(newArr)
+        let totalArr = [];
+
+        for (var i in newArr) {
+            console.log(i)
+            let obj = {
+                key: i,
+                value: newArr[i]
+            };
+            totalArr.push(obj)
+        }
+        console.log(totalArr)
+        return totalArr;
+    }
+
+
     // 投放申请
     save() {
         this.profiles = [];
@@ -346,19 +406,19 @@ export class SubListComponent implements OnInit {
                     profilesName: this.elementScice[i].profilesName,
                     packTiming: this.elementScice[i].times,
                     name: this.elementScice[i].manager,
+                    applyAlias: this.elementScice[i].deliveryName
                 };
                 this.profiles.push(obj);
             }
         }
+        console.log(this.profiles)
         // 第一次相同的
         var fildNewList = [];
         var filsNewList = [];
         // 完全相同
-
         var deploySelect; // 导出
-
-        if (!_.isUndefined(this.deliveryTime) && !_.isUndefined(this.deliveryName) && this.profiles.length > 0) { // 如果日期和下面的事件都选择了
-
+        console.log(this.deliveryName)
+        if (!_.isUndefined(this.deliveryTime)  && this.profiles.length > 0) { // 如果日期和下面的事件都选择了
             this.infoVisible = true;
             //  处理数据用来展示, 把没有选中的删除掉
             _.forEach(this.copytextList , function (value, index) { // 若一个参数，返回的便是其value值
@@ -407,16 +467,14 @@ export class SubListComponent implements OnInit {
                             }
                         }
                         value.groupArray = allsArray;
-
                     }
                 });
-                console.log(value); // 明天计算总量即可
             });
-
+            // 合计计算
+            this.calculatedArray = this.calculatedTotal(this.copytextList);
             this.modalVisible = false;
             this.infoVisible = true;
             this.dataChange();
-
         } else {
             this.nznot.create('error', '请检查信息是否全部填写', '请检查信息是否全部填写');
         }
@@ -461,7 +519,6 @@ export class SubListComponent implements OnInit {
         this.splicingObj = {
             guidBranch : this.bransguid,
             dliveryAddRequest: {
-                applyAlias: this.deliveryName,
                 profiles: this.profiles,
                 deliveryTime: moment(this.deliveryTime).format('YYYY-MM-DD')
             },
