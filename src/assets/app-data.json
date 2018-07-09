@@ -29,6 +29,10 @@
                     "text": "投放申请",
                     "link": "/launchApply",
                     "i18n": "launchApply"
+                },{
+                    "text": "核对记录",
+                    "link": "/adRecord",
+                    "i18n": "adRecord"
                 }
                 ]
             },
@@ -39,12 +43,8 @@
                 "icon": "anticon anticon-area-chart",
                 "children": [{
                     "text": "运行环境",
-                    "link": "/sProfiles",
+                    "link": "/UnderlyingParameter/sProfiles",
                     "i18n": "sProfiles"
-                },{
-                    "text": "核对记录",
-                    "link": "/adRecord",
-                    "i18n": "adRecord"
                 }
                 ]
             }
