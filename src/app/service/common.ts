@@ -25,10 +25,16 @@ export let appConfig = {
     },
 
 
-    // 枚举值
-    Enumeration:{
+    // 公共方法
+    //  判断是否是空或者undefinde
+    isNull(d) {
+        if (d === undefined || d === null) {
+            return true;
+        }
+        return false;
+    },
 
-    }
+
 }
 
 
