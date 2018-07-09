@@ -1,8 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { _HttpClient } from '@delon/theme';
-import { DeliveryModule} from '../../../service/delivent/deliveryModule';
-import {UtilityService} from '../../../service/utils.service';
-import {appConfig} from '../../../service/common';
+import { DeliveryModule} from '../../../../service/delivent/deliveryModule';
+import {UtilityService} from '../../../../service/utils.service';
+import {appConfig} from '../../../../service/common';
 import {NzModalService, NzNotificationService} from 'ng-zorro-antd';
 import {Router} from '@angular/router';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
@@ -26,7 +26,7 @@ export class SProfilesComponent implements OnInit {
     ngOnInit() {
         this.token  = this.tokenService.get().token;
         this.getData();
-        this.showAdd = true;
+        this.showAdd = false;
     }
 
     showAdd: boolean; // 是否有修改
@@ -65,24 +65,32 @@ export class SProfilesComponent implements OnInit {
     // 传入按钮层
     moreData = {
         morebutton: true,
-        buttons: [
+        buttonData: [
             { key: 'Overview', value: '查看概况' }
         ]
     }
+
 
     test: string;
     page: any;
     total: number;
     pageTotal: number;
-
-
+    // 表格数据按钮
+    buttonData = [
+        { key: 'dels', value: '删除' },
+        { key: 'upd', value: '修改' }
+    ];
 
     getData() {
         this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfiles, {}, {Authorization: this.token})
             .subscribe(
                 (val) => {
-                    console.log(val)
+
                     this.data = val.result;
+                    for (let i = 0 ; i <  this.data.length; i ++) {
+                        this.data[i].buttonData = this.buttonData;
+                    }
+                    console.log(this.data);
                     this.total = this.data.length; // 总数
                     // this.pageTotal = parseInt(this.data.length / 10) * 10; // 页码
                     // 拼接
@@ -120,12 +128,18 @@ export class SProfilesComponent implements OnInit {
     // 按钮点击事件
     buttonEvent(event) {
         console.log(event);
-        if (event.names === '失败') {
-            alert('失败的方法');
-        } else if (event.names === '打回') {
+        let obj = event.guid;
+        console.log(event.names)
+        if (event.names.key === 'dels') { // 按钮传入删除方法
+
+            this.utilityService.deleatData(appConfig.testUrl  + appConfig.API.delSprofiles + obj, {Authorization: this.token})
+                .subscribe(
+                    (val) => {
+                        console.log(val);
+                    }
+                );
+        } else if (event.names === '修改') {
             alert('打回的方法');
-        } else if (event.names === '成功') {
-            alert('成功的方法');
         }
 
     }
