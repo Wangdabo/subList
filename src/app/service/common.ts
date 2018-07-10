@@ -19,7 +19,7 @@ export let appConfig = {
         list: '/deliveries/list', //
         mergeInfo: '/deliveries/merge/info', // 合并投放清单信息
         merge: '/deliveries/merge',
-
+        sBranch: '/sBranch/list', // 分支查询
         checklist: '/checks/list', // 查看核对列表
 
     },

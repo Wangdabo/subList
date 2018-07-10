@@ -1,4 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
+import {
+    FormBuilder,
+    FormGroup,
+    Validators,
+    FormControl
+} from '@angular/forms';
 import { _HttpClient } from '@delon/theme';
 import { DeliveryModule} from '../../../../service/delivent/deliveryModule';
 import {UtilityService} from '../../../../service/utils.service';
@@ -6,6 +12,7 @@ import {appConfig} from '../../../../service/common';
 import {NzModalService, NzNotificationService} from 'ng-zorro-antd';
 import {Router} from '@angular/router';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
+
 
 
 @Component({
@@ -20,16 +27,66 @@ export class SProfilesComponent implements OnInit {
         private utilityService: UtilityService,
         private modal: NzModalService,
         private nznot: NzNotificationService,
+        private fb: FormBuilder,
     @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
     ) { }
    token: any;
+    // 打包窗口
+    searchOptions = [
+        {label: '9:00', value: '9:00'},
+        {label: '12:00', value: '12:00'},
+        {label: '15:00', value: '15:00'},
+    ]
+
     ngOnInit() {
         this.token  = this.tokenService.get().token;
         this.getData();
-        this.showAdd = false;
+        this.showAdd = true;
+
+        this.validateForm = this.fb.group({
+            profilesCode         : [ null, [ Validators.required ] ],
+            profilesName      : [ null, [ Validators.required ] ],
+            hostIp          : [ null, [ Validators.required ] ],
+            installPath          : [ null, [ Validators.required ] ],
+            csvUser          : [ null, [ Validators.required ] ],
+            manager          : [ null, [ Validators.required ] ],
+            isAllowDelivery    : [false],
+            packTiming    : [ [] , [ Validators.required ]  ],
+            searchOptions : [this.searchOptions],
+            csvPwd    : [ null , [ Validators.required ] ]
+        });
     }
 
+
+
+    validateForm: FormGroup;
+
+    submitForm() {
+        for (const i in this.validateForm.controls) {
+            this.validateForm.controls[ i ].markAsDirty();
+        }
+
+        console.log(this.validateForm);
+    }
+    confirmationValidator = (control: FormControl): { [s: string]: boolean } => {
+        if (!control.value) {
+            return { required: true };
+        } else if (control.value !== this.validateForm.controls[ 'password' ].value) {
+            return { confirm: true, error: true };
+        }
+    }
+
+    getCaptcha(e: MouseEvent) {
+        e.preventDefault();
+    }
+    getFormControl(name) {
+        return this.validateForm.controls[ name ];
+    }
+
+
+    Ptitle = '新增环境数据'
     showAdd: boolean; // 是否有修改
+    isShowTotal = true;
     configTitle = '详情'
     modalVisible = false;
     mergeVisible = false; // 合并投放弹窗
@@ -43,11 +100,7 @@ export class SProfilesComponent implements OnInit {
         {key: '1', value: '是'}
     ]
 
-    // buttons = [
-    //     {key: 'merge', value: '合并投放', if:true},
-    //     {key: 'checking', value: '核对合并清单',  if:false},
-    //     {key: 'export', value: '导出投放清单',  if:true},
-    // ]
+
 
 
     data: any[] = []; // 表格数据
@@ -57,11 +110,11 @@ export class SProfilesComponent implements OnInit {
         { value: '主机IP', key: 'hostIp', isclick: false },
         { value: '安装路径', key: 'installPath', isclick: false },
         { value: '版本控制用户', key: 'csvUser', isclick: false },
-        // { value: '版本控制密码', key: 'csvPwd', isclick: false },
         { value: '是否允许投放', key: 'isAllowDelivery', isclick: false },
         { value: '环境管理人员', key: 'manager', isclick: false },
         { value: '打包窗口', key: 'packTiming', isclick: false },
     ];
+
     // 传入按钮层
     moreData = {
         morebutton: true,
@@ -69,12 +122,16 @@ export class SProfilesComponent implements OnInit {
             { key: 'Overview', value: '查看概况' }
         ]
     }
-
+    buttons = [
+        {key: 'add', value: '新增', if: true},
+        {key: 'dels', value: '删除', if: true},
+    ]
 
     test: string;
     page: any;
     total: number;
     pageTotal: number;
+
     // 表格数据按钮
     buttonData = [
         { key: 'dels', value: '删除' },
@@ -92,7 +149,10 @@ export class SProfilesComponent implements OnInit {
                     }
                     console.log(this.data);
                     this.total = this.data.length; // 总数
-                    // this.pageTotal = parseInt(this.data.length / 10) * 10; // 页码
+                        // this.pageTotal = parseInt(this.data.length / 10) * 10; // 页码
+                    console.log(this.data.length);
+                    //
+
                     // 拼接
                 }
             );
@@ -103,7 +163,7 @@ export class SProfilesComponent implements OnInit {
     // 列表组件传过来的内容
     addHandler(event) {
 
-        if (event === 'merge') {
+        if (event === 'add') {
             this.mergeVisible = true;
         } else if (event === 'checking') {
             this.modalVisible = true; // 打开核对弹出框
@@ -127,19 +187,32 @@ export class SProfilesComponent implements OnInit {
 
     // 按钮点击事件
     buttonEvent(event) {
-        console.log(event);
+
         let obj = event.guid;
-        console.log(event.names)
+
         if (event.names.key === 'dels') { // 按钮传入删除方法
 
-            this.utilityService.deleatData(appConfig.testUrl  + appConfig.API.delSprofiles + obj, {Authorization: this.token})
+
+            this.utilityService.deleatData(appConfig.testUrl  + appConfig.API.delSprofiles + obj, {headers: this.token})
                 .subscribe(
                     (val) => {
                         console.log(val);
                     }
                 );
-        } else if (event.names === '修改') {
-            alert('打回的方法');
+        } else if (event.names.key === 'upd') {
+            let arr = [];
+           this.mergeVisible = true;
+            arr = event.packTiming.split(',');
+            event.searchOptions = this.searchOptions;
+            event.packTiming = arr;
+            // this.validateForm = event
+            delete event.buttonData;
+            delete event.names;
+            delete event.guid;
+            // event.delete('guid')
+            console.log(event);
+            this.validateForm.value =   event;
+            console.log( this.validateForm);
         }
 
     }
@@ -213,16 +286,12 @@ export class SProfilesComponent implements OnInit {
     isVisible = false; // 默认关闭
     workItem = false;
 
-    checkOptionsOne  = [
-        { label: 'TWS改版', value: 'TWS' },
-        { label: '1618 国际结算', value: '1618' },
-        { label: '无纸化',  value: 'wu' }
-    ]
+
 
 
     handleOk() {
         console.log(this.deliverItem);
-        console.log(this.checkOptionsOne); // 选中的会有true属性 判断即可
+        // console.log(this.checkOptionsOne); // 选中的会有true属性 判断即可
         // 请求数据 下载下来
         this.isVisible = false; // 关闭弹出框
     }
@@ -233,6 +302,7 @@ export class SProfilesComponent implements OnInit {
         console.log('确定成功');
         this.mergeVisible = false;
     }
+
 
 
 }

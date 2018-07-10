@@ -23,8 +23,8 @@ import { Exception500Component } from './exception/500.component';
 import { LaunchApplyComponent } from '../../../../subList/src/app/routes/listManagement/launch-apply/launch-apply.component';
 import { SubListComponent } from '../../../../subList/src/app/routes/listManagement/sub-list/sub-list.component';
 import { SProfilesComponent } from '../../../../subList/src/app/routes/listManagement/UnderlyingParameter/s-profiles/s-profiles.component';
-import { AdRecordComponent   } from  '../../../../subList/src/app/routes/listManagement/ad-record/ad-record.component';
-
+import { AdRecordComponent  } from  '../../../../subList/src/app/routes/listManagement/ad-record/ad-record.component';
+import { SBranchComponent } from '../../../../subList/src/app/routes/listManagement/UnderlyingParameter/s-branch/s-branch.component';
 
 
 const routes: Routes = [
@@ -40,6 +40,7 @@ const routes: Routes = [
             { path: 'launchApply', component: LaunchApplyComponent },
             { path: 'sProfiles', component: SProfilesComponent },
             { path: 'adRecord', component: AdRecordComponent },
+            { path: 'sBranch', component: SBranchComponent },
         ]
     },
     // passport

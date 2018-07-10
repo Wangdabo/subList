@@ -30,6 +30,7 @@ export class ListComponent implements OnInit {
     totalCallNo = 0;
     allChecked = false;
     indeterminate = false;
+    // isShowTotal = true;
 
     header: any[]; // 表头数据
     obj: any[];
@@ -58,6 +59,8 @@ export class ListComponent implements OnInit {
     pageTotal: number;
     @Input() // 输入属性,接受父组件传入的数据
     deleteTitle: string;
+    @Input() // 输入属性,接受父组件传入的数据
+    isShowTotal: boolean;
 
     data: any[] = [];
 
@@ -82,6 +85,7 @@ export class ListComponent implements OnInit {
     @Output()
     buttonEvent: EventEmitter<any> = new EventEmitter(); // 定义一个输出属性，按钮点击事件，非必选
 
+
     constructor(
         private http: _HttpClient,
         public msg: NzMessageService,
@@ -92,6 +96,7 @@ export class ListComponent implements OnInit {
     ngOnInit() {
         this.headerDate = this.headerDate;
         this.moreData = this.moreData; // 绑定更多数据
+
     }
 
 
@@ -122,8 +127,6 @@ export class ListComponent implements OnInit {
         } else {
             this.buttonEvent.emit(event); // 点击了修改，打开弹出框，把修改的数据传递过去
         }
-
-
 
 
     }
@@ -213,5 +216,6 @@ export class ListComponent implements OnInit {
         for (const item of ls) item.value = false;
         // this.getData();
     }
+
 
 }

@@ -5,6 +5,8 @@
 
 <pro-header></pro-header>
 
+
+
 <!--引入list组件-->
 <nz-card [nzBordered]="false">
     <!--  form表单搜索 -->
@@ -68,7 +70,7 @@
     </form>
     <!--列表组件-->
 
-    <app-list #child [initDate]="data" [configTitle]="configTitle"  [showAdd]="showAdd" [isPagination]="isPagination"  [buttons] ='buttons' (addCreat)="addHandler($event)" (buttonData)="buttonDataHandler($event)" (pageNumber)="monitorHandler($event)"
+    <app-list #child [initDate]="data" [configTitle]="configTitle"  [showAdd]="showAdd" [isPagination]="isPagination" [isShowTotal]="isShowTotal"  [buttons] ='buttons' (addCreat)="addHandler($event)" (buttonData)="buttonDataHandler($event)" (pageNumber)="monitorHandler($event)"
               (deleatData)="deleatData($event)" (isActive)="isActive($event)" (buttonEvent)="buttonEvent($event)" (selectedRow)="selectedRow($event)" [headerDate]="headerDate"
               [moreData]="moreData" [total]="total"  [pageTotal] = 'pageTotal'></app-list>
 </nz-card>
@@ -227,228 +229,171 @@
 </nz-modal>
 
 <!--合并投放-->
-<nz-modal [nzVisible]="mergeVisible"  [nzWidth]="1024" [nzTitle]="'工作项投放申请'"  [nzContent]="mergeModal"
-          (nzOnCancel)="mergeVisible=false" (nzOnOk)="checkSave()">
+<nz-modal [nzVisible]="mergeVisible"  [nzWidth]="1024" [nzTitle]="'Ptitle'"  [nzConfirmLoading]="false" [nzContent]="mergeModal"
+          (nzOnCancel)="mergeVisible=false" [nzFooter]="is">
     <ng-template #mergeModal>
-        <div nz-row [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
-            <div nz-col [nzSpan]="1" class="mb-md">
-                <div nz-col [nzSpan]="1"  nz-form-item class="d-flex">
-                    <div class="ad-desc-list__term ng-star-inserted">将:</div>
-                </div>
-            </div>
-            <div nz-col [nzSpan]="23"  class="mb-md">
-                <div nz-col [nzSpan]="23"  nz-form-item class="d-flex">
-                    <div>1618 国际结算迁移  2018-06-16  SIT 第一次投放</div>
-                </div>
-            </div>
-            <div nz-col [nzSpan]="23" [nzOffset]="1" class="mb-md">
-                <div nz-col [nzSpan]="23"  nz-form-item class="d-flex">
-                    <div>1618 国际结算迁移  2018-06-16  SIT 第二次投放</div>
-                </div>
-            </div>
-            <div nz-col [nzSpan]="23" [nzOffset]="1"  class="mb-md">
-                <div nz-col [nzSpan]="23"  nz-form-item class="d-flex">
-                    <div>1618 国际结算迁移  2018-06-16  SIT 第三次投放</div>
-                </div>
-            </div>
-            <div nz-col [nzSpan]="23" [nzOffset]="1"   class="mb-md">
-                <div nz-col [nzSpan]="23"  nz-form-item class="d-flex">
-                    <div>共三次投放申请，合并为以下投放申请</div>
-                </div>
-            </div>
-            <div nz-col [nzSpan]="8" class="mb-md">
-                <div  nz-form-item class="d-flex">
-                    <div class="ad-desc-list__term ng-star-inserted">投放计划:</div>
-                    <div class="ad-desc-list__detail ng-star-inserted">2018-07-01</div>
-                </div>
-            </div>
-            <div nz-col [nzSpan]="16" class="mb-md">
-                <div  nz-form-item class="d-flex">
-                    <div class="ad-desc-list__term ng-star-inserted">UAT</div>
-                    <div class="ad-desc-list__detail ng-star-inserted"> 付佳鸽</div>
-                </div>
-            </div>
-            <div nz-col [nzSpan]="24" class="mb-md">
-                <div  nz-form-item class="d-flex">
-                    <div class="ad-desc-list__term ng-star-inserted">工作项</div>
-                    <div class="ad-desc-list__detail ng-star-inserted">1618 国际结算交易迁移
 
+        <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+
+            <div nz-form-item nz-row>
+                <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                    <label for="profilesCode" nz-form-item-required>
+                        <span>
+                          环境代码
+                        </span>
+                    </label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" nzHasFeedback>
+                    <nz-input [nzSize]="'large'" formControlName="profilesCode" [nzId]="'profilesCode'"></nz-input>
+                    <div nz-form-explain *ngIf="getFormControl('profilesCode').dirty&&getFormControl('profilesCode').hasError('required')">请输入环境代码!</div>
+                </div>
+            </div>
+
+            <div nz-form-item nz-row>
+                <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                   <label for="profilesName" nz-form-item-required>
+                        <span>
+                          环境名称
+                        </span>
+                    </label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" nzHasFeedback>
+                    <nz-input [nzSize]="'large'" formControlName="profilesName" [nzId]="'profilesName'"></nz-input>
+                    <div nz-form-explain *ngIf="getFormControl('profilesName').dirty&&getFormControl('profilesName').hasError('required')">请输入环境名称!</div>
+                </div>
+            </div>
+
+            <div nz-form-item nz-row>
+                <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                    <label for="hostIp" nz-form-item-required>
+                        <span>
+                        主机IP
+                        </span>
+                    </label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" nzHasFeedback>
+                    <nz-input [nzSize]="'large'" formControlName="hostIp" [nzId]="'hostIp'"></nz-input>
+                    <div nz-form-explain *ngIf="getFormControl('hostIp').dirty&&getFormControl('hostIp').hasError('required')">请输入主机IP!</div>
+                </div>
+            </div>
+
+            <div nz-form-item nz-row>
+                <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                    <label for="installPath" nz-form-item-required>
+                        <span>
+                          安装路径
+                        </span>
+                    </label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" nzHasFeedback>
+                    <nz-input [nzSize]="'large'" formControlName="installPath" [nzId]="'installPath'"></nz-input>
+                    <div nz-form-explain *ngIf="getFormControl('installPath').dirty&&getFormControl('installPath').hasError('required')">请输入安装路径!</div>
+                </div>
+            </div>
+
+            <div nz-form-item nz-row>
+                <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                    <label for="installPath" nz-form-item-required>
+                        <span>
+                          版本密码
+                        </span>
+                    </label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" nzHasFeedback>
+                    <nz-input [nzSize]="'large'" formControlName="csvPwd" [nzId]="'csvPwd'"></nz-input>
+                    <div nz-form-explain *ngIf="getFormControl('csvPwd').dirty&&getFormControl('csvPwd').hasError('required')">请输入安装路径!</div>
+                </div>
+            </div>
+
+            <div nz-form-item nz-row>
+                <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                    <label for="installPath" nz-form-item-required>
+                        <span>
+                          版本控制用户
+                        </span>
+                    </label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" nzHasFeedback>
+                    <nz-input [nzSize]="'large'" formControlName="csvUser" [nzId]="'csvUser'"></nz-input>
+                    <div nz-form-explain *ngIf="getFormControl('csvUser').dirty&&getFormControl('csvUser').hasError('required')">请输入版本控制用户!</div>
+                </div>
+            </div>
+
+            <div nz-form-item nz-row>
+                <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                    <label for="installPath" nz-form-item-required>
+                        <span>
+                        是否允许投放
+                        </span>
+                    </label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" nzHasFeedback>
+                    <nz-switch  formControlName="isAllowDelivery"  >
+                        <span checked>是</span>
+                        <span unchecked>否</span>
+                    </nz-switch>
+                </div>
+
+            </div>
+
+                <div nz-form-item nz-row>
+                    <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                   <label for="installPath" nz-form-item-required>
+                        <span>
+                          环境管理人员
+                        </span>
+                        </label>
+                    </div>
+                    <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" nzHasFeedback>
+                        <nz-input [nzSize]="'large'" formControlName="manager" [nzId]="'manager'"></nz-input>
+                        <div nz-form-explain *ngIf="getFormControl('manager').dirty&&getFormControl('manager').hasError('required')">请输入环境管理人员!</div>
                     </div>
                 </div>
-            </div>
 
-            <div nz-col [nzSpan]="8" class="mb-md">
-                <div  nz-form-item class="d-flex">
-                    <div class="ad-desc-list__term ng-star-inserted">申请人:</div>
-                    <div class="ad-desc-list__detail ng-star-inserted">黄锡华</div>
+            <div nz-form-item nz-row>
+                <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                    <label for="installPath" nz-form-item-required>
+                        <span>
+                          打包窗口
+                        </span>
+                    </label>
                 </div>
-            </div>
-            <div nz-col [nzSpan]="24" class="mb-md">
-                <div  nz-form-item class="d-flex">
-                    <div class="ad-desc-list__term ng-star-inserted">开发分支:</div>
-                    <div class="ad-desc-list__detail ng-star-inserted"> http://10.232.84.99/svn/repos/tip/development/branches/Feature/Feature_2018061601</div>
-                </div>
-            </div>
-            <div nz-col [nzSpan]="24" class="mb-md">
-                <div  nz-form-item class="d-flex">
-                    <div class="ad-desc-list__term ng-star-inserted">投放小计:</div>
-                    <div class="ad-desc-list__detail ng-star-inserted">jar包数 :2个</div>
-                    <div class="ad-desc-list__detail ng-star-inserted">ecd包数 :1个</div>
-                    <div class="ad-desc-list__detail ng-star-inserted">epd包数  :0个</div>
-                    <div class="ad-desc-list__detail ng-star-inserted">SQL文件数   :1个</div>
-
-                </div>
-            </div>
-            <div nz-col [nzSpan]="24" class="mb-md">
-                <div  nz-form-item class="d-flex">
-                    <div class="ad-desc-list__term ng-star-inserted">投放合计:</div>
-                    <div class="ad-desc-list__detail ng-star-inserted">补丁包树:5个</div>
-                    <div class="ad-desc-list__detail ng-star-inserted">代码文件:20个</div>
-                    <div class="ad-desc-list__detail ng-star-inserted">脚本数  :1个</div>
-                </div>
-            </div>
-            <div nz-col [nzSpan]="24" class="mb-md">
-                <div  nz-form-item class="d-flex">
-                    <div class="ad-desc-list__term ng-star-inserted">投放明细:</div>
+                <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" nzHasFeedback>
+                    <nz-select
+                            style="width: 400px;"
+                            nzTags
+                            [nzPlaceHolder]="'请选择打包窗口'"
+                            formControlName="packTiming"
+                            [nzNotFoundContent]="'无法找到'"
+                            nzShowSearch>
+                        <nz-option
+                                *ngFor="let option of searchOptions"
+                                [nzLabel]="option.label"
+                                [nzValue]="option">
+                        </nz-option>
+                    </nz-select>
                 </div>
             </div>
 
-            <!-- 列表 -->
-            <div  nz-col [nzSpan]="24" class="mb-md">
-                <table style="margin:30px 0px;">
-                    <tbody nz-col [nzSpan]="24" style="text-align: center;" >
-                    <tr nz-col [nzSpan]="24">
-                        <td nz-col [nzSpan]="8">工程名</td>
-                        <td nz-col [nzSpan]="16">com.primeton.ibs.common.message</td>
-                    </tr>
-                    <tr nz-col [nzSpan]="24">
-                        <td nz-col [nzSpan]="8">编译为</td>
-                        <td nz-col [nzSpan]="16">com.primeton.ibs.common.message.jar</td>
-                    </tr>
-                    <tr nz-col [nzSpan]="24">
-                        <td nz-col [nzSpan]="8">部署到</td>
-                        <td nz-col [nzSpan]="16">TWS   BS</td>
-                    </tr>
-                    <tr nz-col [nzSpan]="24">
-                        <td nz-col [nzSpan]="15">代码</td>
-                        <td nz-col [nzSpan]="3">变动类型</td>
-                        <td nz-col [nzSpan]="3">最新版本</td>
-                        <td nz-col [nzSpan]="3">开发人员</td>
-                    </tr>
-                    <tr nz-col [nzSpan]="24">
-                        <td nz-col [nzSpan]="15">src/com/primeton/message/MessageDefinitionModelLoader.java</td>
-                        <td nz-col [nzSpan]="3">修改</td>
-                        <td nz-col [nzSpan]="3">820</td>
-                        <td nz-col [nzSpan]="3">Shiyl</td>
-                    </tr>
-                    <tr nz-col [nzSpan]="24">
-                        <td nz-col [nzSpan]="15">src/com/primeton/message/MessagePackerConfigModelLoader.java</td>
-                        <td nz-col [nzSpan]="3">删除</td>
-                        <td nz-col [nzSpan]="3">820</td>
-                        <td nz-col [nzSpan]="3">Shiyl</td>
-                    </tr>
-                    <tr nz-col [nzSpan]="24">
-                        <td nz-col [nzSpan]="15">src/com/primeton/ipl/message/packer/BitMapMessagePacker.java</td>
-                        <td nz-col [nzSpan]="3">新增</td>
-                        <td nz-col [nzSpan]="3">90</td>
-                        <td nz-col [nzSpan]="3">Shiyl</td>
-                    </tr>
-                    </tbody>
-                </table>
-                <table style="margin:30px 0px;">
-                    <tbody nz-col [nzSpan]="24" style="text-align: center;" >
-                    <tr nz-col [nzSpan]="24">
-                        <td nz-col [nzSpan]="8">工程名</td>
-                        <td nz-col [nzSpan]="16">com.primeton.ibs.common.message</td>
-                    </tr>
-                    <tr nz-col [nzSpan]="24">
-                        <td nz-col [nzSpan]="8">编译为</td>
-                        <td nz-col [nzSpan]="16">com.primeton.ibs.common.message.jar</td>
-                    </tr>
-                    <tr nz-col [nzSpan]="24">
-                        <td nz-col [nzSpan]="8">部署到</td>
-                        <td nz-col [nzSpan]="16">TWS   BS</td>
-                    </tr>
-                    <tr nz-col [nzSpan]="24">
-                        <td nz-col [nzSpan]="15">代码</td>
-                        <td nz-col [nzSpan]="3">变动类型</td>
-                        <td nz-col [nzSpan]="3">最新版本</td>
-                        <td nz-col [nzSpan]="3">开发人员</td>
-                    </tr>
-                    <tr nz-col [nzSpan]="24">
-                        <td nz-col [nzSpan]="15">src/com/primeton/message/MessageDefinitionModelLoader.java</td>
-                        <td nz-col [nzSpan]="3">修改</td>
-                        <td nz-col [nzSpan]="3">820</td>
-                        <td nz-col [nzSpan]="3">Shiyl</td>
-                    </tr>
-                    <tr nz-col [nzSpan]="24">
-                        <td nz-col [nzSpan]="15">src/com/primeton/message/MessagePackerConfigModelLoader.java</td>
-                        <td nz-col [nzSpan]="3">删除</td>
-                        <td nz-col [nzSpan]="3">820</td>
-                        <td nz-col [nzSpan]="3">Shiyl</td>
-                    </tr>
-                    <tr nz-col [nzSpan]="24">
-                        <td nz-col [nzSpan]="15">src/com/primeton/ipl/message/packer/BitMapMessagePacker.java</td>
-                        <td nz-col [nzSpan]="3">新增</td>
-                        <td nz-col [nzSpan]="3">90</td>
-                        <td nz-col [nzSpan]="3">Shiyl</td>
-                    </tr>
-                    </tbody>
-                </table>
-                <table style="margin:30px 0px;">
-                    <tbody nz-col [nzSpan]="24" style="text-align: center;" >
-                    <tr nz-col [nzSpan]="24">
-                        <td nz-col [nzSpan]="8">工程名</td>
-                        <td nz-col [nzSpan]="16">com.primeton.ibs.common.message</td>
-                    </tr>
-                    <tr nz-col [nzSpan]="24">
-                        <td nz-col [nzSpan]="8">编译为</td>
-                        <td nz-col [nzSpan]="16">com.primeton.ibs.common.message.jar</td>
-                    </tr>
-                    <tr nz-col [nzSpan]="24">
-                        <td nz-col [nzSpan]="8">部署到</td>
-                        <td nz-col [nzSpan]="16">TWS   BS</td>
-                    </tr>
-                    <tr nz-col [nzSpan]="24">
-                        <td nz-col [nzSpan]="15">代码</td>
-                        <td nz-col [nzSpan]="3">变动类型</td>
-                        <td nz-col [nzSpan]="3">最新版本</td>
-                        <td nz-col [nzSpan]="3">开发人员</td>
-                    </tr>
-                    <tr nz-col [nzSpan]="24">
-                        <td nz-col [nzSpan]="15">src/com/primeton/message/MessageDefinitionModelLoader.java</td>
-                        <td nz-col [nzSpan]="3">修改</td>
-                        <td nz-col [nzSpan]="3">820</td>
-                        <td nz-col [nzSpan]="3">Shiyl</td>
-                    </tr>
-                    <tr nz-col [nzSpan]="24">
-                        <td nz-col [nzSpan]="15">src/com/primeton/message/MessagePackerConfigModelLoader.java</td>
-                        <td nz-col [nzSpan]="3">删除</td>
-                        <td nz-col [nzSpan]="3">820</td>
-                        <td nz-col [nzSpan]="3">Shiyl</td>
-                    </tr>
-                    <tr nz-col [nzSpan]="24">
-                        <td nz-col [nzSpan]="15">src/com/primeton/ipl/message/packer/BitMapMessagePacker.java</td>
-                        <td nz-col [nzSpan]="3">新增</td>
-                        <td nz-col [nzSpan]="3">90</td>
-                        <td nz-col [nzSpan]="3">Shiyl</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
 
 
-            <div  nz-col [nzSpan]="24" class="mb-md">
-                <button   nz-col  [nzSpan]="4"  [nzOffset]="'6'" nz-button  (click)="mergeVisible=false"  [nzType]="'primary'" [nzSize]="'large'">
-                    <span>取消</span>
-                </button>
-                <button  nz-col [nzSpan]="4"  [nzOffset]="'4'"  nz-button  (click)="determine()"  [nzType]="'primary'" [nzSize]="'large'">
-                    <span>确定</span>
-                </button>
-            </div>
 
-        </div>
 
+
+                    <div nz-form-item nz-row style="margin-bottom:8px;">
+                        <div nz-form-control nz-col [nzSpan]="5" [nzOffset]="7">
+                            <button nz-button [nzSize]="'large'" [nzType]="'primary'">确定</button>
+                        </div>
+
+                        <div nz-form-control nz-col [nzSpan]="5">
+                            <button nz-button  [nzSize]="'large'" [nzType]="default" (click)="mergeVisible=false">取消</button>
+                        </div>
+                    </div>
+
+
+
+
+        </form>
 
     </ng-template>
 </nz-modal>

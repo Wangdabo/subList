@@ -27,6 +27,7 @@ import { LaunchApplyComponent } from '../../../../subList/src/app/routes/listMan
 import { SubListComponent } from '../../../../subList/src/app/routes/listManagement/sub-list/sub-list.component';
 import { SProfilesComponent } from '../../../../subList/src/app/routes/listManagement/UnderlyingParameter/s-profiles/s-profiles.component';
 import { AdRecordComponent } from '../../../../subList/src/app/routes/listManagement/ad-record/ad-record.component';
+import { SBranchComponent } from '../../../../subList/src/app/routes/listManagement/UnderlyingParameter/s-branch/s-branch.component';
 // 公共封装组件
 import { ListComponent} from '../component/list/list.component';
 import { EnvironmentComponent} from '../component/environment/environment.component';
@@ -46,6 +47,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
         LaunchApplyComponent,
         SubListComponent,
         SProfilesComponent,
+        SBranchComponent,
         AdRecordComponent,
         UserRegisterComponent,
         UserRegisterResultComponent,

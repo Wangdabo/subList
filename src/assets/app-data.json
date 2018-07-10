@@ -48,8 +48,8 @@
                 },
                     {
                         "text": "分支记录",
-                        "link": "/sBran",
-                        "i18n": "sProfiles"
+                        "link": "/sBranch",
+                        "i18n": "sBranch"
                     }
                 ]
             }
