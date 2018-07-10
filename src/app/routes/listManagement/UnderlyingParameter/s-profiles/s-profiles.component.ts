@@ -32,8 +32,8 @@ export class SProfilesComponent implements OnInit {
     ) { }
    token: any;
     // 打包窗口
-    searchOptions = [
-        {label: '9:00', value: '9:00'},
+    checkOptionsOne = [
+        {label: '9:00', value: '9:00', checked: true},
         {label: '12:00', value: '12:00'},
         {label: '15:00', value: '15:00'},
     ]
@@ -51,8 +51,7 @@ export class SProfilesComponent implements OnInit {
             csvUser          : [ null, [ Validators.required ] ],
             manager          : [ null, [ Validators.required ] ],
             isAllowDelivery    : [false],
-            packTiming    : [ [] , [ Validators.required ]  ],
-            searchOptions : [this.searchOptions],
+            packTiming : [this.checkOptionsOne],
             csvPwd    : [ null , [ Validators.required ] ]
         });
     }
@@ -63,10 +62,20 @@ export class SProfilesComponent implements OnInit {
 
     submitForm() {
         for (const i in this.validateForm.controls) {
-            this.validateForm.controls[ i ].markAsDirty();
-        }
+          this.validateForm.controls[ i ].markAsDirty();
+          console.log(i);
+            console.log( this.validateForm.controls[ i ]);
 
-        console.log(this.validateForm);
+        }
+        this.utilityService.postData(appConfig.testUrl  + appConfig.API.sBranch, {}, {Authorization: this.token})
+            .subscribe(
+                (val) => {
+           console.log(val);
+                }
+            );
+
+
+
     }
     confirmationValidator = (control: FormControl): { [s: string]: boolean } => {
         if (!control.value) {
@@ -201,21 +210,19 @@ export class SProfilesComponent implements OnInit {
                 );
         } else if (event.names.key === 'upd') {
             let arr = [];
-           this.mergeVisible = true;
+
             arr = event.packTiming.split(',');
-            event.searchOptions = this.searchOptions;
             event.packTiming = arr;
-            // this.validateForm = event
-            delete event.buttonData;
-            delete event.names;
-            delete event.guid;
-            // event.delete('guid')
-            console.log(event);
-            this.validateForm.value =   event;
+            // for (const i in this.validateForm.controls) {
+            //     this.validateForm.controls[i].value = '1';
+            //     this.validateForm.controls[ i ].markAsDirty(event);
+            // }
             console.log( this.validateForm);
+            this.mergeVisible = true;
         }
 
     }
+
 
     // 列表按钮方法
     buttonDataHandler(event) {

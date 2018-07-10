@@ -20,6 +20,8 @@ export let appConfig = {
         mergeInfo: '/deliveries/merge/info', // 合并投放清单信息
         merge: '/deliveries/merge',
         sBranch: '/sBranch/list', // 分支查询
+        sBranchadd: '/sBranch', // 分支增加
+        NogetsBranch: '/sBranch/notAllot', // 未指配的分支
         checklist: '/checks/list', // 查看核对列表
 
     },

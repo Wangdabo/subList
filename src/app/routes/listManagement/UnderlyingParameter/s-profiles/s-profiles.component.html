@@ -244,7 +244,7 @@
                     </label>
                 </div>
                 <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" nzHasFeedback>
-                    <nz-input [nzSize]="'large'" formControlName="profilesCode" [nzId]="'profilesCode'"></nz-input>
+                    <nz-input [nzSize]="'large'" formControlName="profilesCode" [nzId]="'profilesCode'" [nzDisabled]="true"></nz-input>
                     <div nz-form-explain *ngIf="getFormControl('profilesCode').dirty&&getFormControl('profilesCode').hasError('required')">请输入环境代码!</div>
                 </div>
             </div>
@@ -258,7 +258,7 @@
                     </label>
                 </div>
                 <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" nzHasFeedback>
-                    <nz-input [nzSize]="'large'" formControlName="profilesName" [nzId]="'profilesName'"></nz-input>
+                    <nz-input [nzSize]="'large'" formControlName="profilesName" [nzId]="'profilesName'" [nzDisabled]="true"></nz-input>
                     <div nz-form-explain *ngIf="getFormControl('profilesName').dirty&&getFormControl('profilesName').hasError('required')">请输入环境名称!</div>
                 </div>
             </div>
@@ -319,22 +319,6 @@
                 </div>
             </div>
 
-            <div nz-form-item nz-row>
-                <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
-                    <label for="installPath" nz-form-item-required>
-                        <span>
-                        是否允许投放
-                        </span>
-                    </label>
-                </div>
-                <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" nzHasFeedback>
-                    <nz-switch  formControlName="isAllowDelivery"  >
-                        <span checked>是</span>
-                        <span unchecked>否</span>
-                    </nz-switch>
-                </div>
-
-            </div>
 
                 <div nz-form-item nz-row>
                     <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
@@ -359,19 +343,7 @@
                     </label>
                 </div>
                 <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" nzHasFeedback>
-                    <nz-select
-                            style="width: 400px;"
-                            nzTags
-                            [nzPlaceHolder]="'请选择打包窗口'"
-                            formControlName="packTiming"
-                            [nzNotFoundContent]="'无法找到'"
-                            nzShowSearch>
-                        <nz-option
-                                *ngFor="let option of searchOptions"
-                                [nzLabel]="option.label"
-                                [nzValue]="option">
-                        </nz-option>
-                    </nz-select>
+                    <nz-checkbox-group  formControlName="packTiming"></nz-checkbox-group>
                 </div>
             </div>
 
