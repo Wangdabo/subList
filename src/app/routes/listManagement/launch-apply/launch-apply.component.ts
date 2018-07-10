@@ -25,14 +25,17 @@ export class LaunchApplyComponent implements OnInit {
     ) { }
     token: any;
     userName: string;
+
     ngOnInit() {
         this.token  = this.tokenService.get().token;
         this.userName = this.tokenService.get().name;
         this.getData(1);
         this.showAdd = true;
+
     }
 
     showAdd: boolean; // 是否有修改
+    isStatus = true;
     configTitle = '详情'
     modalVisible = false;
     checkModalVisible = false;
@@ -40,10 +43,11 @@ export class LaunchApplyComponent implements OnInit {
     checkListVisible = false; // 核查清单弹出
     isPagination = true; // 是否有分页
     istextVisible = false;
+    isMergeList = false; // 合并列表模态框
     // 信息
     deliverItem: DeliveryModule = new  DeliveryModule();
     deliveryTime: any; // 投放日期
-
+    isShowTotal = true;
     pageTotal: number; // 翻页总数
     deliveryResult = [
         {key: '0', value: '申请中'},
@@ -53,9 +57,9 @@ export class LaunchApplyComponent implements OnInit {
     ]
 
     buttons = [
-        {key: 'merge', value: '合并投放', if:true},
-        {key: 'checking', value: '核对合并清单',  if:false},
-        {key: 'export', value: '导出投放清单',  if:true},
+        {key: 'merge', value: '合并投放', if: true},
+        {key: 'checking', value: '核对合并清单',  if: false},
+        {key: 'export', value: '导出投放清单',  if: true},
     ]
 
 
@@ -78,10 +82,11 @@ export class LaunchApplyComponent implements OnInit {
     // 传入按钮层
     moreData = {
         morebutton: true,
-        buttons: [
+        buttonData: [
             { key: 'Overview', value: '查看概况' }
         ]
     }
+
 
     test: string;
     page: any;
@@ -94,6 +99,7 @@ export class LaunchApplyComponent implements OnInit {
     profilesData: any;
     checkModalData: any[] = []; // 核查清单数据
     mergeListData: any[] = []; // 核查有异议的数据
+
     inputValue = '';
 
         getData(index) {
@@ -224,6 +230,49 @@ export class LaunchApplyComponent implements OnInit {
     deleatData(event) {
 
     }
+    buttonClick(e) {
+            console.log(e);
+    }
+
+
+
+    // current = 0;
+    //
+    // index = 'First-content';
+    //
+    // pre(): void {
+    //     this.current -= 1;
+    //     this.changeContent();
+    // }
+    //
+    // next(): void {
+    //     this.current += 1;
+    //     this.changeContent();
+    // }
+    //
+    // done(): void {
+    //     console.log('done');
+    // }
+    //
+    // changeContent(): void {
+    //     switch (this.current) {
+    //         case 0: {
+    //             this.index = 'First-content';
+    //             break;
+    //         }
+    //         case 1: {
+    //             this.index = 'Second-content';
+    //             break;
+    //         }
+    //         case 2: {
+    //             this.index = 'third-content';
+    //             break;
+    //         }
+    //         default: {
+    //             this.index = 'error';
+    //         }
+    //     }
+    // }
 
     // 按钮点击事件
     buttonEvent(event) {
@@ -241,7 +290,7 @@ export class LaunchApplyComponent implements OnInit {
     // 列表按钮方法
     buttonDataHandler(event) {
 
-        // console.log(event);
+        console.log(event);
 
     }
 

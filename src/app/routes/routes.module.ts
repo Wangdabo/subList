@@ -23,6 +23,7 @@ import { Exception500Component } from './exception/500.component';
 import { UtilityService } from '../service/utils.service';
 
 // 清单页面
+
 import { LaunchApplyComponent } from './listManagement/launch-apply/launch-apply.component';
 import { SubListComponent } from './listManagement/sub-list/sub-list.component';
 import { AdRecordComponent } from './listManagement/ad-record/ad-record.component';
@@ -31,6 +32,7 @@ import { AdRecordComponent } from './listManagement/ad-record/ad-record.componen
 import { SProfilesComponent } from './listManagement/UnderlyingParameter/s-profiles/s-profiles.component';
 import { SProjectComponent } from './listManagement/UnderlyingParameter/s-project/s-project.component';
 import { SWorkitemComponent } from './listManagement/UnderlyingParameter/s-workitem/s-workitem.component';
+import { SBranchComponent } from './listManagement/UnderlyingParameter/s-branch/s-branch.component';
 
 // 公共封装组件
 import { ListComponent} from '../component/list/list.component';
@@ -54,6 +56,7 @@ import {HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
         // 清单页面
         LaunchApplyComponent,
         SubListComponent,
+        SBranchComponent,
         AdRecordComponent,
         UserRegisterComponent,
         // 基础参数维护

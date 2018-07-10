@@ -51,8 +51,15 @@ export class UtilityService {
 
     // 删除封装
     deleatData(url: string, options?: any, myheaders?: any): Observable<any> {
-        console.log(options)
-        return this.http.delete(url, options);
+
+        const myHeaders: Headers = new Headers();
+        myHeaders.append('Content-Type', 'application/json');
+        for (const key in myheaders) {
+            myHeaders.append(key, myheaders[key]);
+        }
+        
+        return  this.http.delete(url,  { headers: myHeaders });
+
     }
 
 

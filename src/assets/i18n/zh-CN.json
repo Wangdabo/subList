@@ -11,5 +11,7 @@
     "adRecord": "核对记录",
     "UnderlyingParameter": "基础参数",
     "sWorkItem": "工作项",
-    "sProject": "工程参数"
+    "sProject": "工程参数",
+    "sBranch": "分支参数"
+
 }

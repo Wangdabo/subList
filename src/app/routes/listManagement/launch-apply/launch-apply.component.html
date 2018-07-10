@@ -48,9 +48,9 @@
     </form>
     <!--列表组件-->
 
-    <app-list #child [initDate]="data" [configTitle]="configTitle" [showAdd]="showAdd" [isPagination]="isPagination"  [buttons] ='buttons' (addCreat)="addHandler($event)" (buttonData)="buttonDataHandler($event)" (pageNumber)="monitorHandler($event)"
+    <app-list #child [initDate]="data" [isShowTotal]="isShowTotal"  [configTitle]="configTitle" [showAdd]="showAdd" [isPagination]="isPagination"  [buttons] ='buttons' (addCreat)="addHandler($event)" (buttonData)="buttonData($event)" (pageNumber)="monitorHandler($event)"
               (deleatData)="deleatData($event)" (isActive)="isActive($event)" (buttonEvent)="buttonEvent($event)" (selectedRow)="selectedRow($event)" [headerDate]="headerDate"
-              [moreData]="moreData" [total]="total"  [pageTotal] = 'pageTotal' >
+              [moreData]="moreData" [total]="total"  [pageTotal] = 'pageTotal'  >
     </app-list>
 </nz-card>
 
@@ -218,6 +218,35 @@
     </ng-template>
 </nz-modal>
 
+<nz-modal [nzVisible]="isMergeList"  [nzWidth]="1000" [nzTitle]="'合并列表'"   [nzContent]="modaltextTitle"
+          (nzOnCancel)="isMergeList=false" (nzOnOk)="returns(guid,2)" >
+    <ng-template #modaltextTitle>
+        <app-list #child [initDate]="data" [configTitle]="configTitle" [showAdd]="showAdd" [isPagination]="isPagination"  [buttons] ='buttons'  (buttonData)="buttonDataHandler($event)"
+                  (deleatData)="deleatData($event)"  (buttonEvent)="buttonEvent($event)" (selectedRow)="selectedRow($event)" [headerDate]="headerDate"
+                  [moreData]="moreData"  >
+        </app-list>
+        <!--<nz-steps [nzCurrent]="current">-->
+            <!--<nz-step nzTitle="Finished"></nz-step>-->
+            <!--<nz-step nzTitle="In Progress"></nz-step>-->
+            <!--<nz-step nzTitle="Waiting"></nz-step>-->
+        <!--</nz-steps>-->
+
+        <!--<div class="steps-content">-->
+            <!--<app-environment [mergeListInfo]="mergeListInfo"></app-environment>-->
+        <!--</div>-->
+        <!--<div class="steps-action">-->
+            <!--<button nz-button nzType="default" (click)="pre()" *ngIf="current > 0">-->
+                <!--<span>运行环境</span>-->
+            <!--</button>-->
+            <!--<button nz-button nzType="default" (click)="next()" *ngIf="current < 2">-->
+                <!--<span>合并列表</span>-->
+            <!--</button>-->
+            <!--<button nz-button nzType="primary" (click)="done()" *ngIf="current === 2">-->
+                <!--<span>核对清单</span>-->
+            <!--</button>-->
+        <!--</div>-->
+    </ng-template>
+</nz-modal>
 
 <!-- 打印-->
 <nz-modal [nzVisible]="isVisible" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter">

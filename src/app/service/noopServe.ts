@@ -25,16 +25,18 @@ export class NoopInterceptor implements HttpInterceptor {
      * @description
      * @returns {Observable<HttpEvent<any>>}
      */
+
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        console.log(req)
+
         // 拦截请求
         const token = 'css'; // 绑定token
         let authReq = null;
         if (token) {
             authReq = req.clone({ setHeaders: { 'asdd': token}});
         }
-        return next.handle(authReq || req).map(event => {
 
+        return next.handle(authReq || req).map(event => {
+                    console.log(event);
             // 拦截响应
             if (event instanceof HttpResponse) {
                 if (event.status === 401) {
@@ -44,4 +46,5 @@ export class NoopInterceptor implements HttpInterceptor {
             return event;
         });
     }
+
 }

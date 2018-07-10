@@ -20,12 +20,15 @@ import { Exception404Component } from './exception/404.component';
 import { Exception500Component } from './exception/500.component';
 
 // 提交清单页面
+
 import { LaunchApplyComponent } from './listManagement/launch-apply/launch-apply.component';
 import { SubListComponent } from './listManagement/sub-list/sub-list.component';
 import { SProfilesComponent } from './listManagement/UnderlyingParameter/s-profiles/s-profiles.component';
 import { AdRecordComponent} from './listManagement/ad-record/ad-record.component';
 import { SProjectComponent } from './listManagement/UnderlyingParameter/s-project/s-project.component';
 import { SWorkitemComponent } from './listManagement/UnderlyingParameter/s-workitem/s-workitem.component';
+import { SBranchComponent } from './listManagement/UnderlyingParameter/s-branch/s-branch.component';
+
 
 
 
@@ -44,6 +47,7 @@ const routes: Routes = [
             { path: 'adRecord', component: AdRecordComponent },
             { path: 'sProject', component: SProjectComponent },
             { path: 'sworkItem', component: SWorkitemComponent },
+            { path: 'sBranch', component: SBranchComponent },
         ]
     },
     // passport
