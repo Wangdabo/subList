@@ -12,8 +12,7 @@ import {appConfig} from '../../../../service/common';
 import {NzModalService, NzNotificationService} from 'ng-zorro-antd';
 import {Router} from '@angular/router';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
-
-
+import { SprofilesModule } from '../../../../service/delivent/sprofilesModule';
 
 @Component({
     selector: 'app-s-profiles',
@@ -31,67 +30,67 @@ export class SProfilesComponent implements OnInit {
     @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
     ) { }
    token: any;
-    // 打包窗口
-    checkOptionsOne = [
-        {label: '9:00', value: '9:00', checked: true},
-        {label: '12:00', value: '12:00'},
-        {label: '15:00', value: '15:00'},
-    ]
+    profiles: SProfilesModule = new SprofilesModule();
 
     ngOnInit() {
         this.token  = this.tokenService.get().token;
         this.getData();
         this.showAdd = true;
+    
 
-        this.validateForm = this.fb.group({
-            profilesCode         : [ null, [ Validators.required ] ],
-            profilesName      : [ null, [ Validators.required ] ],
-            hostIp          : [ null, [ Validators.required ] ],
-            installPath          : [ null, [ Validators.required ] ],
-            csvUser          : [ null, [ Validators.required ] ],
-            manager          : [ null, [ Validators.required ] ],
-            isAllowDelivery    : [false],
-            packTiming : [this.checkOptionsOne],
-            csvPwd    : [ null , [ Validators.required ] ]
-        });
     }
 
-
-
-    validateForm: FormGroup;
+   
 
     submitForm() {
-        for (const i in this.validateForm.controls) {
-          this.validateForm.controls[ i ].markAsDirty();
-          console.log(i);
-            console.log( this.validateForm.controls[ i ]);
+      console.log(this.profiles)
+      let arr = [];
+      let objarr = [];
+        if ( ! this.profiles.guid ) {
 
-        }
-        this.utilityService.postData(appConfig.testUrl  + appConfig.API.sBranch, {}, {Authorization: this.token})
-            .subscribe(
-                (val) => {
-           console.log(val);
-                }
-            );
+         this.profiles.checkOptionsOne.forEach( function (i) {
+                                    console.log(i)
+                            if(i.checked == true) {
+                                arr.push(i.value)
+                            }
+                        })
+                this.profiles.packTiming = arr.join(',')
+                this.profiles.isAllowDelivery = '1';
+                this.utilityService.postData(appConfig.testUrl  + appConfig.API.sProfilesadd, this.profiles, {Authorization: this.token})
+                    .subscribe(
+                        (val) => {
+                console.log(val);
+                        }
+                    );
+        }else{
+              this.profiles.isAllowDelivery = '1';
+               this.utilityService.putData(appConfig.testUrl  + appConfig.API.sProfilesadd, this.profiles, {Authorization: this.token})
+                    .map(res => res.json())
+                    .subscribe(
+                        (val) => {
+                        
+                        if(val.code == 200) {
+                        
+                                
+                            console.log(this.branch);
+                            this.mergeVisible = false;
+                            this.nznot.create('success', val.msg, val.msg);
+                        }else {
+                            this.nznot.create('error', '异常', '异常');
+                        }
+                        }   ,
+                            (error) => {
+                                this.nznot.create('error', '异常', '异常');
+                            }
+                            
+                    );
+                    }
+   
 
 
 
     }
-    confirmationValidator = (control: FormControl): { [s: string]: boolean } => {
-        if (!control.value) {
-            return { required: true };
-        } else if (control.value !== this.validateForm.controls[ 'password' ].value) {
-            return { confirm: true, error: true };
-        }
-    }
-
-    getCaptcha(e: MouseEvent) {
-        e.preventDefault();
-    }
-    getFormControl(name) {
-        return this.validateForm.controls[ name ];
-    }
-
+ 
 
     Ptitle = '新增环境数据'
     showAdd: boolean; // 是否有修改
@@ -151,15 +150,17 @@ export class SProfilesComponent implements OnInit {
         this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfiles, {}, {Authorization: this.token})
             .subscribe(
                 (val) => {
-
-                    this.data = val.result;
+                    if(this.data) {
+                           this.data = val.result;
                     for (let i = 0 ; i <  this.data.length; i ++) {
                         this.data[i].buttonData = this.buttonData;
                     }
                     console.log(this.data);
                     this.total = this.data.length; // 总数
-                        // this.pageTotal = parseInt(this.data.length / 10) * 10; // 页码
+                    this.pageTotal = parseInt(this.total / 10) * 10; // 页码s
                     console.log(this.data.length);
+                    }
+                 
                     //
 
                     // 拼接
@@ -173,6 +174,7 @@ export class SProfilesComponent implements OnInit {
     addHandler(event) {
 
         if (event === 'add') {
+         this.profiles = new SprofilesModule();
             this.mergeVisible = true;
         } else if (event === 'checking') {
             this.modalVisible = true; // 打开核对弹出框
@@ -191,7 +193,7 @@ export class SProfilesComponent implements OnInit {
 
     // 接受子组件删除的数据 单条还是多条
     deleatData(event) {
-
+    
     }
 
     // 按钮点击事件
@@ -201,23 +203,39 @@ export class SProfilesComponent implements OnInit {
 
         if (event.names.key === 'dels') { // 按钮传入删除方法
 
-
-            this.utilityService.deleatData(appConfig.testUrl  + appConfig.API.delSprofiles + obj, {headers: this.token})
-                .subscribe(
-                    (val) => {
-                        console.log(val);
-                    }
+            this.utilityService.deleatData(appConfig.testUrl  + appConfig.API.delSprofiles + obj,  {Authorization: this.token})
+            .map(res => res.json())
+            .subscribe(
+                (val) => {
+                    console.log(val);
+                
+                if(val.code == 200) {
+                      console.log(this.profiles)
+                
+                 console.log(this.profiles)
+                    this.nznot.create('success', val.msg, val.msg);
+             }else {
+                this.nznot.create('error', '异常', '异常');
+             }
+            }   ,
+                (error) => {
+                    this.nznot.create('error', '异常', '异常');
+                }
                 );
         } else if (event.names.key === 'upd') {
             let arr = [];
 
             arr = event.packTiming.split(',');
-            event.packTiming = arr;
-            // for (const i in this.validateForm.controls) {
-            //     this.validateForm.controls[i].value = '1';
-            //     this.validateForm.controls[ i ].markAsDirty(event);
-            // }
-            console.log( this.validateForm);
+        
+               this.profiles.checkOptionsOne.forEach( function (i) {
+                            console.log(i)
+                            if(arr == i.key) {
+                                 i.checked = true;
+                            }
+                 })
+           event.checkOptionsOne =  this.profiles.checkOptionsOne;
+            this.profiles = event
+            console.log( this.profiles);
             this.mergeVisible = true;
         }
 

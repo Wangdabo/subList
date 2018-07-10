@@ -10,6 +10,7 @@ import * as moment from 'moment';
 import {ProductModule} from '../../../../service/delivent/projectModule';
 import {SbranchModule} from '../../../../service/delivent/sbranchModule';
 
+
 @Component({
     selector: 'app-s-branch',
     templateUrl: './s-branch.component.html'
@@ -23,6 +24,7 @@ export class SBranchComponent implements OnInit {
                 @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,) {
     }
     branch: SbranchModule = new  SbranchModule();
+    
     token: any;
     showAdd = false;
     isShowTotal = true;
@@ -119,11 +121,21 @@ export class SBranchComponent implements OnInit {
         if (event.names.key === 'dels') { // 按钮传入删除方法
 
 
-            this.utilityService.deleatData(appConfig.testUrl  + appConfig.API.delSprofiles + obj,{Authorization: this.token})
+            console.log('删除')
+            this.utilityService.deleatData(appConfig.testUrl  + appConfig.API.sBranchadd +'/'+ obj, {Authorization: this.token})
+                  .map(res => res.json())
                 .subscribe(
                     (val) => {
-                        console.log(val);
-                    }
+                      if(val.code == 200) {
+                  this.nznot.create('success', val.msg, val.msg);
+                        }else {
+                            this.nznot.create('error', val.msg, val.msg);
+                        }
+            }   ,
+                (error) => {
+                    this.nznot.create('error', error.msg,error.msg);
+                }
+                   
                 );
         } else if (event.names.key === 'upd') {
            
@@ -142,6 +154,7 @@ export class SBranchComponent implements OnInit {
         }  else if (event.names.key === 'details') {
           this.detailsVisible = true
             this.utilityService.getData(appConfig.testUrl  + appConfig.API.sBranchadd +'/'+ obj,{}, {Authorization: this.token})
+                .map(res => res.json())
                 .subscribe(
                     (val) => {
                         console.log(val);
@@ -149,12 +162,8 @@ export class SBranchComponent implements OnInit {
                     }
                 );
         } else if (event.names.key === 'delete') {
-            this.utilityService.deleatData(appConfig.testUrl  + appConfig.API.sBranchadd +'/'+ obj, {Authorization: this.token})
-                .subscribe(
-                    (val) => {
-                        console.log(val);
-                    }
-                );
+
+          
         }
 
     }
