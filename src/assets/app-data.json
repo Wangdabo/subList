@@ -50,6 +50,15 @@
                         "text": "分支记录",
                         "link": "/sBran",
                         "i18n": "sProfiles"
+                    },
+                    {
+                        "text": "工作项",
+                        "link": "/sworkItem",
+                        "i18n": "sWorkItem"
+                    },{
+                        "text": "工程参数",
+                        "link": "/sProject",
+                        "i18n": "sProject"
                     }
                 ]
             }

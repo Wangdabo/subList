@@ -23,17 +23,26 @@ import { Exception500Component } from './exception/500.component';
 import { UtilityService } from '../service/utils.service';
 
 // 清单页面
-import { LaunchApplyComponent } from '../../../../subList/src/app/routes/listManagement/launch-apply/launch-apply.component';
-import { SubListComponent } from '../../../../subList/src/app/routes/listManagement/sub-list/sub-list.component';
-import { SProfilesComponent } from '../../../../subList/src/app/routes/listManagement/UnderlyingParameter/s-profiles/s-profiles.component';
-import { AdRecordComponent } from '../../../../subList/src/app/routes/listManagement/ad-record/ad-record.component';
+import { LaunchApplyComponent } from './listManagement/launch-apply/launch-apply.component';
+import { SubListComponent } from './listManagement/sub-list/sub-list.component';
+import { AdRecordComponent } from './listManagement/ad-record/ad-record.component';
+
+// 基础参数维护
+import { SProfilesComponent } from './listManagement/UnderlyingParameter/s-profiles/s-profiles.component';
+import { SProjectComponent } from './listManagement/UnderlyingParameter/s-project/s-project.component';
+import { SWorkitemComponent } from './listManagement/UnderlyingParameter/s-workitem/s-workitem.component';
+
 // 公共封装组件
 import { ListComponent} from '../component/list/list.component';
-import { EnvironmentComponent} from '../component/environment/environment.component';
+// import { EnvironmentComponent} from '../component/environment/environment.component';
+
 // 拦截器组件
 // import {AuthInterceptorService } from '../service/noop-interceptor';
 import { NoopInterceptor} from '../service/noopServe';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import {HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+
+
+
 
 
 @NgModule({
@@ -45,9 +54,12 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
         // 清单页面
         LaunchApplyComponent,
         SubListComponent,
-        SProfilesComponent,
         AdRecordComponent,
         UserRegisterComponent,
+        // 基础参数维护
+        SProfilesComponent,
+        SWorkitemComponent,
+        SProjectComponent,
         UserRegisterResultComponent,
         // single pages
         Exception403Component,
@@ -55,7 +67,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
         Exception500Component,
         // 封装组件
         ListComponent,
-        EnvironmentComponent
+        // EnvironmentComponent
     ],
     entryComponents: [],
     providers: [

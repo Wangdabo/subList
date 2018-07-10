@@ -115,7 +115,6 @@ export class ListComponent implements OnInit {
                 console.log(obj)
                 this.buttonEvent.emit(obj); // 点击了修改，打开弹出框，把修改的数据传递过去
             } else {
-                console.log('正常的')
                 this.buttonEvent.emit(event); // 点击了修改，打开弹出框，把修改的数据传递过去
             }
 

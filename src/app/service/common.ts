@@ -25,6 +25,30 @@ export let appConfig = {
     },
 
 
+    // 枚举值
+    Enumeration : {
+        exportType : [
+            {key: 'jar', value: 'jar'},
+            {key: 'plugins', value: 'plugins'},
+            {key: 'epd', value: 'epd'},
+            {key: 'ecd,', value: 'ecd'},
+            {key: 'sql,', value: 'sql'},
+            {key: '配置文件,', value: '配置文件'},
+            {key: '可执行jar,', value: '可执行jar'},
+            {key: 'war,', value: 'war'},
+        ],
+        deployType: [
+            {key: 'tws.lib', value: 'tws.lib'},
+            {key: 'bs.lib', value: 'bs.lib'},
+            {key: 'bs.work.user', value: 'bs.work.user'},
+            {key: 'tws.work.user,', value: 'tws.work.user'},
+            {key: 'bs.数据库,', value: 'bs.数据库'},
+            {key: 'bs.config,', value: 'bs.config'},
+            {key: 'governor,', value: 'governor'},
+            {key: 'tws.plugins,', value: 'tws.plugins'},
+        ]
+    },
+
     // 公共方法
     //  判断是否是空或者undefinde
     isNull(d) {

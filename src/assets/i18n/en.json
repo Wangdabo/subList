@@ -9,5 +9,7 @@
     "launchApply": "launchApply",
     "sProfiles": "sProfiles",
     "adRecord": "adRecord",
-    "underlyingParameter": "UnderlyingParameter"
+    "underlyingParameter": "UnderlyingParameter",
+    "sWorkItem": "WorkItem",
+    "sProject": "Project"
 }
