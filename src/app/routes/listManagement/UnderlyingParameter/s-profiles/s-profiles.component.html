@@ -5,8 +5,6 @@
 
 <pro-header></pro-header>
 
-
-
 <!--引入list组件-->
 <nz-card [nzBordered]="false">
     <!--  form表单搜索 -->
@@ -20,6 +18,8 @@
                     </div>
                 </div>
             </div>
+
+
             <div nz-col [nzSpan]="8" class="mb-md">
                 <div nz-form-item class="d-flex">
                     <div nz-form-label><label>环境名称</label></div>
@@ -76,15 +76,40 @@
 </nz-card>
 
 
+<nz-modal [nzVisible]="isCancel"  [nzWidth]="800" [nzTitle]="Ptitle"  [nzConfirmLoading]="false" [nzContent]="isCancelModal"
+          (nzOnCancel)="isCancel=false" (nzOnOk)="saveCorrelation('Q')">
+    <ng-template #isCancelModal>
+        <div nz-row [nzGutter]="24">
+                <div  nz-col [nzSpan]="24" class="mb-md">
+                        
+                </div>
 
-
-<nz-modal [nzVisible]="mergeVisible"  [nzWidth]="800" [nzTitle]="'Ptitle'"  [nzConfirmLoading]="false" [nzContent]="mergeModal"
+        </div>
+            
+    </ng-template>
+</nz-modal>
+<nz-modal [nzVisible]="isCorrelation"  [nzWidth]="800" [nzTitle]="Ptitle"  [nzConfirmLoading]="false" [nzContent]="correlationModal"
+          (nzOnCancel)="isCorrelation=false" (nzOnOk)="saveCorrelation('C')">
+    <ng-template #correlationModal>
+        <div nz-row [nzGutter]="24">
+                <div  nz-col [nzSpan]="24" class="mb-md">
+                        <div  nz-col [nzSpan]="4" style="line-height:2"><label for="status">开发分支</label></div>
+                      
+                            <nz-select  nz-col [nzSpan]="12"  [(ngModel)]="branch"  nzId="status" [nzPlaceHolder]="'分支类型'" [nzShowSearch]="true" [nzSize]="'large'">
+                                <nz-option *ngFor="let i of branshList; let idx = index" [nzLabel]="i.branchFor" [nzValue]="i.guid"></nz-option>
+                            </nz-select>
+                </div>
+        </div>
+            
+    </ng-template>
+</nz-modal>
+<nz-modal [nzVisible]="mergeVisible"  [nzWidth]="800" [nzTitle]="Ptitle"  [nzConfirmLoading]="false" [nzContent]="mergeModal"
           (nzOnCancel)="mergeVisible=false" [nzFooter]="is">
     <ng-template #mergeModal>
         <form nz-form (ngSubmit)="submitForm()" [nzLayout]="'inline'">
             <div nz-row [nzGutter]="24">
 
-                <div  nz-col [nzSpan]="20" class="mb-md">
+                <div  nz-col [nzSpan]="24" class="mb-md">
                     <div nz-form-item class="d-flex">
                         <div nz-form-label nz-col [nzSpan]="8" ><label for="status"> 环境名称</label></div>
                         <div nz-form-control class="flex-1">
@@ -92,6 +117,17 @@
                         </div>
                     </div>
                 </div>
+
+                 <!--<div  nz-col [nzSpan]="24" class="mb-md">
+                    <div nz-form-item class="d-flex">
+                        <div nz-form-label nz-col [nzSpan]="8" ><label for="status">分支</label></div>
+                        <div nz-form-control class="flex-1">
+                            <nz-select [(ngModel)]="profiles.branch" name="status" nzId="status" [nzPlaceHolder]="'分支类型'" [nzShowSearch]="true" [nzSize]="'large'">
+                                <nz-option *ngFor="let i of branchList; let idx = index" [nzLabel]="i.branchFor" [nzValue]="i.guid"></nz-option>
+                            </nz-select>
+                        </div>
+                    </div>
+                </div>-->
 
                 <div nz-col [nzSpan]="24" class="mb-md">
                     <div nz-form-item class="d-flex">
@@ -106,7 +142,7 @@
                     <div nz-form-item class="d-flex">
                         <div nz-form-label nz-col [nzSpan]="8"><label for="name">  安装路径</label></div>
                         <div nz-form-control class="flex-1">
-                            <nz-input [(ngModel)]="profiles.installPath" name="installPath" [nzSize]="'large'" [nzPlaceHolder]="'主机IP'" nzId="installPath"></nz-input>
+                            <nz-input [(ngModel)]="profiles.installPath" name="installPath" [nzSize]="'large'" [nzPlaceHolder]="'安装路径'" nzId="installPath"></nz-input>
                         </div>
                     </div>
                 </div>
@@ -150,7 +186,7 @@
                     </div>
                 </div>
 
-                <div nz-col [nzSpan]="24" class="mb-md" [class.text-right]="expandForm">
+                <div nz-col [nzSpan]="12" [nzOffset]="10" class="mb-md" [class.text-right]="expandForm">
                     <button nz-button type="submit" [nzType]="'primary'" [nzSize]="'large'">确定</button>
                     <button nz-button type="reset" (click)="mergeVisible=false" [nzSize]="'large'" class="mx-sm">取消</button>
                 </div>

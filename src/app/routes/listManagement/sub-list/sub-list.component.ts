@@ -80,6 +80,7 @@ export class SubListComponent implements OnInit {
         this.utilityService.getData(appConfig.testUrl  + appConfig.API.sWorkitem, {}, {Authorization: this.token})
             .subscribe(
                 (val) => {
+                    
                     this.workItem = val.result;
                 }
             );

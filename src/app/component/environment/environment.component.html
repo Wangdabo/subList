@@ -1,5 +1,5 @@
 <div nz-row [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
-    <div nz-col [nzSpan]="12" class="mb-md">
+    <div nz-col [nzSpan]="12" class="mb-md" *ngIf="isShowDate == true">
         <div nz-form-item class="d-flex">
             <div nz-form-label class="alignment"><label for="no">投放日期</label></div>
             <div nz-form-control class="flex-1">
@@ -10,15 +10,15 @@
 
     <div nz-col [nzSpan]="24" class="mb-md">
         <div nz-form-item class="d-flex">
-            <div nz-form-label><label for="itemType">投放到:</label></div>
+            <div nz-form-label><label for="itemType">投放到</label></div>
             <div nz-form-control class="flex-1">
                 <div nz-col [nzSpan]="24" class="mb-md" *ngFor="let s of elementScice ;let l = index">
                     <div nz-col [nzSpan]="6">
-                        <label  nz-checkbox  [(ngModel)]="s.check">&nbsp;&nbsp;<span>{{s.profilesName}}</span></label>
+                        <label  nz-checkbox  [(ngModel)]="s.check" (click)="isClick(s.check,s.times)">&nbsp;&nbsp;<span>{{s.profilesName}}</span></label>
                     </div>
                     <div nz-col [nzSpan]="18">
                         <div nz-col [nzSpan]="6" *ngFor="let t of s.Timing; let d = index" >
-                            <input style="margin-top: 10px;" [disabled]="!s.check"   [(ngModel)]="s.times"   [value]="t.time"   [name]="s.profilesName"
+                            <input style="margin-top: 10px;" [disabled]="!s.check" (click)="isClick(s.check,true)"  [(ngModel)]="s.times"   [value]="t.time"   [name]="s.profilesName"
                                    type="radio" />&nbsp;{{t.time}}
                         </div>
                     </div>

@@ -21,7 +21,9 @@ export class SBranchComponent implements OnInit {
                 private utilityService: UtilityService,
                 private modal: NzModalService,
                 private nznot: NzNotificationService,
-                @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,) {
+                @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
+                private confirmServ: NzModalService
+                ) {
     }
     branch: SbranchModule = new  SbranchModule();
     
@@ -32,7 +34,7 @@ export class SBranchComponent implements OnInit {
     // showTa
     ngOnInit() {
         this.token = this.tokenService.get().token;
-        this.getData(1);
+        this.getData();
         this.showAdd = false;
     }
 
@@ -64,11 +66,11 @@ export class SBranchComponent implements OnInit {
         {key: 'hot分支', value: 'H'},
         {key: 'release分支', value: 'R'},
     ]
-    getData(index) {
+    getData() {
             const page = {
                 page: {
                     size: 10,
-                    current: index
+                    current: this.branch.page
                 }
             };
             
@@ -76,7 +78,7 @@ export class SBranchComponent implements OnInit {
                 .map(res => res.json())
                 .subscribe(
                     (val) => {
-
+                         console.log(val)
                       
                         if (val.code == 200) {
                             this.data = val.result.records;
@@ -88,7 +90,7 @@ export class SBranchComponent implements OnInit {
                                   this.branchType.forEach( function (i) {
                             console.log(i)
                     
-                 })
+                                })
                           }
                             console.log(this.data);
                         }
@@ -96,8 +98,10 @@ export class SBranchComponent implements OnInit {
                     }
                 );
     }
+
     monitorHandler(event) {
-          this.getData(event);
+        this.branch.page = event;
+          this.getData();
     }
 
     // 接受子组件删除的数据 单条还是多条
@@ -119,24 +123,38 @@ export class SBranchComponent implements OnInit {
         let obj = event.guid;
 
         if (event.names.key === 'dels') { // 按钮传入删除方法
-
-
-            console.log('删除')
-            this.utilityService.deleatData(appConfig.testUrl  + appConfig.API.sBranchadd +'/'+ obj, {Authorization: this.token})
+              let self = this; 
+    this.confirmServ.confirm({
+      title  : '您是否确认要删除这项内容!',
+      showConfirmLoading: true,
+      onOk() {
+            self.utilityService.deleatData(appConfig.testUrl  + appConfig.API.sBranchadd +'/'+ obj, {Authorization: self.token})
                   .map(res => res.json())
                 .subscribe(
                     (val) => {
+                        let arr = [];
                       if(val.code == 200) {
-                  this.nznot.create('success', val.msg, val.msg);
+                          
+                          self.getData();
+                
+                  self.nznot.create('success', val.msg, val.msg);
                         }else {
-                            this.nznot.create('error', val.msg, val.msg);
+                            self.nznot.create('error', val.msg, val.msg);
                         }
             }   ,
                 (error) => {
-                    this.nznot.create('error', error.msg,error.msg);
+                    self.nznot.create('error', error.msg,error.msg);
                 }
                    
                 );
+      },
+      onCancel() {
+      }
+    });
+  
+
+
+           
         } else if (event.names.key === 'upd') {
            
            
@@ -161,15 +179,12 @@ export class SBranchComponent implements OnInit {
                         this.details = val.result;
                     }
                 );
-        } else if (event.names.key === 'delete') {
-
-          
-        }
+        } 
 
     }
 
     addsubmit(){
-        console.log(this.branch)
+        
         
         const obj = this.branch;
         if ( !obj.guid ) {
@@ -177,11 +192,12 @@ export class SBranchComponent implements OnInit {
       .map(res => res.json())
         .subscribe(
             (val) => {
-                console.log(val);
+                console.log(this.branch);
              
              if(val.code == 200) {
                   this.detailsVisible = false;
-            
+                 this.getData();
+
                   this.nznot.create('success', val.msg, val.msg);
              }else {
                 this.nznot.create('error', '异常', '异常');

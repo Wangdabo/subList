@@ -25,12 +25,13 @@ export class LaunchApplyComponent implements OnInit {
     ) { }
     token: any;
     userName: string;
-
+    isNext = true;
     ngOnInit() {
         this.token  = this.tokenService.get().token;
         this.userName = this.tokenService.get().name;
         this.getData(1);
         this.showAdd = true;
+        console.log(this.isNext);
 
     }
 
@@ -57,8 +58,8 @@ export class LaunchApplyComponent implements OnInit {
     ]
 
     buttons = [
-        {key: 'merge', value: '合并投放', if: true},
-        {key: 'checking', value: '核对合并清单',  if: false},
+        // {key: 'merge', value: '合并投放', if: true},
+        {key: 'checking', value: '去核对',  if: false},
         {key: 'export', value: '导出投放清单',  if: true},
     ]
 
@@ -99,6 +100,7 @@ export class LaunchApplyComponent implements OnInit {
     profilesData: any;
     checkModalData: any[] = []; // 核查清单数据
     mergeListData: any[] = []; // 核查有异议的数据
+    isShowDate = false;
 
     inputValue = '';
 
@@ -190,27 +192,9 @@ export class LaunchApplyComponent implements OnInit {
 
 
         } else if (event === 'checking') {
-            this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfiles, {}, {Authorization: this.token})
-                .subscribe(
-                    (val) => {
-
-                        this.elementScice = val.result;
-
-                        for (let i = 0; i < this.elementScice.length; i++) {
-                            this.elementScice[i].packTiming = this.elementScice[i].packTiming.split(',');
-                            this.elementScice[i].Timing  = []
-                            for ( let s = 0; s < this.elementScice[i].packTiming.length; s ++) {
-                                let obj = {
-                                    time: this.elementScice[i].packTiming[s]
-                                };
-                                this.elementScice[i].Timing.push(obj);
-                            }
-                        }
-                        // 拼接
-                    }
-                );
-            this.checkModalVisible = true; // 打开核对弹出框
-
+            this.mergeisVisible = true
+            this.changeContent();
+            // this.checkModalVisible = true; // 打开核对弹出框
 
         } else if (event === 'export') {
             this.isVisible = true;
@@ -234,45 +218,124 @@ export class LaunchApplyComponent implements OnInit {
             console.log(e);
     }
 
+    getSprofiles() {
+        this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfiles, {}, {Authorization: this.token})
+                    .subscribe(
+                        (val) => {
+
+                            this.elementScice = val.result;
+
+                            for (let i = 0; i < this.elementScice.length; i++) {
+                                this.elementScice[i].packTiming = this.elementScice[i].packTiming.split(',');
+                                this.elementScice[i].Timing  = []
+                                for ( let s = 0; s < this.elementScice[i].packTiming.length; s ++) {
+                                    let obj = {
+                                        time: this.elementScice[i].packTiming[s]
+                                    };
+                                    this.elementScice[i].Timing.push(obj);
+                                }
+                            }
+                            // 拼接
+                        }
+                    );
+    }
 
 
-    // current = 0;
-    //
-    // index = 'First-content';
-    //
-    // pre(): void {
-    //     this.current -= 1;
-    //     this.changeContent();
-    // }
-    //
-    // next(): void {
-    //     this.current += 1;
-    //     this.changeContent();
-    // }
-    //
-    // done(): void {
-    //     console.log('done');
-    // }
-    //
-    // changeContent(): void {
-    //     switch (this.current) {
-    //         case 0: {
-    //             this.index = 'First-content';
-    //             break;
-    //         }
-    //         case 1: {
-    //             this.index = 'Second-content';
-    //             break;
-    //         }
-    //         case 2: {
-    //             this.index = 'third-content';
-    //             break;
-    //         }
-    //         default: {
-    //             this.index = 'error';
-    //         }
-    //     }
-    // }
+    current = 0;
+
+    
+    index = 'First-content';
+    
+    pre(): void {
+          this.current -= 1;
+          this.changeContent();
+    }
+    
+    next(): void {
+        
+        let url = '';
+        let profiles = '';
+        let packTiming = '';
+        for (let i = 0; i < this.elementScice.length; i ++) {
+            if (this.elementScice[i].check && this.elementScice[i].times) {
+                profiles = this.elementScice[i].guid;
+                packTiming = this.elementScice[i].times;
+
+            }
+        }
+        if (profiles !== '' && packTiming !== '') {
+            url = appConfig.testUrl + '/checks/profiles/' + profiles + '/packTiming/' + packTiming; 
+             }else {
+            this.nznot.create('error', '请选择运行环境！', '请选择运行环境！');
+            return;
+        }
+         let index = '';
+        let indexs = '';
+        this.utilityService.postData( url, {}, {Authorization: this.token})
+            .map(res => res.json())
+            .subscribe(
+                (val) => {
+                    if (val.code === '200') {
+                        this.current += 1;
+                          this.checkListVisible = true;
+                          this.checkModalData = val.result.deliveryDetails;
+                          this.mergeListData  = val.result.mergeLists;
+                        for  (let i = 0; i < this.mergeListData.length; i ++) {
+                            if (this.mergeListData[i].fullPath) {
+                                indexs = this.mergeListData[i].fullPath.indexOf(this.mergeListData[i].partOfProject);
+                                this.mergeListData[i].fullPath = this.mergeListData[i].fullPath.substring(indexs, this.mergeListData[i].fullPath.length);
+                            }
+                        }
+                         for  (let i = 0; i < this.checkModalData.length; i ++) {
+                            for (let j = 0; j < this.checkModalData[i].detailList.length; j ++) {
+                                for (let x = 0; x < this.checkModalData[i].detailList[j].deliveryPatchDetails.length; x ++) {
+                                    for (let  y = 0; y < this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList.length; y ++) {
+                                        if (this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath) {
+                                            index = this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.indexOf(this.checkModalData[i].detailList[j].projectName);
+                                            this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath = this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.substring(index, this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.length);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                    }else{
+                           this.nznot.create('error', val.msg, val.msg);
+                    }
+                }
+                ,
+                
+                (error) => {
+                    this.nznot.create('error', error.json().msg,'');
+                })
+                   
+      
+
+    }
+    
+    done(): void {
+        console.log('done');
+    }
+    
+    changeContent(): void {
+        switch (this.current) {
+            case 0: {
+               this.getSprofiles();
+                break;
+            }
+            case 1: {
+                this.index = '<h2>顶顶顶顶</h1>';
+                break;
+            }
+            case 2: {
+                this.index = '<h3>顶顶顶顶</h1>';
+                break;
+            }
+            default: {
+                this.index = 'error';
+            }
+        }
+    }
 
     // 按钮点击事件
     buttonEvent(event) {
@@ -298,7 +361,10 @@ export class LaunchApplyComponent implements OnInit {
 
     // 处理行为代码，跳转、弹出框、其他交互
     isActive(event) {
-        // console.log(event);
+       if(event) {
+            this.isNext = false;
+       }
+        console.log(event);
     }
 
 
@@ -331,25 +397,8 @@ export class LaunchApplyComponent implements OnInit {
         this.checkVisible = true; // 打开核对弹出框
     }
     // 核查确定
-    saveCheck() {
-        let url = '';
-        let profiles = '';
-        let packTiming = '';
-        for (let i = 0; i < this.elementScice.length; i ++) {
-            if (this.elementScice[i].check && this.elementScice[i].times) {
-                profiles = this.elementScice[i].guid;
-                packTiming = this.elementScice[i].times;
-
-            }
-        }
-        if (profiles !== '' && packTiming !== '') {
-            url = appConfig.testUrl + '/checks/profiles/' + profiles + '/packTiming/' + packTiming;
-        }else {
-            this.nznot.create('error', '请选择运行环境！', '请选择运行环境！');
-            return;
-        }
-
-  let index = '';
+    saveCheck(url) {
+     let index = '';
         let indexs = '';
         this.utilityService.postData( url, {}, {Authorization: this.token})
             .map(res => res.json())
@@ -379,11 +428,13 @@ export class LaunchApplyComponent implements OnInit {
                             }
                         }
 
+                    }else{
+                           this.nznot.create('error', val.msg, val.msg);
                     }
                 }
                 ,
                 (error) => {
-                    this.nznot.create('error', '异常', '异常');
+                    this.nznot.create('error', error.msg, error.msg);
                 }
             );
         this.checkModalVisible = false; // 打开核对弹出框
@@ -400,8 +451,7 @@ export class LaunchApplyComponent implements OnInit {
     }
 
     savemergeisInfo () {
-
-        this.profiles = [];
+         this.profiles = [];
         for (let i = 0; i < this.elementScice.length; i ++) {
             if (this.elementScice[i].check && this.elementScice[i].times) {
                 let obj = {
@@ -418,6 +468,7 @@ export class LaunchApplyComponent implements OnInit {
             this.nznot.create('error', '请选择投放环境', '请选择投放环境');
             return;
         }
+      
         this.deliveryTime = moment(this.deliveryTime).format('YYYY-MM-DD');
         const obj = {
             mergeList: this.mergeList,
@@ -428,29 +479,29 @@ export class LaunchApplyComponent implements OnInit {
 
         this.mergeisVisible = false;
        let index = 0;
-
         this.utilityService.postData(appConfig.testUrl  + appConfig.API.mergeInfo, obj, { Authorization: this.token})
             .map(res => res.json())
             .subscribe(
                 (val) => {
                     if (val.code == 200) {
-                         this.profilesData = obj;
-                         this.detailList = val.result.detailList;
-                         this.branches = val.result.branches;
-                         this.patchCount = val.result.patchCount;
-                         this.mergeisVisible = false;
-                         this.mergeVisible = true;
+                        console.log(val)
+                        //  this.profilesData = obj;
+                        //  this.detailList = val.result.detailList;
+                        //  this.branches = val.result.branches;
+                        //  this.patchCount = val.result.patchCount;
+                        // //  this.mergeisVisible = false;
+                        // //  this.mergeVisible = true;
 
-                        for  (let i = 0; i < this.detailList.length; i ++) {
-                            for (let j = 0; j < this.detailList[i].deliveryPatchDetails.length; j ++) {
-                                for (let x = 0; x < this.detailList[i].deliveryPatchDetails[j].fileList.length; x ++) {
-                                           if (this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath) {
-                                               index = this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath.indexOf(this.detailList[i].projectName);
-                                               this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath = this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath.substring(index, this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath.length - 1);
-                                           }
-                                }
-                            }
-                        }
+                        // for  (let i = 0; i < this.detailList.length; i ++) {
+                        //     for (let j = 0; j < this.detailList[i].deliveryPatchDetails.length; j ++) {
+                        //         for (let x = 0; x < this.detailList[i].deliveryPatchDetails[j].fileList.length; x ++) {
+                        //                    if (this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath) {
+                        //                        index = this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath.indexOf(this.detailList[i].projectName);
+                        //                        this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath = this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath.substring(index, this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath.length - 1);
+                        //                    }
+                        //         }
+                        //     }
+                        // }
                      }else {
                          this.nznot.create('error', val.msg, val.msg);
                      }

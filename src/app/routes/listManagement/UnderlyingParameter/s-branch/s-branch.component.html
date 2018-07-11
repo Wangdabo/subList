@@ -22,13 +22,13 @@
         <form nz-form (ngSubmit)="addsubmit()" [nzLayout]="'inline'">
             <div nz-row [nzGutter]="24">
 
-                <div  nz-col [nzSpan]="20" class="mb-md">
+                <div  nz-col [nzSpan]="24" class="mb-md">
                     <div nz-form-item class="d-flex">
                         <div nz-form-label nz-col [nzSpan]="8" ><label for="status">分支类型</label></div>
                         <div nz-form-control class="flex-1">
-                            <nz-select [(ngModel)]="branch.branchType" name="status" nzId="status" [nzPlaceHolder]="'分支类型'" [nzShowSearch]="true" [nzSize]="'large'">
-                                <nz-option *ngFor="let i of branchType; let idx = index" [nzLabel]="i.key" [nzValue]="i.value"></nz-option>
-                            </nz-select>
+                           <nz-select style="width:100%;" [(ngModel)]="branch.branchType" name="branch" nzId="branch" [nzPlaceHolder]="'开发分支'" [nzShowSearch]="true" [nzSize]="'large'">
+                            <nz-option *ngFor="let i of branchType; let idx = index" [nzLabel]="i.key" [nzValue]="i.value"></nz-option>
+                        </nz-select>
                         </div>
                     </div>
                 </div>

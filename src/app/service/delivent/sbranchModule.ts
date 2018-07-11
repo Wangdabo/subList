@@ -1,7 +1,7 @@
 // 工程
 export class SbranchModule {
  
-
+    public page = '1';
     // 分支类型
     public branchType: any[] = [];
 
@@ -24,6 +24,6 @@ export class SbranchModule {
     // 分支起始版本
     public lastVersion: any;
 
-    public guid:number;
+    public guid: number;
 
 }

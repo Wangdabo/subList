@@ -15,6 +15,9 @@ export let appConfig = {
         sWorkitem: '/sWorkitem', // 查询工作项
         sDeliveryList: '/sDeliveryList', // 整理清单
         sProfiles: '/sProfiles/list',  // 投放申请查询
+        allsProfiles: '/sProfiles/all',  // 投放申请查询
+        getBranch: '/sBranch/notAllot', // 未支配的分支
+    
         sProfilesadd: '/sProfiles',
         delSprofiles: '/sProfiles/' ,
         list: '/deliveries/list', //
