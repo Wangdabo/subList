@@ -78,7 +78,7 @@ export class SBranchComponent implements OnInit {
                 .map(res => res.json())
                 .subscribe(
                     (val) => {
-                         console.log(val)
+                         
                       
                         if (val.code == 200) {
                             this.data = val.result.records;
@@ -88,11 +88,11 @@ export class SBranchComponent implements OnInit {
                                 this.data[i].buttonData = this.buttonData;
                                this.data[i].createTime = moment(this.data[i].createTime).format('YYYY-MM-DD');
                                   this.branchType.forEach( function (i) {
-                            console.log(i)
+                        
                     
                                 })
                           }
-                            console.log(this.data);
+                        
                         }
 
                     }

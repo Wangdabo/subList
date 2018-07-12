@@ -334,6 +334,33 @@ export class SProfilesComponent implements OnInit {
             // }
             //  );
         }
+         else if (event.names.key === 'detail') { 
+             
+                   let self = this; 
+                    this.confirmServ.confirm({
+                    title  : '您是否确认要取消关联分支!',
+                    showConfirmLoading: true,
+                    onOk() {
+                        self.saveCorrelation('Q')
+                    },
+                    onCancel() {
+                    }
+                    });
+             
+                // this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfilesadd + '/' + this.profilesGuid, {},{Authorization: this.token})
+                // .subscribe(
+                // (val) => {
+                //   console.log(val)
+                // if(val.code == 200) {
+                //            this.nznot.create('success', val.msg, val.msg);
+                //             this.isCorrelation = true;
+                //     }
+                //     }   ,
+                //     (error) => {
+                //         this.nznot.create('error', '异常', '异常');
+                // }
+            //  );
+         }
 
     }
 
