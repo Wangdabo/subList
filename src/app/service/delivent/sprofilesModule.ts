@@ -31,11 +31,7 @@ export class SprofilesModule {
           public guid: number;
            public packTiming: any;
       
-          public checkOptionsOne = [
-                  {label: '09:00', value: '09:00', checked: true},
-                  {label: '12:00', value: '12:00'},
-                  {label: '15:00', value: '15:00'},
-              ]
+          public checkOptionsOne :any;
 
           };
           

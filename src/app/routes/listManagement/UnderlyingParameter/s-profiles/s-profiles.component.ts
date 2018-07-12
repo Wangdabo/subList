@@ -31,13 +31,17 @@ export class SProfilesComponent implements OnInit {
       private confirmServ: NzModalService
     ) { }
    token: any;
-    profiles: SProfilesModule = new SprofilesModule();
-
+   
+    profiles:SprofilesModule = new SprofilesModule();
     ngOnInit() {
         this.token  = this.tokenService.get().token;
         this.getData();
         this.showAdd = true;
-       
+       this.profiles.checkOptionsOne = [
+                  {label: '09:00', value: '09:00', checked: true},
+                  {label: '12:00', value: '12:00'},
+                  {label: '15:00', value: '15:00'},
+              ]
 
     }
 
@@ -275,7 +279,8 @@ export class SProfilesComponent implements OnInit {
         
                this.profiles.checkOptionsOne.forEach( function (i) {
                             console.log(i)
-                            if(arr == i.key) {
+                            if(arr == i.value
+                            ) {
                                  i.checked = true;
                             }
                  })
