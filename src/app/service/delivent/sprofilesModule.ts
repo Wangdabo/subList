@@ -1,11 +1,11 @@
 // 工程
-export class SprofilesModule {
- 
+export class SproModule {
+
       public page = '1';
     // 环境代码
        public profilesCode: any;
-       
-       
+
+
         // 环境名称
        public profilesName: any;
 
@@ -26,16 +26,11 @@ export class SprofilesModule {
             // 是否允许投放
 
            public isAllowDelivery = '';
-         
+
               // 打包窗口
           public guid: number;
-           public packTiming: any;
-      
-          public checkOptionsOne = [
-                  {label: '09:00', value: '09:00', checked: true},
-                  {label: '12:00', value: '12:00'},
-                  {label: '15:00', value: '15:00'},
-              ]
+          public packTiming: any;
 
-          };
-          
+          public checkOptionsOne: any;
+
+}

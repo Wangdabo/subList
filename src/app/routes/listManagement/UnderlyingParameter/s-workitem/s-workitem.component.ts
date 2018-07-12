@@ -8,6 +8,7 @@ import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
 import { WorkitemModule } from '../../../../service/delivent/workItemModule';
 import {ProductModule} from '../../../../service/delivent/projectModule';
 import * as _ from 'lodash';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-s-workitem',
@@ -33,6 +34,7 @@ export class SWorkitemComponent implements OnInit {
 
     data: any[] = []; // 表格数据
     modalVisible = false; // 默认弹出框关闭
+    assVisible = false; // 默认关闭
     modelTitle: string; // 默认名称
     headerDate = [  // 配置表头内容
         { value: '工作项名称', key: 'itemName', isclick: false },
@@ -52,50 +54,80 @@ export class SWorkitemComponent implements OnInit {
     }
     test: string;
     page: any;
+    token: any; // token
     total: number;
     pageTotal: number;
     buttons = [
         {key: 'add', value: '新建工作项', if: true}
 
     ];
+    assbranch: any; // 分支信息
+    exitInfo: any;
     // 枚举值
     owner = [
-        {key: '汪波', value: 'wb'},
-        {key: '赵春海', value: 'zch'},
-        {key: '郭培彤', value: 'gpt'},
-        {key: '来哥', value: 'lg'},
+        {key: '汪波', value: 'ljh'},
+        {key: '赵春海', value: 'ljh'},
+        {key: '郭培彤', value: 'ljh'},
+        {key: '来哥', value: 'ljh'},
     ];
 
-    branch = [
-        {key: '分之一', value: 'wb'},
-        {key: '分之二', value: 'zch'},
-        {key: '分之三', value: 'gpt'},
-        {key: '分之四', value: 'lg'},
-    ]
+    branch: any; // 查询分支
+    isEdit = false; // 默认是新增
+
+    isShowTotal: boolean;
+
     ngOnInit() {
         this.showAdd = true;
+        this.isShowTotal = true;
+        this.token  = this.tokenService.get().token; // 绑定token
         this.getData();
+        this.getBranch();
     }
-
     getData() {
-        this.data = [
-            {itemName: '测试工作项名称', developers: '李俊华', owner: '李宁', receiveTime: '2018-07-10', developStartTime: '2018-07-10', deliveryPlanTime: '2018-07-10', deliveryTime: '2018-07-10', itemStatus: '开发中' },
-            {itemName: '测试工作项名称', developers: '李俊华', owner: '李宁', receiveTime: '2018-07-10', developStartTime: '2018-07-10', deliveryPlanTime: '2018-07-10', deliveryTime: '2018-07-10', itemStatus: '已取消' },
-            {itemName: '测试工作项名称', developers: '李俊华', owner: '李宁', receiveTime: '2018-07-10', developStartTime: '2018-07-10', deliveryPlanTime: '2018-07-10', deliveryTime: '2018-07-10', itemStatus: '已投产' },
-            {itemName: '测试工作项名称', developers: '李俊华', owner: '李宁', receiveTime: '2018-07-10', developStartTime: '2018-07-10', deliveryPlanTime: '2018-07-10', deliveryTime: '2018-07-10', itemStatus: '已投产' },
-            {itemName: '测试工作项名称', developers: '李俊华', owner: '李宁', receiveTime: '2018-07-10', developStartTime: '2018-07-10', deliveryPlanTime: '2018-07-10', deliveryTime: '2018-07-10', itemStatus: '已取消' },
-            {itemName: '测试工作项名称', developers: '李俊华', owner: '李宁', receiveTime: '2018-07-10', developStartTime: '2018-07-10', deliveryPlanTime: '2018-07-10', deliveryTime: '2018-07-10', itemStatus: '开发中' },
-            {itemName: '测试工作项名称', developers: '李俊华', owner: '李宁', receiveTime: '2018-07-10', developStartTime: '2018-07-10', deliveryPlanTime: '2018-07-10', deliveryTime: '2018-07-10', itemStatus: '开发中' },
-            {itemName: '测试工作项名称', developers: '李俊华', owner: '李宁', receiveTime: '2018-07-10', developStartTime: '2018-07-10', deliveryPlanTime: '2018-07-10', deliveryTime: '2018-07-10', itemStatus: '已投产' }
-        ];
+        this.page = {
+            page: {
+                current: this.workItem.pi,
+                size: this.workItem.size,
+            }
+        };
+        this.utilityService.postData(appConfig.testUrl  + appConfig.API.workItemList , this.page, {Authorization: this.token})
+            .map(res => res.json())
+            .subscribe(
+                (val) => {
+                    this.data = val.result.records;
+                    this.total = val.result.total;
+                    this.pageTotal = val.result.pages * 10;
+                    _.forEach(this.data , function (value) {
+                        if (value.itemStatus === '开发中') {
+                            value.buttonData = [
+                                {key: 'upd', value: '修改'},
+                                {key: 'cenel', value: '取消'},
+                                {key: 'association', value: '关联分支'},
+                                {key: 'close', value: '取消分支'},
+                                {key: 'branchDDetail', value: '分支详情'}
+                            ];
+                        } else {
+                            value.buttonData = [
+                                {key: 'upd', value: '修改'},
+                            ];
+                        }
+                        value.receiveTime = moment(value.receiveTime).format('YYYY-MM-DD');
+                        value.developStartTime = moment(value.developStartTime).format('YYYY-MM-DD');
+                        value.deliveryTime = moment(value.deliveryTime).format('YYYY-MM-DD');
+                        value.deliveryPlanTime = moment(value.deliveryPlanTime).format('YYYY-MM-DD');
+                    });
 
-        this.total = 100;
-        this.pageTotal = 20;
 
-        _.forEach(this.data , function (value) {
-            // 不是取消状态的话，那就加上取消按钮
-            value.buttonData = ['修改', '', '', '取消'];
-        });
+                }
+            );
+    }
+    getBranch() {
+        this.utilityService.getData(appConfig.testUrl  + appConfig.API.notAllot , {}, {Authorization: this.token})
+            .subscribe(
+                (val) => {
+                 this.branch = val.result;
+                 console.log(val);
+            });
     }
 
     // 新增方法
@@ -103,6 +135,7 @@ export class SWorkitemComponent implements OnInit {
         if (event === 'add') {
             this.workAdd = new WorkitemModule(); // 清空
             this.modalVisible = true;
+            this.isEdit = false;
             this.modelTitle = '新建工作项';
         }
     }
@@ -120,15 +153,76 @@ export class SWorkitemComponent implements OnInit {
 
     // 按钮点击事件方法
     buttonEvent(event) {
-        console.log(event)
         if (!_.isNull(event.names)) {
-            if (event.names === '修改') {
+            if (event.names.key === 'upd') {
                 this.modelTitle = '修改工程';
-                this.workAdd = event;
                 this.modalVisible = true;
-            } else if (event.names === '取消') {
-                console.log('取消逻辑');
+                this.workAdd = event;
+                this.isEdit = true;
+
+            } else if (event.names.key  === 'association') {
+                this.assVisible = true;
+                this.exitInfo = event;
+            } else if (event.names.key  === 'close') {
+                this.modal.open({
+                    title: '取消关联',
+                    content: '您是否确定取消关联分支?',
+                    okText: '确定',
+                    cancelText: '取消',
+                    onOk: () => {
+                        this.utilityService.getData(appConfig.testUrl  + appConfig.API.sWorkitem + '/' +  event.guid,  {},  {Authorization: this.token})
+                            .subscribe(
+                                (val) => {
+                                    console.log(val)
+                                    this.nznot.create('success', val.msg , val.msg);
+                                    this.getData();
+                                }
+                            );
+                    },
+                    onCancel: () => {
+
+                    }
+                });
+
+
+            } else if (event.names.key  === 'branchDDetail') {
+                console.log('分支详情');
+            } else {
+
+                this.modal.open({
+                    title: '取消工作项',
+                    content: '您是否确定取消工作项?',
+                    okText: '确定',
+                    cancelText: '取消',
+                    onOk: () => {
+                        this.utilityService.putData(appConfig.testUrl  + appConfig.API.sWorkitem + '/' + event.guid + '/status' ,{}, {Authorization: this.token})
+                            .map(res => res.json())
+                            .subscribe(
+                                (val) => {
+                                    this.nznot.create('success', val.msg , val.msg);
+                                    this.getData();
+                                }
+                            );
+                    },
+                    onCancel: () => {
+
+                    }
+                });
+
+
+
             }
+
+            /*else if (event.names.key === 'dels') {
+                this.utilityService.deleatData(appConfig.testUrl  + appConfig.API.sWorkitem + '/' + event.guid , {}, {Authorization: this.token})
+                    .map(res => res.json())
+                    .subscribe(
+                        (val) => {
+                            this.nznot.create('success', val.msg , val.msg);
+                            this.getData();
+                        }
+                    );
+            } */
         }
     }
 
@@ -137,6 +231,54 @@ export class SWorkitemComponent implements OnInit {
 
     }
 
+
+
+
+    // 弹出框确定
+    save() {
+        this.workAdd.deliveryPlanTime = moment(this.workAdd.deliveryPlanTime).format('YYYY-MM-DD');
+        this.workAdd.developStartTime = moment(this.workAdd.deliveryPlanTime).format('YYYY-MM-DD');
+        this.workAdd.deliveryTime = moment(this.workAdd.deliveryPlanTime).format('YYYY-MM-DD');
+        this.workAdd.deliveryPlanTime = moment(this.workAdd.deliveryPlanTime).format('YYYY-MM-DD');
+        this.workAdd.developers = this.workAdd.developers.join( ',' );
+
+        console.log(this.workAdd)
+        if (this.isEdit) { // 修改
+            this.utilityService.putData(appConfig.testUrl  + appConfig.API.sWorkitem , this.workAdd, {Authorization: this.token})
+                .map(res => res.json())
+                .subscribe(
+                    (val) => {
+                        this.nznot.create('success', val.msg , val.msg);
+                        this.getData();
+                    }
+                );
+        } else {
+            // this.utilityService.postData(appConfig.testUrl  + appConfig.API.workitemAdd + '/' + this.workAdd.branch, this.workAdd, {Authorization: this.token})
+            this.utilityService.postData(appConfig.testUrl  + appConfig.API.sWorkitem, this.workAdd,  {Authorization: this.token})
+                .map(res => res.json())
+                .subscribe(
+                    (val) => {
+                        this.nznot.create('success', val.msg , val.msg);
+                        this.getData();
+                    }
+                );
+        }
+        this.modalVisible = false;
+
+    }
+
+
+    // 关联分支
+    assSave() {
+        this.utilityService.getData(appConfig.testUrl  + appConfig.API.sWorkitem + '/' + this.exitInfo.guid + '/branch/'  + this.assbranch,   {}, {Authorization: this.token})
+            .subscribe(
+                (val) => {
+                    this.assVisible = false;
+                    this.nznot.create('success', val.msg , val.msg);
+                    this.getData();
+                }
+            );
+    }
 
 
 

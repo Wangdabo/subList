@@ -80,27 +80,27 @@
           (nzOnCancel)="isCancel=false" (nzOnOk)="saveCorrelation('Q')">
     <ng-template #isCancelModal>
         <div nz-row [nzGutter]="24">
-                <div  nz-col [nzSpan]="24" class="mb-md">
-                        
-                </div>
+            <div  nz-col [nzSpan]="24" class="mb-md">
+
+            </div>
 
         </div>
-            
+
     </ng-template>
 </nz-modal>
 <nz-modal [nzVisible]="isCorrelation"  [nzWidth]="800" [nzTitle]="Ptitle"  [nzConfirmLoading]="false" [nzContent]="correlationModal"
           (nzOnCancel)="isCorrelation=false" (nzOnOk)="saveCorrelation('C')">
     <ng-template #correlationModal>
         <div nz-row [nzGutter]="24">
-                <div  nz-col [nzSpan]="24" class="mb-md">
-                        <div  nz-col [nzSpan]="4" style="line-height:2"><label for="status">开发分支</label></div>
-                      
-                            <nz-select  nz-col [nzSpan]="12"  [(ngModel)]="branch"  nzId="status" [nzPlaceHolder]="'分支类型'" [nzShowSearch]="true" [nzSize]="'large'">
-                                <nz-option *ngFor="let i of branshList; let idx = index" [nzLabel]="i.branchFor" [nzValue]="i.guid"></nz-option>
-                            </nz-select>
-                </div>
+            <div  nz-col [nzSpan]="24" class="mb-md">
+                <div  nz-col [nzSpan]="4" style="line-height:2"><label for="status">开发分支</label></div>
+
+                <nz-select  nz-col [nzSpan]="12"  [(ngModel)]="branch"  nzId="status" [nzPlaceHolder]="'分支类型'" [nzShowSearch]="true" [nzSize]="'large'">
+                    <nz-option *ngFor="let i of branshList; let idx = index" [nzLabel]="i.branchFor" [nzValue]="i.guid"></nz-option>
+                </nz-select>
+            </div>
         </div>
-            
+
     </ng-template>
 </nz-modal>
 <nz-modal [nzVisible]="mergeVisible"  [nzWidth]="800" [nzTitle]="Ptitle"  [nzConfirmLoading]="false" [nzContent]="mergeModal"
@@ -113,21 +113,21 @@
                     <div nz-form-item class="d-flex">
                         <div nz-form-label nz-col [nzSpan]="8" ><label for="status"> 环境名称</label></div>
                         <div nz-form-control class="flex-1">
-                          <nz-input [(ngModel)]="profiles.profilesName" name="profilesName" [nzSize]="'large'" [nzPlaceHolder]="'环境名称'" nzId="profilesName"></nz-input>
+                            <nz-input [(ngModel)]="profiles.profilesName" name="profilesName" [nzSize]="'large'" [nzPlaceHolder]="'环境名称'" nzId="profilesName"></nz-input>
                         </div>
                     </div>
                 </div>
 
-                 <!--<div  nz-col [nzSpan]="24" class="mb-md">
-                    <div nz-form-item class="d-flex">
-                        <div nz-form-label nz-col [nzSpan]="8" ><label for="status">分支</label></div>
-                        <div nz-form-control class="flex-1">
-                            <nz-select [(ngModel)]="profiles.branch" name="status" nzId="status" [nzPlaceHolder]="'分支类型'" [nzShowSearch]="true" [nzSize]="'large'">
-                                <nz-option *ngFor="let i of branchList; let idx = index" [nzLabel]="i.branchFor" [nzValue]="i.guid"></nz-option>
-                            </nz-select>
-                        </div>
-                    </div>
-                </div>-->
+                <!--<div  nz-col [nzSpan]="24" class="mb-md">
+                   <div nz-form-item class="d-flex">
+                       <div nz-form-label nz-col [nzSpan]="8" ><label for="status">分支</label></div>
+                       <div nz-form-control class="flex-1">
+                           <nz-select [(ngModel)]="profiles.branch" name="status" nzId="status" [nzPlaceHolder]="'分支类型'" [nzShowSearch]="true" [nzSize]="'large'">
+                               <nz-option *ngFor="let i of branchList; let idx = index" [nzLabel]="i.branchFor" [nzValue]="i.guid"></nz-option>
+                           </nz-select>
+                       </div>
+                   </div>
+               </div>-->
 
                 <div nz-col [nzSpan]="24" class="mb-md">
                     <div nz-form-item class="d-flex">
@@ -147,7 +147,7 @@
                     </div>
                 </div>
 
-                 <div nz-col [nzSpan]="24" class="mb-md">
+                <div nz-col [nzSpan]="24" class="mb-md">
                     <div nz-form-item class="d-flex">
                         <div nz-form-label nz-col [nzSpan]="8"><label for="name">版本密码</label></div>
                         <div nz-form-control class="flex-1">
@@ -156,7 +156,7 @@
                     </div>
                 </div>
 
-                 <div nz-col [nzSpan]="24" class="mb-md">
+                <div nz-col [nzSpan]="24" class="mb-md">
                     <div nz-form-item class="d-flex">
                         <div nz-form-label nz-col [nzSpan]="8"><label for="name">版本控制用户</label></div>
                         <div nz-form-control class="flex-1">
@@ -164,8 +164,8 @@
                         </div>
                     </div>
                 </div>
-             
-              <div nz-col [nzSpan]="24" class="mb-md">
+
+                <div nz-col [nzSpan]="24" class="mb-md">
                     <div nz-form-item class="d-flex">
                         <div nz-form-label nz-col [nzSpan]="8"><label for="name">环境管理人员</label></div>
                         <div nz-form-control class="flex-1">
@@ -174,14 +174,14 @@
                     </div>
                 </div>
 
-             
 
-                 <div nz-col [nzSpan]="24" class="mb-md">
+
+                <div nz-col [nzSpan]="24" class="mb-md">
                     <div nz-form-item class="d-flex">
                         <div nz-form-label nz-col [nzSpan]="8"><label for="name">打包窗口</label></div>
                         <div nz-form-control class="flex-1">
-                          <nz-checkbox-group [(ngModel)]="profiles.checkOptionsOne"  [ngModelOptions]="{standalone: true}"></nz-checkbox-group>
-                           
+                            <nz-checkbox-group [(ngModel)]="profiles.checkOptionsOne"  [ngModelOptions]="{standalone: true}"></nz-checkbox-group>
+
                         </div>
                     </div>
                 </div>

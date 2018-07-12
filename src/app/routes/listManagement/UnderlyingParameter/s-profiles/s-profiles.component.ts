@@ -12,7 +12,7 @@ import {appConfig} from '../../../../service/common';
 import {NzModalService, NzNotificationService} from 'ng-zorro-antd';
 import {Router} from '@angular/router';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
-import { SprofilesModule } from '../../../../service/delivent/sprofilesModule';
+import { SproModule} from '../../../../service/delivent/sprofilesModule';
 
 @Component({
     selector: 'app-s-profiles',
@@ -27,83 +27,73 @@ export class SProfilesComponent implements OnInit {
         private modal: NzModalService,
         private nznot: NzNotificationService,
         private fb: FormBuilder,
-    @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
-      private confirmServ: NzModalService
+        @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
+        private confirmServ: NzModalService
     ) { }
-   token: any;
-    profiles: SProfilesModule = new SprofilesModule();
+    token: any;
+    profiles: SproModule = new SproModule();
 
-    ngOnInit() {
-        this.token  = this.tokenService.get().token;
-        this.getData();
-        this.showAdd = true;
-       
 
-    }
 
-   
+
 
     submitForm() {
-     
-      let arr = [];
-      let objarr = [];
+
+        let arr = [];
+        let objarr = [];
         if ( ! this.profiles.guid ) {
 
-         this.profiles.checkOptionsOne.forEach( function (i) {
-                                    console.log(i)
-                            if(i.checked == true) {
-                                arr.push(i.value)
-                            }
-                        })
-                this.profiles.packTiming = arr.join(',')
-                // this.profiles.isAllowDelivery = ' ';
-                this.utilityService.postData(appConfig.testUrl  + appConfig.API.sProfilesadd, this.profiles, {Authorization: this.token})
-                      .map(res => res.json())
-                    .subscribe(
-                         (val) => {
-                        
-                        if(val.code == 200) {
-                        
-                                this.mergeVisible = false;
-                          this.getData();
+            this.profiles.checkOptionsOne.forEach( function (i) {
+                console.log(i)
+                if ( i.checked === true) {
+                    arr.push(i.value);
+                }
+            })
+            this.profiles.packTiming = arr.join(',')
+            // this.profiles.isAllowDelivery = ' ';
+            this.utilityService.postData(appConfig.testUrl  + appConfig.API.sProfilesadd, this.profiles, {Authorization: this.token})
+                .map(res => res.json())
+                .subscribe(
+                    (val) => {
+                        if (val.code === 200) {
+
+                            this.mergeVisible = false;
+                            this.getData();
                             this.nznot.create('success', val.msg, val.msg);
                         }else {
                             this.nznot.create('error', '异常', '异常');
                         }
-                        }   ,
-                            (error) => {
-                                this.nznot.create('error', '异常', '异常');
-                            }
-                    );
+                    }   ,
+                    (error) => {
+                        this.nznot.create('error', '异常', '异常');
+                    }
+                );
         }else{
-              this.profiles.isAllowDelivery = '1';
-               this.utilityService.putData(appConfig.testUrl  + appConfig.API.sProfilesadd, this.profiles, {Authorization: this.token})
-                    .map(res => res.json())
-                    .subscribe(
-                        (val) => {
-                        
+            this.profiles.isAllowDelivery = '1';
+            this.utilityService.putData(appConfig.testUrl  + appConfig.API.sProfilesadd, this.profiles, {Authorization: this.token})
+                .map(res => res.json())
+                .subscribe(
+                    (val) => {
                         if(val.code == 200) {
-                        
-                                
                             console.log(this.profiles);
                             this.mergeVisible = false;
                             this.nznot.create('success', val.msg, val.msg);
                         }else {
                             this.nznot.create('error', '异常', '异常');
                         }
-                        }   ,
-                            (error) => {
-                                this.nznot.create('error', '异常', '异常');
-                            }
-                            
-                    );
+                    }   ,
+                    (error) => {
+                        this.nznot.create('error', '异常', '异常');
                     }
-   
+
+                );
+        }
+
 
 
 
     }
- 
+
 
     Ptitle: any;
     showAdd: boolean; // 是否有修改
@@ -113,7 +103,7 @@ export class SProfilesComponent implements OnInit {
     mergeVisible = false; // 合并投放弹窗
     isPagination = true; // 是否有分页
     isCorrelation = false;
-    
+
     // 信息
     deliverItem: DeliveryModule = new  DeliveryModule();
     deliveryTime: any; // 投放日期
@@ -147,7 +137,7 @@ export class SProfilesComponent implements OnInit {
     }
     buttons = [
         {key: 'add', value: '新增', if: true},
-        {key: 'dels', value: '删除', if: true},
+        // {key: 'dels', value: '删除', if: true},
     ]
 
     test: string;
@@ -157,6 +147,20 @@ export class SProfilesComponent implements OnInit {
     branshList:any[] = [];
     branch:any;
 
+
+    ngOnInit() {
+        this.token  = this.tokenService.get().token;
+        this.getData();
+        this.showAdd = true;
+        this.profiles.checkOptionsOne = [
+            {label: '09:00', value: '09:00', checked: true},
+            {label: '12:00', value: '12:00'},
+            {label: '15:00', value: '15:00'},
+        ];
+
+    }
+
+    
     // 表格数据按钮
     buttonData = [
         { key: 'dels', value: '删除' },
@@ -169,38 +173,36 @@ export class SProfilesComponent implements OnInit {
     //       this.utilityService.getData(appConfig.testUrl  + appConfig.API.getBranch, {}, {Authorization: this.token})
     //         .subscribe(
     //             (val) => {
-                    
+
     //                 this.branchList = val.result;
     //                 console.log(  this.branchList);
     //             }
     //         );
 
-      
+
     // }
 
     getData() {
-         const page = {
-                page: {
-                    size: 10,
-                    current: this.profiles.page
-                }
-            };
+        const page = {
+            page: {
+                size: 10,
+                current: this.profiles.page
+            }
+        };
         this.utilityService.postData(appConfig.testUrl  + appConfig.API.allsProfiles, page, {Authorization: this.token})
-             .map(res => res.json())
+            .map(res => res.json())
             .subscribe(
                 (val) => {
-                
+
                     if (val.code == 200) {
                         this.data = val.result.records;
                         console.log(this.data);
                         this.total = val.result.total; // 总数
                         this.pageTotal = val.result.pages * 10; // 页码
                         for ( let i = 0; i < this.data.length; i++) {
-                           this.data[i].buttonData = this.buttonData
+                            this.data[i].buttonData = this.buttonData
                         }
                     }
-                 
-
                     // 拼接
                 }
             );
@@ -212,13 +214,13 @@ export class SProfilesComponent implements OnInit {
     addHandler(event) {
 
         if (event === 'add') {
-         this.profiles = new SprofilesModule();
-         this.Ptitle = '新增环境数据'
-         
+            this.profiles = new SproModule();
+            this.Ptitle = '新增环境数据'
+
             this.mergeVisible = true;
         } else if (event === 'checking') {
             this.modalVisible = true; // 打开核对弹出框
-            
+
         } else if (event === 'export') {
             this.isVisible = true;
         } else {
@@ -227,129 +229,140 @@ export class SProfilesComponent implements OnInit {
         }
     }
 
-   
+
 
     // 接受子组件删除的数据 单条还是多条
     deleatData(event) {
-    
+
     }
-        profilesGuid:any;
+    profilesGuid:any;
     // 按钮点击事件
     buttonEvent(event) {
 
-     
+
         this.profilesGuid = event.guid
         if (event.names.key === 'dels') { // 按钮传入删除方法
 
- let self = this; 
-    this.confirmServ.confirm({
-      title  : '您是否确认要删除这项内容!',
-      showConfirmLoading: true,
-      onOk() {
-            self.utilityService.deleatData(appConfig.testUrl  + appConfig.API.delSprofiles + this.profilesGuid,  {Authorization: self.token})
-            .map(res => res.json())
-            .subscribe(
-                (val) => {
-                if(val.code == 200) {
-                    self.getData();
-                   self.nznot.create('success', val.msg, val.msg);
-                    }else {
-                        self.nznot.create('error', '异常', '异常');
-                    }
-                 }   ,
-                (error) => {
-                    self.nznot.create('error', '异常', '异常');
+            let self = this;
+            this.confirmServ.confirm({
+                title  : '您是否确认要删除这项内容!',
+                showConfirmLoading: true,
+                onOk() {
+                    self.utilityService.deleatData(appConfig.testUrl  + appConfig.API.delSprofiles + this.profilesGuid,  {Authorization: self.token})
+                        .map(res => res.json())
+                        .subscribe(
+                            (val) => {
+                                if(val.code == 200) {
+                                    self.getData();
+                                    self.nznot.create('success', val.msg, val.msg);
+                                }else {
+                                    self.nznot.create('error', '异常', '异常');
+                                }
+                            }   ,
+                            (error) => {
+                                self.nznot.create('error', '异常', '异常');
+                            }
+                        );
+                },
+                onCancel() {
                 }
-             );
-      },
-      onCancel() {
-      }
-    });
+            });
 
-           
+
         } else if (event.names.key === 'upd') {
-                this.Ptitle = '修改环境数据'
+            this.Ptitle = '修改环境数据'
             let arr = [];
 
             arr = event.packTiming.split(',');
-        
-               this.profiles.checkOptionsOne.forEach( function (i) {
-                            console.log(i)
-                            if(arr == i.key) {
-                                 i.checked = true;
-                            }
-                 })
-           event.checkOptionsOne =  this.profiles.checkOptionsOne;
+
+            this.profiles.checkOptionsOne.forEach( function (i) {
+                console.log(i)
+                if (arr === i.key) {
+                    i.checked = true;
+                }
+            })
+            event.checkOptionsOne =  this.profiles.checkOptionsOne;
             this.profiles = event
             console.log( this.profiles);
             this.mergeVisible = true;
-        } 
+        }
         else if (event.names.key === 'correlation') {
-          
-           this.utilityService.getData(appConfig.testUrl  + appConfig.API.getBranch, {},{Authorization: this.token})
-        
-            .subscribe(
-                (val) => {
-                  console.log(val)
-                if(val.code == 200) {
+
+            this.utilityService.getData(appConfig.testUrl  + appConfig.API.getBranch, {},{Authorization: this.token})
+
+                .subscribe(
+                    (val) => {
+                        console.log(val)
+                        if(val.code == 200) {
                             this.branshList = val.result
                             this.isCorrelation = true;
-                    }else {
+                        }else {
                             this.nznot.create('error', '异常', '异常');
                         }
                     }   ,
                     (error) => {
                         this.nznot.create('error', '异常', '异常');
-                }
-             );
-          
-            
+                    }
+                );
+
+
         }
-         else if (event.names.key === 'detail') { 
-             this.saveCorrelation('Q')
-                // this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfilesadd + '/' + this.profilesGuid, {},{Authorization: this.token})
-                // .subscribe(
-                // (val) => {
-                //   console.log(val)
-                // if(val.code == 200) {
-                //            this.nznot.create('success', val.msg, val.msg);
-                //             this.isCorrelation = true;
-                //     }
-                //     }   ,
-                //     (error) => {
-                //         this.nznot.create('error', '异常', '异常');
-                // }
-             );
-         }
+        else if (event.names.key === 'detail') {
+
+            let self = this;
+            this.confirmServ.confirm({
+                title  : '您是否确认要取消关联分支!',
+                showConfirmLoading: true,
+                onOk() {
+                    self.saveCorrelation('Q')
+                },
+                onCancel() {
+                }
+            });
+
+            // this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfilesadd + '/' + this.profilesGuid, {},{Authorization: this.token})
+            // .subscribe(
+            // (val) => {
+            //   console.log(val)
+            // if(val.code == 200) {
+            //            this.nznot.create('success', val.msg, val.msg);
+            //             this.isCorrelation = true;
+            //     }
+            //     }   ,
+            //     (error) => {
+            //         this.nznot.create('error', '异常', '异常');
+            // }
+            //  );
+        }
 
     }
 
 // 关联分支方法
-        saveCorrelation(item) {
-             let url = ''
-            if(item == 'C'){
-                 url = '/'+this.profilesGuid+'/branch/'+this.branch
-            }else {
-                 url = '/'+this.profilesGuid+'/cancel'
-            }
-         
-              this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfilesadd + url, {},{Authorization: this.token})
+    saveCorrelation(item) {
+        let url = ''
+        if (item === 'C'){
+            url = '/' + this.profilesGuid + '/branch/' +this.branch;
+        }else {
+            url = '/' + this.profilesGuid + '/cancel';
+        }
+
+        this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfilesadd + url, {},{Authorization: this.token})
             .subscribe(
                 (val) => {
-                  console.log(val)
-                if(val.code == 200) {
-                           this.nznot.create('success', val.msg, val.msg);
-                            this.isCorrelation = false;
+                    console.log(val)
+                    if(val.code == 200) {
+                        this.nznot.create('success', val.msg, val.msg);
+                        this.isCorrelation = false;
                     }else {
-                            this.nznot.create('error', val.msg, '');
-                        }
-                    }   ,
-                    (error) => {
-                        this.nznot.create('error', error.json().msg, '');
+                        this.nznot.create('error', val.msg, '');
+                    }
+                }   ,
+                (error) => {
+                    this.nznot.create('error', error.json().msg, '');
                 }
-             );
-        }
-        // 
+            );
+    }
+    //
 
     // 列表按钮方法
     buttonDataHandler(event) {
@@ -409,7 +422,7 @@ export class SProfilesComponent implements OnInit {
 
     }
 
- // 列表传入的翻页数据
+    // 列表传入的翻页数据
     monitorHandler(event) {
         this.profiles.page = event;
         this.getData();

@@ -12,7 +12,7 @@ export class WorkitemModule {
     public seqNo: string;
 
     // 开发人员
-    public develOpers: string;
+    public developers: any;
 
     // 工作项负责人
     public owner: string;
@@ -34,9 +34,5 @@ export class WorkitemModule {
 
     // 工作项状态
     public itemStatus: any;
-
-    // 指定分支
-    public branch: any;
-
 
 }
