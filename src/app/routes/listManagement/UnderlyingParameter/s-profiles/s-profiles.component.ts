@@ -147,7 +147,7 @@ export class SProfilesComponent implements OnInit {
     }
     buttons = [
         {key: 'add', value: '新增', if: true},
-        {key: 'dels', value: '删除', if: true},
+        // {key: 'dels', value: '删除', if: true},
     ]
 
     test: string;
@@ -306,7 +306,18 @@ export class SProfilesComponent implements OnInit {
             
         }
          else if (event.names.key === 'detail') { 
-             this.saveCorrelation('Q')
+             
+                   let self = this; 
+                    this.confirmServ.confirm({
+                    title  : '您是否确认要取消关联分支!',
+                    showConfirmLoading: true,
+                    onOk() {
+                        self.saveCorrelation('Q')
+                    },
+                    onCancel() {
+                    }
+                    });
+             
                 // this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfilesadd + '/' + this.profilesGuid, {},{Authorization: this.token})
                 // .subscribe(
                 // (val) => {
@@ -319,7 +330,7 @@ export class SProfilesComponent implements OnInit {
                 //     (error) => {
                 //         this.nznot.create('error', '异常', '异常');
                 // }
-             );
+            //  );
          }
 
     }
