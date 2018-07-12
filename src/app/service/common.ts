@@ -12,7 +12,7 @@ export let appConfig = {
         // 登陆接口
         login: '/login',
         logout: '/logout', // 登出
-        sWorkitem: '/sWorkitem', // 查询工作项
+        sWorkitem: '/sWorkitem', // 查询工作项、修改、删除
         sDeliveryList: '/sDeliveryList', // 整理清单
         sProfiles: '/sProfiles/list',  // 投放申请查询
         delSprofiles: '/sProfiles/' ,
@@ -22,30 +22,41 @@ export let appConfig = {
         sBranch: '/sBranch/list', // 分支查询
         checklist: '/checks/list', // 查看核对列表
 
+        // 基础参数--工程
+        sProject: '/sProject',  // 新增、删除、详情
+        sProjectList: '/sProject/list',
+
+        // 基础参数--工作项
+        workitemAdd: '/sWorkitem/branch', // 新增工作项 后面加分支guid
+        workItemList: '/sWorkitem/list', // 查询列表
+        // 基础参数---分支
+        notAllot: '/sBranch/notAllot',
+
+
     },
 
 
     // 枚举值
     Enumeration : {
         exportType : [
-            {key: 'jar', value: 'jar'},
-            {key: 'plugins', value: 'plugins'},
-            {key: 'epd', value: 'epd'},
-            {key: 'ecd,', value: 'ecd'},
-            {key: 'sql,', value: 'sql'},
-            {key: '配置文件,', value: '配置文件'},
-            {key: '可执行jar,', value: '可执行jar'},
-            {key: 'war,', value: 'war'},
+            {label: 'jar', value: 'jar'},
+            {label: 'plugins', value: 'plugins'},
+            {label: 'epd', value: 'epd'},
+            {label: 'ecd', value: 'ecd'},
+            {label: 'sql', value: 'sql'},
+            {label: '配置文件', value: '配置文件'},
+            {label: '可执行jar', value: '可执行jar'},
+            {label: 'war', value: 'war'},
         ],
         deployType: [
-            {key: 'tws.lib', value: 'tws.lib'},
-            {key: 'bs.lib', value: 'bs.lib'},
-            {key: 'bs.work.user', value: 'bs.work.user'},
-            {key: 'tws.work.user,', value: 'tws.work.user'},
-            {key: 'bs.数据库,', value: 'bs.数据库'},
-            {key: 'bs.config,', value: 'bs.config'},
-            {key: 'governor,', value: 'governor'},
-            {key: 'tws.plugins,', value: 'tws.plugins'},
+            {label: 'tws.lib', value: 'tws.lib'},
+            {label: 'bs.lib', value: 'bs.lib'},
+            {label: 'bs.work.user', value: 'bs.work.user'},
+            {label: 'tws.work.user', value: 'tws.work.user'},
+            {label: 'bs.数据库', value: 'bs.数据库'},
+            {label: 'bs.config', value: 'bs.config'},
+            {label: 'governor', value: 'governor'},
+            {label: 'tws.plugins', value: 'tws.plugins'},
         ]
     },
 

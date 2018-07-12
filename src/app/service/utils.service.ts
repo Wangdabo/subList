@@ -45,8 +45,13 @@ export class UtilityService {
 
 
     // put 修改测试封装
-    putData(url: string, options?: any): Observable<any> {
-        return this.http.put(url, options);
+    putData(url: string, options?: any,  myheaders?: any): Observable<any> {
+        const myHeaders: Headers = new Headers();
+        myHeaders.append('Content-Type', 'application/json');
+        for (const key in myheaders) {
+            myHeaders.append(key, myheaders[key]);
+        }
+        return this.http.put(url, options, { headers: myHeaders } );
     }
 
     // 删除封装
@@ -57,7 +62,7 @@ export class UtilityService {
         for (const key in myheaders) {
             myHeaders.append(key, myheaders[key]);
         }
-        
+
         return  this.http.delete(url,  { headers: myHeaders });
 
     }

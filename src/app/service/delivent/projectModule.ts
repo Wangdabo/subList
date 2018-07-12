@@ -14,5 +14,11 @@ export class ProductModule {
     // 部署配置
     public deployConfig: any;
 
+    // 部署类型
+    public deployType: any;
+
+    // 导出类型
+    public exportType: any;
+
 
 }

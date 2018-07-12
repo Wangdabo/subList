@@ -185,6 +185,7 @@
     </ng-template>
 </nz-modal>
 
+
 <!-- 打印-->
 <nz-modal [nzVisible]="isVisible" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter">
     <ng-template #modalTitle>
@@ -234,7 +235,6 @@
     <ng-template #mergeModal>
 
         <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
-
             <div nz-form-item nz-row>
                 <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
                     <label for="profilesCode" nz-form-item-required>
@@ -258,7 +258,7 @@
                     </label>
                 </div>
                 <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" nzHasFeedback>
-                    <nz-input [nzSize]="'large'" formControlName="profilesName" [nzId]="'profilesName'"></nz-input>
+                    <nz-input [nzSize]="'large'"   formControlName="profilesName" [nzId]="'profilesName'"></nz-input>
                     <div nz-form-explain *ngIf="getFormControl('profilesName').dirty&&getFormControl('profilesName').hasError('required')">请输入环境名称!</div>
                 </div>
             </div>

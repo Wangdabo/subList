@@ -44,10 +44,10 @@
         [headerDate]="headerDate"
         [moreData]="moreData"
         [total]="total"
+        [isShowTotal] = "isShowTotal"
         [showAdd]="showAdd"
         [pageTotal] = 'pageTotal'></app-list>
 </nz-card>
-
 
 <!--新增工程内容-->
 <nz-modal [nzVisible]="modalVisible" [nzWidth]="1024" [nzTitle]="modelTitle" [nzConfirmLoading]="loading" [nzContent]="modalContent"
@@ -67,19 +67,29 @@
                     <div nz-form-label class="alignment"><label for="no">工程类型</label></div>
                     <div nz-form-control class="flex-1">
                         <nz-select style="width:100%" [(ngModel)]="productAdd.projectType"  name="projectType"  [nzSize]="'large'" [nzPlaceHolder]="'工程类型'" nzId="projectType">
-                            <nz-option  *ngFor="let i of projectType; let idx = index" [nzLabel]="i.value" [nzValue]="i.key"></nz-option>
+                            <nz-option  *ngFor="let i of projectType; let idx = index" [nzLabel]="i.key" [nzValue]="i.value"></nz-option>
                         </nz-select>
                     </div>
                 </div>
             </div>
-            <div nz-col [nzSpan]="12" class="mb-md">
+            <div nz-col [nzSpan]="24" class="mb-md">
                 <div nz-form-item class="d-flex">
-                    <div nz-form-label class="alignment"><label for="no">认证模式</label></div>
+                    <div nz-form-label class="alignment"><label for="no">导出类型</label></div>
                     <div nz-form-control class="flex-1">
-
+                        <nz-checkbox-group [(ngModel)]="exportType"></nz-checkbox-group>
                     </div>
                 </div>
             </div>
+            <div nz-col [nzSpan]="24" class="mb-md">
+                <div nz-form-item class="d-flex">
+                    <div nz-form-label class="alignment"><label for="no">部署类型</label></div>
+                    <div nz-form-control class="flex-1">
+                        <nz-checkbox-group [(ngModel)]="deployType"></nz-checkbox-group>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
     </ng-template>
 </nz-modal>

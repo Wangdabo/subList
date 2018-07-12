@@ -38,6 +38,8 @@ export class SProfilesComponent implements OnInit {
         {label: '15:00', value: '15:00'},
     ]
 
+
+    Warning: string;
     ngOnInit() {
         this.token  = this.tokenService.get().token;
         this.getData();
@@ -65,16 +67,14 @@ export class SProfilesComponent implements OnInit {
         for (const i in this.validateForm.controls) {
             this.validateForm.controls[ i ].markAsDirty();
         }
-
-        console.log(this.validateForm);
     }
-    confirmationValidator = (control: FormControl): { [s: string]: boolean } => {
+/*    confirmationValidator = (control: FormControl): { [s: string]: boolean } => {
         if (!control.value) {
             return { required: true };
         } else if (control.value !== this.validateForm.controls[ 'password' ].value) {
             return { confirm: true, error: true };
         }
-    }
+    }*/
 
     getCaptcha(e: MouseEvent) {
         e.preventDefault();
@@ -186,7 +186,7 @@ export class SProfilesComponent implements OnInit {
     }
 
     // 按钮点击事件
-    buttonEvent(event) {
+    buttonEvent(event, ) {
 
         let obj = event.guid;
 
@@ -202,17 +202,14 @@ export class SProfilesComponent implements OnInit {
         } else if (event.names.key === 'upd') {
             let arr = [];
            this.mergeVisible = true;
-            arr = event.packTiming.split(',');
+            // arr = event.packTiming.split(',');
             event.searchOptions = this.searchOptions;
             event.packTiming = arr;
-            // this.validateForm = event
-            delete event.buttonData;
-            delete event.names;
-            delete event.guid;
-            // event.delete('guid')
-            console.log(event);
-            this.validateForm.value =   event;
-            console.log( this.validateForm);
+            this.Warning = '测试';
+
+
+
+
         }
 
     }

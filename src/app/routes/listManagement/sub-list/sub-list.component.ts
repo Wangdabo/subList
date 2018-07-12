@@ -53,6 +53,8 @@ export class SubListComponent implements OnInit {
     splicingObj: any; //  拼接的数据
     elementScice: any; // 环境数据
     infoVisible = false; //  弹出框默认关闭
+    appendVisible = false; // 追加弹出框 默认关闭
+    launchVisible = false; // 投放详情弹出框 默认关闭
     copysplicingObj: any; // 复制的数据 用来页面展示
     copytextList: any; // 复制的数据 用来页面展示
     isGou = false; // 默认是没有勾选的
@@ -169,7 +171,6 @@ export class SubListComponent implements OnInit {
                     this.textcssList = val.result;
                     let index = 0;
                     for (let i = 0; i < this.textcssList.length; i ++) {
-                        console.log(this.textcssList)
                         if (this.textcssList[i].projectType !== 'C') { // 说明是config工程，需要让用户手动选择
                             this.textcssList[i].headerData = [  // 配置表头内容
                                 { value: '程序名称', key: 'fullName', isclick: true, radio: false },
@@ -535,7 +536,6 @@ export class SubListComponent implements OnInit {
 
 
     subSave() {
-
         for ( let i = 0; i < this.splicingObj.deliveryList.length; i++) {
             if (this.splicingObj.deliveryList[i].commitType === '新增') {
                 this.splicingObj.deliveryList[i].commitType = 'A';
@@ -545,7 +545,6 @@ export class SubListComponent implements OnInit {
                 this.splicingObj.deliveryList[i].commitType = 'M';
             }
         }
-        console.log(this.splicingObj)
          this.utilityService.postData(appConfig.testUrl  + appConfig.API.sDeliveryList +  '/deliveryAndDeliveryList', this.splicingObj, {Authorization: this.token})
              .map(res => res.json())
              .subscribe(
@@ -556,6 +555,36 @@ export class SubListComponent implements OnInit {
                        }
                    );
 
+    }
+
+    // 追加逻辑
+    testSelect= [
+        {workName: '国际结算迁移', nameApplie: '国际结算上SIT', time: '2018/06/06', window: 'SIT@14:30'},
+        {workName: '清单管理', nameApplie: '国际结算上UAT', time: '2018/07/06', window: 'SIT@14:30'},
+        {workName: '国际结算迁移', nameApplie: '国际结算上SIT', time: '2018/07/06', window: 'SIT@14:30'},
+        {workName: '国际结算迁移', nameApplie: '国际结算上SIT', time: '2018/07/06', window: 'SIT@14:30'},
+    ];
+
+
+    tests() {
+        // this.appendVisible = true;
+        this.launchVisible = true;
+
+        this.testSelect = _.cloneDeep(this.testSelect); // 肯定是拷贝的
+    };
+
+
+
+
+    appendsave() {
+        let submitArray = [];
+        _.forEach(this.testSelect , function (select) {
+            if (select.check) {
+                submitArray.push(select);
+            }
+        })
+        console.log(submitArray); // 提交给后台
+        this.appendVisible = false;
     }
 }
 
