@@ -29,8 +29,13 @@ export class SproModule {
 
               // 打包窗口
           public guid: number;
-          public packTiming: any;
+           public packTiming: any;
+      
+          public checkOptionsOne = [
+                  {label: '09:00', value: '09:00', checked: false},
+                  {label: '12:00', value: '12:00',checked: false},
+                  {label: '17:00', value: '17:00',checked: false},
+              ]
 
-          public checkOptionsOne: any;
-
-}
+          };
+          
