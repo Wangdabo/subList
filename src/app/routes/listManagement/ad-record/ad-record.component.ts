@@ -241,7 +241,7 @@ mergeClick(index,id){
                           if(val.code == 200) {
                        
                            self.nznot.create('success',val.msg,'');
-                                  
+                             self.detailVisible =false;     
                           }else{
                                 self.nznot.create('error', val.msg,'');
                           }
