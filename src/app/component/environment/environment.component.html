@@ -14,7 +14,7 @@
             <div nz-form-control class="flex-1">
                 <div nz-col [nzSpan]="24" class="mb-md" *ngFor="let s of elementScice ;let l = index">
                     <div nz-col [nzSpan]="5">
-                        <label  nz-checkbox  [(ngModel)]="s.check" (click)="isClick(s.check,s.times)">&nbsp;&nbsp;<span>{{s.profilesName}}</span></label>
+                        <label  nz-checkbox  [(ngModel)]="s.check" (ngModelChange)="onChange(s.guid)" (click)="isClick(s.check,s.times)">&nbsp;&nbsp;<span>{{s.profilesName}}</span></label>
                     </div>
                     <div nz-col [nzSpan]="18">
                         <div nz-col [nzSpan]="6" *ngFor="let t of s.Timing; let d = index" >

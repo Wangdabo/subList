@@ -300,7 +300,7 @@ export class LaunchApplyComponent implements OnInit {
           let arr = [];
         // 跳转核对列表
         this.utilityService.getData( url, {}, {Authorization: this.token})
-            .map(res => res.json())
+            // .map(res => res.json())
             .subscribe(
                 (val) => {
                     console.log(val)
@@ -313,8 +313,13 @@ export class LaunchApplyComponent implements OnInit {
                             arr[i]['projectList'] = item.projectList;
                             arr[i]['expand'] =false;
                             arr[i]['check'] = true;
-                            arr[i]['buttonData']= [ {check: false, value: '未确认合并'}];
-                             arr[i]['guidWorkitem'] = item.delivery.guidWorkitem.target;
+                            if(item.deliveryResult == "申请中"){
+                                  arr[i]['buttonData']= [ {check: false, value: '未确认合并'}];
+                            }else{
+                                   arr[i]['buttonData']= [ {check: true, value: '已确认合并'}];
+                            }
+                          
+                            arr[i]['guidWorkitem'] = item.delivery.guidWorkitem.target;
             
                         })
                         this.initDate = arr;
@@ -328,8 +333,8 @@ export class LaunchApplyComponent implements OnInit {
                             ,
                             
                             (error) => {
-                                let msg = error.json();
-                                this.nznot.create('error',msg.msg,'');
+                                // let msg = error.json();
+                                this.nznot.create('error','msg.msg','');
                             })
                             // step2
                    }else{
@@ -491,14 +496,7 @@ export class LaunchApplyComponent implements OnInit {
     //
     }
 
-    onChange(item) {
-        for (let i = 0; i < this.elementScice.length; i ++) {
-            if (this.elementScice[i].guid !== item && this.elementScice[i].check === true) {
-                this.elementScice[i].check = false;
-            }
-        }
-
-    }
+   
 
     savemergeisInfo () {
          this.profiles = [];

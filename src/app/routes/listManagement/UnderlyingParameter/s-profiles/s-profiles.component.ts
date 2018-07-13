@@ -67,7 +67,7 @@ export class SProfilesComponent implements OnInit {
                         }   ,
                             (error) => {
 
-                                this.nznot.create('error', error.json().msg,'');
+                                this.nznot.create('error','异常','');
                             }
                     );
         }else{
@@ -245,7 +245,8 @@ export class SProfilesComponent implements OnInit {
     // 按钮点击事件
     buttonEvent(event) {
 
-
+     
+    
         this.profilesGuid = event.guid
         if (event.names.key === 'dels') { // 按钮传入删除方法
 
@@ -254,7 +255,7 @@ export class SProfilesComponent implements OnInit {
                 title  : '您是否确认要删除这项内容!',
                 showConfirmLoading: true,
                 onOk() {
-                    self.utilityService.deleatData(appConfig.testUrl  + appConfig.API.delSprofiles + this.profilesGuid,  {Authorization: self.token})
+                    self.utilityService.deleatData(appConfig.testUrl  + appConfig.API.delSprofiles + self.profilesGuid,  {Authorization: self.token})
                         .map(res => res.json())
                         .subscribe(
                             (val) => {
@@ -386,15 +387,18 @@ export class SProfilesComponent implements OnInit {
                     console.log(val)
                     if(val.code == 200) {
                         this.nznot.create('success', val.msg, val.msg);
+                        this.branch = null;// 清空
                         this.isCorrelation = false;
                     }else {
                         this.nznot.create('error', val.msg, '');
                     }
                 }   ,
                 (error) => {
-                    this.nznot.create('error', error.json().msg, '');
+                    this.nznot.create('error', '', '');
                 }
             );
+
+            this.branch=''
     }
     //
 
