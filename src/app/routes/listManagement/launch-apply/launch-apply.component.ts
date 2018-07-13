@@ -122,6 +122,7 @@ export class LaunchApplyComponent implements OnInit {
     checkModalData: any[] = []; // 核查清单数据
     mergeListData: any[] = []; // 核查有异议的数据
     isShowDate = false;
+    detailVisible = false;
 
     inputValue = '';
 
@@ -208,6 +209,10 @@ export class LaunchApplyComponent implements OnInit {
                             }
                         }
                         // 拼接
+                    },(error)=>{
+                        if(error){
+                          this.nznot.create('error', error.json().msg,'');
+                          }
                     }
                 );
 
@@ -259,6 +264,10 @@ export class LaunchApplyComponent implements OnInit {
                             }
                             // 拼接
                          
+                        },(error)=>{
+                            if(error){
+                          this.nznot.create('error', error.json().msg,'');
+                                 }
                         }
                     );
     }
@@ -276,10 +285,7 @@ export class LaunchApplyComponent implements OnInit {
     
     next(): void {
            console.log(this.elementScice)
-     
-        if(this.current == 0) {
-        let url = '';
-        let profiles = '';
+      let profiles = '';
         let packTiming = '';
         for (let i = 0; i < this.elementScice.length; i ++) {
             if (this.elementScice[i].check && this.elementScice[i].times) {
@@ -288,12 +294,15 @@ export class LaunchApplyComponent implements OnInit {
 
             }
         }
+        
+        let url = '';
         if (profiles !== '' && packTiming !== '') {
             url = appConfig.testUrl + '/checks/profiles/' + profiles + '/packTiming/' + packTiming;   
           }else {
             this.nznot.create('error', '请选择运行环境！', '请选择运行环境！');
             return;
         }
+        if(this.current == 0) {
          let index = '';
         let indexs = '';
         //   this.current += 1;
@@ -306,35 +315,37 @@ export class LaunchApplyComponent implements OnInit {
                     console.log(val)
                     if (val.code === '200') {
                      
-                        
-                        val.result.forEach(function(item,i){
-                            arr[i]=item.delivery
-                            arr[i]['branch']=item.branch
-                            arr[i]['projectList'] = item.projectList;
+                          for(let i = 0;i<val.result.length;i++){
+                               arr[i]=val.result[i].delivery
+                            arr[i]['branch']=val.result[i].branch
+                            arr[i]['projectList'] = val.result[i].projectList;
                             arr[i]['expand'] =false;
                             arr[i]['check'] = true;
-                            if(item.deliveryResult == "申请中"){
+                             if(val.result[i].delivery.deliveryResult === "申请中"){
                                   arr[i]['buttonData']= [ {check: false, value: '未确认合并'}];
                             }else{
                                    arr[i]['buttonData']= [ {check: true, value: '已确认合并'}];
                             }
-                          
-                            arr[i]['guidWorkitem'] = item.delivery.guidWorkitem.target;
-            
-                        })
+                            arr[i]['guidWorkitem'] = val.result[i].delivery.guidWorkitem.target;
+                          }
+                    
                         this.initDate = arr;
                         console.log(arr)
                          this.current += 1;
                                 }else{
                                     this.nznot.create('error',val.msg,val.msg);
                                 }
-                                
                             }
                             ,
                             
                             (error) => {
-                                // let msg = error.json();
-                                this.nznot.create('error','msg.msg','');
+                                console.log(error)
+                                if(error){
+                                    let msg = error.json();
+                                     this.nznot.create('error',msg.msg,'');
+                                }
+                                // 
+                               
                             })
                             // step2
                    }else{
@@ -349,7 +360,40 @@ export class LaunchApplyComponent implements OnInit {
                     }
                     
                     if( flage == true ) {
+                           let index = '';
+                             let indexs = '';
+                   this.utilityService.postData( url, {}, {Authorization: this.token})
+                        .map(res => res.json())
+                         .subscribe(
+                         (val) => {
                             this.current += 1;
+                 this.checkListVisible = true;
+                          this.checkModalData = val.result.deliveryDetails;
+                          this.mergeListData  = val.result.mergeLists;
+                        for  (let i = 0; i < this.mergeListData.length; i ++) {
+                            if (this.mergeListData[i].fullPath) {
+                                indexs = this.mergeListData[i].fullPath.indexOf(this.mergeListData[i].partOfProject);
+                                this.mergeListData[i].fullPath = this.mergeListData[i].fullPath.substring(indexs, this.mergeListData[i].fullPath.length);
+                            }
+                        }
+                         for  (let i = 0; i < this.checkModalData.length; i ++) {
+                            for (let j = 0; j < this.checkModalData[i].detailList.length; j ++) {
+                                for (let x = 0; x < this.checkModalData[i].detailList[j].deliveryPatchDetails.length; x ++) {
+                                    for (let  y = 0; y < this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList.length; y ++) {
+                                        if (this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath) {
+                                            index = this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.indexOf(this.checkModalData[i].detailList[j].projectName);
+                                            this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath = this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.substring(index, this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.length);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                                }
+                                ,(error)=>{
+                                  if(error){
+                                   this.nznot.create('error', error.json().msg,'');
+                                      }
+                                }) 
                     }
                 
 
@@ -393,14 +437,17 @@ export class LaunchApplyComponent implements OnInit {
                 (val) => {
                     console.log(val)
                     if (val.code == 200) {
-                       
+                       this.nznot.create('success', val.msg, val.msg);
                      }else {
                          this.nznot.create('error', val.msg, val.msg);
                      }
 
                 },
                 (error) =>{
-                    this.nznot.create('error', error.msg,'');
+                    if(error){
+                          this.nznot.create('error', error.json().msg,'');
+                    }
+                  
                 })
 
     }
@@ -489,7 +536,9 @@ export class LaunchApplyComponent implements OnInit {
                 }
                 ,
                 (error) => {
-                    this.nznot.create('error', error.msg, error.msg);
+                   if(error){
+                          this.nznot.create('error', error.json().msg,'');
+                    }
                 }
             );
         this.checkModalVisible = false; // 打开核对弹出框
@@ -533,28 +582,18 @@ export class LaunchApplyComponent implements OnInit {
                 (val) => {
                     if (val.code == 200) {
                         console.log(val)
-                        //  this.profilesData = obj;
-                        //  this.detailList = val.result.detailList;
-                        //  this.branches = val.result.branches;
-                        //  this.patchCount = val.result.patchCount;
-                        // //  this.mergeisVisible = false;
-                        // //  this.mergeVisible = true;
-
-                        // for  (let i = 0; i < this.detailList.length; i ++) {
-                        //     for (let j = 0; j < this.detailList[i].deliveryPatchDetails.length; j ++) {
-                        //         for (let x = 0; x < this.detailList[i].deliveryPatchDetails[j].fileList.length; x ++) {
-                        //                    if (this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath) {
-                        //                        index = this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath.indexOf(this.detailList[i].projectName);
-                        //                        this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath = this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath.substring(index, this.detailList[i].deliveryPatchDetails[j].fileList[x].fullPath.length - 1);
-                        //                    }
-                        //         }
-                        //     }
-                        // }
+                       
                      }else {
                          this.nznot.create('error', val.msg, val.msg);
                      }
 
                 },
+                (error)=>{
+                    if(error){
+                          this.nznot.create('error', error.json().msg,'');
+                    }
+                }
+                
 
             )
         ;
@@ -596,13 +635,17 @@ export class LaunchApplyComponent implements OnInit {
                        this.istextVisible = false;
                        this.checkListVisible = false;
                        this.nznot.create('success', val.msg, val.msg);
-                   }
+                   }else{
+                         this.nznot.create('error', val.msg,'');
+                  }
 
                }
                ,
                (error) => {
                    console.log(error);
-                   this.nznot.create('error', '异常', '异常');
+                  if(error){
+                          this.nznot.create('error', error.json().msg,'');
+                    }
                }
            );
    }
@@ -635,6 +678,11 @@ export class LaunchApplyComponent implements OnInit {
                     }
 
                 },
+                (error)=>{
+                    if(error){
+                          this.nznot.create('error', error.json().msg,'');
+                    }
+                }
             );
     }
 

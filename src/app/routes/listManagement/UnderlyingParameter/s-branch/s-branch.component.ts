@@ -93,9 +93,16 @@ export class SBranchComponent implements OnInit {
                                 })
                           }
                         
+                        }else{
+                         this.nznot.create('error',val.msg,'');
                         }
 
+                    },
+                (error)=>{
+                    if(error){
+                          this.nznot.create('error', error.json().msg,'');
                     }
+                }
                 );
     }
 
@@ -177,7 +184,12 @@ export class SBranchComponent implements OnInit {
                     (val) => {
                         console.log(val);
                         this.details = val.result;
+                    },
+                (error)=>{
+                    if(error){
+                          this.nznot.create('error', error.json().msg,'');
                     }
+                }
                 );
         } 
 
@@ -203,8 +215,10 @@ export class SBranchComponent implements OnInit {
                 this.nznot.create('error', '异常', '异常');
              }
             }   ,
-                (error) => {
-                    this.nznot.create('error', '异常', '异常');
+                (error)=>{
+                    if(error){
+                          this.nznot.create('error', error.json().msg,'');
+                    }
                 }
                 
         );
@@ -227,8 +241,10 @@ export class SBranchComponent implements OnInit {
                 this.nznot.create('error', '异常', '异常');
              }
             }   ,
-                (error) => {
-                    this.nznot.create('error', '异常', '异常');
+                (error)=>{
+                    if(error){
+                          this.nznot.create('error', error.json().msg,'');
+                    }
                 }
                 
         );

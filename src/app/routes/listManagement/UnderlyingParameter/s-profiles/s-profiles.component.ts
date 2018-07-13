@@ -64,11 +64,12 @@ export class SProfilesComponent implements OnInit {
                         }else {
                             this.nznot.create('error', '异常', '异常');
                         }
-                    }   ,
-                    (error) => {
-
-                                this.nznot.create('error','异常','');
-                            }
+                    }  ,
+                (error)=>{
+                    if(error){
+                          this.nznot.create('error', error.json().msg,'');
+                    }
+                }
                     );
         }else{
             console.log(this.profiles)
@@ -85,10 +86,12 @@ export class SProfilesComponent implements OnInit {
                         }else {
                             this.nznot.create('error', '异常', '异常');
                         }
-                    }   ,
-                    (error) => {
-                        this.nznot.create('error', '异常', '异常');
+                    } ,
+                (error)=>{
+                    if(error){
+                          this.nznot.create('error', error.json().msg,'');
                     }
+                }
 
                 );
         }
@@ -168,19 +171,7 @@ export class SProfilesComponent implements OnInit {
         {key: 'correlation', value: '关联分支'},
         {key: 'detail', value: '取消分支'},
     ];
-    // branchList:any[] = [];
-    // getBranch() {
-    //       this.utilityService.getData(appConfig.testUrl  + appConfig.API.getBranch, {}, {Authorization: this.token})
-    //         .subscribe(
-    //             (val) => {
-
-    //                 this.branchList = val.result;
-    //                 console.log(  this.branchList);
-    //             }
-    //         );
-
-
-    // }
+   
 
     getData() {
         const page = {
@@ -201,7 +192,7 @@ export class SProfilesComponent implements OnInit {
                         this.pageTotal = val.result.pages * 10; // 页码
                         for ( let i = 0; i < this.data.length; i++) {
                             this.data[i].buttonData = this.buttonData
-                            if(this.data[i].isAllowDelivery == '允许'){
+                            if(this.data[i].isAllowDelivery == '1'){
                                 this.data[i].isAllowDelivery = true
                             }else{
                                 this.data[i].isAllowDelivery = false
@@ -306,10 +297,12 @@ export class SProfilesComponent implements OnInit {
                         }else {
                             this.nznot.create('error', '异常', '异常');
                         }
-                    }   ,
-                    (error) => {
-                        this.nznot.create('error', '异常', '异常');
+                    }  ,
+                (error)=>{
+                    if(error){
+                          this.nznot.create('error', error.json().msg,'');
                     }
+                }
                 );
 
 
@@ -326,20 +319,6 @@ export class SProfilesComponent implements OnInit {
                 onCancel() {
                 }
             });
-
-            // this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfilesadd + '/' + this.profilesGuid, {},{Authorization: this.token})
-            // .subscribe(
-            // (val) => {
-            //   console.log(val)
-            // if(val.code == 200) {
-            //            this.nznot.create('success', val.msg, val.msg);
-            //             this.isCorrelation = true;
-            //     }
-            //     }   ,
-            //     (error) => {
-            //         this.nznot.create('error', '异常', '异常');
-            // }
-            //  );
         }
         else if (event.names.key === 'detail') {
 
@@ -353,20 +332,6 @@ export class SProfilesComponent implements OnInit {
                 onCancel() {
                 }
             });
-
-            // this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfilesadd + '/' + this.profilesGuid, {},{Authorization: this.token})
-            // .subscribe(
-            // (val) => {
-            //   console.log(val)
-            // if(val.code == 200) {
-            //            this.nznot.create('success', val.msg, val.msg);
-            //             this.isCorrelation = true;
-            //     }
-            //     }   ,
-            //     (error) => {
-            //         this.nznot.create('error', '异常', '异常');
-            // }
-            //  );
         }
 
     }
@@ -391,9 +356,11 @@ export class SProfilesComponent implements OnInit {
                     }else {
                         this.nznot.create('error', val.msg, '');
                     }
-                }   ,
-                (error) => {
-                    this.nznot.create('error', '', '');
+                }  ,
+                (error)=>{
+                    if(error){
+                          this.nznot.create('error', error.json().msg,'');
+                    }
                 }
             );
 
@@ -429,8 +396,10 @@ export class SProfilesComponent implements OnInit {
                         this.nznot.create('error', val.msg, '');
                     }
                 }   ,
-                (error) => {
-                    this.nznot.create('error', error.json().msg, '');
+                (error)=>{
+                    if(error){
+                          this.nznot.create('error', error.json().msg,'');
+                    }
                 }
             );
 

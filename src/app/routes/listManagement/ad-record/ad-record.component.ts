@@ -20,7 +20,9 @@ export class AdRecordComponent implements OnInit {
         private utilityService: UtilityService,
         private modal: NzModalService,
         private nznot: NzNotificationService,
+       
        @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
+        private confirmServ: NzModalService
     ) { }
 
 
@@ -32,7 +34,7 @@ export class AdRecordComponent implements OnInit {
         this.showAdd = true;
 
     }
-
+    mergeId :any;
     showAdd: boolean; // 是否有修改
     configTitle = '详情';
     modalVisible = false;
@@ -67,25 +69,25 @@ export class AdRecordComponent implements OnInit {
     // 传入按钮层
     moreData = {
         morebutton: true,
-        buttons: [
-            { key: 'Overview', value: '查看概况' }
-        ]
+        // buttons: [
+        //     { key: 'Overview', value: '查看概况' }
+        // ]
     }
+    buttonData = [
+        {key: 'merge', value: '核对',if:false },
+        {key: 'dels', value: '删除',if:false },
+         {key: 'details', value: '详情',if:false }
+    ]
+      buttons: [
+            { key: 'merge', value: '已合并' },
+               { key: 'giveup', value: '不投产' }
+        ]
 
     test: string;
     page: any;
     total: number;
 
- // demo= [
- //     { key: '1', value: '查看概况1' },
- //     { key: '2', value: '查看概况2' },
- //     { key: '2', value: '查看概况1' },
- //     { key: '4', value: '查看概况2' },
- //     { key: '4', value: '查看概况3' },
- //     { key: '4', value: '查看概况3' },
- //     { key: '7', value: '查看概况2' },
- //
- // ]
+
 
     getData(index) {
         const page = {
@@ -106,7 +108,7 @@ export class AdRecordComponent implements OnInit {
                     for ( let i = 0; i < this.data.length; i++) {
                         this.data[i].checkDate = moment(this.data[i].checkDate).format('YYYY-MM-DD');
                        this.data[i].guidProfiles =  this.data[i].guidProfiles.target;
-                       this.data[i].buttonData = ['删除'];
+                       this.data[i].buttonData = this.buttonData;
                     }
 
 
@@ -114,13 +116,14 @@ export class AdRecordComponent implements OnInit {
             );
     }
 
-
+    detailVisible =false;
 
     // 列表组件传过来的内容
     addHandler(event) {
 
         if (event === 'merge') {
-            this.mergeVisible = true;
+            
+            // this.mergeVisible = true;
         } else if (event === 'checking') {
             this.modalVisible = true; // 打开核对弹出框
         } else if (event === 'export') {
@@ -140,12 +143,67 @@ export class AdRecordComponent implements OnInit {
     deleatData(event) {
 
     }
+  mergeListInfo: any[] = [];
+      mergeListData: any[] = []; // 核查有异议的数据
+         checkModalData: any[] = []; // 核查清单数据
+         guidprent=[
+             {guid:'',
+            guidWorkitem:''
+        }
 
+         ]
     // 按钮点击事件
+    idcheck:any
     buttonEvent(event) {
-        console.log(event.name);
-        if (event.names === '删除') {
-            alert('失败的方法');
+        this.mergeId = event.guid;
+       console.log(event)
+        if (event.names.key === 'merge') {
+            this.idcheck = event.guid;
+              let index = '';
+              let indexs = '';
+             this.detailVisible = true;
+             this.utilityService.getData( appConfig.testUrl +'/checks/'+event.guid, {}, {Authorization: this.token})
+                        // .map(res => res.json())
+                         .subscribe(
+                         (val) => {
+                           console.log(val);
+
+                          this.detailVisible = true;
+                          this.checkModalData = val.result.deliveryDetails;
+                          this.mergeListData  = val.result.mergeLists;
+                        for  (let i = 0; i < this.mergeListData.length; i ++) {
+                            if (this.mergeListData[i].fullPath) {
+                                indexs = this.mergeListData[i].fullPath.indexOf(this.mergeListData[i].partOfProject);
+                                this.mergeListData[i].fullPath = this.mergeListData[i].fullPath.substring(indexs, this.mergeListData[i].fullPath.length);
+                            }
+                        }
+                         for  (let i = 0; i < this.checkModalData.length; i ++) {
+                                      this.guidprent[i]['guid']=this.checkModalData[i].delivery.guid;
+                                      this.guidprent[i]['guidWorkitem']=this.checkModalData[i].delivery.guidWorkitem.target
+                            for (let j = 0; j < this.checkModalData[i].detailList.length; j ++) {
+                                for (let x = 0; x < this.checkModalData[i].detailList[j].deliveryPatchDetails.length; x ++) {
+                                    for (let  y = 0; y < this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList.length; y ++) {
+                                           this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y]['buttons'] = this.buttons
+                                        if (this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath) {
+                                            index = this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.indexOf(this.checkModalData[i].detailList[j].projectName);
+                                            this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath = this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.substring(index, this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.length);
+                                      
+
+                              }
+                                    }
+                                }
+                            }
+                        }
+                        console.log(this.guidprent)
+                                }
+                                ,(error)=>{
+                                    console.log(error)
+                                //   if(error){
+                                //     this.nznot.create('error', error.json().msg,'');
+                                //       }
+                                }) 
+
+          
         } else if (event.names === '打回') {
             alert('打回的方法');
         } else if (event.names === '成功') {
@@ -156,13 +214,82 @@ export class AdRecordComponent implements OnInit {
 
     }
 
+mergeClick(index,id){
+    let status = '';
+   switch(index){
+       case 0 :
+       this.detailVisible = false
+       return;
+    
+         case 1 :
+       status  = 'F'
+       break;
+         case 2 :
+       status = 'S'
+       break;
+   }
+  
+    let self = this; 
+    this.confirmServ.confirm({
+      title  : '您是否确认要进行这项操作!',
+      showConfirmLoading: true,
+      onOk() {
+           self.utilityService.putData( appConfig.testUrl +'/checks/'+self.idcheck+'/status/'+status, {}, {Authorization: self.token})
+                        .map(res => res.json())
+                         .subscribe(
+                       (val) => {
+                          if(val.code == 200) {
+                       
+                           self.nznot.create('success',val.msg,'');
+                                  
+                          }else{
+                                self.nznot.create('error', val.msg,'');
+                          }
+                         },(error)=>{
+                              if(error){
+                                    self.nznot.create('error', error.json().msg,'');
+                              }
+                         })
+      },
+      onCancel() {
+      }
+    });
+      
+
+} 
+   
     // 列表按钮方法
     buttonDataHandler(event) {
-        console.log(event);
+      
+        
+
 
     }
-
-
+     iStouchan = false
+    
+        buttonClick(type,id){
+            if(type=='4'){
+         
+           this.iStouchan =true
+         
+            }else{
+              this.utilityService.putData( appConfig.testUrl +'/checkLists/'+id+'/status/'+type, {}, {Authorization: this.token})
+                        .map(res => res.json())
+                         .subscribe(
+                         (val) => {
+                          if(val.code == 200) {
+                       
+                           this.nznot.create('success',val.msg,'');
+                                //    
+                                  
+                          }
+                         },(error)=>{
+                              if(error){
+                                    this.nznot.create('error', error.msg,'');
+                              }
+                         });
+                          }
+            }
 
     // 处理行为代码，跳转、弹出框、其他交互
     isActive(event) {
@@ -214,10 +341,32 @@ export class AdRecordComponent implements OnInit {
 
     }
 
-
+      guidDelivery:any;
+      patchType:any;
+      deployWhere:any;
     // 关闭核对清单
     checkSave() {
-        this.checkVisible = false;
+        this.iStouchan = false;
+        const obj ={
+            guidDelivery:this.guidDelivery,
+            patchType:this.patchType,
+            deployWhere:this.deployWhere
+        }
+          this.utilityService.putData( appConfig.testUrl +'/checkLists/'+this.mergeId+'/delivery', obj, {Authorization: this.token})
+                        .map(res => res.json())
+                         .subscribe(
+                         (val) => {
+                          if(val.code == 200) {
+                       
+                           this.nznot.create('success',val.msg,'');
+                                //    
+                                  
+                          }
+                         },(error)=>{
+                              if(error){
+                                    this.nznot.create('error', error.msg,'');
+                              }
+                         });
     }
 
 
@@ -239,7 +388,54 @@ export class AdRecordComponent implements OnInit {
         this.isVisible = false; // 关闭弹出框
     }
 
+  istextVisible = false;
+  inputValue:any;
+   returnsclick(item) {
+          console.log(this.mergeId);
+    let S = '';
+   if ( item === 0) {
+    
+       this.istextVisible = true;
+   }else {
+       let  url = appConfig.testUrl + '/checks/delivery/' + this.mergeId + '/result';
+       if (item === 1) {
+           S = 'S';
+       }else {
+           S = 'F';
+       }
+       const obj = {
+               result : S,
+               desc : this.inputValue
+       };
 
+
+       this.utilityService.postData( url, obj, {Authorization: this.token})
+           .map(res => res.json())
+           .subscribe(
+               (val) => {
+                   console.log(val);
+
+                   if (val.code == 200){
+                       this.istextVisible = false;
+                       this.detailVisible = false;
+                       this.nznot.create('success', val.msg, val.msg);
+                   }else{
+                         this.nznot.create('error', val.msg,'');
+                  }
+
+               }
+               ,
+               (error) => {
+                  
+                  if(error){
+                          this.nznot.create('error', error.json().msg,'');
+                    }
+               }
+           );
+   }
+
+
+    }
     // 合并的确定
     determine() {
         console.log('确定成功');

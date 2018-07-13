@@ -289,15 +289,47 @@
         <app-listfold [headerDate]="mergeHeader"  [buttons] ='buttons'  (buttonData)="buttonDataHandler($event)" (buttonEvent)="buttonEvent($event)"  [initDate]="initDate" *ngIf="current === 1" ></app-listfold>
     
          <!--<span >2222</span>-->
-       <div *ngIf="current ===2" nz-row [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
+      
+
+
+
+            <div class="steps-action" >
+                
+                    <button   nz-button [nzType]="'default'"  (click)="pre()" *ngIf="current > 0">
+                        <span>上一步</span>
+                    </button>
+                  
+                   
+                    <button  nz-col  [nzOffset]="2"  nz-button [nzType]="'default'" (click)="next()" *ngIf="current < 2" [disabled]="isNext">
+                        <span>下一步</span>
+                    </button>
+                   
+                    <button nz-col  nz-button [nzType]="'primary'" [nzOffset]="2"  (click)="done()" *ngIf="current === 2">
+                        <span>确认</span>
+                    </button>
+                    
+            </div>
+    </div>
+   
+
+    </ng-template>
+</nz-modal>
+
+
+  <!--核对清单详细-->
+<!--<nz-modal [nzVisible]="detailVisible"  [nzWidth]="1024" [nzTitle]="'工作项投放申请'"  [nzContent]="detailVisibleModal"
+          (nzOnCancel)="detailVisible=false" (nzOnOk)="checkSave()">
+    <ng-template #detailVisibleModal>-->
+        <div *ngIf="current ===2">
+             <div  nz-row [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
             
                <div nz-col [nzSpan]="24" class="mb-md">
                 <div  nz-form-item class="d-flex">
                     <div nz-col [nzSpan]="8" [nzOffset]="2"  class="ad-desc-list__term ng-star-inserted">投放清单多的记录</div>
-                   <button nz-col [nzSize]="large" [nzOffset]="2"   nz-button [nzType]="'primary'"  (click)="buttonClick()">
+                   <button nz-col [nzSize]="large" [nzOffset]="2"   nz-button [nzType]="'primary'"  (click)="buttonClick('Y')">
                     <span>已合并</span>
                 </button>
-                  <button nz-col  [nzSize]="large" [nzOffset]="2" nz-button [nzType]="'primary'"  (click)="buttonClick()">
+                  <button nz-col  [nzSize]="large" [nzOffset]="2" nz-button [nzType]="'primary'"  (click)="buttonClick('B')">
                     <span>不投产</span>
                 </button>
                 </div>
@@ -308,7 +340,7 @@
               <div nz-col [nzSpan]="24" class="mb-md">
                 <div  nz-form-item class="d-flex">
                     <div nz-col [nzSpan]="8" [nzOffset]="2"  class="ad-desc-list__term ng-star-inserted">投放清单多的记录</div>
-                   <button nz-col [nzSize]="large" [nzOffset]="2"   nz-button [nzType]="'primary'"  (click)="buttonClick()">
+                   <button nz-col [nzSize]="large" [nzOffset]="2"   nz-button [nzType]="'primary'"  (click)="buttonClick('S')">
                     <span>删除</span>
                 </button>
                   <button nz-col  [nzSize]="large" [nzOffset]="2" nz-button [nzType]="'primary'"  (click)="buttonClick()">
@@ -341,33 +373,112 @@
             </div>
 
        </div>
-
-
-
-            <div class="steps-action" >
-                
-                    <button   nz-button [nzType]="'default'"  (click)="pre()" *ngIf="current > 0">
-                        <span>上一步</span>
-                    </button>
-                  
-                   
-                    <button  nz-col  [nzOffset]="2"  nz-button [nzType]="'default'" (click)="next()" *ngIf="current < 2" [disabled]="isNext">
-                        <span>下一步</span>
-                    </button>
-                   
-                    <button nz-col  nz-button [nzType]="'primary'" [nzOffset]="2"  (click)="done()" *ngIf="current === 2">
-                        <span>确认</span>
-                    </button>
-                    
+        <div nz-row [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
+            <div nz-col [nzSpan]="24" class="mb-md">
+                <div nz-col [nzSpan]="1"  nz-form-item class="d-flex">
+                    <div class="ad-desc-list__term ng-star-inserted">将:</div>
+                </div>
             </div>
-    </div>
-   
 
-    </ng-template>
-</nz-modal>
+            <div nz-col [nzSpan]="23"  class="mb-md" *ngFor="let s of mergeListInfo ;let l = index">
+                <div nz-col [nzSpan]="23"  nz-form-item class="d-flex">
+                    <div>{{s.guidWorkitem}} &nbsp; {{s.deliveryTime}}&nbsp;  {{s.guidProfiles}} </div>
+                </div>
+            </div>
 
+            <div nz-col [nzSpan]="23" [nzOffset]="1"   class="mb-md">
+                <div nz-col [nzSpan]="23"  nz-form-item class="d-flex">
+                    <div>共{{mergeListInfo.length}}次投放申请，合并为以下投放申请</div>
+                </div>
+            </div>
+            <div nz-col [nzSpan]="8" class="mb-md">
+                <div  nz-form-item class="d-flex">
+                    <div class="ad-desc-list__term ng-star-inserted">投放计划:</div>
+                    <div class="ad-desc-list__detail ng-star-inserted">{{deliveryTime}}</div>
+                </div>
+            </div>
+            <div nz-col [nzSpan]="24" class="mb-md" *ngFor="let s of profiles ; let l = index">
+                <div  nz-form-item class="d-flex" >
+                    <div nz-col [nzSpan]="6"   class="ad-desc-list__term ng-star-inserted" >{{s.profilesName}}</div>
+                    <div  nz-col [nzSpan]="6"  class="ad-desc-list__detail ng-star-inserted"> {{s.name}}</div>
+                </div>
+            </div>
+            <div nz-col [nzSpan]="24" class="mb-md">
+                <div  nz-form-item class="d-flex">
+                    <div class="ad-desc-list__term ng-star-inserted">工作项</div>
+                    <div   class="ad-desc-list__detail ng-star-inserted" *ngFor="let s of mergeListInfo ; let l = index" >{{s.guidWorkitem}}
+                    </div>
+                </div>
+            </div>
 
+            <div nz-col [nzSpan]="8" class="mb-md">
+                <div  nz-form-item class="d-flex">
+                    <div class="ad-desc-list__term ng-star-inserted">申请人:</div>
+                    <div class="ad-desc-list__detail ng-star-inserted" >{{userName}}</div>
+                </div>
+            </div>
+            <div nz-col [nzSpan]="24" class="mb-md">
+                <div  nz-form-item class="d-flex">
+                    <div class="ad-desc-list__term ng-star-inserted">开发分支:</div>
+                    <div class="ad-desc-list__detail ng-star-inserted" *ngFor="let s of branches ; let l = index">{{s.fullPath}}</div>
+                </div>
+            </div>
+            <div nz-col [nzSpan]="24" class="mb-md">
+                <div  nz-form-item class="d-flex">
+                    <div class="ad-desc-list__term ng-star-inserted">投放小计:</div>
+                    <!--<div class="ad-desc-list__detail ng-star-inserted">jar包数 :2个</div>-->
+                    <div class="ad-desc-list__detail ng-star-inserted">ecd包数 :{{ patchCount.ecd }}个</div>
+                    <div class="ad-desc-list__detail ng-star-inserted">epd包数 :{{ patchCount.epd }}个</div>
+                </div>
+            </div>
 
+            <div nz-col [nzSpan]="24" class="mb-md">
+                <div  nz-form-item class="d-flex">
+                    <div class="ad-desc-list__term ng-star-inserted">投放明细:</div>
+                </div>
+            </div>
+
+            <!-- 列表 -->
+            <div  nz-col [nzSpan]="24" class="mb-md" *ngFor="let s of detailList ; let l = index">
+                <div *ngFor="let j of s.deliveryPatchDetails">
+                    <div>
+                        <table style="margin:30px 0px;" >
+                            <tbody nz-col [nzSpan]="24" style="text-align: center;" >
+                            <tr nz-col [nzSpan]="24">
+                                <td nz-col [nzSpan]="8">工程名</td>
+                                <td nz-col [nzSpan]="16">{{s.projectName}}</td>
+                            </tr>
+
+                            <tr nz-col [nzSpan]="24">
+                                <td nz-col [nzSpan]="8">编译为</td>
+                                <td nz-col [nzSpan]="16">{{j.deployWhere}}</td>
+                            </tr>
+                            <tr nz-col [nzSpan]="24">
+                                <td nz-col [nzSpan]="8">部署到</td>
+                                <td nz-col [nzSpan]="16">{{j.patchType }}</td>
+                            </tr>
+                            <tr nz-col [nzSpan]="24">
+                                <td nz-col [nzSpan]="15">代码</td>
+                                <td nz-col [nzSpan]="3">变动类型</td>
+                                <td nz-col [nzSpan]="3">最新版本</td>
+                                <td nz-col [nzSpan]="3">开发人员</td>
+                            </tr>
+                            <tr nz-col [nzSpan]="24"  *ngFor="let k of j.fileList">
+                                <td nz-col [nzSpan]="15">{{k.fullPath}}</td>
+                                <td nz-col [nzSpan]="3">{{k.commitType}}</td>
+                                <td nz-col [nzSpan]="3">{{k.deliveryVersion}}</td>
+                                <td nz-col [nzSpan]="3">{{k.author}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+    <!--</ng-template>
+</nz-modal>-->
 <!--合并投放-->
 <nz-modal [nzVisible]="mergeVisible"  [nzWidth]="1024" [nzTitle]="'工作项投放申请'"  [nzContent]="mergeModal"
           (nzOnCancel)="mergeVisible=false" (nzOnOk)="checkSave()">
