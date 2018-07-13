@@ -8,7 +8,6 @@ import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
 import { ProductModule } from '../../../../service/delivent/projectModule';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-
 @Component({
   selector: 'app-s-project',
   templateUrl: './s-project.component.html',
@@ -65,6 +64,16 @@ export class SProjectComponent implements OnInit {
     exportType: any;
     deployType: any;
     page: any;
+
+    // 部署类型
+
+    diconArray : any;
+    diconfig:any = [{
+        'exportType': '' ,
+        'depolySelect': [{ depoly: ''}]}];
+
+
+
 
     ngOnInit() {
         // 枚举值赋值
@@ -151,52 +160,51 @@ export class SProjectComponent implements OnInit {
         }
         if (!_.isNull(event.names)) {
             if (event.names.key === 'upd') {
+                console.log(event);
                 this.modelTitle = '修改工程';
-                this.productAdd = event; // 修改类型问题，为什么返回给我C, 不应该是add或者 exit？
+                this.productAdd = event; // 修改类型问题
 
-                // 避免影响 重新赋值
-                this.exportType = _.cloneDeep(appConfig.Enumeration.exportType);
-                this.deployType = _.cloneDeep(appConfig.Enumeration.deployType);
-                // 拼接即可
-                let spliarray = [];
-                if (!_.isNull(event.deployConfig)) {
-                    let jsonPar = JSON.parse(event.deployConfig)
-                    let deployarray = this.deployType
-                    let exportarray = this.exportType
-                        _.forEach(jsonPar , function (json) {
-                            json.deployArray = json.deployType.split(',');
-                            json.exportArray = json.exportType.split(',');
 
-                            // 匹配部署到选中
-                            _.forEach(json.deployArray , function (deploy) {
-                                for (let i = 0;  i < deployarray.length; i ++) {
-                                    if (deploy === deployarray[i].value) {
-                                        deployarray[i].checked = true;  // 选中
-                                    }
-                                }
-                            })
-                            // 匹配导出为选中
-                            _.forEach(json.exportArray , function (expo) {
-                                for (let i = 0;  i < exportarray.length; i ++) {
-                                    if (expo === exportarray[i].value) {
-                                        exportarray[i].checked = true;  // 选中
-                                    }
-                                }
-                            })
+                this.diconArray =  _.cloneDeep(JSON.parse(event.deployConfig));
 
-                        })
+                for (let i = 0; i < this.diconArray.length; i++ ) {
+                    this.diconArray[i].jsonArray = this.diconArray[i].deployType.split(',');
+                    this.diconArray[i].depolySelect = [];
+                    for (let j = 0; j < this.diconArray[i].jsonArray.length; j++) {
+                        let obj = {
+                            depoly: this.diconArray[i].jsonArray[j]
+                        };
+                        this.diconArray[i].depolySelect.push(obj)
+                    }
                 }
+
+                this.diconfig = this.diconArray;
+
+
                 this.modalVisible = true;
                 this.isEdit = true;
             } else if (event.names.key === 'dels') { // 删除逻辑
-                this.utilityService.deleatData(appConfig.testUrl  + appConfig.API.sProject + '/' + event.guid , {Authorization: this.token})
-                    .map(res => res.json())
-                    .subscribe(
-                        (val) => {
-                            this.nznot.create('success', val.msg , val.msg);
-                            this.getData();
-                        }
-                    );
+
+                this.modal.open({
+                    title: '删除工程',
+                    content: '您是否确定删除该工程?',
+                    okText: '确定',
+                    cancelText: '取消',
+                    onOk: () => {
+                        this.utilityService.deleatData(appConfig.testUrl  + appConfig.API.sProject + '/' + event.guid , {Authorization: this.token})
+                            .map(res => res.json())
+                            .subscribe(
+                                (val) => {
+                                    this.nznot.create('success', val.msg , val.msg);
+                                    this.getData();
+                                }
+                            );
+                    },
+                    onCancel: () => {
+
+                    }
+                });
+
             } else {
                 console.log('详情逻辑');
             }
@@ -209,32 +217,25 @@ export class SProjectComponent implements OnInit {
     }
 
     save() {
-        console.log(this.productAdd);
         let splicing  = [];
-        console.log(this.exportType)
-        console.log(this.deployType)
-
-        var exportType = [];
-        _.forEach(this.exportType , function (value) {
-            if (value.checked) {
-                exportType.push(value.label);
-            }
+        console.log(this.diconfig)
+        _.forEach(this.diconfig, function (value) {
+            var arr = [];
+            _.forEach(value.depolySelect, function (value1) {
+                arr.push(value1.depoly);
+            })
+            let jsonObj = {
+                exportType: value.exportType,
+                depolyType: arr
+            };
+            splicing.push(jsonObj);
         })
 
-        var deployType = [];
-        _.forEach(this.deployType , function (value) {
-            if (value.checked) {
-                deployType.push(value.label);
-            }
-        });
-        splicing = [
-            {
-             exportType: exportType.join(','),
-             deployType: deployType.join(',')
-            }
-        ]
+        console.log(splicing)
         this.productAdd.deployConfig = JSON.stringify(splicing);
-        if (this.isEdit) { // 修改
+        console.log(this.productAdd);
+
+/*        if (this.isEdit) { // 修改
             this.utilityService.putData(appConfig.testUrl  + appConfig.API.sProject, this.productAdd, {Authorization: this.token})
                 .map(res => res.json())
                 .subscribe(
@@ -252,9 +253,57 @@ export class SProjectComponent implements OnInit {
                         this.getData();
                     }
                 );
-        }
+        }*/
         this.modalVisible = false;
 
     }
 
+
+
+
+
+
+    addInput() {
+        this.diconfig.push({'exportType': '' , 'depolySelect': [{ depoly: ''}]});
+    }
+
+
+    removeInput(index) {
+        let i = this.diconfig.indexOf(index);
+        this.diconfig.splice(i, 1);
+        console.log(this.diconfig);
+    }
+
+
+    addChildInput(items) {
+        items.push({ depoly: ''});
+    }
+
+    removeChildInput(items, s) {
+        let t = items.indexOf(s);
+        items.splice(t, 1);
+    }
+
+
+    onblur(item, array) {
+
+      /*  for(let i = 0; i < array.length; i++) {
+            let tims = array[i];
+            if (tims.exportType === item.exportType) {
+                tims.error = true;
+            }
+
+        }*/
+
+        for(let i = 0; i < array.length; i++) {
+            for ( let j = i + 1 ; j < array.length; j ++ ) {
+                if (array[i].exportType === array[j].exportType) {
+                    item.error = true;
+                } else {
+
+                }
+            }
+
+        }
+    }
 }
