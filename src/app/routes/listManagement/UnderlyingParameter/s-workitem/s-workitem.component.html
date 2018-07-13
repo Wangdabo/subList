@@ -134,16 +134,6 @@
                     </div>
                 </div>
             </div>
-           <!-- <div nz-col [nzSpan]="24" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label><label for="name">开发分支</label></div>
-                    <div nz-form-control class="flex-1">
-                        <nz-select style="width:100%;" [(ngModel)]="workAdd.branch" name="branch" nzId="branch" [nzPlaceHolder]="'开发分支'" [nzShowSearch]="true" [nzSize]="'large'">
-                            <nz-option *ngFor="let i of branch; let idx = index" [nzLabel]="i.branchFor" [nzValue]="i.guid"></nz-option>
-                        </nz-select>
-                    </div>
-                </div>
-            </div>-->
             <div nz-col [nzSpan]="24" class="mb-md">
                 <div nz-form-item class="d-flex">
                     <div nz-form-label><label>开发人员</label></div>
@@ -156,8 +146,8 @@
                                    name='开发人员'>
                             <nz-option
                                 *ngFor="let option of owner"
-                                [nzLabel]="option.key"
-                                [nzValue]="option.value">
+                                [nzLabel]="option.svnUser"
+                                [nzValue]="option.userId">
                             </nz-option>
                         </nz-select>
                     </div>
@@ -168,7 +158,7 @@
                     <div nz-form-label><label for="name">项目负责人</label></div>
                     <div nz-form-control class="flex-1">
                         <nz-select style="width:100%;" [(ngModel)]="workAdd.owner" name="owner" nzId="owner" [nzPlaceHolder]="'工作项负责人'" [nzShowSearch]="true" [nzSize]="'large'">
-                            <nz-option *ngFor="let i of owner; let idx = index" [nzLabel]="i.key" [nzValue]="i.value"></nz-option>
+                            <nz-option *ngFor="let i of owner; let idx = index" [nzLabel]="i.svnUser" [nzValue]="i.userId"></nz-option>
                         </nz-select>
                     </div>
                 </div>
@@ -177,7 +167,7 @@
                 <div nz-form-item class="d-flex">
                     <div nz-form-label class="alignment"><label for="no">需求时间</label></div>
                     <div nz-form-control class="flex-1">
-                        <nz-datepicker [(ngModel)]="workAdd.receiveTime" [nzFormat]="'YYYY-MM-DD'"    name="receiveTime" [nzSize]="'large'" [nzPlaceHolder]="'收到需求时间'" nzId="receiveTime" class="d-block"></nz-datepicker>
+                        <nz-datepicker [(ngModel)]="workAdd.receiveTime"  [nzFormat]="'YYYY-MM-DD'"     name="receiveTime" [nzSize]="'large'" [nzPlaceHolder]="'收到需求时间'" nzId="receiveTime" class="d-block"></nz-datepicker>
                     </div>
                 </div>
             </div>
@@ -241,3 +231,75 @@
         </div>
     </ng-template>
 </nz-modal>
+
+
+
+<!--查看分支详情-->
+<nz-modal [nzVisible]="branchInfo" [nzWidth]="1024" [nzTitle]="'分支详情'" [nzConfirmLoading]="loading" [nzContent]="branchContent"
+          (nzOnCancel)="branchInfo=false" (nzOnOk)="branchInfo=false">
+    <ng-template #branchContent>
+        <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="24" class="mb-md">
+                <div nz-form-item class="d-flex">
+                    <div nz-form-label class="alignment"><label for="name">分支类型</label></div>
+                    <div nz-form-control class="flex-1">
+                        <nz-input [(ngModel)]="branchData.branchType" name="branchType" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'分支类型'" nzId="branchType"></nz-input>
+                    </div>
+                </div>
+            </div>
+            <div nz-col [nzSpan]="12" class="mb-md">
+                <div nz-form-item class="d-flex">
+                    <div nz-form-label class="alignment"><label for="name">创建人</label></div>
+                    <div nz-form-control class="flex-1">
+                        <nz-input [(ngModel)]="branchData.creater" name="creater" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'分支创建人'" nzId="creater"></nz-input>
+                    </div>
+                </div>
+            </div>
+            <div nz-col [nzSpan]="12" class="mb-md">
+                <div nz-form-item class="d-flex">
+                    <div nz-form-label class="alignment"><label for="name">创建时间</label></div>
+                    <div nz-form-control class="flex-1">
+                        <nz-input [(ngModel)]="branchData.createTime" name="createTime" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'创建时间'" nzId="createTime"></nz-input>
+                    </div>
+                </div>
+            </div>
+            <div nz-col [nzSpan]="12" class="mb-md">
+                <div nz-form-item class="d-flex">
+                    <div nz-form-label class="alignment"><label for="name">当前版本</label></div>
+                    <div nz-form-control class="flex-1">
+                        <nz-input [(ngModel)]="branchData.currVersion" name="currVersion" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'当前版本'" nzId="currVersion"></nz-input>
+                    </div>
+                </div>
+            </div>
+            <div nz-col [nzSpan]="12" class="mb-md">
+                <div nz-form-item class="d-flex">
+                    <div nz-form-label class="alignment"><label for="name">上次投产版本</label></div>
+                    <div nz-form-control class="flex-1">
+                        <nz-input [(ngModel)]="branchData.lastVersion" name="lastVersion" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'上次投产版本'" nzId="lastVersion"></nz-input>
+                    </div>
+                </div>
+            </div>
+            <div nz-col [nzSpan]="24" class="mb-md">
+                <div nz-form-item class="d-flex">
+                    <div nz-form-label class="alignment"><label for="name">分支全路径</label></div>
+                    <div nz-form-control class="flex-1">
+                        <nz-input [(ngModel)]="branchData.fullPath" name="fullPath" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'分支全路径'" nzId="fullPath"></nz-input>
+                    </div>
+                </div>
+            </div>
+
+            <div nz-col [nzSpan]="24" class="mb-md">
+                <div nz-form-item class="d-flex">
+                    <div nz-form-label class="alignment"><label for="name">分支作用说明</label></div>
+                    <div nz-form-control class="flex-1">
+                        <nz-input [(ngModel)]="branchData.branchFor" name="branchFor" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'分支作用说明'" nzId="branchFor"></nz-input>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </ng-template>
+</nz-modal>
+
+
+

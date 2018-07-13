@@ -68,9 +68,11 @@ export class SProjectComponent implements OnInit {
     // 部署类型
 
     diconArray : any;
-    diconfig:any = [{
+    diconfig: any = [{
         'exportType': '' ,
-        'depolySelect': [{ depoly: ''}]}];
+        'depolySelect': [{ depoly: ''}],
+        'error': false
+    }];
 
 
 
@@ -80,7 +82,6 @@ export class SProjectComponent implements OnInit {
         this.exportType = appConfig.Enumeration.exportType;
         this.deployType = appConfig.Enumeration.deployType;
         this.token  = this.tokenService.get().token; // 绑定token
-        console.log(this.productAdd)
         this.showAdd = true;
         this.isShowTotal = true;
         this.getData();
@@ -100,20 +101,41 @@ export class SProjectComponent implements OnInit {
                     this.data = val.result.records;
                     this.total = val.result.total;
                     this.pageTotal = val.result.pages * 10;
+                    console.log(this.data)
                     _.forEach(this.data , function (value) {
+
+                        if (!_.isUndefined(value.deployConfig)) {
+
+                            if (value.deployConfig !== 'default') {
+                                let jsonPar = JSON.parse(value.deployConfig)
+                                _.forEach(jsonPar , function (json) {
+                                    // 先这样。如果想严谨  利用冒泡函数 两两相加即可,然后赋值
+                                    value.exportShow = json.exportType;
+                                    value.deployShow = json.deployType;
+                                })
+
+                            } else {
+                                value.deployShow = value.deployConfig;
+                                value.exportShow = value.deployConfig;
+                            }
+
+                        }
+
+
                         value.buttonData = [
-                            {key: 'details', value: '详情'},
+                            // {key: 'details', value: '详情'},
                             {key: 'dels', value: '删除'},
                             {key: 'upd', value: '修改'}
                         ];
-                        if (!_.isNull(value.deployConfig)) {
+                      /*  if (!_.isNull(value.deployConfig)) {
+                            console.log(value)
                             let jsonPar = JSON.parse(value.deployConfig)
                             _.forEach(jsonPar , function (json) {
                                 // 先这样。如果想严谨  利用冒泡函数 两两相加即可,然后赋值
                                 value.exportShow = json.exportType;
                                 value.deployShow = json.deployType;
                             })
-                        }
+                        }*/
                     });
 
 
@@ -128,6 +150,11 @@ export class SProjectComponent implements OnInit {
             this.productAdd = new ProductModule(); // 清空
             this.modalVisible = true;
             this.modelTitle = '新建工程';
+            this.diconfig = [{
+                'exportType': '' ,
+                'depolySelect': [{ depoly: ''}],
+                'error': false}
+            ];
             this.isEdit = false;
         }
     }
@@ -153,38 +180,45 @@ export class SProjectComponent implements OnInit {
 
     // 按钮点击事件方法
     buttonEvent(event) {
-        if (event.projectType === '特殊工程') {
-            event.projectType = 'S';
-        } else {
-            event.projectType = 'C';
-        }
         if (!_.isNull(event.names)) {
             if (event.names.key === 'upd') {
-                console.log(event);
                 this.modelTitle = '修改工程';
                 this.productAdd = event; // 修改类型问题
-
-
-                this.diconArray =  _.cloneDeep(JSON.parse(event.deployConfig));
-
-                for (let i = 0; i < this.diconArray.length; i++ ) {
-                    this.diconArray[i].jsonArray = this.diconArray[i].deployType.split(',');
-                    this.diconArray[i].depolySelect = [];
-                    for (let j = 0; j < this.diconArray[i].jsonArray.length; j++) {
-                        let obj = {
-                            depoly: this.diconArray[i].jsonArray[j]
-                        };
-                        this.diconArray[i].depolySelect.push(obj)
-                    }
+                if (event.projectType === '特殊工程') {
+                    event.projectType = 'S';
+                } else {
+                    event.projectType = 'C';
                 }
 
-                this.diconfig = this.diconArray;
+                console.log(event)
+                if (event.deployConfig !== 'default') {
+                    this.diconArray =  _.cloneDeep(JSON.parse(event.deployConfig));
+
+                    for (let i = 0; i < this.diconArray.length; i++ ) {
+                        this.diconArray[i].jsonArray = this.diconArray[i].deployType.split(','); // 字符串转数组
+                        this.diconArray[i].depolySelect = [];
+                        for (let j = 0; j < this.diconArray[i].jsonArray.length; j++) {
+                            let obj = {
+                                depoly: this.diconArray[i].jsonArray[j]
+                            };
+                            this.diconArray[i].depolySelect.push(obj)
+                        }
+                    }
+                    this.diconfig = this.diconArray;
+                } else {
+                    console.log(event.deployConfig);
+                    this. diconfig = [{
+                        'exportType': event.deployConfig ,
+                        'depolySelect': [{ depoly: event.deployConfig}],
+                        'error': false
+                    }];
+                }
+
 
 
                 this.modalVisible = true;
                 this.isEdit = true;
             } else if (event.names.key === 'dels') { // 删除逻辑
-
                 this.modal.open({
                     title: '删除工程',
                     content: '您是否确定删除该工程?',
@@ -196,6 +230,11 @@ export class SProjectComponent implements OnInit {
                             .subscribe(
                                 (val) => {
                                     this.nznot.create('success', val.msg , val.msg);
+                                    if ( !(( this.total - 1) % 10)) {
+                                        this.productItem.pi -- ;
+                                        this.getData();
+                                    }
+
                                     this.getData();
                                 }
                             );
@@ -206,7 +245,7 @@ export class SProjectComponent implements OnInit {
                 });
 
             } else {
-                console.log('详情逻辑');
+
             }
         }
     }
@@ -226,16 +265,13 @@ export class SProjectComponent implements OnInit {
             })
             let jsonObj = {
                 exportType: value.exportType,
-                depolyType: arr
+                deployType: arr.join(',')
             };
             splicing.push(jsonObj);
         })
-
-        console.log(splicing)
+        console.log(this.productAdd)
         this.productAdd.deployConfig = JSON.stringify(splicing);
-        console.log(this.productAdd);
-
-/*        if (this.isEdit) { // 修改
+        if (this.isEdit) { // 修改
             this.utilityService.putData(appConfig.testUrl  + appConfig.API.sProject, this.productAdd, {Authorization: this.token})
                 .map(res => res.json())
                 .subscribe(
@@ -253,7 +289,7 @@ export class SProjectComponent implements OnInit {
                         this.getData();
                     }
                 );
-        }*/
+        }
         this.modalVisible = false;
 
     }
@@ -264,7 +300,9 @@ export class SProjectComponent implements OnInit {
 
 
     addInput() {
-        this.diconfig.push({'exportType': '' , 'depolySelect': [{ depoly: ''}]});
+        this.diconfig.push({ 'exportType': '' ,
+                            'depolySelect': [{ depoly: ''}],
+                            'error': false});
     }
 
 
@@ -285,25 +323,17 @@ export class SProjectComponent implements OnInit {
     }
 
 
-    onblur(item, array) {
-
-      /*  for(let i = 0; i < array.length; i++) {
-            let tims = array[i];
-            if (tims.exportType === item.exportType) {
-                tims.error = true;
+    onblur(item, index, array){
+        for (let i = 0; i < array.length; i++) {
+            if (index === i) continue; // 本次不判断, 否则会一直跟本次判断，一直true
+            if (item.exportType === array[i].exportType) {
+                item.error = true;
+                return;
             }
-
-        }*/
-
-        for(let i = 0; i < array.length; i++) {
-            for ( let j = i + 1 ; j < array.length; j ++ ) {
-                if (array[i].exportType === array[j].exportType) {
-                    item.error = true;
-                } else {
-
-                }
-            }
-
         }
+        item.error = false;
     }
+
+
+
 }
