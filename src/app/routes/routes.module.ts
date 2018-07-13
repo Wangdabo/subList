@@ -37,6 +37,7 @@ import { SBranchComponent } from './listManagement/UnderlyingParameter/s-branch/
 // 公共封装组件
 import { ListComponent} from '../component/list/list.component';
 import { EnvironmentComponent} from '../component/environment/environment.component';
+import { ListfoldComponent} from '../component/listfold/listfold.component';
 
 // 拦截器组件
 // import {AuthInterceptorService } from '../service/noop-interceptor';
@@ -70,7 +71,8 @@ import {HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
         Exception500Component,
         // 封装组件
         ListComponent,
-        EnvironmentComponent
+        EnvironmentComponent,
+        ListfoldComponent
     ],
     entryComponents: [],
     providers: [
