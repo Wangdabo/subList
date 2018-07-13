@@ -58,7 +58,7 @@
 </nz-modal>
 
 
-<nz-modal [nzVisible]="detailVisible"  [nzWidth]="1024" [nzTitle]="'工作项投放申请'" nzZIndex=10 [nzContent]="detailVisibleModal"
+<nz-modal [nzVisible]="detailVisible"   [nzWidth]="1024" [nzTitle]="'工作项投放申请'" nzZIndex=10 [nzContent]="detailVisibleModal"
           (nzOnCancel)="detailVisible=false" (nzOnOk)="checkSave()">
     <ng-template #detailVisibleModal>
              <div nz-col [nzSpan]="24" class="mb-md">
@@ -168,20 +168,23 @@
                                 <td nz-col [nzSpan]="16">{{k.patchType }}</td>
                             </tr>
                             <tr nz-col [nzSpan]="24">
-                                <td nz-col [nzSpan]="12">代码</td>
+                                <td nz-col [nzSpan]="8">代码</td>
                                 <td nz-col [nzSpan]="3">变动类型</td>
                                 <td nz-col [nzSpan]="3">最新版本</td>
+                               
                                 <td nz-col [nzSpan]="3">开发人员</td>
-                                <td nz-col [nzSpan]="3">操作</td>
+                                 <td nz-col [nzSpan]="3">状态</td>
+                                <td nz-col [nzSpan]="4">操作</td>
                             </tr>
                             <tr nz-col [nzSpan]="24"  *ngFor="let x of k.fileList">
-                                <td nz-col [nzSpan]="12" style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;"  title="{{x.fullPath}}">{{x.fullPath}}</td>
+                                <td nz-col [nzSpan]="8" style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;"  title="{{x.fullPath}}">{{x.fullPath}}</td>
                                 <td nz-col [nzSpan]="3">{{x.commitType}}</td>
                                 <td nz-col [nzSpan]="3">{{x.deliveryVersion}}</td>
                                 <td nz-col [nzSpan]="3">{{x.author}}</td>
-                                  <td nz-col [nzSpan]="3">
-                                    <a  style="color:#108ee9;" (click)="buttonClick('1',j.guid)">已合并&nbsp;</a>&nbsp;
-                                    <a style="color:red;" (click)="buttonClick('B',j.guid)">不投产&nbsp;</a>&nbsp;
+                                <td nz-col [nzSpan]="3">{{x.confirmStatus}}</td>
+                                  <td nz-col [nzSpan]="4">
+                                    <a  style="color:#108ee9;" (click)="buttonClick(1,x.guid)">已合并&nbsp;</a>&nbsp;
+                                    <a style="color:red;" (click)="buttonClick(2,x.guid)">不投产&nbsp;</a>&nbsp;
                                 </td>
                             </tr>
                             </tbody>
@@ -191,11 +194,11 @@
 
 
             <div  nz-col [nzSpan]="24" class="mb-md">
-                    <button  nz-col [nzSpan]="4"  [nzOffset]="'6'" nz-button  (click)="returnsclick(0)"  [nzType]="'primary'" [nzSize]="'large'">
+                    <button  nz-col [nzSpan]="4"  [nzOffset]="'6'" nz-button  (click)="returnsclick(0,j.delivery.guid)"  [nzType]="'primary'" [nzSize]="'large'">
                         <span>打回</span>
                     </button>
 
-                    <button   nz-col  [nzSpan]="4"  [nzOffset]="'3'" nz-button  (click)="returnsclick(1)"  [nzType]="'primary'" [nzSize]="'large'">
+                    <button   nz-col  [nzSpan]="4"  [nzOffset]="'3'" nz-button  (click)="returnsclick(1,j.delivery.guid)"  [nzType]="'primary'" [nzSize]="'large'">
                         <span>成功</span>
                     </button>
 
@@ -205,7 +208,7 @@
   </ng-template>
 </nz-modal>
 <nz-modal [nzVisible]="istextVisible"  [nzWidth]="600" [nzTitle]="'请输入打回理由（选填）'"   [nzContent]="modaltextTitle"
-          (nzOnCancel)="istextVisible=false"  (nzOnOk)="returnsclick(2)" >
+          (nzOnCancel)="istextVisible=false"  (nzOnOk)="returnsclick(2,guid)" >
     <ng-template #modaltextTitle>
         <textarea rows="6"  nz-input [(ngModel)]="inputValue" ></textarea>
 

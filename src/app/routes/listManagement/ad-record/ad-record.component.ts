@@ -198,9 +198,9 @@ export class AdRecordComponent implements OnInit {
                                 }
                                 ,(error)=>{
                                     console.log(error)
-                                //   if(error){
-                                //     this.nznot.create('error', error.json().msg,'');
-                                //       }
+                                  if(error){
+                                    this.nznot.create('error', error.json().msg,'');
+                                      }
                                 }) 
 
           
@@ -268,11 +268,14 @@ mergeClick(index,id){
      iStouchan = false
     
         buttonClick(type,id){
+            console.log(type);
+            console.log(id);
             if(type=='4'){
          
            this.iStouchan =true
          
             }else{
+
               this.utilityService.putData( appConfig.testUrl +'/checkLists/'+id+'/status/'+type, {}, {Authorization: this.token})
                         .map(res => res.json())
                          .subscribe(
@@ -285,7 +288,7 @@ mergeClick(index,id){
                           }
                          },(error)=>{
                               if(error){
-                                    this.nznot.create('error', error.msg,'');
+                                    this.nznot.create('error', error.json().msg,'');
                               }
                          });
                           }
@@ -364,7 +367,7 @@ mergeClick(index,id){
                           }
                          },(error)=>{
                               if(error){
-                                    this.nznot.create('error', error.msg,'');
+                                    this.nznot.create('error', error.json().msg,'');
                               }
                          });
     }
@@ -390,14 +393,17 @@ mergeClick(index,id){
 
   istextVisible = false;
   inputValue:any;
-   returnsclick(item) {
-          console.log(this.mergeId);
+  guid:any;
+   returnsclick(item,id) {
+       this.guid=id
+      
     let S = '';
+    console.log(this.guidprent)
    if ( item === 0) {
     
        this.istextVisible = true;
    }else {
-       let  url = appConfig.testUrl + '/checks/delivery/' + this.mergeId + '/result';
+       let  url = appConfig.testUrl + '/checks/delivery/' + this.guid + '/result';
        if (item === 1) {
            S = 'S';
        }else {
@@ -409,7 +415,7 @@ mergeClick(index,id){
        };
 
 
-       this.utilityService.postData( url, obj, {Authorization: this.token})
+       this.utilityService.putData( url, obj, {Authorization: this.token})
            .map(res => res.json())
            .subscribe(
                (val) => {
@@ -417,7 +423,7 @@ mergeClick(index,id){
 
                    if (val.code == 200){
                        this.istextVisible = false;
-                       this.detailVisible = false;
+                    //    this.detailVisible = false;
                        this.nznot.create('success', val.msg, val.msg);
                    }else{
                          this.nznot.create('error', val.msg,'');
