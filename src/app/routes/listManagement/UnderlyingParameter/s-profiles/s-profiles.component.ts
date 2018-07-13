@@ -157,11 +157,7 @@ export class SProfilesComponent implements OnInit {
         this.token  = this.tokenService.get().token;
         this.getData();
         this.showAdd = true;
-        this.profiles.checkOptionsOne = [
-            {label: '09:00', value: '09:00', checked: true},
-            {label: '12:00', value: '12:00'},
-            {label: '15:00', value: '15:00'},
-        ];
+        
 
     }
 
@@ -224,7 +220,7 @@ export class SProfilesComponent implements OnInit {
     addHandler(event) {
 
         if (event === 'add') {
-            this.profiles = new SproModule();
+            this.profiles = new SprofilesModule();
             this.Ptitle = '新增环境数据'
 
             this.mergeVisible = true;

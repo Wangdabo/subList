@@ -1,5 +1,5 @@
 // 工程
-export class SproModule {
+export class SprofilesModule {
 
       public page = '1';
     // 环境代码
