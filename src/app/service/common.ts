@@ -35,6 +35,7 @@ export let appConfig = {
         // 基础参数--工作项
         workitemAdd: '/sWorkitem/branch', // 新增工作项 后面加分支guid
         workItemList: '/sWorkitem/list', // 查询列表
+        svncount: '/sSvnAccount/all', // 查询人员
         // 基础参数---分支
         notAllot: '/sBranch/notAllot',
 

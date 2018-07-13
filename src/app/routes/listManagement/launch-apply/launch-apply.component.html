@@ -275,7 +275,7 @@
 <nz-modal [nzVisible]="mergeisVisible"  [nzWidth]="1100" [nzTitle]="'合并投放 请指定投放日期和环境'"   [nzContent]="dictModal"
           (nzOnCancel)="mergeisVisible=false" (nzOnOk)="savemergeisInfo()" [nzFooter]="is" >
     <ng-template #dictModal>
-     
+
       <nz-steps [(nzCurrent)]="current"  [nzSize]="default">
             <nz-step  [nzTitle]="'选择环境'" style="width:47%"></nz-step>
             <nz-step   [nzTitle]="'核对列表'" style="width:47%"></nz-step>
@@ -283,14 +283,14 @@
       </nz-steps>
 
     <div class="steps-content" >
-        
+
        <app-environment [deliveryTime]="deliveryTime" [isShowDate]="isShowDate" (isActive)="isActive($event)" [elementScice]="elementScice" *ngIf="current === 0"></app-environment>
 
         <app-listfold [headerDate]="mergeHeader"  [buttons] ='buttons'  (buttonData)="buttonDataHandler($event)" (buttonEvent)="buttonEvent($event)"  [initDate]="initDate" *ngIf="current === 1" ></app-listfold>
-    
+
          <!--<span >2222</span>-->
        <div *ngIf="current ===2" nz-row [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
-            
+
                <div nz-col [nzSpan]="24" class="mb-md">
                 <div  nz-form-item class="d-flex">
                     <div nz-col [nzSpan]="8" [nzOffset]="2"  class="ad-desc-list__term ng-star-inserted">投放清单多的记录</div>
@@ -302,7 +302,7 @@
                 </button>
                 </div>
             </div>
-           
+
 
 
               <div nz-col [nzSpan]="24" class="mb-md">
@@ -345,23 +345,23 @@
 
 
             <div class="steps-action" >
-                
+
                     <button   nz-button [nzType]="'default'"  (click)="pre()" *ngIf="current > 0">
                         <span>上一步</span>
                     </button>
-                  
-                   
+
+
                     <button  nz-col  [nzOffset]="2"  nz-button [nzType]="'default'" (click)="next()" *ngIf="current < 2" [disabled]="isNext">
                         <span>下一步</span>
                     </button>
-                   
+
                     <button nz-col  nz-button [nzType]="'primary'" [nzOffset]="2"  (click)="done()" *ngIf="current === 2">
                         <span>确认</span>
                     </button>
-                    
+
             </div>
     </div>
-   
+
 
     </ng-template>
 </nz-modal>
@@ -436,7 +436,6 @@
                     <div class="ad-desc-list__term ng-star-inserted">投放明细:</div>
                 </div>
             </div>
-
             <!-- 列表 -->
             <div  nz-col [nzSpan]="24" class="mb-md" *ngFor="let s of detailList ; let l = index">
                 <div *ngFor="let j of s.deliveryPatchDetails">

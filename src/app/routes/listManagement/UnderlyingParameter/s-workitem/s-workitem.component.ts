@@ -6,7 +6,7 @@ import {NzModalService, NzNotificationService} from 'ng-zorro-antd';
 import {Router} from '@angular/router';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
 import { WorkitemModule } from '../../../../service/delivent/workItemModule';
-import {ProductModule} from '../../../../service/delivent/projectModule';
+import { BranchModule} from '../../../../service/delivent/brachModule';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 
@@ -75,6 +75,8 @@ export class SWorkitemComponent implements OnInit {
     isEdit = false; // 默认是新增
 
     isShowTotal: boolean;
+    branchInfo = false; // 弹出框 默认为false
+    branchData: BranchModule = new BranchModule();
 
     ngOnInit() {
         this.showAdd = true;
@@ -82,6 +84,8 @@ export class SWorkitemComponent implements OnInit {
         this.token  = this.tokenService.get().token; // 绑定token
         this.getData();
         this.getBranch();
+        this.getOper()
+        this.initDate(); // 默认时间
     }
     getData() {
         this.page = {
@@ -121,6 +125,7 @@ export class SWorkitemComponent implements OnInit {
                 }
             );
     }
+    // 查询分支
     getBranch() {
         this.utilityService.getData(appConfig.testUrl  + appConfig.API.notAllot , {}, {Authorization: this.token})
             .subscribe(
@@ -129,7 +134,23 @@ export class SWorkitemComponent implements OnInit {
                  console.log(val);
             });
     }
+    // 查询人员
+    getOper() {
+        this.utilityService.postData(appConfig.testUrl  + appConfig.API.svncount , {}, {Authorization: this.token})
+            .map(res => res.json())
+            .subscribe(
+                (val) => {
+                    this.owner = val.result
+                });
+    }
 
+    // 默认时间
+    initDate() {
+        this.workAdd.receiveTime =  moment(new Date()).format('YYYY-MM-DD');
+        this.workAdd.developStartTime =  moment(new Date()).format('YYYY-MM-DD');
+        this.workAdd.deliveryTime =  moment(new Date()).format('YYYY-MM-DD');
+        this.workAdd.deliveryPlanTime =  moment(new Date()).format('YYYY-MM-DD');
+    }
     // 新增方法
     addHandler(event) {
         if (event === 'add') {
@@ -147,7 +168,14 @@ export class SWorkitemComponent implements OnInit {
 
     // 翻页方法
     monitorHandler(event) {
-
+        this.workItem.pi = event;
+        this.page = {
+            page: {
+                current: event, // 页码
+                size: this.workItem.size, //  每页个数
+            }
+        };
+        this.getData();
     }
 
 
@@ -186,7 +214,17 @@ export class SWorkitemComponent implements OnInit {
 
 
             } else if (event.names.key  === 'branchDDetail') {
-                console.log('分支详情');
+
+                this.utilityService.getData(appConfig.testUrl  + appConfig.API.sWorkitem + '/' + event.guid + '/branchDetail' ,{}, {Authorization: this.token})
+                    .subscribe(
+                        (val) => {
+                             this.branchInfo = true;
+                             this.branchData = val.result;
+                             this.branchData.createTime = moment(this.branchData.createTime).format('YYYY-MM-DD');
+                        },
+                        (error) => {
+                            this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
+                        });
             } else {
 
                 this.modal.open({
@@ -208,21 +246,7 @@ export class SWorkitemComponent implements OnInit {
 
                     }
                 });
-
-
-
             }
-
-            /*else if (event.names.key === 'dels') {
-                this.utilityService.deleatData(appConfig.testUrl  + appConfig.API.sWorkitem + '/' + event.guid , {}, {Authorization: this.token})
-                    .map(res => res.json())
-                    .subscribe(
-                        (val) => {
-                            this.nznot.create('success', val.msg , val.msg);
-                            this.getData();
-                        }
-                    );
-            } */
         }
     }
 
@@ -236,13 +260,19 @@ export class SWorkitemComponent implements OnInit {
 
     // 弹出框确定
     save() {
+        this.workAdd.receiveTime = moment(this.workAdd.receiveTime).format('YYYY-MM-DD');
+        this.workAdd.developStartTime = moment(this.workAdd.developStartTime).format('YYYY-MM-DD');
+        this.workAdd.deliveryTime = moment(this.workAdd.deliveryTime).format('YYYY-MM-DD');
         this.workAdd.deliveryPlanTime = moment(this.workAdd.deliveryPlanTime).format('YYYY-MM-DD');
-        this.workAdd.developStartTime = moment(this.workAdd.deliveryPlanTime).format('YYYY-MM-DD');
-        this.workAdd.deliveryTime = moment(this.workAdd.deliveryPlanTime).format('YYYY-MM-DD');
-        this.workAdd.deliveryPlanTime = moment(this.workAdd.deliveryPlanTime).format('YYYY-MM-DD');
-        this.workAdd.developers = this.workAdd.developers.join( ',' );
 
-        console.log(this.workAdd)
+
+
+        if (_.isArray(this.workAdd.developers)) {
+            this.workAdd.developers = this.workAdd.developers.join( ',' );
+        } else {
+        }
+
+
         if (this.isEdit) { // 修改
             this.utilityService.putData(appConfig.testUrl  + appConfig.API.sWorkitem , this.workAdd, {Authorization: this.token})
                 .map(res => res.json())
@@ -253,7 +283,6 @@ export class SWorkitemComponent implements OnInit {
                     }
                 );
         } else {
-            // this.utilityService.postData(appConfig.testUrl  + appConfig.API.workitemAdd + '/' + this.workAdd.branch, this.workAdd, {Authorization: this.token})
             this.utilityService.postData(appConfig.testUrl  + appConfig.API.sWorkitem, this.workAdd,  {Authorization: this.token})
                 .map(res => res.json())
                 .subscribe(

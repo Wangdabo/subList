@@ -401,19 +401,19 @@
             <div nz-col [nzSpan]="24" class="mb-md" style="text-align: center">
                 <div nz-col [nzSpan]="12"  [nzOffset]="6" class="mb-md">
                     <div style="border: 1px solid #000000; display: block; line-height: 50px; height: 50px;">
-                        本次明细如下
+                        本次投放明细如下
                     </div>
                     <div nz-col [nzSpan]="24" style="border:1px solid #cccccc;" >
                         <div style="margin: 20px 0px;" nz-col [nzSpan]="24">
                             <div nz-col [nzSpan]="4">工作项名称</div>
                             <div nz-col [nzSpan]="8">工作项别名</div>
-                            <div nz-col [nzSpan]="4">打包窗口即环境</div>
+                            <div nz-col [nzSpan]="10">打包窗口即环境</div>
                         </div>
 
-                        <div  nz-col [nzSpan]="24" *ngFor = 'let i of detailInfo'>
+                        <div  nz-col [nzSpan]="24" *ngFor = 'let i of detailInfo' style="margin:10px 0px;">
                             <div nz-col [nzSpan]="4">{{i.guidWorkitem.target}}</div>
-                            <div nz-col [nzSpan]="8">{{i.name}}</div>
-                            <div nz-col [nzSpan]="4">{{i.guidProfiles.target}}@{{i.packTiming}}</div>
+                            <div nz-col [nzSpan]="8">{{i.applyAlias}}</div>
+                            <div nz-col [nzSpan]="10">{{i.guidProfiles.target}}@{{i.packTiming}}</div>
                         </div>
 
                     </div>
