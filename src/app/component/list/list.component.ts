@@ -96,10 +96,8 @@ export class ListComponent implements OnInit {
 
 
     ngOnInit() {
-       
         this.headerDate = this.headerDate;
         this.moreData = this.moreData; // 绑定更多数据
-
     }
 
 
@@ -120,8 +118,8 @@ export class ListComponent implements OnInit {
                     parList: this.parsentList,
                     index: index,
                 }
-               
-            
+
+
                 this.buttonEvent.emit(obj); // 点击了修改，打开弹出框，把修改的数据传递过去
             } else {
                 this.buttonEvent.emit(event); // 点击了修改，打开弹出框，把修改的数据传递过去
@@ -177,7 +175,7 @@ export class ListComponent implements OnInit {
     }
     status(i,event) {
         i.status = event
-      
+
    this.getStatus.emit(i); // 把要删除的内容发射给父组件
     }
 
