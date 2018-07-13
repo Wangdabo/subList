@@ -605,7 +605,7 @@ export class SubListComponent implements OnInit {
                         );
                 },
                 (error) => {
-                    console.log('error')
+                    this.getData();
                     this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
                 }
             );
@@ -646,14 +646,18 @@ export class SubListComponent implements OnInit {
             }
 
         }
-        // this.copytextList = _.cloneDeep(this.textcssList); // 拷贝内容
         if (this.isGou) {
-            this.appendVisible = true;
-        /*    this.appendTitle = '追加成功';*/
+
             this.utilityService.getData(appConfig.testUrl  + '/deliveries/' +  + this.workItemInfo.guid + '/addTo', {}, {Authorization: this.token})
                 .subscribe(
                     (val) => {
                         this.appendSelect = val.result;
+                        if (this.appendSelect.length > 0 ) {
+                            this.appendVisible = true;
+                        } else {
+                            this.nznot.create('error', '没有可追加的清单', '没有可追加的清单');
+                        }
+
                     }
                 );
 
