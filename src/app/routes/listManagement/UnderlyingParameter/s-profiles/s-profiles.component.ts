@@ -30,42 +30,42 @@ export class SProfilesComponent implements OnInit {
         @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
         private confirmServ: NzModalService
     ) { }
-   token: any;
-   
+    token: any;
+
     profiles:SprofilesModule = new SprofilesModule();
-   
-   
+
+
 
 
 
     submitForm() {
-     
-      let arr = [];
-      let objarr = [];
+
+        let arr = [];
+        let objarr = [];
         this.profiles.checkOptionsOne.forEach( function (i) {
-                                    console.log(i)
-                            if(i.checked == true) {
-                                arr.push(i.value)
-                            }
-                        })
-                this.profiles.packTiming = arr.join(',')
+            console.log(i)
+            if(i.checked == true) {
+                arr.push(i.value)
+            }
+        })
+        this.profiles.packTiming = arr.join(',')
         if ( ! this.profiles.guid ) {
-                // this.profiles.isAllowDelivery = ' ';
-                this.utilityService.postData(appConfig.testUrl  + appConfig.API.sProfilesadd, this.profiles, {Authorization: this.token})
-                      .map(res => res.json())
-                    .subscribe(
-                         (val) => {
-                          this.getData();
+            // this.profiles.isAllowDelivery = ' ';
+            this.utilityService.postData(appConfig.testUrl  + appConfig.API.sProfilesadd, this.profiles, {Authorization: this.token})
+                .map(res => res.json())
+                .subscribe(
+                    (val) => {
+                        this.getData();
                         if(val.code == 200) {
-                        
-                                this.mergeVisible = false;
-                          
+
+                            this.mergeVisible = false;
+
                             this.nznot.create('success', val.msg, val.msg);
                         }else {
                             this.nznot.create('error', '异常', '异常');
                         }
-                        }   ,
-                            (error) => {
+                    }   ,
+                    (error) => {
 
                                 this.nznot.create('error','异常','');
                             }
@@ -73,27 +73,27 @@ export class SProfilesComponent implements OnInit {
         }else{
             console.log(this.profiles)
             //   this.profiles.isAllowDelivery = ' ';
-               this.utilityService.putData(appConfig.testUrl  + appConfig.API.sProfilesadd, this.profiles, {Authorization: this.token})
-                    .map(res => res.json())
-                    .subscribe(
-                        (val) => {
-                          this.getData();
+            this.utilityService.putData(appConfig.testUrl  + appConfig.API.sProfilesadd, this.profiles, {Authorization: this.token})
+                .map(res => res.json())
+                .subscribe(
+                    (val) => {
+                        this.getData();
                         if(val.code == 200) {
-                         
+
                             this.mergeVisible = false;
                             this.nznot.create('success', val.msg, val.msg);
                         }else {
                             this.nznot.create('error', '异常', '异常');
                         }
-                        }   ,
-                            (error) => {
-                                this.nznot.create('error', '异常', '异常');
-                            }
-                            
-                    );
-                }
-              
-   
+                    }   ,
+                    (error) => {
+                        this.nznot.create('error', '异常', '异常');
+                    }
+
+                );
+        }
+
+
 
 
 
@@ -157,11 +157,10 @@ export class SProfilesComponent implements OnInit {
         this.token  = this.tokenService.get().token;
         this.getData();
         this.showAdd = true;
-        
 
     }
 
-    
+
     // 表格数据按钮
     buttonData = [
         { key: 'dels', value: '删除' },
@@ -201,12 +200,12 @@ export class SProfilesComponent implements OnInit {
                         this.total = val.result.total; // 总数
                         this.pageTotal = val.result.pages * 10; // 页码
                         for ( let i = 0; i < this.data.length; i++) {
-                           this.data[i].buttonData = this.buttonData
-                           if(this.data[i].isAllowDelivery == '允许'){
-                               this.data[i].isAllowDelivery = true
-                           }else{
-                               this.data[i].isAllowDelivery = false
-                           }
+                            this.data[i].buttonData = this.buttonData
+                            if(this.data[i].isAllowDelivery == '允许'){
+                                this.data[i].isAllowDelivery = true
+                            }else{
+                                this.data[i].isAllowDelivery = false
+                            }
                         }
                     }
                     // 拼接
@@ -285,13 +284,13 @@ export class SProfilesComponent implements OnInit {
             event.checkOptionsOne =  this.profiles.checkOptionsOne;
             this.profiles = event
             arr.forEach( j=> {
-                        this.profiles.checkOptionsOne.forEach( function (i) {
-                                if(j == i.value){
-                                    i.checked = true;
-                                }
-                        })
-                            
-                     })
+                this.profiles.checkOptionsOne.forEach( function (i) {
+                    if(j == i.value){
+                        i.checked = true;
+                    }
+                })
+
+            })
             this.mergeVisible = true;
         }
         else if (event.names.key === 'correlation') {
@@ -342,33 +341,33 @@ export class SProfilesComponent implements OnInit {
             // }
             //  );
         }
-         else if (event.names.key === 'detail') { 
-             
-                   let self = this; 
-                    this.confirmServ.confirm({
-                    title  : '您是否确认要取消关联分支!',
-                    showConfirmLoading: true,
-                    onOk() {
-                        self.saveCorrelation('Q')
-                    },
-                    onCancel() {
-                    }
-                    });
-             
-                // this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfilesadd + '/' + this.profilesGuid, {},{Authorization: this.token})
-                // .subscribe(
-                // (val) => {
-                //   console.log(val)
-                // if(val.code == 200) {
-                //            this.nznot.create('success', val.msg, val.msg);
-                //             this.isCorrelation = true;
-                //     }
-                //     }   ,
-                //     (error) => {
-                //         this.nznot.create('error', '异常', '异常');
-                // }
+        else if (event.names.key === 'detail') {
+
+            let self = this;
+            this.confirmServ.confirm({
+                title  : '您是否确认要取消关联分支!',
+                showConfirmLoading: true,
+                onOk() {
+                    self.saveCorrelation('Q')
+                },
+                onCancel() {
+                }
+            });
+
+            // this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfilesadd + '/' + this.profilesGuid, {},{Authorization: this.token})
+            // .subscribe(
+            // (val) => {
+            //   console.log(val)
+            // if(val.code == 200) {
+            //            this.nznot.create('success', val.msg, val.msg);
+            //             this.isCorrelation = true;
+            //     }
+            //     }   ,
+            //     (error) => {
+            //         this.nznot.create('error', '异常', '异常');
+            // }
             //  );
-         }
+        }
 
     }
 
@@ -411,32 +410,32 @@ export class SProfilesComponent implements OnInit {
     getStatus(event) {
         let status = '';
         if(event.status === true){
-           status = '1'
+            status = '1'
         }else{
-             status = '0'
+            status = '0'
         }
-         let obj = {
-             guid: event.guid,
-             isAllowDelivery: status
-         }
-         console.log(obj)
-            this.utilityService.putData(appConfig.testUrl  + appConfig.API.getStatus, obj,{Authorization: this.token})
-           .map(res => res.json())
+        let obj = {
+            guid: event.guid,
+            isAllowDelivery: status
+        }
+        console.log(obj)
+        this.utilityService.putData(appConfig.testUrl  + appConfig.API.getStatus, obj,{Authorization: this.token})
+            .map(res => res.json())
             .subscribe(
                 (val) => {
-                if(val.code == 200) {
-                           this.nznot.create('success', val.msg, val.msg);
+                    if(val.code == 200) {
+                        this.nznot.create('success', val.msg, val.msg);
                     }else {
-                            this.nznot.create('error', val.msg, '');
-                        }
-                    }   ,
-                    (error) => {
-                        this.nznot.create('error', error.json().msg, '');
+                        this.nznot.create('error', val.msg, '');
+                    }
+                }   ,
+                (error) => {
+                    this.nznot.create('error', error.json().msg, '');
                 }
-             );
+            );
 
 
-    }     
+    }
 
 
 

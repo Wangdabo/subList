@@ -62,7 +62,9 @@ export class SubListComponent implements OnInit {
     itemName: string;
     ifActive: boolean; // 是否请求成功
     copyinfos: any;
-
+    isShowTotal  = true;
+    appendTitle: string; // 弹窗名称
+    appendSelect: any; // 可追加的环境和方法
     ngOnInit() {
         this.active = false;
         this.reset = false;
@@ -82,7 +84,7 @@ export class SubListComponent implements OnInit {
         this.utilityService.getData(appConfig.testUrl  + appConfig.API.sWorkitem, {}, {Authorization: this.token})
             .subscribe(
                 (val) => {
-                    
+
                     this.workItem = val.result;
                 }
             );
@@ -148,6 +150,8 @@ export class SubListComponent implements OnInit {
     textcssList: any;
 
     calculatedArray: any; // 合计的数组
+
+    detailInfo: any; // 投放之后的详情
     // 数组转换特定格式
     arrarObj(event) {
         let listArray = [];
@@ -314,7 +318,7 @@ export class SubListComponent implements OnInit {
             }
 
         }
-        this.copytextList = _.cloneDeep(this.textcssList); // 拷贝内容
+        // this.copytextList = _.cloneDeep(this.textcssList); // 拷贝内容
         if (this.isGou) {
             this.modalVisible = true;
         } else {
@@ -340,7 +344,7 @@ export class SubListComponent implements OnInit {
     profiles: any;
 
     // 计算合计
-    calculatedTotal(event) {
+    /*calculatedTotal(event) {
         let totalArray = []
         _.forEach(event , function (value) {
             if (value.projectType !== 'C') { // 如果不是默认的，代表congig和default
@@ -391,103 +395,17 @@ export class SubListComponent implements OnInit {
                 key: i,
                 value: newArr[i]
             };
-            totalArr.push(obj)
+            totalArr.push(obj);
         }
         console.log(totalArr)
         return totalArr;
-    }
-
-
-    // 投放申请
-    save() {
-        this.profiles = [];
-        for (let i = 0; i < this.elementScice.length; i ++) {
-            if (this.elementScice[i].check && this.elementScice[i].times) {
-                let obj = {
-                    guidProfiles: this.elementScice[i].guid,
-                    profilesName: this.elementScice[i].profilesName,
-                    packTiming: this.elementScice[i].times,
-                    name: this.elementScice[i].manager,
-                    applyAlias: this.elementScice[i].deliveryName
-                };
-                this.profiles.push(obj);
-            }
-        }
-        console.log(this.profiles)
-        // 第一次相同的
-        var fildNewList = [];
-        var filsNewList = [];
-        // 完全相同
-        var deploySelect; // 导出
-        console.log(this.deliveryName)
-        if (!_.isUndefined(this.deliveryTime)  && this.profiles.length > 0) { // 如果日期和下面的事件都选择了
-            this.infoVisible = true;
-            //  处理数据用来展示, 把没有选中的删除掉
-            _.forEach(this.copytextList , function (value, index) { // 若一个参数，返回的便是其value值
-                _.forEach(value.deliveryPatchDetails , function (value1) {
-                    _.remove(value1.fileList, function(n) {
-                        return n.checked !== true;
-                    });
-                    if (value.projectType === 'D') {
-                        var alldArray = [];
-                        var twodNewList;
-                        for ( let i = 0; i < value1.fileList.length; i ++) {
-                            twodNewList = value1.fileList[i].patchSelect; // jar  部署类型
-                            fildNewList[twodNewList] = fildNewList[twodNewList] || (fildNewList[twodNewList] = []); // 断裂 如果前面是false。那就执行后面的，就相当于判断filNewList[twoNewList]是否是undefined
-                            fildNewList[twodNewList].push(value1.fileList[i]);
-                        }
-                        for (let key in fildNewList) {
-                            var obj = [];
-                            for (let s = 0; s < fildNewList[key].length; s++) {
-                                deploySelect = fildNewList[key][s].deploySelect; // 拿到了每一项
-                                obj[deploySelect] = obj[deploySelect] || ( obj[deploySelect] = []);
-                                obj[deploySelect].push(fildNewList[key][s]);
-                            }
-                            for (let k in obj) {
-                                alldArray.push(obj[k]);
-                            }
-                        }
-                        value.groupArray = alldArray;
-                    } else if (value.projectType === 'S') {
-                        var  allsArray = [];
-                        var twosNewList;
-                        var filst;
-                        for ( let i = 0; i < value1.fileList.length; i ++) {
-                            twosNewList = value1.fileList[i].patchSelect; // jar  部署类型
-                            filsNewList[twosNewList] = filsNewList[twosNewList] || (filsNewList[twosNewList] = []); // 断裂 如果前面是false。那就执行后面的，就相当于判断filNewList[twoNewList]是否是undefined
-                            filsNewList[twosNewList].push(value1.fileList[i]);
-                        }
-                        for (let key in filsNewList) {
-                            var obj = [];
-                            for (let s = 0; s < filsNewList[key].length; s++) {
-                                deploySelect = filsNewList[key][s].deploySelect; // 拿到了每一项
-                                obj[deploySelect] = obj[deploySelect] || ( obj[deploySelect] = []);
-                                obj[deploySelect].push(filsNewList[key][s]);
-                            }
-                            for (let k in obj) {
-                                allsArray.push(obj[k]); // 我拼成的数组 目前我是直接等于
-                            }
-                        }
-                        value.groupArray = allsArray;
-                    }
-                });
-            });
-            // 合计计算
-            this.calculatedArray = this.calculatedTotal(this.copytextList);
-            this.modalVisible = false;
-            this.infoVisible = true;
-            this.dataChange();
-        } else {
-            this.nznot.create('error', '请检查信息是否全部填写', '请检查信息是否全部填写');
-        }
-
-    }
-
+    }*/
 
 
     // 数据处理
     dataChange() {
         /*拼数据*/
+
         let objsss = false; // 前端判定是否正确
         let array = [];
         for (let i = 0; i < this.textcssList.length; i ++) {
@@ -522,21 +440,275 @@ export class SubListComponent implements OnInit {
             guidBranch : this.bransguid,
             dliveryAddRequest: {
                 profiles: this.profiles,
-                deliveryTime: moment(this.deliveryTime).format('YYYY-MM-DD')
+                deliveryTime: moment(this.deliveryTime).format('YYYY-MM-DD'),
             },
+            guidWorkitem: this.workItemInfo.guid,
             deliveryList: array,
         };
 
-        this.copysplicingObj = _.cloneDeep(this.splicingObj); // copy内容 用来页面的展示 而且需要添加数据
-        // 绑定内容
-        this.copysplicingObj.branchDetail = this.branchDetail; // 分支
-        this.copysplicingObj.userName = this.userName; // 登陆用户名
-        this.copysplicingObj.itemName = this.itemName; // 登陆用户名
+        /*        this.copysplicingObj = _.cloneDeep(this.splicingObj); // copy内容 用来页面的展示 而且需要添加数据
+                // 绑定内容
+                this.copysplicingObj.branchDetail = this.branchDetail; // 分支
+                this.copysplicingObj.userName = this.userName; // 登陆用户名
+                this.copysplicingObj.itemName = this.itemName; // 登陆用户名*/
+
+
+
     }
 
 
 
+    // 投放申请
+    save() {
+        /* this.profiles = [];
+      for (let i = 0; i < this.elementScice.length; i ++) {
+          if (this.elementScice[i].check && this.elementScice[i].times) {
+              let obj = {
+                  guidProfiles: this.elementScice[i].guid,
+                  profilesName: this.elementScice[i].profilesName,
+                  packTiming: this.elementScice[i].times,
+                  name: this.elementScice[i].manager,
+                  applyAlias: this.elementScice[i].deliveryName
+              };
+              this.profiles.push(obj);
+          }
+      }
+      console.log(this.profiles)
+      // 第一次相同的
+      var fildNewList = [];
+      var filsNewList = [];
+      // 完全相同
+      var deploySelect; // 导出
+      console.log(this.deliveryName)
+      if (!_.isUndefined(this.deliveryTime)  && this.profiles.length > 0) { // 如果日期和下面的事件都选择了
+          this.infoVisible = true;
+          //  处理数据用来展示, 把没有选中的删除掉
+          _.forEach(this.copytextList , function (value, index) { // 若一个参数，返回的便是其value值
+              _.forEach(value.deliveryPatchDetails , function (value1) {
+                  _.remove(value1.fileList, function(n) {
+                      return n.checked !== true;
+                  });
+                  if (value.projectType === 'D') {
+                      var alldArray = [];
+                      var twodNewList;
+                      for ( let i = 0; i < value1.fileList.length; i ++) {
+                          twodNewList = value1.fileList[i].patchSelect; // jar  部署类型
+                          fildNewList[twodNewList] = fildNewList[twodNewList] || (fildNewList[twodNewList] = []); // 断裂 如果前面是false。那就执行后面的，就相当于判断filNewList[twoNewList]是否是undefined
+                          fildNewList[twodNewList].push(value1.fileList[i]);
+                      }
+                      for (let key in fildNewList) {
+                          var obj = [];
+                          for (let s = 0; s < fildNewList[key].length; s++) {
+                              deploySelect = fildNewList[key][s].deploySelect; // 拿到了每一项
+                              obj[deploySelect] = obj[deploySelect] || ( obj[deploySelect] = []);
+                              obj[deploySelect].push(fildNewList[key][s]);
+                          }
+                          for (let k in obj) {
+                              alldArray.push(obj[k]);
+                          }
+                      }
+                      value.groupArray = alldArray;
+                  } else if (value.projectType === 'S') {
+                      var  allsArray = [];
+                      var twosNewList;
+                      var filst;
+                      for ( let i = 0; i < value1.fileList.length; i ++) {
+                          twosNewList = value1.fileList[i].patchSelect; // jar  部署类型
+                          filsNewList[twosNewList] = filsNewList[twosNewList] || (filsNewList[twosNewList] = []); // 断裂 如果前面是false。那就执行后面的，就相当于判断filNewList[twoNewList]是否是undefined
+                          filsNewList[twosNewList].push(value1.fileList[i]);
+                      }
+                      for (let key in filsNewList) {
+                          var obj = [];
+                          for (let s = 0; s < filsNewList[key].length; s++) {
+                              deploySelect = filsNewList[key][s].deploySelect; // 拿到了每一项
+                              obj[deploySelect] = obj[deploySelect] || ( obj[deploySelect] = []);
+                              obj[deploySelect].push(filsNewList[key][s]);
+                          }
+                          for (let k in obj) {
+                              allsArray.push(obj[k]); // 我拼成的数组 目前我是直接等于
+                          }
+                      }
+                      value.groupArray = allsArray;
+                  }
+              });
+          });
+          // 合计计算
+          this.calculatedArray = this.calculatedTotal(this.copytextList);
+          this.modalVisible = false;
+          this.infoVisible = true;
+          this.dataChange();
+      } else {
+          this.nznot.create('error', '请检查信息是否全部填写', '请检查信息是否全部填写');
+      }*/
+        this.profiles = [];
+        for (let i = 0; i < this.elementScice.length; i ++) {
+            if (this.elementScice[i].check && this.elementScice[i].times) {
+                let obj = {
+                    guidProfiles: this.elementScice[i].guid,
+                    profilesName: this.elementScice[i].profilesName,
+                    packTiming: this.elementScice[i].times,
+                    name: this.elementScice[i].manager,
+                    applyAlias: this.elementScice[i].deliveryName
+                };
+                this.profiles.push(obj);
+            }
+        }
+        this.dataChange();
+        let obj = {
+            guidWorkitem: this.workItemInfo.guid,
+            deliveryTime: this.splicingObj.dliveryAddRequest.deliveryTime,
+            profiles: this.profiles
+        }
+        this.utilityService.postData(appConfig.testUrl  + '/deliveries/putDelivery', obj, {Authorization: this.token})
+            .map(res => res.json())
+            .subscribe(
+                (val) => {
+                    for ( let i = 0; i < this.splicingObj.deliveryList.length; i++) {
+                        if (this.splicingObj.deliveryList[i].commitType === '新增') {
+                            this.splicingObj.deliveryList[i].commitType = 'A';
+                        } else if (this.splicingObj.deliveryList[i].commitType === '删除') {
+                            this.splicingObj.deliveryList[i].commitType = 'D';
+                        }else if (this.splicingObj.deliveryList[i].commitType === '修改') {
+                            this.splicingObj.deliveryList[i].commitType = 'M';
+                        }
+
+                        if (this.splicingObj.deliveryList[i].fromType === '手动补录') {
+                            this.splicingObj.deliveryList[i].fromType = 'A';
+                        } else if (this.splicingObj.deliveryList[i].fromType === '分支提交') {
+                            this.splicingObj.deliveryList[i].fromType = 'B';
+                        }else if (this.splicingObj.deliveryList[i].fromType === '标准清单') {
+                            this.splicingObj.deliveryList[i].fromType = 'S';
+                        } else {
+                            this.splicingObj.deliveryList[i].fromType = 'M';
+                        }
+                    }
+                    this.utilityService.postData(appConfig.testUrl  + appConfig.API.sDeliveryList +  '/deliveryAndDeliveryList', this.splicingObj, {Authorization: this.token})
+                        .map(res => res.json())
+                        .subscribe(
+                            (suc) => {
+                                this.nznot.create('success', suc.code , suc.msg);
+                                this.detailInfo = suc.result;
+                                let index = '';
+                                /*_.forEach(this.detailInfo , function (value) {
+                                    _.forEach(value.deliveryPatchDetails , function (value2) {
+                                        _.forEach(value2.fileList, function (value3) {
+                                            index = value3.fullPath.indexOf(value3.partOfProject);
+                                            value3.fullPath = value3.fullPath.substring(index, value3.fullPath.length);
+                                        })
+                                    })
+                                })*/
+                                this.appendTitle = '投放成功';
+                                this.modalVisible = false; // 关闭
+                                this.launchVisible  = true; // 显示详情
+                                this.getData();
+                            }
+                        );
+                },
+                (error) => {
+                    console.log('error')
+                    this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
+                }
+            );
+    }
+
+
+
+
+
     subSave() {
+
+
+    }
+
+
+
+    // 追加代码逻辑
+    appendSave() {
+        for (let i = 0; i < this.textcssList.length; i ++) {
+            if (this.textcssList[i].projectType !== 'C') { // 说明是config工程，需要让用户手动选择
+                for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
+                    for ( let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
+                        if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].checked) {
+                            if ( !_.isUndefined(this.textcssList[i].deliveryPatchDetails[j].fileList[n].deployWhere) && !_.isUndefined(this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchSelect)) {
+                                this.isGou = true;
+                            }
+                        }
+                    }
+                }
+            } else {
+                for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
+                    for ( let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
+                        if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].checked) {
+                            this.isGou = true;
+                        }
+                    }
+                }
+            }
+
+        }
+        // this.copytextList = _.cloneDeep(this.textcssList); // 拷贝内容
+        if (this.isGou) {
+            this.appendVisible = true;
+        /*    this.appendTitle = '追加成功';*/
+            this.utilityService.getData(appConfig.testUrl  + '/deliveries/' +  + this.workItemInfo.guid + '/addTo', {}, {Authorization: this.token})
+                .subscribe(
+                    (val) => {
+                        this.appendSelect = val.result;
+                    }
+                );
+
+        } else {
+            this.nznot.create('error', '请检查是否勾选工程', '请检查是否勾选工程');
+        }
+
+    }
+
+
+
+    appendsave() {
+        let submitArray = [];
+        _.forEach(this.appendSelect , function (select) {
+            if (select.check) {
+                submitArray.push(select.guid); // guid 集合
+            }
+        })
+
+
+        let array = [];
+        for (let i = 0; i < this.textcssList.length; i ++) {
+            if (this.textcssList[i].projectType !== 'C') { // 说明是config工程，需要让用户手动选择
+                for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
+                    for ( let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
+                        if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].checked) {
+                            if ( !_.isUndefined(this.textcssList[i].deliveryPatchDetails[j].fileList[n].deployWhere) && !_.isUndefined(this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchSelect)) {
+                                this.textcssList[i].deliveryPatchDetails[j].fileList[n].deployWhere = this.textcssList[i].deliveryPatchDetails[j].fileList[n].deploySelect;
+                                this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchType = this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchSelect;
+                            }
+                            // 处理转换逻辑，把radio选中的给后台
+                            array.push(this.textcssList[i].deliveryPatchDetails[j].fileList[n]);
+                        }
+
+                    }
+                }
+            } else {
+                for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
+                    for ( let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
+                        if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].checked) {
+                            array.push(this.textcssList[i].deliveryPatchDetails[j].fileList[n]);
+                        }
+                    }
+                }
+            }
+
+        }
+
+
+        this.splicingObj = {
+            guidDelivery: submitArray, // guid 集合
+            deliveryList: array,
+            guidWorkitem: this.workItemInfo.guid,
+        };
+
         for ( let i = 0; i < this.splicingObj.deliveryList.length; i++) {
             if (this.splicingObj.deliveryList[i].commitType === '新增') {
                 this.splicingObj.deliveryList[i].commitType = 'A';
@@ -545,48 +717,38 @@ export class SubListComponent implements OnInit {
             }else if (this.splicingObj.deliveryList[i].commitType === '修改') {
                 this.splicingObj.deliveryList[i].commitType = 'M';
             }
-        }
-         this.utilityService.postData(appConfig.testUrl  + appConfig.API.sDeliveryList +  '/deliveryAndDeliveryList', this.splicingObj, {Authorization: this.token})
-             .map(res => res.json())
-             .subscribe(
-                       (val) => {
-                           this.nznot.create('success', val.msg , val.msg);
-                           this.infoVisible  = false;
-                           this.getData();
-                       }
-                   );
 
-    }
-
-    // 追加逻辑
-    testSelect= [
-        {workName: '国际结算迁移', nameApplie: '国际结算上SIT', time: '2018/06/06', window: 'SIT@14:30'},
-        {workName: '清单管理', nameApplie: '国际结算上UAT', time: '2018/07/06', window: 'SIT@14:30'},
-        {workName: '国际结算迁移', nameApplie: '国际结算上SIT', time: '2018/07/06', window: 'SIT@14:30'},
-        {workName: '国际结算迁移', nameApplie: '国际结算上SIT', time: '2018/07/06', window: 'SIT@14:30'},
-    ];
-
-
-    tests() {
-        // this.appendVisible = true;
-        this.launchVisible = true;
-
-        this.testSelect = _.cloneDeep(this.testSelect); // 肯定是拷贝的
-    };
-
-
-
-
-    appendsave() {
-        let submitArray = [];
-        _.forEach(this.testSelect , function (select) {
-            if (select.check) {
-                submitArray.push(select);
+            if (this.splicingObj.deliveryList[i].fromType === '手动补录') {
+                this.splicingObj.deliveryList[i].fromType = 'A';
+            } else if (this.splicingObj.deliveryList[i].fromType === '分支提交') {
+                this.splicingObj.deliveryList[i].fromType = 'B';
+            }else if (this.splicingObj.deliveryList[i].fromType === '标准清单') {
+                this.splicingObj.deliveryList[i].fromType = 'S';
+            } else {
+                this.splicingObj.deliveryList[i].fromType = 'M';
             }
-        })
-        console.log(submitArray); // 提交给后台
-        this.appendVisible = false;
+        }
+        this.utilityService.postData(appConfig.testUrl  + '/sDeliveryList/superadditionDeliverylist', this.splicingObj, {Authorization: this.token})
+            .map(res => res.json())
+            .subscribe(
+                (val) => {
+                    this.nznot.create('success', val.code , val.msg);
+                    this.appendTitle = '追加成功';
+                    this.detailInfo = val.result; // 返回的数据有问题
+                    console.log(this.detailInfo)
+                    this.appendVisible = false;
+                    this.launchVisible = true; // 查看追加详情
+                }
+            );
+
     }
+
+    k
+
+
+
+
+
 }
 
 

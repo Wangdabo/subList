@@ -72,7 +72,7 @@
                     </div>
                 </div>
             </div>
-            <div nz-col [nzSpan]="24" class="mb-md">
+           <!-- <div nz-col [nzSpan]="24" class="mb-md">
                 <div nz-form-item class="d-flex">
                     <div nz-form-label class="alignment"><label for="no">导出类型</label></div>
                     <div nz-form-control class="flex-1">
@@ -87,8 +87,38 @@
                         <nz-checkbox-group [(ngModel)]="deployType"></nz-checkbox-group>
                     </div>
                 </div>
-            </div>
+            </div>-->
 
+
+            <div nz-col [nzSpan]="24" class="mb-md">
+                <div *ngFor="let i of diconfig">
+                    <div nz-row [nzGutter]="24" style="margin:10px 0px; ">
+                        <div nz-col [nzSpan]="8" class="mb-md">
+                            <div nz-form-item class="d-flex">
+                                <div nz-form-label class="alignment"><label for="no"> 导出为</label></div>
+                                <div nz-form-control class="flex-1">
+                                    <nz-input  [(ngModel)]="i.exportType"  (nzBlur)="onblur(i, diconfig)" [name]="i.exportType" [nzSize]="'large'" [nzPlaceHolder]="'导出类型'"></nz-input>
+                                    <div *ngIf="i.error" style="color:red" nz-form-explain>不能存在重复的导出类型</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div nz-col [nzSpan]="8" class="mb-md" *ngFor="let s of i.depolySelect">
+                            <div nz-form-item class="d-flex">
+                                <div nz-form-label class="alignment"><label for="no"> 部署到</label></div>
+                                <div nz-form-control class="flex-1">
+                                    <nz-input [(ngModel)]="s.depoly" [name]="s"   [nzPlaceHolder]="'部署类型'"></nz-input>
+                                </div>
+                                <i class=" anticon anticon-plus-circle-o" style="font-size: 27px; margin: 0  5px"  (click)="addChildInput(i.depolySelect)"></i>
+                                <i  *ngIf="i.depolySelect.length > 1"  class="anticon anticon-minus-circle-o dynamic-delete-button" style="font-size: 27px;"  (click)="removeChildInput(i.depolySelect,i)"></i>
+                            </div>
+                        </div>
+                        <div nz-col [nzSpan]="8" class="mb-md">
+                            <i class="anticon anticon-plus" style="font-size: 30px; width: 10%;"  (click)="addInput()"></i>
+                            <i  *ngIf="diconfig.length  > 1" class="anticon anticon-minus" style="font-size: 30px; width: 10%;"  (click)="removeInput(i)"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div>
     </ng-template>
