@@ -113,7 +113,7 @@
 
             <span *ngIf="d.switch">
             
-                   <nz-switch [ngModel]="false">
+                   <nz-switch [ngModel]="i.isAllowDelivery"  (ngModelChange)="status(i,$event)">
                         <span checked>是</span>
                         <span unchecked>否</span>
                  </nz-switch>
@@ -127,5 +127,11 @@
             <a *ngFor="let c of i.buttonData" style="color:#108ee9;" (click)="buttonClick(i, c, l)">{{c.value}}&nbsp;</a>&nbsp;
         </td>
     </tr>
+      <tr nz-tbody-tr *ngIf="data.expand">
+            <td nz-td></td>
+            <td nz-td colspan="4">
+              {{data.description}}
+            </td>
+      </tr>
     </tbody>
 </nz-table>

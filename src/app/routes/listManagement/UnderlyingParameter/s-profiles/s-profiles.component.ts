@@ -12,7 +12,7 @@ import {appConfig} from '../../../../service/common';
 import {NzModalService, NzNotificationService} from 'ng-zorro-antd';
 import {Router} from '@angular/router';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
-import { SproModule} from '../../../../service/delivent/sprofilesModule';
+import { SprofilesModule} from '../../../../service/delivent/sprofilesModule';
 
 @Component({
     selector: 'app-s-profiles',
@@ -31,7 +31,8 @@ export class SProfilesComponent implements OnInit {
         private confirmServ: NzModalService
     ) { }
     token: any;
-    profiles: SproModule = new SproModule();
+
+    profiles:SprofilesModule = new SprofilesModule();
 
 
 
@@ -41,41 +42,44 @@ export class SProfilesComponent implements OnInit {
 
         let arr = [];
         let objarr = [];
+        this.profiles.checkOptionsOne.forEach( function (i) {
+            console.log(i)
+            if(i.checked == true) {
+                arr.push(i.value)
+            }
+        })
+        this.profiles.packTiming = arr.join(',')
         if ( ! this.profiles.guid ) {
-
-            this.profiles.checkOptionsOne.forEach( function (i) {
-                console.log(i)
-                if ( i.checked === true) {
-                    arr.push(i.value);
-                }
-            })
-            this.profiles.packTiming = arr.join(',')
             // this.profiles.isAllowDelivery = ' ';
             this.utilityService.postData(appConfig.testUrl  + appConfig.API.sProfilesadd, this.profiles, {Authorization: this.token})
                 .map(res => res.json())
                 .subscribe(
                     (val) => {
-                        if (val.code === 200) {
+                        this.getData();
+                        if(val.code == 200) {
 
                             this.mergeVisible = false;
-                            this.getData();
+
                             this.nznot.create('success', val.msg, val.msg);
                         }else {
                             this.nznot.create('error', '异常', '异常');
                         }
                     }   ,
                     (error) => {
-                        this.nznot.create('error', '异常', '异常');
+
+                        this.nznot.create('error', error.json().msg,'');
                     }
                 );
         }else{
-            this.profiles.isAllowDelivery = '1';
+            console.log(this.profiles)
+            //   this.profiles.isAllowDelivery = ' ';
             this.utilityService.putData(appConfig.testUrl  + appConfig.API.sProfilesadd, this.profiles, {Authorization: this.token})
                 .map(res => res.json())
                 .subscribe(
                     (val) => {
+                        this.getData();
                         if(val.code == 200) {
-                            console.log(this.profiles);
+
                             this.mergeVisible = false;
                             this.nznot.create('success', val.msg, val.msg);
                         }else {
@@ -88,6 +92,7 @@ export class SProfilesComponent implements OnInit {
 
                 );
         }
+
 
 
 
@@ -152,15 +157,11 @@ export class SProfilesComponent implements OnInit {
         this.token  = this.tokenService.get().token;
         this.getData();
         this.showAdd = true;
-        this.profiles.checkOptionsOne = [
-            {label: '09:00', value: '09:00', checked: true},
-            {label: '12:00', value: '12:00'},
-            {label: '15:00', value: '15:00'},
-        ];
+
 
     }
 
-    
+
     // 表格数据按钮
     buttonData = [
         { key: 'dels', value: '删除' },
@@ -201,6 +202,11 @@ export class SProfilesComponent implements OnInit {
                         this.pageTotal = val.result.pages * 10; // 页码
                         for ( let i = 0; i < this.data.length; i++) {
                             this.data[i].buttonData = this.buttonData
+                            if(this.data[i].isAllowDelivery == '允许'){
+                                this.data[i].isAllowDelivery = true
+                            }else{
+                                this.data[i].isAllowDelivery = false
+                            }
                         }
                     }
                     // 拼接
@@ -214,7 +220,7 @@ export class SProfilesComponent implements OnInit {
     addHandler(event) {
 
         if (event === 'add') {
-            this.profiles = new SproModule();
+            this.profiles = new SprofilesModule();
             this.Ptitle = '新增环境数据'
 
             this.mergeVisible = true;
@@ -274,16 +280,17 @@ export class SProfilesComponent implements OnInit {
             let arr = [];
 
             arr = event.packTiming.split(',');
-
-            this.profiles.checkOptionsOne.forEach( function (i) {
-                console.log(i)
-                if (arr === i.key) {
-                    i.checked = true;
-                }
-            })
+            this.profiles = new SprofilesModule();
             event.checkOptionsOne =  this.profiles.checkOptionsOne;
             this.profiles = event
-            console.log( this.profiles);
+            arr.forEach( j=> {
+                this.profiles.checkOptionsOne.forEach( function (i) {
+                    if(j == i.value){
+                        i.checked = true;
+                    }
+                })
+
+            })
             this.mergeVisible = true;
         }
         else if (event.names.key === 'correlation') {
@@ -334,33 +341,33 @@ export class SProfilesComponent implements OnInit {
             // }
             //  );
         }
-         else if (event.names.key === 'detail') { 
-             
-                   let self = this; 
-                    this.confirmServ.confirm({
-                    title  : '您是否确认要取消关联分支!',
-                    showConfirmLoading: true,
-                    onOk() {
-                        self.saveCorrelation('Q')
-                    },
-                    onCancel() {
-                    }
-                    });
-             
-                // this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfilesadd + '/' + this.profilesGuid, {},{Authorization: this.token})
-                // .subscribe(
-                // (val) => {
-                //   console.log(val)
-                // if(val.code == 200) {
-                //            this.nznot.create('success', val.msg, val.msg);
-                //             this.isCorrelation = true;
-                //     }
-                //     }   ,
-                //     (error) => {
-                //         this.nznot.create('error', '异常', '异常');
-                // }
+        else if (event.names.key === 'detail') {
+
+            let self = this;
+            this.confirmServ.confirm({
+                title  : '您是否确认要取消关联分支!',
+                showConfirmLoading: true,
+                onOk() {
+                    self.saveCorrelation('Q')
+                },
+                onCancel() {
+                }
+            });
+
+            // this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfilesadd + '/' + this.profilesGuid, {},{Authorization: this.token})
+            // .subscribe(
+            // (val) => {
+            //   console.log(val)
+            // if(val.code == 200) {
+            //            this.nznot.create('success', val.msg, val.msg);
+            //             this.isCorrelation = true;
+            //     }
+            //     }   ,
+            //     (error) => {
+            //         this.nznot.create('error', '异常', '异常');
+            // }
             //  );
-         }
+        }
 
     }
 
@@ -394,6 +401,36 @@ export class SProfilesComponent implements OnInit {
     // 列表按钮方法
     buttonDataHandler(event) {
         console.log(event);
+
+    }
+    // switch开关方法
+    getStatus(event) {
+        let status = '';
+        if(event.status === true){
+            status = '1'
+        }else{
+            status = '0'
+        }
+        let obj = {
+            guid: event.guid,
+            isAllowDelivery: status
+        }
+        console.log(obj)
+        this.utilityService.putData(appConfig.testUrl  + appConfig.API.getStatus, obj,{Authorization: this.token})
+            .map(res => res.json())
+            .subscribe(
+                (val) => {
+                    if(val.code == 200) {
+                        this.nznot.create('success', val.msg, val.msg);
+                    }else {
+                        this.nznot.create('error', val.msg, '');
+                    }
+                }   ,
+                (error) => {
+                    this.nznot.create('error', error.json().msg, '');
+                }
+            );
+
 
     }
 

@@ -85,6 +85,8 @@ export class ListComponent implements OnInit {
     @Output()
     buttonEvent: EventEmitter<any> = new EventEmitter(); // 定义一个输出属性，按钮点击事件，非必选
 
+    @Output()
+    getStatus: EventEmitter<any> = new EventEmitter(); // 定义一个输出属性，按钮点击事件，非必选
 
     constructor(
         private http: _HttpClient,
@@ -96,7 +98,6 @@ export class ListComponent implements OnInit {
     ngOnInit() {
         this.headerDate = this.headerDate;
         this.moreData = this.moreData; // 绑定更多数据
-
     }
 
 
@@ -117,7 +118,8 @@ export class ListComponent implements OnInit {
                     parList: this.parsentList,
                     index: index,
                 }
-                console.log(obj)
+
+
                 this.buttonEvent.emit(obj); // 点击了修改，打开弹出框，把修改的数据传递过去
             } else {
                 this.buttonEvent.emit(event); // 点击了修改，打开弹出框，把修改的数据传递过去
@@ -169,8 +171,12 @@ export class ListComponent implements OnInit {
         this.table.data.forEach(i => {
             if (!i.disabled) i.checked = value;
         });
-       console.log(value);
         this.refreshStatus();
+    }
+    status(i,event) {
+        i.status = event
+
+   this.getStatus.emit(i); // 把要删除的内容发射给父组件
     }
 
 

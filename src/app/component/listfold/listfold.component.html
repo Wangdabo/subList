@@ -1,0 +1,43 @@
+
+   <nz-table #nzTable [nzAjaxData]="initDate" [nzPageSize]="10" [nzIsPagination]="false" nzShowExpand>
+      <thead nz-thead>
+        <tr>
+          <th nz-th nzExpand></th>
+          <th nz-td *ngFor="let d of headerDate">
+              {{d.value}}
+            </th>
+        
+        </tr>
+      </thead>
+      <tbody nz-tbody>
+        <ng-template ngFor let-data [ngForOf]="nzTable.data" >
+          <tr nz-tbody-tr >
+            <td nz-td nzExpand>
+              <nz-row-expand-icon [(nzExpand)]="data.expand"></nz-row-expand-icon>
+            </td>
+            <td *ngFor="let d of headerDate;let s = index">{{data[d.key]}}</td>
+             <td nz-td>
+          <td nz-td>
+            <span>
+               <!--<label nz-checkbox nzDisabled [ngModel]="true"></label>-->
+                 <button nz-button [nzType]="'primary'" *ngFor="let c of data.buttonData"   (click)="buttonClick(c,data.guid)" [disabled]="c.check">
+                    <span>{{c.value}}</span>
+                </button>
+               
+            </span>
+            </td>
+          </tr>
+       
+          <tr nz-tbody-tr *ngFor="let j of data.projectList" >
+              <ng-container *ngIf="data.expand" >
+            <td nz-td></td>
+            <td nz-td colspan="6">
+                   工程名 ：  {{j}}
+            </td>
+            
+            </ng-container>
+          </tr>
+           
+        </ng-template>
+      </tbody>
+    </nz-table>
