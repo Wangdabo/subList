@@ -220,6 +220,7 @@ export class LaunchApplyComponent implements OnInit {
         } else if (event === 'checking') {
               this.getSprofiles();
              this.mergeisVisible = true
+        //    this.current = 0;
             // this.changeContent();
             // this.checkModalVisible = true; // 打开核对弹出框
 
@@ -282,7 +283,7 @@ export class LaunchApplyComponent implements OnInit {
     }
     
     next(): void {
-           console.log(this.elementScice)
+        // this.current = 0;
         let profiles = '';
         let packTiming = '';
         for (let i = 0; i < this.elementScice.length; i ++) {
@@ -300,7 +301,7 @@ export class LaunchApplyComponent implements OnInit {
             this.nznot.create('error', '请选择运行环境！', '请选择运行环境！');
             return;
         }
-        console.log(this.current);
+    
         if(this.current == 0) {
          let index = '';
         let indexs = '';
@@ -313,7 +314,8 @@ export class LaunchApplyComponent implements OnInit {
                 (val) => {
                     console.log(val)
                     if (val.code === '200') {
-                     
+                       this.current += 1;
+                       console.log(this.current)
                           for(let i = 0;i<val.result.length;i++){
                                arr[i]=val.result[i].delivery
                             arr[i]['branch']=val.result[i].branch
@@ -329,8 +331,8 @@ export class LaunchApplyComponent implements OnInit {
                           }
                     
                         this.initDate = arr;
-                        console.log(arr)
-                         this.current += 1;
+                        // console.log(arr)
+                       
                                 }else{
                                     this.nznot.create('error',val.msg,val.msg);
                                 }
@@ -338,7 +340,7 @@ export class LaunchApplyComponent implements OnInit {
                             ,
                             
                             (error) => {
-                                console.log(error)
+                                // console.log(error)
                                 if(error){
                                     let msg = error.json();
                                      this.nznot.create('error',msg.msg,'');
@@ -347,7 +349,7 @@ export class LaunchApplyComponent implements OnInit {
                                
                             })
                             // step2
-                   }else{
+                   }else if(this.current == 1){
                     
                     let flage = true;
                     for (let i = 0; i < this.initDate.length; i++) {
@@ -359,9 +361,11 @@ export class LaunchApplyComponent implements OnInit {
                     }
                     
                     if( flage == true ) {
+                            console.log(this.current)
                            let index = '';
                              let indexs = '';
-                   this.utilityService.postData( url, {}, {Authorization: this.token})
+                             console.log(url);
+            this.utilityService.postData(url, {}, {Authorization: this.token})
                         .map(res => res.json())
                          .subscribe(
                          (val) => {
