@@ -77,10 +77,12 @@ export class SWorkitemComponent implements OnInit {
     isShowTotal: boolean;
     branchInfo = false; // 弹出框 默认为false
     branchData: BranchModule = new BranchModule();
+    branchdataInfo: boolean; // 分支详情
 
     ngOnInit() {
         this.showAdd = true;
         this.isShowTotal = true;
+        this.branchdataInfo = false; // 默认不显示详情
         this.token  = this.tokenService.get().token; // 绑定token
         this.getData();
         this.getOper()
@@ -258,7 +260,17 @@ export class SWorkitemComponent implements OnInit {
     }
 
 
+    checkBranch(guid) {
+        console.log(guid)
+        this.utilityService.getData(appConfig.testUrl  + appConfig.API.sBranchadd + '/' + guid,   {}, {Authorization: this.token})
+            .subscribe(
+                (val) => {
+                  this.branchData = val.result;
+                  this.branchdataInfo = true; // 默认不显示详情
+                }
+            );
 
+    }
 
     // 弹出框确定
     save() {
@@ -302,6 +314,7 @@ export class SWorkitemComponent implements OnInit {
     // 关联分支
     assSave() {
         this.utilityService.getData(appConfig.testUrl  + appConfig.API.sWorkitem + '/' + this.exitInfo.guid + '/branch/'  + this.assbranch,   {}, {Authorization: this.token})
+            .timeout(5000)
             .subscribe(
                 (val) => {
                     this.assVisible = false;
@@ -310,7 +323,6 @@ export class SWorkitemComponent implements OnInit {
                 }
             );
     }
-
 
 
 
