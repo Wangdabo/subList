@@ -16,8 +16,9 @@ export let appConfig = {
         sDeliveryList: '/sDeliveryList', // 整理清单
         sProfiles: '/sProfiles/list',  // 投放申请查询
         allsProfiles: '/sProfiles/all',  // 投放申请查询
+
         getBranch: '/sProfiles/relevanceBranch', // 未支配的分支
-        getStatus: '/sProfiles/status',// 修改状态
+        getStatus: '/sProfiles/status', // 修改状态
         sProfilesadd: '/sProfiles',
         delSprofiles: '/sProfiles/' ,
         list: '/deliveries/list', //
@@ -36,8 +37,9 @@ export let appConfig = {
         workitemAdd: '/sWorkitem/branch', // 新增工作项 后面加分支guid
         workItemList: '/sWorkitem/list', // 查询列表
         svncount: '/sSvnAccount/all', // 查询人员
+
         // 基础参数---分支
-        notAllot: '/sBranch/notAllot',
+        notAllot: '/sWorkitem/relevanceBranch',
 
 
     },

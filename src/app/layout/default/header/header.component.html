@@ -1,7 +1,11 @@
 <div class="logo">
     <a [routerLink]="['/']">
-        <img class="expanded" src="./assets/img/logo-full.svg" alt="{{settings.app.name}}" style="max-height:40px;" />
-        <img class="collapsed" src="./assets/img/logo.svg" alt="{{settings.app.name}}" style="max-height:30px;" />
+        <!--<img class="expanded" src="./assets/img/logo-full.svg" alt="{{settings.app.name}}" style="max-height:40px;" />-->
+        <!--<img class="expanded" src="../../../../assets/img/subSlist.png" alt="{{settings.app.name}}" />-->
+
+        <img class="expanded"  src="../../../../assets/img/subList1.png"  alt="{{settings.app.name}}" style="max-height:40px;"/>
+        <img class="collapsed" src="./assets/img/subExport.svg" alt="{{settings.app.name}}" style="max-height:30px;" />
+        <!--<img class="collapsed" src="./assets/img/logo.svg" alt="{{settings.app.name}}" style="max-height:30px;" />-->
     </a>
 </div>
 <div class="top-nav-wrap">
@@ -19,20 +23,21 @@
             </div>
         </li>
     </ul>
-    <header-search class="header-search" [toggleChange]="searchToggleStatus"></header-search>
+    <!-- 隐藏掉-->
+    <!--<header-search class="header-search" [toggleChange]="searchToggleStatus"></header-search>-->
     <ul class="top-nav">
         <!-- Notify -->
-        <li>
+       <!-- <li>
             <header-notify></header-notify>
         </li>
-        <!-- Task -->
+        &lt;!&ndash; Task &ndash;&gt;
         <li class="hidden-xs">
             <header-task></header-task>
         </li>
-        <!-- App Icons -->
+        &lt;!&ndash; App Icons &ndash;&gt;
         <li class="hidden-xs">
             <header-icon></header-icon>
-        </li>
+        </li>-->
         <!-- Settings -->
         <li class="hidden-xs">
             <nz-dropdown nzTrigger="click" nzPlacement="bottomRight">

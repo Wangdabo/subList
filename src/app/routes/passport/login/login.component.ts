@@ -98,10 +98,11 @@ export class UserLoginComponent implements OnDestroy {
                     if (val.code === '200') {
                         // 清空路由复用信息
                         this.reuseTabService.clear();
+                        console.log(val)
                         // 设置token
                         this.tokenService.set({
                             token: val.result.token,
-                            name: val.result.userInfo.role,
+                            name: val.result.userInfo.userId,
                         });
                         this.router.navigate(['/']);
                     }

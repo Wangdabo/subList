@@ -83,7 +83,6 @@ export class SWorkitemComponent implements OnInit {
         this.isShowTotal = true;
         this.token  = this.tokenService.get().token; // 绑定token
         this.getData();
-        this.getBranch();
         this.getOper()
         this.initDate(); // 默认时间
     }
@@ -110,9 +109,9 @@ export class SWorkitemComponent implements OnInit {
                                 {key: 'close', value: '取消分支'},
                                 {key: 'branchDDetail', value: '分支详情'}
                             ];
-                        } else {
+                        } else { // 取消状态不允许修改
                             value.buttonData = [
-                                {key: 'upd', value: '修改'},
+
                             ];
                         }
                         value.receiveTime = moment(value.receiveTime).format('YYYY-MM-DD');
@@ -191,6 +190,7 @@ export class SWorkitemComponent implements OnInit {
             } else if (event.names.key  === 'association') {
                 this.assVisible = true;
                 this.exitInfo = event;
+                this.getBranch();
             } else if (event.names.key  === 'close') {
                 this.modal.open({
                     title: '取消关联',
@@ -198,12 +198,15 @@ export class SWorkitemComponent implements OnInit {
                     okText: '确定',
                     cancelText: '取消',
                     onOk: () => {
-                        this.utilityService.getData(appConfig.testUrl  + appConfig.API.sWorkitem + '/' +  event.guid,  {},  {Authorization: this.token})
+                        this.utilityService.getData(appConfig.testUrl  + appConfig.API.sWorkitem + '/' +  event.guid + '/cancel',  {},  {Authorization: this.token})
                             .subscribe(
                                 (val) => {
                                     console.log(val)
                                     this.nznot.create('success', val.msg , val.msg);
                                     this.getData();
+                                },
+                                (error) => {
+                                    this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
                                 }
                             );
                     },
@@ -214,7 +217,6 @@ export class SWorkitemComponent implements OnInit {
 
 
             } else if (event.names.key  === 'branchDDetail') {
-
                 this.utilityService.getData(appConfig.testUrl  + appConfig.API.sWorkitem + '/' + event.guid + '/branchDetail' ,{}, {Authorization: this.token})
                     .subscribe(
                         (val) => {
