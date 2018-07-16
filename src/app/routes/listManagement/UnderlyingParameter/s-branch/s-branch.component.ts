@@ -65,9 +65,9 @@ export class SBranchComponent implements OnInit {
         {key: 'upd', value: '修改'}
     ];
     branchType = [
-        {key: '特性分支', value: 'F',selector:false},
-        {key: 'hot分支', value: 'H' ,selector:false},
-        {key: 'release分支', value: 'R' ,selector:false},
+        {key: '特性', value: 'F',selector:false},
+        {key: 'hot', value: 'H' ,selector:false},
+        {key: 'release', value: 'R' ,selector:false},
     ]
     getData() {
             const page = {
