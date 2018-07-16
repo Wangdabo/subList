@@ -51,7 +51,7 @@
 
 <!--新增工程内容-->
 <nz-modal [nzVisible]="modalVisible" [nzWidth]="1024" [nzTitle]="modelTitle" [nzConfirmLoading]="loading" [nzContent]="modalContent"
-          (nzOnCancel)="modalVisible=false" (nzOnOk)="save()">
+          (nzOnCancel)="cancel()" (nzOnOk)="save()">
     <ng-template #modalContent>
         <div nz-row [nzGutter]="24">
             <div nz-col [nzSpan]="12" class="mb-md">
@@ -89,15 +89,14 @@
                 </div>
             </div>-->
 
-
             <div nz-col [nzSpan]="24" class="mb-md">
-                <div *ngFor="let i of diconfig">
+                <div *ngFor="let i of diconfig; let index = index">
                     <div nz-row [nzGutter]="24" style="margin:10px 0px; ">
                         <div nz-col [nzSpan]="8" class="mb-md">
                             <div nz-form-item class="d-flex">
                                 <div nz-form-label class="alignment"><label for="no"> 导出为</label></div>
                                 <div nz-form-control class="flex-1">
-                                    <nz-input  [(ngModel)]="i.exportType"  (nzBlur)="onblur(i, diconfig)" [name]="i.exportType" [nzSize]="'large'" [nzPlaceHolder]="'导出类型'"></nz-input>
+                                    <nz-input  [(ngModel)]="i.exportType"  (nzBlur)="onblur(i,index,diconfig)" [name]="i.exportType" [nzSize]="'large'" [nzPlaceHolder]="'导出类型'"></nz-input>
                                     <div *ngIf="i.error" style="color:red" nz-form-explain>不能存在重复的导出类型</div>
                                 </div>
                             </div>
