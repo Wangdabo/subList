@@ -105,11 +105,11 @@ export class LaunchApplyComponent implements OnInit {
         ]
     }
 
-    // buttonData = [
-    //     // {key: 'details', value: '详情'},
-    //     {check: false, value: '未确认合并'},
+    buttonData = [
+        {key: 'details', value: '详情'},
+        // {check: false, value: '未确认合并'},
      
-    // ];
+    ];
 
     test: string;
     page: any;
@@ -149,6 +149,9 @@ export class LaunchApplyComponent implements OnInit {
                                 this.data[i].deliveryTime = moment(this.data[i].deliveryTime).format('YYYY-MM-DD');
                                 this.data[i].guidProfiles = this.data[i].guidProfiles.target;
                                 this.data[i].guidWorkitem = this.data[i].guidWorkitem.target;
+                                this.data[i].buttonData = [{
+                                    key:'dels',value:'删除'
+                                }]
                             }
                         }
 

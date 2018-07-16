@@ -60,18 +60,19 @@ export class SProfilesComponent implements OnInit {
         {key: '0', value: '否'},
         {key: '1', value: '是'}
     ]
-    ptitle='关联分支'
+   
 
 
 
 
     data: any[] = []; // 表格数据
     headerDate = [  // 配置表头内容
-        { value: '环境代码', key: 'profilesCode', isclick: true},
+        // { value: '环境代码', key: 'profilesCode', isclick: true},
         { value: '环境名称', key: 'profilesName', isclick: false},
-        { value: '主机IP', key: 'hostIp', isclick: false },
-        { value: '安装路径', key: 'installPath', isclick: false },
-        { value: '版本控制用户', key: 'csvUser', isclick: false, switch:false },
+        { value: 'Release分支', key: 'fullPath', isclick: false },
+        // { value: '主机IP', key: 'hostIp', isclick: false },
+        // { value: '安装路径', key: 'installPath', isclick: false },
+        // { value: '版本控制用户', key: 'csvUser', isclick: false, switch:false },
         { value: '是否允许投放', key: 'isAllowDelivery', isclick: false,  switch:true},
         { value: '环境管理人员', key: 'manager', isclick: false, switch:false },
         { value: '打包窗口', key: 'packTiming', isclick: false , switch:false},
@@ -95,7 +96,7 @@ export class SProfilesComponent implements OnInit {
     pageTotal: number;
     branshList:any[] = [];
     branch:any;
-
+    Ptitle:any;
 
     ngOnInit() {
         this.token  = this.tokenService.get().token;
@@ -199,6 +200,7 @@ export class SProfilesComponent implements OnInit {
         {key: 'correlation', value: '关联分支'},
         {key: 'detail', value: '取消分支'},
          {key: 'branchDDetail', value: '分支详情'}
+        
     ];
    
 
@@ -213,7 +215,7 @@ export class SProfilesComponent implements OnInit {
             .map(res => res.json())
             .subscribe(
                 (val) => {
-
+                      console.log(val)
                     if (val.code == 200) {
                         this.data = val.result.records;
                         console.log(this.data);
@@ -240,7 +242,7 @@ export class SProfilesComponent implements OnInit {
 
         if (event === 'add') {
             this.profiles = new SprofilesModule();
-            this.ptitle = '新增环境数据'
+            this.Ptitle = '新增运行环境'
 
             this.mergeVisible = true;
         } else if (event === 'checking') {
@@ -300,7 +302,7 @@ export class SProfilesComponent implements OnInit {
 
 
         } else if (event.names.key === 'upd') {
-            this.ptitle = '修改环境数据'
+            this.Ptitle = '修改运行环境'
             let arr = [];
 
             arr = event.packTiming.split(',');
@@ -327,7 +329,8 @@ export class SProfilesComponent implements OnInit {
                         if(val.code == 200) {
                             this.branshList = val.result
                             this.isCorrelation = true;
-                          
+                            this.Ptitle='关联Release分支'
+                            
                         }else {
                             this.nznot.create('error', '异常', '异常');
                         }
@@ -341,18 +344,19 @@ export class SProfilesComponent implements OnInit {
 
 
         }
-        else if (event.names.key === 'detail') {
+        else if (event.names.key === 'branchDDetail') {
+                   
 
-            let self = this;
-            this.confirmServ.confirm({
-                title  : '您是否确认要取消关联分支!',
-                showConfirmLoading: true,
-                onOk() {
-                    self.saveCorrelation('Q')
-                },
-                onCancel() {
-                }
-            });
+          this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfilesadd + '/' + event.guid + '/branchDetail' ,{}, {Authorization: this.token})
+                    .subscribe(
+                        (val) => {
+                             this.branchInfo = true;
+                             this.branchData = val.result;
+                             this.branchData.createTime = moment(this.branchData.createTime).format('YYYY-MM-DD');
+                        },
+                        (error) => {
+                            this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
+                        });
         }
        else if (event.names.key  === 'branchDDetail') {
            let url='/'+event.guid+'/branchDetail'

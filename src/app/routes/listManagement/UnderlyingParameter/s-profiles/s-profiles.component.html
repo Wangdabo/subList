@@ -82,10 +82,10 @@
     <ng-template #correlationModal>
         <div nz-row [nzGutter]="24">
             <div  nz-col [nzSpan]="24" class="mb-md">
-                <div  nz-col [nzSpan]="4" style="line-height:2"><label for="status">开发分支</label></div>
+                <div  nz-col [nzSpan]="4" style="line-height:2;text-align:right" ><label for="status">Release分支</label></div>
 
                 <nz-select  nz-col [nzSpan]="12"  [(ngModel)]="branch"  (ngModelChange)="checkBranch(branch)" nzId="status" [nzPlaceHolder]="'分支类型'" [nzShowSearch]="true" [nzSize]="'large'">
-                    <nz-option *ngFor="let i of branshList; let idx = index" [nzLabel]="i.branchFor" [nzValue]="i.guid"></nz-option>
+                    <nz-option *ngFor="let i of branshList; let idx = index" [nzLabel]="i.fullPath" [nzValue]="i.guid"></nz-option>
                 </nz-select>
             </div>
         </div>
@@ -122,7 +122,7 @@
                     <div nz-form-item class="d-flex">
                         <div nz-form-label nz-col [nzSpan]="8"><label for="name">   主机IP</label></div>
                         <div nz-form-control class="flex-1">
-                            <nz-input [(ngModel)]="profiles.hostIp" name="hostIp" [nzSize]="'large'" [nzPlaceHolder]="'主机IP'" nzId="hostIp"></nz-input>
+                            <nz-input [(ngModel)]="profiles.hostIp" name="hostIp" [nzSize]="'large'" [nzPlaceHolder]="'请输入该环境部署服务的IP'" nzId="hostIp"></nz-input>
                         </div>
                     </div>
                 </div>
@@ -131,7 +131,7 @@
                     <div nz-form-item class="d-flex">
                         <div nz-form-label nz-col [nzSpan]="8"><label for="name">  安装路径</label></div>
                         <div nz-form-control class="flex-1">
-                            <nz-input [(ngModel)]="profiles.installPath" name="installPath" [nzSize]="'large'" [nzPlaceHolder]="'安装路径'" nzId="installPath"></nz-input>
+                            <nz-input [(ngModel)]="profiles.installPath" name="installPath" [nzSize]="'large'" [nzPlaceHolder]="'请输入该环境在服务器上的安装路径'" nzId="installPath"></nz-input>
                         </div>
                     </div>
                 </div>
@@ -158,7 +158,7 @@
                     <div nz-form-item class="d-flex">
                         <div nz-form-label nz-col [nzSpan]="8"><label for="name">环境管理人员</label></div>
                         <div nz-form-control class="flex-1">
-                            <nz-input [(ngModel)]="profiles.manager" name="manager" [nzSize]="'large'" [nzPlaceHolder]="'环境管理人员'" nzId="manager"></nz-input>
+                            <nz-input [(ngModel)]="profiles.manager" name="manager" [nzSize]="'large'" [nzPlaceHolder]="'请输入环境管理员'" nzId="manager"></nz-input>
                         </div>
                     </div>
                 </div>
