@@ -323,8 +323,4 @@ export class SWorkitemComponent implements OnInit {
                 }
             );
     }
-
-
-
-
 }

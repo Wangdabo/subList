@@ -104,7 +104,6 @@ export class SubListComponent implements OnInit {
 
         this.showAdd = true; // 默认没有新增
 
-
         // 请求信息
         this.utilityService.getData(appConfig.testUrl  + appConfig.API.sWorkitem + '/' + event + '/branchDetail', {}, {Authorization: this.token})
             .subscribe(
@@ -304,7 +303,8 @@ export class SubListComponent implements OnInit {
 
     // 投放申请
     Serve() {
-        for (let i = 0; i < this.textcssList.length; i ++) {
+        // 不做判断
+        /*      for (let i = 0; i < this.textcssList.length; i ++) {
             if (this.textcssList[i].projectType !== 'C' && this.textcssList[i].projectType !== 'I') { // 说明是config或者default工程，需要让用户手动选择
                 for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
                     for ( let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
@@ -324,14 +324,13 @@ export class SubListComponent implements OnInit {
                     }
                 }
             }
-
         }
         // this.copytextList = _.cloneDeep(this.textcssList); // 拷贝内容
         if (this.isGou) {
             this.modalVisible = true;
         } else {
             this.nznot.create('error', '请检查是否勾选工程', '请检查是否勾选工程');
-        }
+        }*/
         // 初始化数据
         this.deliveryTime = moment(new Date()).format('YYYY-MM-DD');
         this.getcheckOptionOne();
