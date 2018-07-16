@@ -84,12 +84,10 @@ export class SubListComponent implements OnInit {
         this.utilityService.getData(appConfig.testUrl  + appConfig.API.sWorkitem, {}, {Authorization: this.token})
             .subscribe(
                 (val) => {
-
                     this.workItem = val.result;
                 }
             );
     }
-
 
     // 下拉框选择
     checkSelect(event) {
@@ -103,16 +101,24 @@ export class SubListComponent implements OnInit {
 
         this.copyinfos = _.cloneDeep(this.workItemInfo.developers);
         this.workItemInfo.copyinfos = this.copyinfos.split(',');
-        this.active = true; // 打开弹框
+
         this.showAdd = true; // 默认没有新增
+
 
         // 请求信息
         this.utilityService.getData(appConfig.testUrl  + appConfig.API.sWorkitem + '/' + event + '/branchDetail', {}, {Authorization: this.token})
             .subscribe(
                 (val) => {
+
                     this.branchDetail = val.result.fullPath;
                     this.bransguid = val.result.guid;
                     this.ifActive = true;
+                    this.active = true; // 显示清单整理按钮
+                },
+                (src) => {
+                    this.active = false; // 显示清单整理按钮
+                    this.reset = false; // 分支信息关闭
+                    this.nznot.create('error', JSON.parse(src._body).code , JSON.parse(src._body).msg);
                 }
             );
 
@@ -176,7 +182,7 @@ export class SubListComponent implements OnInit {
                     this.textcssList = val.result;
                     let index = 0;
                     for (let i = 0; i < this.textcssList.length; i ++) {
-                        if (this.textcssList[i].projectType !== 'C') { // 说明是config工程，需要让用户手动选择
+                        if (this.textcssList[i].projectType !== 'C' && this.textcssList[i].projectType !== 'I') { // 说明是config工程，需要让用户手动选择
                             this.textcssList[i].headerData = [  // 配置表头内容
                                 { value: '程序名称', key: 'fullName', isclick: true, radio: false },
                                 { value: '变动类型', key: 'commitType', isclick: false, radio: false  },
@@ -204,7 +210,6 @@ export class SubListComponent implements OnInit {
                             ];
                             for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
                                 for ( let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
-
                                     // 截取字符串
                                     index = this.textcssList[i].deliveryPatchDetails[j].fileList[n].fullPath.indexOf(this.textcssList[i].deliveryPatchDetails[j].fileList[n].partOfProject);
                                     this.textcssList[i].deliveryPatchDetails[j].fileList[n].fullName = this.textcssList[i].deliveryPatchDetails[j].fileList[n].fullPath.substring(index, this.textcssList[i].deliveryPatchDetails[j].fileList[n].fullPath.length);
@@ -216,6 +221,9 @@ export class SubListComponent implements OnInit {
                         }
 
                     }
+                },
+                (error) => {
+                    this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
                 }
             );
     }
@@ -297,7 +305,7 @@ export class SubListComponent implements OnInit {
     // 投放申请
     Serve() {
         for (let i = 0; i < this.textcssList.length; i ++) {
-            if (this.textcssList[i].projectType !== 'C') { // 说明是config工程，需要让用户手动选择
+            if (this.textcssList[i].projectType !== 'C' && this.textcssList[i].projectType !== 'I') { // 说明是config或者default工程，需要让用户手动选择
                 for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
                     for ( let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
                         if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].checked) {
@@ -343,63 +351,7 @@ export class SubListComponent implements OnInit {
 
     profiles: any;
 
-    // 计算合计
-    /*calculatedTotal(event) {
-        let totalArray = []
-        _.forEach(event , function (value) {
-            if (value.projectType !== 'C') { // 如果不是默认的，代表congig和default
-                if (!appConfig.isNull(value.groupArray)) { // 不为空
-                    _.forEach(value.groupArray , function (value1) {
-                        _.forEach(value1 , function (value2) {
-                            if (!appConfig.isNull(value2.patchSelect)) {
-                                let obj = {
-                                    key: value2.patchSelect,
-                                    total: value1.length
-                                };
-                                totalArray.push(obj);
-                            }
-                        })
-                    });
-                }
 
-            } else {
-                _.forEach(value.deliveryPatchDetails , function (value3) {
-                    console.log(value3)
-                    _.forEach(value3.fileList , function (value4) {
-                        console.log(value4)
-                        let obj = {
-                            key: value4.patchType,
-                            total: 1
-                        };
-                        totalArray.push(obj);
-                    })
-                });
-            }
-        });
-
-        console.log(totalArray)
-        let newArr = [];
-        for (let i in totalArray) {
-            if (typeof(newArr[totalArray[i].key]) === 'undefined') {
-                newArr[totalArray[i].key] = 0;
-            }
-            newArr[totalArray[i].key] += totalArray[i].total;
-        }
-
-        console.log(newArr)
-        let totalArr = [];
-
-        for (var i in newArr) {
-            console.log(i)
-            let obj = {
-                key: i,
-                value: newArr[i]
-            };
-            totalArr.push(obj);
-        }
-        console.log(totalArr)
-        return totalArr;
-    }*/
 
 
     // 数据处理
@@ -409,7 +361,7 @@ export class SubListComponent implements OnInit {
         let objsss = false; // 前端判定是否正确
         let array = [];
         for (let i = 0; i < this.textcssList.length; i ++) {
-            if (this.textcssList[i].projectType !== 'C') { // 说明是config工程，需要让用户手动选择
+            if (this.textcssList[i].projectType === 'C' || this.textcssList[i].projectType === 'I' ) { // 说明是config工程，需要让用户手动选择
                 for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
                     for ( let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
                         if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].checked) {
@@ -588,19 +540,13 @@ export class SubListComponent implements OnInit {
                             (suc) => {
                                 this.nznot.create('success', suc.code , suc.msg);
                                 this.detailInfo = suc.result;
-                                let index = '';
-                                /*_.forEach(this.detailInfo , function (value) {
-                                    _.forEach(value.deliveryPatchDetails , function (value2) {
-                                        _.forEach(value2.fileList, function (value3) {
-                                            index = value3.fullPath.indexOf(value3.partOfProject);
-                                            value3.fullPath = value3.fullPath.substring(index, value3.fullPath.length);
-                                        })
-                                    })
-                                })*/
                                 this.appendTitle = '投放成功';
                                 this.modalVisible = false; // 关闭
                                 this.launchVisible  = true; // 显示详情
                                 this.getData();
+                            },
+                            (error) => {
+                                this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
                             }
                         );
                 },
@@ -625,7 +571,7 @@ export class SubListComponent implements OnInit {
     // 追加代码逻辑
     appendSave() {
         for (let i = 0; i < this.textcssList.length; i ++) {
-            if (this.textcssList[i].projectType !== 'C') { // 说明是config工程，需要让用户手动选择
+            if (this.textcssList[i].projectType !== 'C' && this.textcssList[i].projectType !== 'I' ) { // 说明是config工程，需要让用户手动选择
                 for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
                     for ( let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
                         if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].checked) {
@@ -680,7 +626,7 @@ export class SubListComponent implements OnInit {
 
         let array = [];
         for (let i = 0; i < this.textcssList.length; i ++) {
-            if (this.textcssList[i].projectType !== 'C') { // 说明是config工程，需要让用户手动选择
+            if (this.textcssList[i].projectType !== 'C' && this.textcssList[i].projectType !== 'I') { // 说明是config工程，需要让用户手动选择
                 for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
                     for ( let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
                         if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].checked) {
@@ -739,17 +685,12 @@ export class SubListComponent implements OnInit {
                     this.nznot.create('success', val.code , val.msg);
                     this.appendTitle = '追加成功';
                     this.detailInfo = val.result; // 返回的数据有问题
-                    console.log(this.detailInfo)
                     this.appendVisible = false;
                     this.launchVisible = true; // 查看追加详情
                 }
             );
 
     }
-
-    k
-
-
 
 
 

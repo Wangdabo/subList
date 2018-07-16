@@ -17,7 +17,7 @@ export let appConfig = {
         sProfiles: '/sProfiles/list',  // 投放申请查询
         allsProfiles: '/sProfiles/all',  // 投放申请查询
         getBranch: '/sBranch/notAllot', // 未支配的分支
-        getStatus: '/sProfiles/status',// 修改状态
+        getStatus: '/sProfiles/status', // 修改状态
         sProfilesadd: '/sProfiles',
         delSprofiles: '/sProfiles/' ,
         list: '/deliveries/list', //
@@ -37,7 +37,7 @@ export let appConfig = {
         workItemList: '/sWorkitem/list', // 查询列表
         svncount: '/sSvnAccount/all', // 查询人员
         // 基础参数---分支
-        notAllot: '/sBranch/notAllot',
+        notAllot: '/sWorkitem/relevanceBranch',
 
 
     },

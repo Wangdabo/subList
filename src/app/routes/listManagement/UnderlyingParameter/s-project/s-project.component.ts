@@ -295,6 +295,11 @@ export class SProjectComponent implements OnInit {
     }
 
 
+    // 取消
+    cancel() {
+        this.modalVisible = false;
+        this.getData(); // 重新查询
+    }
 
 
 
