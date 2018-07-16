@@ -13,7 +13,9 @@ import {NzModalService, NzNotificationService} from 'ng-zorro-antd';
 import {Router} from '@angular/router';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
 import { SprofilesModule} from '../../../../service/delivent/sprofilesModule';
+import { BranchModule} from '../../../../service/delivent/brachModule';
 import { Observable, Observer } from 'rxjs';
+import * as moment from 'moment';
 
 @Component({
     selector: 'app-s-profiles',
@@ -41,7 +43,6 @@ export class SProfilesComponent implements OnInit {
      
  
 
-    Ptitle: any;
     showAdd: boolean; // 是否有修改
     isShowTotal = true;
     configTitle = '详情'
@@ -50,6 +51,7 @@ export class SProfilesComponent implements OnInit {
     isPagination = true; // 是否有分页
     isCorrelation = false;
      isCancel = false;
+     assVisible = false;
     // 信息
     deliverItem: DeliveryModule = new  DeliveryModule();
     deliveryTime: any; // 投放日期
@@ -58,7 +60,7 @@ export class SProfilesComponent implements OnInit {
         {key: '0', value: '否'},
         {key: '1', value: '是'}
     ]
-    ptitle:'关联分支'
+    ptitle='关联分支'
 
 
 
@@ -167,6 +169,27 @@ export class SProfilesComponent implements OnInit {
     }
         checkBranch(branch){
             console.log(branch);
+         
+               this.utilityService.getData(appConfig.testUrl  + appConfig.API+'/sBranch/'+branch, {},{Authorization: this.token})
+                .subscribe(
+                    (val) => {
+                        console.log(val)
+                        if(val.code == 200) {
+                            // this.branshList = val.result
+                            // this.isCorrelation = true;
+                          
+                        }else {
+                            this.nznot.create('error', '异常', '异常');
+                        }
+                    }  ,
+                (error)=>{
+                    if(error){
+                          this.nznot.create('error', error.json().msg,'');
+                    }
+                }
+                );
+
+            console.log(branch);
         }
 
     // 表格数据按钮
@@ -175,6 +198,7 @@ export class SProfilesComponent implements OnInit {
         { key: 'upd', value: '修改' },
         {key: 'correlation', value: '关联分支'},
         {key: 'detail', value: '取消分支'},
+         {key: 'branchDDetail', value: '分支详情'}
     ];
    
 
@@ -216,7 +240,7 @@ export class SProfilesComponent implements OnInit {
 
         if (event === 'add') {
             this.profiles = new SprofilesModule();
-            this.Ptitle = '新增环境数据'
+            this.ptitle = '新增环境数据'
 
             this.mergeVisible = true;
         } else if (event === 'checking') {
@@ -238,6 +262,9 @@ export class SProfilesComponent implements OnInit {
 
     }
     profilesGuid:any;
+    branchInfo = false; // 弹出框 默认为false
+    branchData: BranchModule = new BranchModule();
+    branchdataInfo: boolean; // 分支详情
     // 按钮点击事件
     buttonEvent(event) {
 
@@ -273,7 +300,7 @@ export class SProfilesComponent implements OnInit {
 
 
         } else if (event.names.key === 'upd') {
-            this.Ptitle = '修改环境数据'
+            this.ptitle = '修改环境数据'
             let arr = [];
 
             arr = event.packTiming.split(',');
@@ -291,7 +318,7 @@ export class SProfilesComponent implements OnInit {
             this.mergeVisible = true;
         }
         else if (event.names.key === 'correlation') {
-
+            this.ptitle='关联分支'
             this.utilityService.getData(appConfig.testUrl  + appConfig.API.getBranch, {},{Authorization: this.token})
 
                 .subscribe(
@@ -300,7 +327,7 @@ export class SProfilesComponent implements OnInit {
                         if(val.code == 200) {
                             this.branshList = val.result
                             this.isCorrelation = true;
-                            this.ptitle='关联分支'
+                          
                         }else {
                             this.nznot.create('error', '异常', '异常');
                         }
@@ -327,19 +354,22 @@ export class SProfilesComponent implements OnInit {
                 }
             });
         }
-        else if (event.names.key === 'detail') {
-
-            let self = this;
-            this.confirmServ.confirm({
-                title  : '您是否确认要取消关联分支!',
-                showConfirmLoading: true,
-                onOk() {
-                    self.saveCorrelation('Q')
-                },
-                onCancel() {
-                }
-            });
-        }
+       else if (event.names.key  === 'branchDDetail') {
+           let url='/'+event.guid+'/branchDetail'
+                this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfilesadd + url ,{}, {Authorization: this.token})
+                    .subscribe(
+                        (val) => {
+                            console.log(val);
+                             this.branchInfo = true;
+                             this.branchData = val.result;
+                            //  this.branchData.createTime = moment(this.branchData.createTime).format('YYYY-MM-DD');
+                        },
+                        (error) => {
+                            if(error){
+                          this.nznot.create('error', error.json().msg,'');
+                             }
+                        });
+            }
 
     }
 

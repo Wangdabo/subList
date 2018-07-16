@@ -16,7 +16,7 @@
         <div >
 
         <div nz-row [nzType]="'flex'" [nzJustify]="'start'" nz-col [nzSpan]="24"  >
-            <nz-table #nzTable  [nzDataSource]="mergeListData" [nzIsPagination]="false">
+            <nz-table #nzTable [nzLoading]="checkloading" [nzDataSource]="mergeListData" [nzIsPagination]="false">
                 <thead nz-thead>
                     <tr>
                     <th nz-th><span>代码</span></th>
@@ -31,7 +31,7 @@
                     </tr>
                 </thead>
                 <tbody nz-tbody>
-                    <tr nz-tbody-tr  *ngFor="let j of mergeListData">
+                    <tr nz-tbody-tr  *ngFor="let j of mergeListData;let l = index">
                     <td nz-td>{{j.partOfProject }}</td>
                     <td nz-td>{{j.programName }}</td>
                         <td nz-td>{{j.fullPath }}</td>
@@ -41,18 +41,18 @@
                         <td nz-td>{{j.confirmStatus }}</td>
                         <td nz-td>{{j.errorType }}</td>
                     <td nz-td>
-                      <span  style="color:red" (click)="sonbuttonClick(3,j)">
+                      <span  style="color:red"  (click)="sonbuttonClick(3,j,l)" *ngIf="j.check == null" >
                              删除
                         </span>
-                        <span style="margin-left:1rem; color:#108ee9" (click)="sonbuttonClick(4,j)">
+                        <span style="margin-left:1rem; color:#108ee9" *ngIf=" j.check == null"  (click)="sonbuttonClick(4,j,l)">
                         加入投放
                         </span>
+                        <span *ngIf='j.check == true'>已投放</span>
                     </td>
                     </tr>
                 </tbody>
                 </nz-table>
-          
-
+        
         </div>
 
            <div nz-row [nzType]="'flex'" [nzJustify]="'start'" nz-col [nzSpan]="24"  *ngFor="let j of checkModalData" >
@@ -117,15 +117,15 @@
                                  <td class="bcolor"  nz-td nz-col [nzSpan]="4">状态</td>
                                 <td class="bcolor"  nz-td nz-col [nzSpan]="4">操作</td>
                             </tr>
-                            <tr nz-tbody-tr nz-col [nzSpan]="24"  *ngFor="let x of k.fileList">
+                            <tr nz-tbody-tr nz-col [nzSpan]="24"  *ngFor="let x of k.fileList;let q = index">
                                 <td nz-td nz-col [nzSpan]="8" style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;"  title="{{x.fullPath}}">{{x.fullPath}}</td>
                                 <td nz-td nz-col [nzSpan]="4">{{x.commitType}}</td>
             
                                 <td nz-td nz-col [nzSpan]="4">{{x.errorType}}</td>
                                 <td nz-td nz-col [nzSpan]="4">{{x.confirmStatus}}</td>
                                 <td nz-td nz-col [nzSpan]="4">
-                                   <a  style="color:#108ee9;" [ngClass]="x.buttons == true ? 'noactive' : ''" (click)="sonbuttonClick(1,x)">已合并&nbsp;</a>&nbsp;
-                                   <a style="color:red;" [ngClass]="x.buttons == false ? 'active' : ''" (click)="sonbuttonClick(2,x)">不投产&nbsp;</a>&nbsp;
+                                   <a  style="color:#108ee9;" [ngClass]="x.buttons == true ? 'noactive' : ''" (click)="sonbuttonClick(1,x,q)">已合并&nbsp;</a>&nbsp;
+                                   <a style="color:red;" [ngClass]="x.buttons == false ? 'active' : ''" (click)="sonbuttonClick(2,x,q)">不投产&nbsp;</a>&nbsp;
                                 </td>
                             </tr>
                             </tbody>
@@ -160,7 +160,7 @@
 
                 <div  nz-col [nzSpan]="24" class="mb-md">
                     <div nz-form-item class="d-flex">
-                        <div nz-form-label nz-col [nzSpan]="8" ><label for="status">投放申请GUID</label></div>
+                        <div nz-form-label nz-col [nzSpan]="8" ><label for="status">投放申请</label></div>
                         <div nz-form-control class="flex-1">
                            <nz-select style="width:100%;" [(ngModel)]="arr.guidDelivery" name="guidDelivery" nzId="guidDelivery" [nzPlaceHolder]="'开发分支'" [nzShowSearch]="true" [nzSize]="'large'">
                             <nz-option *ngFor="let i of guidprent; let idx = index" [nzLabel]="i.guidWorkitem" [nzValue]="i.guid"></nz-option>
@@ -191,3 +191,7 @@
         </form>
     </ng-template>
 </nz-modal>
+
+<div class="example" *ngIf='loading == true'>
+      <nz-spin></nz-spin>
+      </div>

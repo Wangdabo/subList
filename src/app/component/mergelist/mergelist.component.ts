@@ -28,7 +28,12 @@ export class MergelistComponent implements OnInit {
     guidprent:any[];
     @Input()
     guid:any;
+    @Input()
+    checkloading:boolean;
+    @Input()
+    loading:boolean;
     @Output()
+
     isActive: EventEmitter<any> = new EventEmitter(); // 定义一个输出属性，当点击按钮的时候 发射出去
     @Output()
     buttonClick: EventEmitter<any> = new EventEmitter();
@@ -49,6 +54,8 @@ export class MergelistComponent implements OnInit {
 
     ngOnInit() {
         this.elementScice = this.elementScice;
+        this.checkloading = false;
+        this.loading = false;
     }
 
       isClick(d,i) {
@@ -72,26 +79,35 @@ export class MergelistComponent implements OnInit {
       
         this.mergeClick.emit(index)
     }
-    sonbuttonClick(index,it) {
-      
+    sonbuttonClick(index,it,suoyin) {
+          console.log(it)
          this.arr = [];
 
-         if(index == 1){
-             it.buttons = true;
+     
+        switch(index){
+            case 1:
+               it.buttons = true;
              it.confirmStatus = '已合并'
-         }
-          if(index == 2){
-              it.buttons = false;
+             break;
+              case 2:
+               it.buttons = false;
              it.confirmStatus = '不投产'
-         }
-        if(index == 4){
+             break;
+              case 3:
+            //   it.check = false;
+             break;
+              case 4:
+                // it.check = true;
          this.iStouchan = true;
+             break;
         }
           console.log(it)
         
         let obj = {
             index:index,
-            id : it.guid
+            id : it.guid,
+            soyin: suoyin
+
         }
         this.buttonClick.emit(obj)
     }
