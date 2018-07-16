@@ -320,7 +320,7 @@ export class SProfilesComponent implements OnInit {
             this.mergeVisible = true;
         }
         else if (event.names.key === 'correlation') {
-            this.ptitle='关联分支'
+            this.Ptitle='关联分支'
             this.utilityService.getData(appConfig.testUrl  + appConfig.API.getBranch, {},{Authorization: this.token})
 
                 .subscribe(
