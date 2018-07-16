@@ -241,9 +241,7 @@ export class LaunchApplyComponent implements OnInit {
     deleatData(event) {
 
     }
-    buttonClick(e) {
-            console.log(e);
-    }
+
 
     getSprofiles() {
         this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfiles, {}, {Authorization: this.token})
@@ -285,7 +283,7 @@ export class LaunchApplyComponent implements OnInit {
     
     next(): void {
            console.log(this.elementScice)
-      let profiles = '';
+        let profiles = '';
         let packTiming = '';
         for (let i = 0; i < this.elementScice.length; i ++) {
             if (this.elementScice[i].check && this.elementScice[i].times) {
@@ -302,6 +300,7 @@ export class LaunchApplyComponent implements OnInit {
             this.nznot.create('error', '请选择运行环境！', '请选择运行环境！');
             return;
         }
+        console.log(this.current);
         if(this.current == 0) {
          let index = '';
         let indexs = '';
@@ -367,7 +366,7 @@ export class LaunchApplyComponent implements OnInit {
                          .subscribe(
                          (val) => {
                             this.current += 1;
-                 this.checkListVisible = true;
+                         this.checkListVisible = true;
                           this.checkModalData = val.result.deliveryDetails;
                           this.mergeListData  = val.result.mergeLists;
                         for  (let i = 0; i < this.mergeListData.length; i ++) {
@@ -428,7 +427,8 @@ export class LaunchApplyComponent implements OnInit {
     }
 
     // 按钮点击事件
-    buttonEvent(event) {
+    buttonEventlist(event) {
+        console.log(event)
           
         let url ='/deliveries/'+event+'/merge'
             this.utilityService.putData(appConfig.testUrl  + url,{}, { Authorization: this.token})
@@ -687,7 +687,244 @@ export class LaunchApplyComponent implements OnInit {
     }
 
 
+
+//子组件核对详情的方法
+    iStouchan = false;
+    idcheck:any
+    mergeId :any;
+    mergeguid:any
+    guidprent=[ {
+           guid:'',
+           guidWorkitem:''
+              } ]
+     mergeData: any[] = []; // 核查有异议的数据
+    buttonClick(event){
+            let type = event.index;
+            let id = event.id;
+            console.log(type);
+            console.log(id);
+            if(type=='4'){
+         
+           this.iStouchan =true
+         
+            }else{
+
+              this.utilityService.putData( appConfig.testUrl +'/checkLists/'+id+'/status/'+type, {}, {Authorization: this.token})
+                        .map(res => res.json())
+                         .subscribe(
+                         (val) => {
+                          if(val.code == 200) {
+                       
+                           this.nznot.create('success',val.msg,'');
+                           if(type == 3){
+                             this.mergeData.forEach((result,i) =>{
+                                 if(result.guid != id){
+                                     this.mergeData.splice(i,1);
+                                 }
+                                 console.log(this.mergeData);
+                             })
+                             
+                           }
+                           
+                                //    
+                                  
+                          }
+                         },(error)=>{
+                              if(error){
+                                    this.nznot.create('error', error.json().msg,'');
+                              }
+                         });
+                          }
+            }
+
+   
+   
+    mergeClick(index){
+            let status = '';
+                switch(index){
+                    case 0 :
+                    this.detailVisible = false
+                    return;
+                    
+                        case 1 :
+                    status  = 'F'
+                    break;
+                        case 2 :
+                    status = 'S'
+                    break;
+             }
+  
+                let self = this; 
+                this.modal.confirm({
+                title  : '您是否确认要进行这项操作!',
+                
+                showConfirmLoading: true,
+                onOk() {
+                    self.utilityService.putData( appConfig.testUrl +'/checks/'+self.idcheck+'/status/'+status, {}, {Authorization: self.token})
+                                    .map(res => res.json())
+                                    .subscribe(
+                                (val) => {
+                                    if(val.code == 200) {
+                                
+                                    self.nznot.create('success',val.msg,'');
+                                        self.detailVisible =false;     
+                                    }else{
+                                            self.nznot.create('error', val.msg,'');
+                                    }
+                                    },(error)=>{
+                                        if(error){
+                                                self.nznot.create('error', error.json().msg,'');
+                                        }
+                                    })
+                },
+                onCancel() {
+                }
+            });
+
+      
+
+        } 
+        
+    buttonEvent(event) {
+        this.mergeId = event.guid;
+       console.log(event)
+        if (event.names.key === 'merge') {
+            this.idcheck = event.guid;
+              let index = '';
+              let indexs = '';
+             this.detailVisible = true;
+             this.utilityService.getData( appConfig.testUrl +'/checks/'+event.guid, {}, {Authorization: this.token})
+                        // .map(res => res.json())
+                         .subscribe(
+                         (val) => {
+                           console.log(val);
+
+                          this.detailVisible = true;
+                          this.checkModalData = val.result.deliveryDetails;
+                          this.mergeData  = val.result.mergeLists;
+                        for  (let i = 0; i < this.mergeData.length; i ++) {
+                            if (this.mergeData[i].fullPath) {
+                                indexs = this.mergeData[i].fullPath.indexOf(this.mergeData[i].partOfProject);
+                                this.mergeData[i].fullPath = this.mergeData[i].fullPath.substring(indexs, this.mergeData[i].fullPath.length);
+                            }
+                        }
+                         for  (let i = 0; i < this.checkModalData.length; i ++) {
+                                      this.guidprent[i]['guid']=this.checkModalData[i].delivery.guid;
+                                      this.guidprent[i]['guidWorkitem']=this.checkModalData[i].delivery.guidWorkitem.target
+                            for (let j = 0; j < this.checkModalData[i].detailList.length; j ++) {
+                                for (let x = 0; x < this.checkModalData[i].detailList[j].deliveryPatchDetails.length; x ++) {
+                                    for (let  y = 0; y < this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList.length; y ++) {
+                                           this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y]['buttons'] = null
+                                        if (this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath) {
+                                            index = this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.indexOf(this.checkModalData[i].detailList[j].projectName);
+                                            this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath = this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.substring(index, this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.length);
+                                      
+
+                              }
+                                    }
+                                }
+                            }
+                        }
+                        console.log(this.guidprent)
+                                }
+                                ,(error)=>{
+                                    console.log(error)
+                                  if(error){
+                                    this.nznot.create('error', error.json().msg,'');
+                                      }
+                                }) 
+
+          
+        } else if (event.names.key  === 'details') {
+     
+        } else if (event.names === '成功') {
+            alert('成功的方法');
+        }
+
+
+
+    }
+   
+   returnsclick(event) {
+       let item = event.index
+       this.mergeguid=event.id
+      
+    let S = '';
+    console.log(this.guidprent)
+    if ( item === 0) {
+        
+        this.istextVisible = true;
+    }else {
+        let  url = appConfig.testUrl + '/checks/delivery/' + this.mergeguid + '/result';
+        if (item === 1) {
+            S = 'S';
+        }else {
+            S = 'F';
+        }
+        const obj = {
+                result : S,
+                desc : this.inputValue
+        };
+
+
+       this.utilityService.putData( url, obj, {Authorization: this.token})
+           .map(res => res.json())
+           .subscribe(
+               (val) => {
+                   console.log(val);
+
+                   if (val.code == 200){
+                       this.istextVisible = false;
+                    //    this.detailVisible = false;
+                       this.nznot.create('success', val.msg, val.msg);
+                   }else{
+                         this.nznot.create('error', val.msg,'');
+                  }
+
+               }
+               ,
+               (error) => {
+                  
+                  if(error){
+                          this.nznot.create('error', error.json().msg,'');
+                    }
+               }
+           );
+       }
+
+
+    }
+
+       checkSavemerge(event) {
+        this.iStouchan = false;
+        const obj ={
+            guidDelivery:event.guidDelivery,
+            patchType:event.patchType,
+            deployWhere:event.deployWhere
+        }
+          console.log(event)
+          this.utilityService.putData( appConfig.testUrl +'/checkLists/'+this.mergeId+'/delivery', obj, {Authorization: this.token})
+                        .map(res => res.json())
+                         .subscribe(
+                         (val) => {
+                          if(val.code == 200) {
+                       
+                           this.nznot.create('success',val.msg,'');
+                                //    
+                                  
+                          }
+                         },(error)=>{
+                              if(error){
+                                    this.nznot.create('error', error.json().msg,'');
+                              }
+                         });
+    }
+
+   
+   
+   
     // 打印界面
+    
     isVisible = false; // 默认关闭
     workItem = false;
     mergeisVisible = false;
@@ -724,6 +961,9 @@ export class LaunchApplyComponent implements OnInit {
     moreclick() {
         console.log('sssss');
     }
+
+
+
 
 
 }

@@ -6,13 +6,16 @@ import {appConfig} from '../../../service/common';
 import {NzModalService, NzNotificationService} from 'ng-zorro-antd';
 import {Router} from '@angular/router';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
+// import { MergelistComponent } from '../../../component/mergelist/mergelist.component';
 import * as moment from 'moment';
+
 
 @Component({
     selector: 'app-ad-record',
     templateUrl: './ad-record.component.html',
 })
 export class AdRecordComponent implements OnInit {
+    // @ViewChild(MergelistComponent) child: MergelistComponent;
 
     constructor(
         private http: _HttpClient,
@@ -20,9 +23,9 @@ export class AdRecordComponent implements OnInit {
         private utilityService: UtilityService,
         private modal: NzModalService,
         private nznot: NzNotificationService,
-       
        @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
-        private confirmServ: NzModalService
+  
+        // private MergelistComponent : MergelistComponent
     ) { }
 
 
@@ -44,6 +47,7 @@ export class AdRecordComponent implements OnInit {
     deliverItem: DeliveryModule = new  DeliveryModule();
     deliveryTime: any; // 投放日期
     pageTotal: number;
+    isShow = false;
 
     dliveryResult = [
         {key: '0', value: '否'},
@@ -78,10 +82,7 @@ export class AdRecordComponent implements OnInit {
         {key: 'dels', value: '删除',if:false },
          {key: 'details', value: '详情',if:false }
     ]
-      buttons: [
-            { key: 'merge', value: '已合并' },
-               { key: 'giveup', value: '不投产' }
-        ]
+     
 
     test: string;
     page: any;
@@ -183,7 +184,7 @@ export class AdRecordComponent implements OnInit {
                             for (let j = 0; j < this.checkModalData[i].detailList.length; j ++) {
                                 for (let x = 0; x < this.checkModalData[i].detailList[j].deliveryPatchDetails.length; x ++) {
                                     for (let  y = 0; y < this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList.length; y ++) {
-                                           this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y]['buttons'] = this.buttons
+                                           this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y]['buttons'] = null
                                         if (this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath) {
                                             index = this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.indexOf(this.checkModalData[i].detailList[j].projectName);
                                             this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath = this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.substring(index, this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.length);
@@ -204,8 +205,20 @@ export class AdRecordComponent implements OnInit {
                                 }) 
 
           
-        } else if (event.names === '打回') {
-            alert('打回的方法');
+        } else if (event.names.key  === 'details') {
+            //  this.modal.open({
+            //     title          : '对话框标题',
+            //     content        : MergelistComponent,
+            //     onOk() {
+            //     },
+            //     onCancel() {
+            //         console.log('Click cancel');
+            //     },
+            //     footer         : false,
+            //     componentParams: {
+            //         name: '测试渲染Component'
+            //     }
+            // });
         } else if (event.names === '成功') {
             alert('成功的方法');
         }
@@ -214,7 +227,7 @@ export class AdRecordComponent implements OnInit {
 
     }
 
-mergeClick(index,id){
+mergeClick(index){
     let status = '';
    switch(index){
        case 0 :
@@ -230,8 +243,9 @@ mergeClick(index,id){
    }
   
     let self = this; 
-    this.confirmServ.confirm({
+    this.modal.confirm({
       title  : '您是否确认要进行这项操作!',
+     
       showConfirmLoading: true,
       onOk() {
            self.utilityService.putData( appConfig.testUrl +'/checks/'+self.idcheck+'/status/'+status, {}, {Authorization: self.token})
@@ -267,7 +281,9 @@ mergeClick(index,id){
     }
      iStouchan = false
     
-        buttonClick(type,id){
+        buttonClick(event){
+            let type = event.index;
+            let id = event.id;
             console.log(type);
             console.log(id);
             if(type=='4'){
@@ -283,6 +299,16 @@ mergeClick(index,id){
                           if(val.code == 200) {
                        
                            this.nznot.create('success',val.msg,'');
+                           if(type == 3){
+                             this.mergeListData.forEach((result,i) =>{
+                                 if(result.guid != id){
+                                     this.mergeListData.splice(i,1);
+                                 }
+                                 console.log(this.mergeListData);
+                             })
+                             
+                           }
+                           
                                 //    
                                   
                           }
@@ -348,13 +374,14 @@ mergeClick(index,id){
       patchType:any;
       deployWhere:any;
     // 关闭核对清单
-    checkSave() {
+    checkSave(event) {
         this.iStouchan = false;
         const obj ={
-            guidDelivery:this.guidDelivery,
-            patchType:this.patchType,
-            deployWhere:this.deployWhere
+            guidDelivery:event.guidDelivery,
+            patchType:event.patchType,
+            deployWhere:event.deployWhere
         }
+        console.log(event)
           this.utilityService.putData( appConfig.testUrl +'/checkLists/'+this.mergeId+'/delivery', obj, {Authorization: this.token})
                         .map(res => res.json())
                          .subscribe(
@@ -394,8 +421,9 @@ mergeClick(index,id){
   istextVisible = false;
   inputValue:any;
   guid:any;
-   returnsclick(item,id) {
-       this.guid=id
+   returnsclick(event) {
+       let item = event.index
+       this.guid=event.id
       
     let S = '';
     console.log(this.guidprent)

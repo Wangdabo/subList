@@ -49,7 +49,7 @@
     <!--列表组件-->
 
     <app-list #child [initDate]="data" [isShowTotal]="isShowTotal"  [configTitle]="configTitle" [showAdd]="showAdd" [isPagination]="isPagination"  [buttons] ='buttons' (addCreat)="addHandler($event)" (buttonData)="buttonData($event)" (pageNumber)="monitorHandler($event)"
-              (deleatData)="deleatData($event)" (isActive)="isActive($event)" (buttonEvent)="buttonEvent($event)" (selectedRow)="selectedRow($event)" [headerDate]="headerDate"
+              (deleatData)="deleatData($event)" (isActive)="isActive($event)" (buttonEvent)="buttonEventlist($event)" (selectedRow)="selectedRow($event)" [headerDate]="headerDate"
               [moreData]="moreData" [total]="total"  [pageTotal] = 'pageTotal'  >
     </app-list>
 </nz-card>
@@ -210,13 +210,13 @@
     </ng-template>
 </nz-modal>
 
-<nz-modal [nzVisible]="istextVisible"  [nzWidth]="600" [nzTitle]="'请输入打回理由（选填）'"   [nzContent]="modaltextTitle"
+<!--<nz-modal [nzVisible]="istextVisible"  [nzWidth]="600" [nzTitle]="'请输入打回理由（选填）'"   [nzContent]="modaltextTitle"
           (nzOnCancel)="istextVisible=false" (nzOnOk)="returns(guid,2)" >
     <ng-template #modaltextTitle>
         <textarea rows="6"  nz-input [(ngModel)]="inputValue" ></textarea>
 
     </ng-template>
-</nz-modal>
+</nz-modal>-->
 
 <nz-modal [nzVisible]="isMergeList"  [nzWidth]="1000" [nzTitle]="'合并列表'"   [nzContent]="modaltextTitle"
           (nzOnCancel)="isMergeList=false" (nzOnOk)="returns(guid,2)" >
@@ -272,13 +272,13 @@
 </nz-modal>
 
 
-<nz-modal [nzVisible]="mergeisVisible"  [nzWidth]="1100" [nzTitle]="'合并投放 请指定投放日期和环境'"   [nzContent]="dictModal"
+<nz-modal [nzVisible]="mergeisVisible"  [nzWidth]="1024" [nzTitle]="'合并投放 请指定投放日期和环境'"   [nzContent]="dictModal"
           (nzOnCancel)="mergeisVisible=false" (nzOnOk)="savemergeisInfo()" [nzFooter]="is" >
     <ng-template #dictModal>
-     
+    
       <nz-steps [(nzCurrent)]="current"  [nzSize]="default">
-            <nz-step  [nzTitle]="'选择环境'" style="width:47%"></nz-step>
-            <nz-step   [nzTitle]="'核对列表'" style="width:47%"></nz-step>
+            <nz-step class="stepwidth" [nzTitle]="'选择环境'" ></nz-step>
+            <nz-step  class="stepwidth" [nzTitle]="'核对列表'" ></nz-step>
             <nz-step  [nzTitle]="'确认清单'"></nz-step>
       </nz-steps>
 
@@ -286,9 +286,21 @@
         
        <app-environment [deliveryTime]="deliveryTime" [isShowDate]="isShowDate" (isActive)="isActive($event)" [elementScice]="elementScice" *ngIf="current === 0"></app-environment>
 
-        <app-listfold [headerDate]="mergeHeader"  [buttons] ='buttons'  (buttonData)="buttonDataHandler($event)" (buttonEvent)="buttonEvent($event)"  [initDate]="initDate" *ngIf="current === 1" ></app-listfold>
+        <app-listfold [headerDate]="mergeHeader"  [buttons] ='buttons'  (buttonData)="buttonDataHandler($event)" (buttonEvent)="buttonEventlist($event)"  [initDate]="initDate" *ngIf="current === 1" ></app-listfold>
     
          <!--<span >2222</span>-->
+       <app-mergelist  *ngIf="current === 2" #child 
+            [iStouchan]="iStouchan" 
+            [guid]="mergeguid" 
+            [istextVisible]="istextVisible" 
+            (checkSave)="checkSavemerge($event)"
+            [guidprent]="guidprent" 
+            (buttonClick)="buttonClick($event)" 
+            (mergeClick)="mergeClick($event)" 
+            (returnsclick)="returnsclick($event)" 
+            [mergeListData]="mergeData" 
+            [checkModalData]='checkModalData'>
+        </app-mergelist>
       
 
 
@@ -317,10 +329,10 @@
 
 
   <!--核对清单详细-->
-<!--<nz-modal [nzVisible]="detailVisible"  [nzWidth]="1024" [nzTitle]="'工作项投放申请'"  [nzContent]="detailVisibleModal"
+<nz-modal [nzVisible]="detailVisible"  [nzWidth]="1024" [nzTitle]="'工作项投放申请'"  [nzContent]="detailVisibleModal"
           (nzOnCancel)="detailVisible=false" (nzOnOk)="checkSave()">
-    <ng-template #detailVisibleModal>-->
-        <div *ngIf="current ===2">
+    <ng-template #detailVisibleModal>
+        <div >
              <div  nz-row [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
             
                <div nz-col [nzSpan]="24" class="mb-md">
@@ -477,8 +489,8 @@
         </div>
         </div>
 
-    <!--</ng-template>
-</nz-modal>-->
+</ng-template>
+</nz-modal>
 <!--合并投放-->
 <nz-modal [nzVisible]="mergeVisible"  [nzWidth]="1024" [nzTitle]="'工作项投放申请'"  [nzContent]="mergeModal"
           (nzOnCancel)="mergeVisible=false" (nzOnOk)="checkSave()">

@@ -30,12 +30,15 @@ export class SBranchComponent implements OnInit {
     token: any;
     showAdd = false;
     isShowTotal = true;
-    
+    isPagination = true;
+   ptitle:any
     // showTa
     ngOnInit() {
         this.token = this.tokenService.get().token;
         this.getData();
         this.showAdd = false;
+        this.ptitle = '信息提示'
+        
     }
 
     data: any[] = []; // 表格数据
@@ -62,9 +65,9 @@ export class SBranchComponent implements OnInit {
         {key: 'upd', value: '修改'}
     ];
     branchType = [
-        {key: '特性分支', value: 'F'},
-        {key: 'hot分支', value: 'H'},
-        {key: 'release分支', value: 'R'},
+        {key: '特性分支', value: 'F',selector:false},
+        {key: 'hot分支', value: 'H' ,selector:false},
+        {key: 'release分支', value: 'R' ,selector:false},
     ]
     getData() {
             const page = {
@@ -81,6 +84,7 @@ export class SBranchComponent implements OnInit {
                          
                       
                         if (val.code == 200) {
+                            console.log(val);
                             this.data = val.result.records;
                             this.total = val.result.total; // 总数
                             this.pageTotal = val.result.pages * 10; // 页码
@@ -115,13 +119,17 @@ export class SBranchComponent implements OnInit {
     deleatData(event) {
 
     }
+  
     // 顶部按钮
+  
     addHandler(event) {
         console.log(this.branch)
         
         if (event === 'add') {
              this.branch = new  SbranchModule();
+             console.log()
               this.detailsVisible = true;
+              this.ptitle = '新增分支'
         }
     }
     // 按钮点击事件
@@ -172,7 +180,7 @@ export class SBranchComponent implements OnInit {
                             }
                  })
                   this.branch = event;
-
+            this.ptitle = '修改分支'
             this.detailsVisible = true;
              console.log(this.branch);
               console.log(event);
@@ -194,11 +202,22 @@ export class SBranchComponent implements OnInit {
         } 
 
     }
+       checkversion(item,index){
+            console.log(item)
+            
+        }
+
 
     addsubmit(){
         
         
-        const obj = this.branch;
+        let obj = this.branch;
+        console.log(this.branch)
+          if(!obj.branchFor||!obj.fullPath||!obj.branchFor||!obj.lastVersion){
+             this.nznot.create('error', '请输入完整的信息！','');
+             return;
+          }
+    
         if ( !obj.guid ) {
               this.utilityService.postData(appConfig.testUrl  + appConfig.API.sBranchadd ,obj, {Authorization: this.token})
       .map(res => res.json())
