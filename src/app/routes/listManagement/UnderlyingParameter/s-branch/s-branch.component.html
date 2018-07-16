@@ -12,11 +12,11 @@
     <!--列表组件-->
 
     <app-list #child [initDate]="data" [configTitle]="configTitle"  [showAdd]="showAdd" [isPagination]="isPagination"  [buttons] ='buttons' (addCreat)="addHandler($event)" (buttonData)="buttonDataHandler($event)" (pageNumber)="monitorHandler($event)"
-              (deleatData)="deleatData($event)" (isActive)="isActive($event)" (buttonEvent)="buttonEvent($event)" (selectedRow)="selectedRow($event)" [headerDate]="headerDate"
+              (deleatData)="deleatData($event)" (isActive)="isActive($event)" (buttonEvent)="buttonEvent($event)"  [headerDate]="headerDate"
               [moreData]="moreData" [total]="total" [isShowTotal]="isShowTotal" [pageTotal] = 'pageTotal'></app-list>
 </nz-card>
 
-<nz-modal [nzVisible]="detailsVisible"  [nzWidth]="800" [nzTitle]="'Ptitle'"  [nzConfirmLoading]="false" [nzContent]="mergeModal"
+<nz-modal [nzVisible]="detailsVisible"  [nzWidth]="800" [nzTitle]="ptitle"  [nzConfirmLoading]="false" [nzContent]="mergeModal"
           (nzOnCancel)="detailsVisible=false" [nzFooter]="is">
     <ng-template #mergeModal>
         <form nz-form (ngSubmit)="addsubmit()" [nzLayout]="'inline'">
@@ -26,7 +26,7 @@
                     <div nz-form-item class="d-flex">
                         <div nz-form-label nz-col [nzSpan]="8" ><label for="status">分支类型</label></div>
                         <div nz-form-control class="flex-1">
-                           <nz-select style="width:100%;" [(ngModel)]="branch.branchType" name="branch" nzId="branch" [nzPlaceHolder]="'开发分支'" [nzShowSearch]="true" [nzSize]="'large'">
+                           <nz-select style="width:100%;" [(ngModel)]="branch.branchType"  [nzMode]="default" name="branch" nzId="branch" [nzPlaceHolder]="'开发分支'" [nzShowSearch]="true" [nzSize]="'large'">
                             <nz-option *ngFor="let i of branchType; let idx = index" [nzLabel]="i.key" [nzValue]="i.value"></nz-option>
                         </nz-select>
                         </div>
@@ -37,7 +37,7 @@
                     <div nz-form-item class="d-flex">
                         <div nz-form-label nz-col [nzSpan]="8"><label for="name">分支全路径</label></div>
                         <div nz-form-control class="flex-1">
-                            <nz-input [(ngModel)]="branch.fullPath" name="fullPath" [nzSize]="'large'" [nzPlaceHolder]="'工程名称'" nzId="fullPath"></nz-input>
+                            <nz-input [(ngModel)]="branch.fullPath" name="fullPath"  (nzBlur)="checkversion(branch.fullPath)" type='url' aria-required="true" [nzSize]="'large'" [nzPlaceHolder]="'工程名称'" nzId="fullPath"></nz-input>
                         </div>
                     </div>
                 </div>
@@ -46,7 +46,7 @@
                     <div nz-form-item class="d-flex">
                         <div nz-form-label nz-col [nzSpan]="8"><label for="name">分支作用说明</label></div>
                         <div nz-form-control class="flex-1">
-                            <textarea rows="6"  nz-input [(ngModel)]="branch.branchFor"  nzId="branchFor" [ngModelOptions]="{standalone: true}" ></textarea>
+                            <textarea rows="6"  nz-input [(ngModel)]="branch.branchFor"  nzRequired  nzId="branchFor" [ngModelOptions]="{standalone: true}" ></textarea>
                         </div>
                     </div>
                 </div>
@@ -54,9 +54,8 @@
                 <div nz-col [nzSpan]="24" class="mb-md">
                     <div nz-form-item class="d-flex">
                         <div nz-form-label nz-col [nzSpan]="8"><label for="name">分支起始版本</label></div>
-                        <div nz-form-control class="flex-1">
-                            <nz-input [(ngModel)]="branch.lastVersion" name="lastVersion" [nzSize]="'large'" [nzPlaceHolder]="'分支起始版本'" nzId="lastVersion"></nz-input>
-                        </div>
+                
+                       <nz-input-number  [(ngModel)]="branch.lastVersion"  name="lastVersion"  [nzSize]="large"  [nzMin]="1" [nzStep]="1" nzId="lastVersion"></nz-input-number>
                     </div>
                 </div>
 

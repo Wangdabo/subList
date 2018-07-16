@@ -16,7 +16,7 @@ export let appConfig = {
         sDeliveryList: '/sDeliveryList', // 整理清单
         sProfiles: '/sProfiles/list',  // 投放申请查询
         allsProfiles: '/sProfiles/all',  // 投放申请查询
-        getBranch: '/sBranch/notAllot', // 未支配的分支
+        getBranch: '/sProfiles/relevanceBranch', // 未支配的分支
         getStatus: '/sProfiles/status',// 修改状态
         sProfilesadd: '/sProfiles',
         delSprofiles: '/sProfiles/' ,

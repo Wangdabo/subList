@@ -56,7 +56,8 @@ import {
     NzTransferModule,
     // SERVICES
     NzNotificationService,
-    NzMessageService
+    NzMessageService,
+    
 
 } from 'ng-zorro-antd';
 
@@ -109,7 +110,8 @@ export const ZORROMODULES = [
     // NzAffixModule,
     // NzAnchorModule,
     NzAvatarModule,
-    NzUploadModule
+    NzUploadModule,
+
 ];
 // endregion
 

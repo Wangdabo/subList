@@ -13,6 +13,7 @@ import {NzModalService, NzNotificationService} from 'ng-zorro-antd';
 import {Router} from '@angular/router';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
 import { SprofilesModule} from '../../../../service/delivent/sprofilesModule';
+import { Observable, Observer } from 'rxjs';
 
 @Component({
     selector: 'app-s-profiles',
@@ -29,16 +30,79 @@ export class SProfilesComponent implements OnInit {
         private fb: FormBuilder,
         @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
         private confirmServ: NzModalService
-    ) { }
+    ) {
+        
+     }
     token: any;
 
     profiles:SprofilesModule = new SprofilesModule();
 
 
+     
+ 
+
+    Ptitle: any;
+    showAdd: boolean; // 是否有修改
+    isShowTotal = true;
+    configTitle = '详情'
+    modalVisible = false;
+    mergeVisible = false; // 合并投放弹窗
+    isPagination = true; // 是否有分页
+    isCorrelation = false;
+     isCancel = false;
+    // 信息
+    deliverItem: DeliveryModule = new  DeliveryModule();
+    deliveryTime: any; // 投放日期
+    elementScice: any[] = [];
+    dliveryResult = [
+        {key: '0', value: '否'},
+        {key: '1', value: '是'}
+    ]
+    ptitle:'关联分支'
 
 
 
-    submitForm() {
+
+    data: any[] = []; // 表格数据
+    headerDate = [  // 配置表头内容
+        { value: '环境代码', key: 'profilesCode', isclick: true},
+        { value: '环境名称', key: 'profilesName', isclick: false},
+        { value: '主机IP', key: 'hostIp', isclick: false },
+        { value: '安装路径', key: 'installPath', isclick: false },
+        { value: '版本控制用户', key: 'csvUser', isclick: false, switch:false },
+        { value: '是否允许投放', key: 'isAllowDelivery', isclick: false,  switch:true},
+        { value: '环境管理人员', key: 'manager', isclick: false, switch:false },
+        { value: '打包窗口', key: 'packTiming', isclick: false , switch:false},
+    ];
+
+    // 传入按钮层
+    moreData = {
+        morebutton: true,
+        buttonData: [
+            { key: 'Overview', value: '查看概况' }
+        ]
+    }
+    buttons = [
+        {key: 'add', value: '新增', if: true},
+        {key: 'ces', value: '测试', if: true},
+    ]
+
+    test: string;
+    page: any;
+    total: number;
+    pageTotal: number;
+    branshList:any[] = [];
+    branch:any;
+
+
+    ngOnInit() {
+        this.token  = this.tokenService.get().token;
+        this.getData();
+        this.showAdd = true;
+
+    }
+
+   submitForm() {
 
         let arr = [];
         let objarr = [];
@@ -101,68 +165,9 @@ export class SProfilesComponent implements OnInit {
 
 
     }
-
-
-    Ptitle: any;
-    showAdd: boolean; // 是否有修改
-    isShowTotal = true;
-    configTitle = '详情'
-    modalVisible = false;
-    mergeVisible = false; // 合并投放弹窗
-    isPagination = true; // 是否有分页
-    isCorrelation = false;
-
-    // 信息
-    deliverItem: DeliveryModule = new  DeliveryModule();
-    deliveryTime: any; // 投放日期
-    elementScice: any[] = [];
-    dliveryResult = [
-        {key: '0', value: '否'},
-        {key: '1', value: '是'}
-    ]
-
-
-
-
-    data: any[] = []; // 表格数据
-    headerDate = [  // 配置表头内容
-        { value: '环境代码', key: 'profilesCode', isclick: true},
-        { value: '环境名称', key: 'profilesName', isclick: false},
-        { value: '主机IP', key: 'hostIp', isclick: false },
-        { value: '安装路径', key: 'installPath', isclick: false },
-        { value: '版本控制用户', key: 'csvUser', isclick: false, switch:false },
-        { value: '是否允许投放', key: 'isAllowDelivery', isclick: false,  switch:true},
-        { value: '环境管理人员', key: 'manager', isclick: false, switch:false },
-        { value: '打包窗口', key: 'packTiming', isclick: false , switch:false},
-    ];
-
-    // 传入按钮层
-    moreData = {
-        morebutton: true,
-        buttonData: [
-            { key: 'Overview', value: '查看概况' }
-        ]
-    }
-    buttons = [
-        {key: 'add', value: '新增', if: true},
-        // {key: 'dels', value: '删除', if: true},
-    ]
-
-    test: string;
-    page: any;
-    total: number;
-    pageTotal: number;
-    branshList:any[] = [];
-    branch:any;
-
-
-    ngOnInit() {
-        this.token  = this.tokenService.get().token;
-        this.getData();
-        this.showAdd = true;
-
-    }
-
+        checkBranch(branch){
+            console.log(branch);
+        }
 
     // 表格数据按钮
     buttonData = [
@@ -219,7 +224,8 @@ export class SProfilesComponent implements OnInit {
 
         } else if (event === 'export') {
             this.isVisible = true;
-        } else {
+        } else if(event === 'ces'){
+            this.isCancel= true;
             console.log(event)
             console.log('详情界面');
         }
@@ -294,6 +300,7 @@ export class SProfilesComponent implements OnInit {
                         if(val.code == 200) {
                             this.branshList = val.result
                             this.isCorrelation = true;
+                            this.ptitle='关联分支'
                         }else {
                             this.nznot.create('error', '异常', '异常');
                         }
