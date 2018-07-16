@@ -113,7 +113,6 @@ export class SWorkitemComponent implements OnInit {
                             ];
                         } else { // 取消状态不允许修改
                             value.buttonData = [
-
                             ];
                         }
                         value.receiveTime = moment(value.receiveTime).format('YYYY-MM-DD');
