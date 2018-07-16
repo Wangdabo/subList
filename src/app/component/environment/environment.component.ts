@@ -32,12 +32,11 @@ export class EnvironmentComponent implements OnInit {
     }
 
       isClick(d,i) {
-
           if(d == true && i == true){
             this.isActive.emit(i)
           }
             // 此时，代表允许有行为，至于是路由跳转还是弹出框 父组件中进行定义和修改
-        
+
     };
 
      onChange(item) {

@@ -78,7 +78,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </ng-template>
 </nz-modal>
@@ -106,7 +105,7 @@
 </nz-modal>
 
 <!-- 打印-->
-<nz-modal [nzVisible]="isVisible" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter">
+<!--<nz-modal [nzVisible]="isVisible" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter">
     <ng-template #modalTitle>
         导出投放清单
     </ng-template>
@@ -146,13 +145,13 @@
             确定
         </button>
     </ng-template>
-</nz-modal>
+</nz-modal>-->
 
 
 <nz-modal [nzVisible]="mergeisVisible"  [nzWidth]="1024" [nzTitle]="'合并投放 请指定投放日期和环境'"   [nzContent]="dictModal"
           (nzOnCancel)="mergeisVisible=false" (nzOnOk)="savemergeisInfo()" [nzFooter]="is" >
     <ng-template #dictModal>
-    
+
       <nz-steps [(nzCurrent)]="current"  [nzSize]="default">
             <nz-step class="stepwidth" [nzTitle]="'选择环境'" ></nz-step>
             <nz-step  class="stepwidth" [nzTitle]="'核对列表'" ></nz-step>
@@ -160,53 +159,133 @@
       </nz-steps>
 
     <div class="steps-content" >
-        
+
        <app-environment [deliveryTime]="deliveryTime" [isShowDate]="isShowDate" (isActive)="isActive($event)" [elementScice]="elementScice" *ngIf="current === 0"></app-environment>
 
         <app-listfold [headerDate]="mergeHeader"  [buttons] ='buttons'  (buttonData)="buttonDataHandler($event)" (buttonEvent)="buttonEventlist($event)"  [initDate]="initDate" *ngIf="current === 1" ></app-listfold>
-    
+
          <!--<span >2222</span>-->
-       <app-mergelist  *ngIf="current === 2" #child 
-            [iStouchan]="iStouchan" 
-            [guid]="mergeguid" 
-            [istextVisible]="istextVisible" 
+       <app-mergelist  *ngIf="current === 2" #child
+            [iStouchan]="iStouchan"
+            [guid]="mergeguid"
+            [istextVisible]="istextVisible"
             (checkSave)="checkSavemerge($event)"
-            [guidprent]="guidprent" 
-            (buttonClick)="buttonClick($event)" 
-            (mergeClick)="mergeClick($event)" 
-            (returnsclick)="returnsclick($event)" 
+            [guidprent]="guidprent"
+            (buttonClick)="buttonClick($event)"
+            (mergeClick)="mergeClick($event)"
+            (returnsclick)="returnsclick($event)"
             [checkloading]='checkloading'
             [loading] = 'loading'
-            [mergeListData]="mergeListData" 
+            [mergeListData]="mergeListData"
             [checkModalData]='checkModalData'>
-          
+
         </app-mergelist>
-      
+
 
 
 
             <div class="steps-action" >
-                
+
                     <button   nz-button [nzType]="'default'"  (click)="pre()" *ngIf="current > 0">
                         <span>上一步</span>
                     </button>
-                  
-                   
+
+
                     <button  nz-col  [nzOffset]="2"  nz-button [nzType]="'default'" (click)="next()" *ngIf="current < 2" [disabled]="isNext">
                         <span>下一步</span>
                     </button>
-                   
+
                     <button nz-col  nz-button [nzType]="'primary'" [nzOffset]="2"  (click)="done()" *ngIf="current === 2">
                         <span>确认</span>
                     </button>
-                    
+
             </div>
     </div>
-   
-
     </ng-template>
 </nz-modal>
 
+
+<!--导出步骤-->
+<nz-modal [nzVisible]="isVisible"  [nzWidth]="1024" [nzTitle]="'导出类型'"   [nzContent]="modalContent"
+          (nzOnCancel)="isVisible=false" (nzOnOk)="savemergeisInfo()" [nzFooter]="is" >
+    <ng-template #modalContent>
+
+        <nz-steps [(nzCurrent)]="importCurrent" [nzSize]="default">
+            <nz-step  class="importstepwidth" [nzTitle]="'选择时间和环境'" ></nz-step>
+            <nz-step class="importstepwidth" [nzTitle]="'选择工作项'" ></nz-step>
+        </nz-steps>
+        <div class="steps-content">
+            <div *ngIf="importCurrent === 0">
+                <div nz-row [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24" *ngIf="current === 0">
+                    <div nz-col [nzSpan]="12" class="mb-md">
+                        <div nz-form-item class="d-flex">
+                            <div nz-form-label class="alignment"><label for="no">投放日期</label></div>
+                            <div nz-form-control class="flex-1">
+                                <nz-datepicker [(ngModel)]="deliveryTime" [nzFormat]="'YYYY-MM-DD'"    name="deliveryTime" [nzSize]="'large'" [nzPlaceHolder]="'投放日期'" nzId="deliveryTime" class="d-block"></nz-datepicker>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <app-environment [deliveryTime]="exporTime" [isShowDate]="isShowDate" (isActive)="isActive($event)" [elementScice]="elementScice" *ngIf="current === 0"></app-environment>
+            </div>
+            <div *ngIf="importCurrent === 1">
+                <div nz-row [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
+                    <div nz-col [nzSpan]="24" class="mb-md">
+                        <div nz-form-item class="d-flex">
+                            <div nz-form-control class="flex-1">
+                                <div nz-col [nzSpan]="24" class="mb-md">
+                                    <div nz-col [nzSpan]="6">
+                                        工作项名称
+                                    </div>
+                                    <div nz-col [nzSpan]="18">
+                                        <div nz-col [nzSpan]="6" >
+                                            申请别名
+                                        </div>
+                                        <div nz-col [nzSpan]="6">
+                                            投放时间
+                                        </div>
+                                        <div nz-col [nzSpan]="6">
+                                            环境@窗口
+                                        </div>
+                                    </div>
+                                </div>
+                                <div nz-col [nzSpan]="24" class="mb-md" *ngFor="let s of appendSelect ;let l = index">
+                                    <div nz-col [nzSpan]="6">
+                                        <label  nz-checkbox  [(ngModel)]="s.check">&nbsp;&nbsp;<span>{{s.guidWorkitem.target}}</span></label>
+                                    </div>
+                                    <div nz-col [nzSpan]="18">
+                                        <div nz-col [nzSpan]="6" >
+                                            {{s.applyAlias}}
+                                        </div>
+                                        <div nz-col [nzSpan]="6">
+                                            {{ s.deliveryTime | date:'yyyy-MM-dd'}}
+                                        </div>
+                                        <div nz-col [nzSpan]="6">
+                                            {{s.guidProfiles.target}} & {{s.packTiming}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="steps-action" >
+
+                <button   nz-button [nzType]="'default'"  (click)="importpre()" *ngIf="importCurrent > 0">
+                    <span>上一步</span>
+                </button>
+                <button  nz-col  [nzOffset]="2"  nz-button  [nzType]="'default'" (click)="nextImport()" *ngIf="importCurrent < 1"  [disabled]="isNext">
+                    <span>下一步</span>
+                </button>
+                <button nz-col  nz-button [nzType]="'primary'" [nzOffset]="2"  (click)="importSave()" *ngIf="importCurrent === 1">
+                    <span>确认</span>
+                </button>
+
+            </div>
+        </div>
+    </ng-template>
+</nz-modal>
 
   <!--核对清单详细-->
 <nz-modal [nzVisible]="detailVisible"  [nzWidth]="1024" [nzTitle]="'工作项投放申请'"  [nzContent]="detailVisibleModal"
@@ -214,7 +293,7 @@
     <ng-template #detailVisibleModal>
         <div >
              <div  nz-row [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
-            
+
                <div nz-col [nzSpan]="24" class="mb-md">
                 <div  nz-form-item class="d-flex">
                     <div nz-col [nzSpan]="8" [nzOffset]="2"  class="ad-desc-list__term ng-star-inserted">投放清单多的记录</div>
@@ -226,7 +305,7 @@
                 </button>
                 </div>
             </div>
-           
+
 
 
               <div nz-col [nzSpan]="24" class="mb-md">
