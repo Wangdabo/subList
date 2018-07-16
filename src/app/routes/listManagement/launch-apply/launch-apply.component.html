@@ -175,8 +175,11 @@
             (buttonClick)="buttonClick($event)" 
             (mergeClick)="mergeClick($event)" 
             (returnsclick)="returnsclick($event)" 
-            [mergeListData]="mergeData" 
+            [checkloading]='checkloading'
+            [loading] = 'loading'
+            [mergeListData]="mergeListData" 
             [checkModalData]='checkModalData'>
+          
         </app-mergelist>
       
 

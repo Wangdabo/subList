@@ -43,7 +43,6 @@ export class SProfilesComponent implements OnInit {
      
  
 
-    Ptitle: any;
     showAdd: boolean; // 是否有修改
     isShowTotal = true;
     configTitle = '详情'
@@ -52,6 +51,7 @@ export class SProfilesComponent implements OnInit {
     isPagination = true; // 是否有分页
     isCorrelation = false;
      isCancel = false;
+     assVisible = false;
     // 信息
     deliverItem: DeliveryModule = new  DeliveryModule();
     deliveryTime: any; // 投放日期
@@ -96,7 +96,7 @@ export class SProfilesComponent implements OnInit {
     pageTotal: number;
     branshList:any[] = [];
     branch:any;
-
+    Ptitle:any;
 
     ngOnInit() {
         this.token  = this.tokenService.get().token;
@@ -169,6 +169,27 @@ export class SProfilesComponent implements OnInit {
 
     }
         checkBranch(branch){
+            console.log(branch);
+         
+               this.utilityService.getData(appConfig.testUrl  + appConfig.API+'/sBranch/'+branch, {},{Authorization: this.token})
+                .subscribe(
+                    (val) => {
+                        console.log(val)
+                        if(val.code == 200) {
+                            // this.branshList = val.result
+                            // this.isCorrelation = true;
+                          
+                        }else {
+                            this.nznot.create('error', '异常', '异常');
+                        }
+                    }  ,
+                (error)=>{
+                    if(error){
+                          this.nznot.create('error', error.json().msg,'');
+                    }
+                }
+                );
+
             console.log(branch);
         }
 
@@ -299,7 +320,7 @@ export class SProfilesComponent implements OnInit {
             this.mergeVisible = true;
         }
         else if (event.names.key === 'correlation') {
-
+            this.Ptitle='关联分支'
             this.utilityService.getData(appConfig.testUrl  + appConfig.API.getBranch, {},{Authorization: this.token})
 
                 .subscribe(
@@ -337,19 +358,22 @@ export class SProfilesComponent implements OnInit {
                             this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
                         });
         }
-        else if (event.names.key === 'detail') {
-
-            let self = this;
-            this.confirmServ.confirm({
-                title  : '您是否确认要取消关联分支!',
-                showConfirmLoading: true,
-                onOk() {
-                    self.saveCorrelation('Q')
-                },
-                onCancel() {
-                }
-            });
-        }
+       else if (event.names.key  === 'branchDDetail') {
+           let url='/'+event.guid+'/branchDetail'
+                this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfilesadd + url ,{}, {Authorization: this.token})
+                    .subscribe(
+                        (val) => {
+                            console.log(val);
+                             this.branchInfo = true;
+                             this.branchData = val.result;
+                            //  this.branchData.createTime = moment(this.branchData.createTime).format('YYYY-MM-DD');
+                        },
+                        (error) => {
+                            if(error){
+                          this.nznot.create('error', error.json().msg,'');
+                             }
+                        });
+            }
 
     }
 

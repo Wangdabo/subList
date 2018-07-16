@@ -284,6 +284,7 @@ mergeClick(index){
         buttonClick(event){
             let type = event.index;
             let id = event.id;
+            let soyin = event.soyin;
             console.log(type);
             console.log(id);
             if(type=='4'){
@@ -300,17 +301,8 @@ mergeClick(index){
                        
                            this.nznot.create('success',val.msg,'');
                            if(type == 3){
-                             this.mergeListData.forEach((result,i) =>{
-                                 if(result.guid != id){
-                                     this.mergeListData.splice(i,1);
-                                 }
-                                 console.log(this.mergeListData);
-                             })
-                             
+                             this.mergeListData.splice(soyin,1)// 删除数组
                            }
-                           
-                                //    
-                                  
                           }
                          },(error)=>{
                               if(error){
@@ -381,13 +373,19 @@ mergeClick(index){
             patchType:event.patchType,
             deployWhere:event.deployWhere
         }
-        console.log(event)
+    
           this.utilityService.putData( appConfig.testUrl +'/checkLists/'+this.mergeId+'/delivery', obj, {Authorization: this.token})
                         .map(res => res.json())
                          .subscribe(
                          (val) => {
                           if(val.code == 200) {
-                       
+
+                             this.mergeListData.forEach((result,i)=>{
+                                 if(result.guid == this.mergeId){
+                                     this.mergeListData[i].check = true;
+                                 }
+                             })
+                                 console.log(this.mergeListData)
                            this.nznot.create('success',val.msg,'');
                                 //    
                                   
@@ -451,7 +449,7 @@ mergeClick(index){
 
                    if (val.code == 200){
                        this.istextVisible = false;
-                    //    this.detailVisible = false;
+                       this.detailVisible = false;
                        this.nznot.create('success', val.msg, val.msg);
                    }else{
                          this.nznot.create('error', val.msg,'');

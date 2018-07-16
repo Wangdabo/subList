@@ -46,6 +46,7 @@ export class LaunchApplyComponent implements OnInit {
     isPagination = true; // 是否有分页
     istextVisible = false;
     isMergeList = false; // 合并列表模态框
+    checkloading = true;
     // 信息
     deliverItem: DeliveryModule = new  DeliveryModule();
     deliveryTime: any; // 投放日期
@@ -277,7 +278,7 @@ export class LaunchApplyComponent implements OnInit {
 
     current = 0;
 
-    
+    loading:any;
     index = 'First-content';
     
     pre(): void {
@@ -310,13 +311,16 @@ export class LaunchApplyComponent implements OnInit {
         let indexs = '';
         //   this.current += 1;
           let arr = [];
+        this.loading = true;
         // 跳转核对列表
         this.utilityService.getData( url, {}, {Authorization: this.token})
             // .map(res => res.json())
             .subscribe(
                 (val) => {
+                       this.loading = false;
                     console.log(val)
                     if (val.code === '200') {
+                      
                        this.current += 1;
                        console.log(this.current)
                           for(let i = 0;i<val.result.length;i++){
@@ -373,28 +377,38 @@ export class LaunchApplyComponent implements OnInit {
                          .subscribe(
                          (val) => {
                              console.log(val)
+                               this.checkloading = false;
                             this.current += 1;
                          this.checkListVisible = true;
                           this.checkModalData = val.result.deliveryDetails;
                           this.mergeListData  = val.result.mergeLists;
                         for  (let i = 0; i < this.mergeListData.length; i ++) {
+                            this.mergeListData[i]['check'] = null;
                             if (this.mergeListData[i].fullPath) {
+                                
                                 indexs = this.mergeListData[i].fullPath.indexOf(this.mergeListData[i].partOfProject);
                                 this.mergeListData[i].fullPath = this.mergeListData[i].fullPath.substring(indexs, this.mergeListData[i].fullPath.length);
                             }
                         }
-                         for  (let i = 0; i < this.checkModalData.length; i ++) {
+
+                              for  (let i = 0; i < this.checkModalData.length; i ++) {
+                                      this.guidprent[i]['guid']=this.checkModalData[i].delivery.guid;
+                                      this.guidprent[i]['guidWorkitem']=this.checkModalData[i].delivery.guidWorkitem.target
                             for (let j = 0; j < this.checkModalData[i].detailList.length; j ++) {
                                 for (let x = 0; x < this.checkModalData[i].detailList[j].deliveryPatchDetails.length; x ++) {
                                     for (let  y = 0; y < this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList.length; y ++) {
+                                           this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y]['buttons'] = null
                                         if (this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath) {
                                             index = this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.indexOf(this.checkModalData[i].detailList[j].projectName);
                                             this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath = this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.substring(index, this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.length);
-                                        }
+                                      
+
+                              }
                                     }
                                 }
                             }
                         }
+                  
                                 }
                                 ,(error)=>{
                                   if(error){
@@ -680,6 +694,7 @@ export class LaunchApplyComponent implements OnInit {
                 (val) => {
                     console.log(val)
                     if (val.code == 200) {
+                        
                         this.nznot.create('success', val.msg, val.msg);
                     }else {
                         this.nznot.create('error', val.msg, val.msg);
@@ -709,6 +724,7 @@ export class LaunchApplyComponent implements OnInit {
     buttonClick(event){
             let type = event.index;
             let id = event.id;
+            let soyin = event.soyin;
             console.log(type);
             console.log(id);
             if(type=='4'){
@@ -724,16 +740,9 @@ export class LaunchApplyComponent implements OnInit {
                           if(val.code == 200) {
                        
                            this.nznot.create('success',val.msg,'');
-                           if(type == 3){
-                             this.mergeData.forEach((result,i) =>{
-                                 if(result.guid != id){
-                                     this.mergeData.splice(i,1);
-                                 }
-                                 console.log(this.mergeData);
-                             })
-                             
+                          if(type == 3){
+                             this.mergeListData.splice(soyin,1)// 删除数组
                            }
-                           
                                 //    
                                   
                           }
