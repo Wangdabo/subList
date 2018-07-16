@@ -365,6 +365,7 @@ export class LaunchApplyComponent implements OnInit {
                         .map(res => res.json())
                          .subscribe(
                          (val) => {
+                             console.log(val)
                             this.current += 1;
                          this.checkListVisible = true;
                           this.checkModalData = val.result.deliveryDetails;
