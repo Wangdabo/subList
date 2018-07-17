@@ -1,8 +1,8 @@
 export let appConfig = {
     ABFUrl: 'http://localhost:3000', // 根路径地址
     RootUrl: 'http://localhost:30001', // 其他地址
-    // testUrl: 'http://106.15.103.14:28080',
-    testUrl: 'http://192.168.43.136:28080',
+    testUrl: 'http://106.15.103.14:28080',
+    // testUrl: 'http://192.168.43.136:28080',
 
     // 所有接口名
     API: {
@@ -25,6 +25,7 @@ export let appConfig = {
         list: '/deliveries/list', //
         mergeInfo: '/deliveries/merge/info', // 合并投放清单信息
         merge: '/deliveries/merge',
+         deliveries: '/deliveries',
         // 分支
         sBranch: '/sBranch/list', // 分支查询
         sBranchadd: '/sBranch', // 分支增加

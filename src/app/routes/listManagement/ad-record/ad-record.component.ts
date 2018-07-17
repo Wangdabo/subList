@@ -79,8 +79,8 @@ export class AdRecordComponent implements OnInit {
     }
     buttonData = [
         {key: 'merge', value: '核对',if:false },
-        {key: 'dels', value: '删除',if:false },
-         {key: 'details', value: '详情',if:false }
+        // {key: 'dels', value: '删除',if:false },
+        //  {key: 'details', value: '详情',if:false }
     ]
      
 
@@ -123,6 +123,7 @@ export class AdRecordComponent implements OnInit {
     addHandler(event) {
 
         if (event === 'merge') {
+
             
             // this.mergeVisible = true;
         } else if (event === 'checking') {
@@ -151,24 +152,30 @@ export class AdRecordComponent implements OnInit {
              {guid:'',
             guidWorkitem:''
         }
-
+            
          ]
+         
+        
+         
     // 按钮点击事件
     idcheck:any
+    checkloading:any;
     buttonEvent(event) {
         this.mergeId = event.guid;
-       console.log(event)
+
         if (event.names.key === 'merge') {
+
             this.idcheck = event.guid;
               let index = '';
               let indexs = '';
              this.detailVisible = true;
+              this.checkloading = true;
              this.utilityService.getData( appConfig.testUrl +'/checks/'+event.guid, {}, {Authorization: this.token})
                         // .map(res => res.json())
                          .subscribe(
                          (val) => {
                            console.log(val);
-
+                            this.checkloading = false;
                           this.detailVisible = true;
                           this.checkModalData = val.result.deliveryDetails;
                           this.mergeListData  = val.result.mergeLists;
@@ -195,7 +202,7 @@ export class AdRecordComponent implements OnInit {
                                 }
                             }
                         }
-                        console.log(this.guidprent)
+                        
                                 }
                                 ,(error)=>{
                                     console.log(error)
