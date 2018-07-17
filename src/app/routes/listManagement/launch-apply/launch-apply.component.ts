@@ -6,8 +6,11 @@ import {appConfig} from '../../../service/common';
 import {NzModalService, NzNotificationService} from 'ng-zorro-antd';
 import {Router} from '@angular/router';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
-// import { catchError, map, tap } from 'rxjs/operators';
+import { ResponseContentType } from '@angular/http';
+
+
 import * as moment from 'moment';
+import * as _ from 'lodash';
 @Component({
     selector: 'app-launch-apply',
     templateUrl: './launch-apply.component.html',
@@ -977,7 +980,7 @@ export class LaunchApplyComponent implements OnInit {
 
     importCurrent = 0;
     // 导出接口
-
+    // 查询导出环境和窗口
     isClick() {
 
     }
@@ -997,13 +1000,17 @@ export class LaunchApplyComponent implements OnInit {
             if (this.elementScice[i].check && this.elementScice[i].times) {
                 profiles = this.elementScice[i].guid;
                 packTiming = this.elementScice[i].times;
-
             }
         }
+        let exportObj = {
+            deliveryTime: moment(this.deliveryTime).format('YYYY-MM-DD'),
+            packTiming: packTiming,
+            guidProfile: profiles
+        };
 
         let url = '';
         if (profiles !== '' && packTiming !== '') {
-            url = appConfig.testUrl + '/checks/profiles/' + profiles + '/packTiming/' + packTiming;
+            url = appConfig.testUrl + appConfig.API.export;
         }else {
             this.nznot.create('error', '请选择运行环境！', '请选择运行环境！');
             return;
@@ -1011,43 +1018,95 @@ export class LaunchApplyComponent implements OnInit {
 
         if (this.current === 0) {
             // 测试接口,先测试
-            this.utilityService.getData(appConfig.testUrl  + '/deliveries/' +  + '17' + '/addTo', {}, {Authorization: this.token})
+            console.log(url)
+            this.utilityService.postData( url, exportObj,  {Authorization: this.token})
+                .map(res => res.json())
                 .subscribe(
                     (val) => {
                         this.appendSelect = val.result;
+                        this.importCurrent += 1;
+                        this.changeContent();
+                    },
+                    (error) => {
+                        this.importCurrent = 0;
+                        this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
                     }
                 );
-
-
-            /* let index = '';
-             let indexs = '';
-             //   this.current += 1;
-             let arr = [];
-             this.loading = true;
-             // 跳转核对列表
-             this.utilityService.getData( url, {}, {Authorization: this.token})
-                 .subscribe(
-                     (val) => {
-                       console.log(val)
-                     })*/
         }
 
-        console.log(this.deliveryTime);
-       for (let i = 0; i < this.elementScice.length; i ++) {
-           if (this.elementScice[i].check && this.elementScice[i].times) {
-               console.log(this.elementScice[i]);
-           }
-       }
-        this.importCurrent += 1;
-        this.changeContent();
     }
+
+
+
+/*    downloadFile(): Observable<Blob> {
+
+        let applicationsUrl = appConfig.testUrl + appConfig.API.excel + '/124/excel';
+        console.log(applicationsUrl);
+        let headers = new Headers({Authorization: this.token});
+        console.log(headers);
+        let options = new RequestOptions({ headers: headers,  responseType: ResponseContentType.Blob });
+
+      /!*  return this.http.get(applicationsUrl, options)
+            .map(res => res.blob())
+            .subscribe(
+                (val) => {
+                    console.log(val)
+                })
+            .catch(this.handleError);*!/
+      return   this.utilityService.getData(applicationsUrl , {}, {Authorization: this.token})
+                .map(res => res.blob())
+                .subscribe(
+                      (val) => {
+
+                      })
+                .catch(this.handleError);
+
+    }*/
+
+/*    this.myService.downloadFile(this.id).subscribe(blob => {
+    importedSaveAs(blob, this.fileName);
+}
+)*/
 
 
 
     // 保存
     importSave() {
-        this.isVisible = true;
+        /*let headers = new Headers();
+        headers.append('Authorization', this.token);
+        return this.utilityService.getData(appConfig.testUrl + appConfig.API.excel + '/124/excel' , {}, headers)
+            .map(res => new Blob([res._body], { type: 'application/vnd.ms-excel' })
+            .subscribe(
+                    (val) => {
+                        console.log(val)
+                    }
+             )*/
+
+
+        /* downloadFile().subscribe(blob => {
+             importedSaveAs(blob, '123.xls');
+         });
+       */
+
+        let workGuid = ''
+        _.forEach(this.appendSelect , function (select) {
+            if (select.check) {
+                workGuid = select.guid;
+            }
+        })
+
+        this.utilityService.getData( appConfig.testUrl + appConfig.API.excel + '/' + workGuid + '/excel', { responseType: 'blob' }, {Authorization: this.token})
+            .subscribe(
+                (val) => {
+                   console.log(val);
+                });
+
+
+
+        this.isVisible = false;
     }
+
+
 
 
 }

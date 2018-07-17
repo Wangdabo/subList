@@ -104,16 +104,21 @@ export class SWorkitemComponent implements OnInit {
                     this.pageTotal = val.result.pages * 10;
                     _.forEach(this.data , function (value) {
                         if (value.itemStatus === '开发中') {
-                            value.buttonData = [
-                                {key: 'upd', value: '修改'},
-                                {key: 'cenel', value: '取消'},
-                                {key: 'association', value: '关联分支'},
-                                {key: 'close', value: '取消分支'},
-                                {key: 'branchDDetail', value: '分支详情'}
-                            ];
-                        } else { // 取消状态不允许修改
-                            value.buttonData = [
-                            ];
+                            if (value.fullPath !== '') { // 说明存在分支
+                                value.buttonData = [
+                                    {key: 'upd', value: '修改'},
+                                    {key: 'cenel', value: '取消'},
+                                    {key: 'close', value: '取消分支'},
+                                    {key: 'branchDDetail', value: '分支详情'}
+
+                                ];
+                            } else {
+                                value.buttonData = [
+                                    {key: 'upd', value: '修改'},
+                                    {key: 'cenel', value: '取消'},
+                                    {key: 'association', value: '关联分支'},
+                                ];
+                            }
                         }
                         value.receiveTime = moment(value.receiveTime).format('YYYY-MM-DD');
                         value.developStartTime = moment(value.developStartTime).format('YYYY-MM-DD');
@@ -285,7 +290,6 @@ export class SWorkitemComponent implements OnInit {
         } else {
         }
 
-
         if (this.isEdit) { // 修改
             this.utilityService.putData(appConfig.testUrl  + appConfig.API.sWorkitem , this.workAdd, {Authorization: this.token})
                 .map(res => res.json())
@@ -293,8 +297,12 @@ export class SWorkitemComponent implements OnInit {
                     (val) => {
                         this.nznot.create('success', val.msg , val.msg);
                         this.getData();
+                    },
+                    error => {
+                        this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
                     }
-                );
+                )
+            ;
         } else {
             this.utilityService.postData(appConfig.testUrl  + appConfig.API.sWorkitem, this.workAdd,  {Authorization: this.token})
                 .map(res => res.json())
@@ -302,6 +310,9 @@ export class SWorkitemComponent implements OnInit {
                     (val) => {
                         this.nznot.create('success', val.msg , val.msg);
                         this.getData();
+                    },
+                    error => {
+                        this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
                     }
                 );
         }
