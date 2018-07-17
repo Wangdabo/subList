@@ -44,7 +44,12 @@ export class MergelistComponent implements OnInit {
     @Output()
     checkSave:EventEmitter<any> = new EventEmitter();
 
-    arr : any[] = []
+    arr ={
+        guidDelivery:'',
+        deployWhere:'',
+        patchType:'',
+
+    }
 
     // deliveryTime
     constructor(private http: _HttpClient,
@@ -56,6 +61,7 @@ export class MergelistComponent implements OnInit {
         this.elementScice = this.elementScice;
         this.checkloading = false;
         this.loading = false;
+         console.log(this.guidprent);
     }
 
       isClick(d,i) {
@@ -81,7 +87,12 @@ export class MergelistComponent implements OnInit {
     }
     sonbuttonClick(index,it,suoyin) {
           console.log(it)
-         this.arr = [];
+         this.arr = {
+                guidDelivery:'',
+                deployWhere:'',
+                patchType:'',
+
+            };
 
      
         switch(index){

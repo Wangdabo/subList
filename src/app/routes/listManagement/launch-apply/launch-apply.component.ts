@@ -452,26 +452,27 @@ export class LaunchApplyComponent implements OnInit {
     // 按钮点击事件
     buttonEventlist(event) {
         console.log(event)
+        if(event.names.key == 'dels'){
+   
+            this.utilityService.deleatData(appConfig.testUrl  + appConfig.API.deliveries + '/' + event.guid , {Authorization: this.token})
+                            // .map(res => res.json())
+                            .subscribe(
+                                (val) => {
+                                    if(val.code == 200){
+                                    this.nznot.create('success', val.msg , val.msg);
+                                 }else{
+                             this.nznot.create('error', val.msg , val.msg);
+                                      }
+                                },
+                                (error)=>{
+                                 if(error){
+                                      this.nznot.create('error',error.json().msg,error.json().msg);
+                                 }
+                                }
+                            );
+        }
 
-        let url ='/deliveries/'+event+'/merge'
-            this.utilityService.putData(appConfig.testUrl  + url,{}, { Authorization: this.token})
-            .map(res => res.json())
-            .subscribe(
-                (val) => {
-                    console.log(val)
-                    if (val.code == 200) {
-                       this.nznot.create('success', val.msg, val.msg);
-                     }else {
-                         this.nznot.create('error', val.msg, val.msg);
-                     }
-
-                },
-                (error) =>{
-                    if(error){
-                          this.nznot.create('error', error.json().msg,'');
-                    }
-
-                })
+        
 
     }
 
