@@ -236,12 +236,13 @@ export class SProfilesComponent implements OnInit {
     // 表格数据按钮
     buttonData = [
         { key: 'dels', value: '删除' },
-        { key: 'upd', value: '修改' },
+        { key: 'upd', value: '修改'},
         {key: 'correlation', value: '关联分支'},
-        // {key: 'detail', value: '取消分支'},
+        {key: 'detail', value: '取消分支'},
          {key: 'branchDDetail', value: '分支详情'}
         
     ];
+   
    
 
     getData() {
@@ -264,14 +265,6 @@ export class SProfilesComponent implements OnInit {
                         for ( let i = 0; i < this.data.length; i++) {
                             
                             this.data[i].buttonData = this.buttonData
-                            if(this.data[i].fullPath != ''&& this.data[i].fullPath){
-                                this.data[i].buttonData.forEach((result,j) =>{
-                                    if(result.key == 'correlation'){
-                                         this.data[i].buttonData[j].key = 'detail'
-                                          this.data[i].buttonData[j].value = '取消分支'
-                                    }
-                                })
-                            }
                             if(this.data[i].isAllowDelivery == '1'){
                                 this.data[i].isAllowDelivery = true
                             }else{
