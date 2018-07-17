@@ -36,7 +36,7 @@ export class SBranchComponent implements OnInit {
     ngOnInit() {
         this.token = this.tokenService.get().token;
         this.getData();
-        this.showAdd = false;
+        // this.showAdd = true;
         this.ptitle = '信息提示'
         
     }
@@ -48,8 +48,8 @@ export class SBranchComponent implements OnInit {
         {value: '创建人', key: 'creater', isclick: false},
         {value: '创建时间', key: 'createTime', isclick: false},
         {value: '分支作用说明', key: 'branchFor', isclick: false},
-        {value: '分支当前版本', key: 'currVersion', isclick: false},
-        {value: '分支起始版本', key: 'lastVersion', isclick: false},
+        // {value: '分支当前版本', key: 'currVersion', isclick: false},
+        // {value: '分支起始版本', key: 'lastVersion', isclick: false},
     ];
     total: number;
     pageTotal: number;
@@ -69,14 +69,21 @@ export class SBranchComponent implements OnInit {
         {key: 'hot', value: 'H' ,selector:false},
         {key: 'release', value: 'R' ,selector:false},
     ]
-    search = [];
+    search = {
+        branchType:'',
+        fullPath:'',
+        branchFor:''
+    };
     getData() {
+        console.log(this.search)
             const page = {
+                condition:this.search,
                 page: {
                     size: 10,
                     current: this.branch.page
                 }
             };
+            console.log(page);
             
             this.utilityService.postData(appConfig.testUrl + appConfig.API.sBranch, page, {Authorization: this.token})
                 .map(res => res.json())

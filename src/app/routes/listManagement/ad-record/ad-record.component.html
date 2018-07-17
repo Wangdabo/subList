@@ -22,7 +22,7 @@
 
  <!--核对详情-->
 <nz-modal [nzVisible]="detailVisible" [nzMaskClosable]="false" [nzWidth]="1024" [nzTitle]="'核对详情'"   [nzContent]="modals"
-          (nzOnCancel)="detailVisible=false"  (nzOnOk)="returnsclick(2,guid)" [nzFooter]="foor" nzZIndex=1>
+          (nzOnCancel)="detailVisible=false"  (nzOnOk)="returnsclick(2,guid)" [nzFooter]="foor" nzZIndex=800>
     <ng-template #modals>
         <nz-card [nzBordered]="false">
      <app-mergelist  #child 
