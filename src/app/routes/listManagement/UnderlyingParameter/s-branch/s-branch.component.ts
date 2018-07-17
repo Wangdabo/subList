@@ -28,10 +28,10 @@ export class SBranchComponent implements OnInit {
     branch: SbranchModule = new  SbranchModule();
     
     token: any;
-    showAdd = false;
+    showAdd = true;
     isShowTotal = true;
     isPagination = true;
-   ptitle:any
+    ptitle:any
     // showTa
     ngOnInit() {
         this.token = this.tokenService.get().token;
@@ -69,6 +69,7 @@ export class SBranchComponent implements OnInit {
         {key: 'hot', value: 'H' ,selector:false},
         {key: 'release', value: 'R' ,selector:false},
     ]
+    search = [];
     getData() {
             const page = {
                 page: {
@@ -91,10 +92,8 @@ export class SBranchComponent implements OnInit {
                             for (let i = 0 ; i <  this.data.length; i ++) {
                                 this.data[i].buttonData = this.buttonData;
                                this.data[i].createTime = moment(this.data[i].createTime).format('YYYY-MM-DD');
-                                  this.branchType.forEach( function (i) {
-                        
-                    
-                                })
+                             
+                                  
                           }
                         
                         }else{
