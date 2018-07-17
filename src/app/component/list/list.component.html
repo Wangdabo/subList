@@ -1,4 +1,4 @@
-<!--  列表组件 -->
+ <!--  列表组件 -->
 <div class="mb-md">
       <div *ngIf="isShowTotal == true">
           <button  *ngFor="let s of buttons;let l = index" style="margin-right: 1%"   nz-button  (click)="add(s.key)"  [nzType]="'primary'" [nzSize]="'large'">
@@ -125,10 +125,11 @@
             <!--查看日志详情页面-->
             <!--<a *ngIf="showAdd" style="color:#108ee9;" (click)="add(i)">{{configTitle}}</a>&nbsp;-->
             <a *ngFor="let c of i.buttonData" style="color:#108ee9;" (click)="buttonClick(i, c, l)">
-             {{c.value}} &nbsp;
+                   {{c.value}} &nbsp;
+                
+                </a>
+              
             
-                </a>&nbsp;
-            <!--<a *ngFor="let c of i.buttonDataBranch" style="color:#108ee9;" (click)="buttonClick(i, c, l)">{{c.value}}&nbsp;</a>&nbsp;-->
         </td>
     </tr>
       <tr nz-tbody-tr *ngIf="data.expand">

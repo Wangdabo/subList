@@ -235,14 +235,18 @@ export class SProfilesComponent implements OnInit {
 
     // 表格数据按钮
     buttonData = [
-        { key: 'dels', value: '删除' },
-        { key: 'upd', value: '修改'},
+        {key: 'dels', value: '删除' },
+        {key: 'upd', value: '修改'},
         {key: 'correlation', value: '关联分支'},
-        {key: 'detail', value: '取消分支'},
-         {key: 'branchDDetail', value: '分支详情'}
+        {key: 'branchDDetail', value: '详情'}
         
     ];
-   
+   buttonDataBranch = [
+        {key: 'dels', value: '删除' },
+        {key: 'upd', value: '修改'},
+        {key: 'detail', value: '取消分支'},
+        {key: 'branchDDetail', value: '详情'}
+   ]
    
 
     getData() {
@@ -263,8 +267,17 @@ export class SProfilesComponent implements OnInit {
                         this.total = val.result.total; // 总数
                         this.pageTotal = val.result.pages * 10; // 页码
                         for ( let i = 0; i < this.data.length; i++) {
-                            
-                            this.data[i].buttonData = this.buttonData
+                         
+                           
+                            // this.data[i].buttonDataBranch = this.buttonDataBranch
+                            if(this.data[i].fullPath == ''){
+                                  this.data[i].buttonData = this.buttonData
+                                //   this.buttonData.push({key:'correlation',value:'关联分支'})
+                            }else{
+                              this.data[i].buttonData = this.buttonDataBranch
+                         
+                           }
+                           
                             if(this.data[i].isAllowDelivery == '1'){
                                 this.data[i].isAllowDelivery = true
                             }else{
