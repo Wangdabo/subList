@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import {
     FormBuilder,
     FormGroup,
@@ -22,7 +22,7 @@ import * as moment from 'moment';
     templateUrl: './s-profiles.component.html',
 })
 export class SProfilesComponent implements OnInit {
-
+//    @ViewChild('time') private d1: ElementRef;   
     constructor(
         private http: _HttpClient,
         private router: Router,
@@ -31,7 +31,8 @@ export class SProfilesComponent implements OnInit {
         private nznot: NzNotificationService,
         private fb: FormBuilder,
         @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
-        private confirmServ: NzModalService
+        private confirmServ: NzModalService,
+        private renderer: Renderer2
     ) {
         
      }
@@ -96,6 +97,7 @@ export class SProfilesComponent implements OnInit {
     branshList:any[] = [];
     branch:any;
     Ptitle:any;
+    time = new Date();
 
     ngOnInit() {
         this.token  = this.tokenService.get().token;
@@ -104,17 +106,42 @@ export class SProfilesComponent implements OnInit {
 
     }
 
-   submitForm() {
-
-        let arr = [];
-        let objarr = [];
-        this.profiles.checkOptionsOne.forEach( function (i) {
-            console.log(i)
-            if(i.checked == true) {
-                arr.push(i.value)
+            public tags = [];
+            public inputVisible = false;
+            public inputValue = '';
+            // @ViewChild('input') input: NzInputDirectiveComponent;
+            @ViewChild('input') private input: ElementRef;   
+            handleClose(removedTag: any): void {
+                this.tags = this.tags.filter(tag => tag !== removedTag);
             }
-        })
-        this.profiles.packTiming = arr.join(',')
+
+            sliceTagName(tag: string): string {
+                const isLongTag = tag.length > 20;
+                return isLongTag ? `${tag.slice(0, 20)}...` : tag;
+            }
+
+            showInput(): void {
+                this.inputVisible = true;
+                setTimeout(() => {
+                    this.input.nativeElement.focus();
+                }, 10);
+            }
+
+            handleInputConfirm(): void {
+                if (this.inputValue) {
+                    this.tags.push(this.inputValue);
+                }
+                this.inputValue = '';
+                this.inputVisible = false;
+            }
+   submitForm() {
+        console.log(this.tags);
+        let objarr = [];
+        if(this.tags.length == 0){
+              this.nznot.create('errpr', '请添加打包窗口', '');
+              return;
+        }
+        this.profiles.packTiming = this.tags.join(',')
         if ( ! this.profiles.guid ) {
             // this.profiles.isAllowDelivery = ' ';
             this.utilityService.postData(appConfig.testUrl  + appConfig.API.sProfilesadd, this.profiles, {Authorization: this.token})
@@ -128,7 +155,7 @@ export class SProfilesComponent implements OnInit {
 
                             this.nznot.create('success', val.msg, val.msg);
                         }else {
-                            this.nznot.create('error', '异常', '异常');
+                            this.nznot.create('error',val.msg, val.msg);
                         }
                     }  ,
                 (error)=>{
@@ -150,7 +177,7 @@ export class SProfilesComponent implements OnInit {
                             this.mergeVisible = false;
                             this.nznot.create('success', val.msg, val.msg);
                         }else {
-                            this.nznot.create('error', '异常', '异常');
+                            this.nznot.create('error',val.msg, val.msg);
                         }
                     } ,
                 (error)=>{
@@ -211,7 +238,7 @@ export class SProfilesComponent implements OnInit {
         { key: 'dels', value: '删除' },
         { key: 'upd', value: '修改' },
         {key: 'correlation', value: '关联分支'},
-        {key: 'detail', value: '取消分支'},
+        // {key: 'detail', value: '取消分支'},
          {key: 'branchDDetail', value: '分支详情'}
         
     ];
@@ -235,7 +262,16 @@ export class SProfilesComponent implements OnInit {
                         this.total = val.result.total; // 总数
                         this.pageTotal = val.result.pages * 10; // 页码
                         for ( let i = 0; i < this.data.length; i++) {
+                            
                             this.data[i].buttonData = this.buttonData
+                            if(this.data[i].fullPath != ''&& this.data[i].fullPath){
+                                this.data[i].buttonData.forEach((result,j) =>{
+                                    if(result.key == 'correlation'){
+                                         this.data[i].buttonData[j].key = 'detail'
+                                          this.data[i].buttonData[j].value = '取消分支'
+                                    }
+                                })
+                            }
                             if(this.data[i].isAllowDelivery == '1'){
                                 this.data[i].isAllowDelivery = true
                             }else{
@@ -302,11 +338,14 @@ export class SProfilesComponent implements OnInit {
                                     self.getData();
                                     self.nznot.create('success', val.msg, val.msg);
                                 }else {
-                                    self.nznot.create('error', '异常', '异常');
+                                    self.nznot.create('error',val.msg,'');
                                 }
                             }   ,
                             (error) => {
-                                self.nznot.create('error', '异常', '异常');
+                                if(error){
+                                       self.nznot.create('error',error.json().msg,'');
+                                }
+                             
                             }
                         );
                 },
@@ -347,10 +386,12 @@ export class SProfilesComponent implements OnInit {
                             this.Ptitle='关联Release分支'
                           if(this.branshList.length == 0){
                                      this.tips = true;
+                          }else{
+                               this.tips = false;
                           }
                             
                         }else {
-                            this.nznot.create('error', '异常', '异常');
+                            this.nznot.create('error', val.msg, val.msg);
                         }
                     }  ,
                 (error)=>{
@@ -409,6 +450,7 @@ export class SProfilesComponent implements OnInit {
                 (val) => {
                     console.log(val)
                     if(val.code == 200) {
+                        this.getData()
                         this.nznot.create('success', val.msg, val.msg);
                         this.branch = null;// 清空
                         this.isCorrelation = false;

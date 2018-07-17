@@ -20,7 +20,7 @@
                 <thead nz-thead>
                     <tr>
                     <th nz-th><span>代码</span></th>
-                    <th nz-th><span>名称</span></th>
+                    <th nz-th ><span>名称</span></th>
                     <th nz-th><span>路径</span></th>
                    <th nz-th><span>类型</span></th>
                     <th nz-th><span>部署于</span></th>
@@ -145,7 +145,7 @@
          </div>
 
    <nz-modal [nzVisible]="istextVisible"  [nzWidth]="600" [nzTitle]="'请输入打回理由（选填）'"   [nzContent]="modaltextTitle"
-          (nzOnCancel)="istextVisible=false"  (nzOnOk)="sonreturnsclick(2,guid)" >
+          (nzOnCancel)="istextVisible=false"  (nzOnOk)="sonreturnsclick(2,guid)" nzZIndex=1000>
       <ng-template #modaltextTitle>
         <textarea rows="6"  nz-input [(ngModel)]="inputValue" ></textarea>
     </ng-template>
