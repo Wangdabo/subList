@@ -44,6 +44,10 @@ export let appConfig = {
         // 基础参数---分支
         notAllot: '/sWorkitem/relevanceBranch',
 
+        // 导出清单
+        export: '/deliveries/excels', // 查询可导出工作项
+        excel: '/checks/delivery', // 导出接口
+
 
     },
 

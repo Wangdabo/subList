@@ -65,19 +65,21 @@ export class SubListComponent implements OnInit {
     isShowTotal  = true;
     appendTitle: string; // 弹窗名称
     appendSelect: any; // 可追加的环境和方法
+
     ngOnInit() {
         this.active = false;
         this.reset = false;
         this.token  = this.tokenService.get().token; // 绑定token
         this.userName  = this.tokenService.get().name; // 绑定token
-        this.getworkData(); // 调用工作项信息
         this.getcheckOptionOne();
         this.copysplicingObj = {};
         this.copysplicingObj.dliveryAddRequest = {};
         this.copysplicingObj.dliveryAddRequest.profiles = [];
         this.copysplicingObj.deliveryList = [];
-
     }
+
+
+
 
     // 调用初始化工作项信息
     getworkData() {
@@ -89,8 +91,13 @@ export class SubListComponent implements OnInit {
             );
     }
 
+
+    openChange() {
+        this.getworkData(); // 调用工作项信息
+    };
     // 下拉框选择
     checkSelect(event) {
+        console.log(event)
         for (var i = 0; i < this.workItem.length; i ++ ) {
             if (this.workItem[i].guid === event) {
                 this.workItemInfo = this.workItem[i];
@@ -592,7 +599,6 @@ export class SubListComponent implements OnInit {
 
         }
         if (this.isGou) {
-
             this.utilityService.getData(appConfig.testUrl  + '/deliveries/' +  + this.workItemInfo.guid + '/addTo', {}, {Authorization: this.token})
                 .subscribe(
                     (val) => {
@@ -688,7 +694,6 @@ export class SubListComponent implements OnInit {
                     this.launchVisible = true; // 查看追加详情
                 }
             );
-
     }
 
 
