@@ -87,7 +87,6 @@ export class SProfilesComponent implements OnInit {
     }
     buttons = [
         {key: 'add', value: '新增', if: true},
-        {key: 'ces', value: '测试', if: true},
     ]
 
     test: string;
@@ -168,19 +167,33 @@ export class SProfilesComponent implements OnInit {
 
 
     }
+    isShowDetail = false;
+    branchDetali = [
+        // {fullPath:''},
+        //  {currVersion:''},
+        //   {creater:''},
+    ]
+    isShowIp = false;
+            checkIp(ip){
+              let MOBILE_REGEXP =/^(?:(?:1[0-9][0-9]\.)|(?:2[0-4][0-9]\.)|(?:25[0-5]\.)|(?:[1-9][0-9]\.)|(?:[0-9]\.)){3}(?:(?:1[0-9][0-9])|(?:2[0-4][0-9])|(?:25[0-5])|(?:[1-9][0-9])|(?:[0-9]))$/;
+              console.log(); 
+              if(MOBILE_REGEXP.test(ip)==true){
+                      this.isShowIp = false
+              }else{
+                  this.isShowIp = true;
+              }
+            }
         checkBranch(branch){
             console.log(branch);
-         
-               this.utilityService.getData(appConfig.testUrl  + appConfig.API+'/sBranch/'+branch, {},{Authorization: this.token})
+             this.isShowDetail = true
+               this.utilityService.getData(appConfig.testUrl  + appConfig.API.sBranchadd+'/'+branch, {},{Authorization: this.token})
                 .subscribe(
                     (val) => {
                         console.log(val)
                         if(val.code == 200) {
-                            // this.branshList = val.result
-                            // this.isCorrelation = true;
-                          
+                            this.branchDetali = val.result;
                         }else {
-                            this.nznot.create('error', '异常', '异常');
+                            this.nznot.create('error', val.msg ,val.msg);
                         }
                     }  ,
                 (error)=>{
@@ -267,6 +280,7 @@ export class SProfilesComponent implements OnInit {
     branchInfo = false; // 弹出框 默认为false
     branchData: BranchModule = new BranchModule();
     branchdataInfo: boolean; // 分支详情
+    tips = false;
     // 按钮点击事件
     buttonEvent(event) {
 
@@ -328,8 +342,12 @@ export class SProfilesComponent implements OnInit {
                         console.log(val)
                         if(val.code == 200) {
                             this.branshList = val.result
+                            this.isShowDetail = false;
                             this.isCorrelation = true;
                             this.Ptitle='关联Release分支'
+                          if(this.branshList.length == 0){
+                                     this.tips = true;
+                          }
                             
                         }else {
                             this.nznot.create('error', '异常', '异常');
@@ -344,20 +362,7 @@ export class SProfilesComponent implements OnInit {
 
 
         }
-        else if (event.names.key === 'branchDDetail') {
-                   
-
-          this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfilesadd + '/' + event.guid + '/branchDetail' ,{}, {Authorization: this.token})
-                    .subscribe(
-                        (val) => {
-                             this.branchInfo = true;
-                             this.branchData = val.result;
-                             this.branchData.createTime = moment(this.branchData.createTime).format('YYYY-MM-DD');
-                        },
-                        (error) => {
-                            this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
-                        });
-        }
+      
        else if (event.names.key  === 'branchDDetail') {
            let url='/'+event.guid+'/branchDetail'
                 this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfilesadd + url ,{}, {Authorization: this.token})
@@ -366,13 +371,26 @@ export class SProfilesComponent implements OnInit {
                             console.log(val);
                              this.branchInfo = true;
                              this.branchData = val.result;
-                            //  this.branchData.createTime = moment(this.branchData.createTime).format('YYYY-MM-DD');
+                             this.branchData.createTime = moment(this.branchData.createTime).format('YYYY-MM-DD');
                         },
                         (error) => {
                             if(error){
                           this.nznot.create('error', error.json().msg,'');
                              }
                         });
+            }    else if (event.names.key  === 'detail') {
+
+           
+            let self = this;
+            this.confirmServ.confirm({
+                title  : '您是否确认要取消关联分支!',
+                showConfirmLoading: true,
+                onOk() {
+                    self.saveCorrelation('Q')
+                },
+                onCancel() {
+                }
+            });
             }
 
     }
