@@ -31,7 +31,7 @@ export class LaunchApplyComponent implements OnInit {
     ngOnInit() {
         this.token  = this.tokenService.get().token;
         this.userName = this.tokenService.get().name;
-        this.getData(1);
+        this.getData();
         this.showAdd = true;
         console.log(this.isNext);
 
@@ -125,15 +125,15 @@ export class LaunchApplyComponent implements OnInit {
     mergeListData: any[] = []; // 核查有异议的数据
     isShowDate = false;
     detailVisible = false;
-
+     currentpage = 1;
     inputValue = '';
 
-        getData(index) {
+        getData() {
 
             const page = {
                 page : {
                     size: 10,
-                    current : index
+                    current :  this.currentpage
                 }
             };
             this.utilityService.postData(appConfig.testUrl  + appConfig.API.list, page, { Authorization: this.token})
@@ -240,10 +240,11 @@ export class LaunchApplyComponent implements OnInit {
             console.log('详情界面');
         }
     }
-
+   
     // 列表传入的翻页数据
     monitorHandler(event) {
-        this.getData(event);
+      this.currentpage = event;
+        this.getData();
     }
 
     // 接受子组件删除的数据 单条还是多条
@@ -455,13 +456,14 @@ export class LaunchApplyComponent implements OnInit {
         if(event.names.key == 'dels'){
    
             this.utilityService.deleatData(appConfig.testUrl  + appConfig.API.deliveries + '/' + event.guid , {Authorization: this.token})
-                            // .map(res => res.json())
+                            .map(res => res.json())
                             .subscribe(
                                 (val) => {
                                     if(val.code == 200){
                                     this.nznot.create('success', val.msg , val.msg);
+                                    this.getData()
                                  }else{
-                             this.nznot.create('error', val.msg , val.msg);
+                                 this.nznot.create('error', val.msg , val.msg);
                                       }
                                 },
                                 (error)=>{
