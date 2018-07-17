@@ -124,7 +124,11 @@
             <!--<a *ngIf="!showAdd" style="color:#108ee9;" (click)="add(i)">修改</a>&nbsp;-->
             <!--查看日志详情页面-->
             <!--<a *ngIf="showAdd" style="color:#108ee9;" (click)="add(i)">{{configTitle}}</a>&nbsp;-->
-            <a *ngFor="let c of i.buttonData" style="color:#108ee9;" (click)="buttonClick(i, c, l)">{{c.value}}&nbsp;</a>&nbsp;
+            <a *ngFor="let c of i.buttonData" style="color:#108ee9;" (click)="buttonClick(i, c, l)">
+             {{c.value}} &nbsp;
+            
+                </a>&nbsp;
+            <!--<a *ngFor="let c of i.buttonDataBranch" style="color:#108ee9;" (click)="buttonClick(i, c, l)">{{c.value}}&nbsp;</a>&nbsp;-->
         </td>
     </tr>
       <tr nz-tbody-tr *ngIf="data.expand">
