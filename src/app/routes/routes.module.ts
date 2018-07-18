@@ -40,13 +40,6 @@ import { EnvironmentComponent} from '../component/environment/environment.compon
 import { ListfoldComponent } from '../component/listfold/listfold.component';
 import { MergelistComponent } from '../component/mergelist/mergelist.component';
 
-// 拦截器组件
-// import {AuthInterceptorService } from '../service/noop-interceptor';
-import { NoopInterceptor} from '../service/noopServe';
-import {HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-
-
-
 
 
 @NgModule({
@@ -75,17 +68,9 @@ import {HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
         EnvironmentComponent,
         ListfoldComponent,
         MergelistComponent
-        // C
     ],
     entryComponents: [],
-    providers: [
-        UtilityService,
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: NoopInterceptor,
-            multi: true,
-        }
-    ], // 把服务加入到当前的模块,如果是跟模块,则可以应用于任何部分
+    providers: [UtilityService], // 把服务加入到当前的模块,如果是跟模块,则可以应用于任何部分
 })
 
 export class RoutesModule {}

@@ -15,7 +15,6 @@ export class HeaderComponent {
     }
 
     searchToggleChange() {
-        console.log(this.searchToggleStatus);
         this.searchToggleStatus = !this.searchToggleStatus;
     }
 

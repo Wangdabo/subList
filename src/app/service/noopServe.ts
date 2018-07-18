@@ -4,7 +4,7 @@
  */
 import { Injectable, Inject} from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpInterceptor, HttpEvent, HttpHandler, HttpRequest, HttpResponse } from '@angular/common/http';
+import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpResponse} from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
@@ -36,7 +36,7 @@ export class NoopInterceptor implements HttpInterceptor {
         }
 
         return next.handle(authReq || req).map(event => {
-                    console.log(event);
+              console.log(event);
             // 拦截响应
             if (event instanceof HttpResponse) {
                 if (event.status === 401) {
@@ -46,5 +46,6 @@ export class NoopInterceptor implements HttpInterceptor {
             return event;
         });
     }
+
 
 }

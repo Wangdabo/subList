@@ -30,28 +30,17 @@ export class DefaultInterceptor implements HttpInterceptor {
     private handleData(event: HttpResponse<any> | HttpErrorResponse): Observable<any> {
         // 可能会因为 `throw` 导出无法执行 `_HttpClient` 的 `end()` 操作
         this.injector.get(_HttpClient).end();
+        console.log(event)
         // 业务处理：一些通用操作
         switch (event.status) {
             case 200:
-                // 业务层级错误处理，以下假如响应体的 `status` 若不为 `0` 表示业务级异常
-                // 并显示 `error_message` 内容
-
-                // const body: any = event instanceof HttpResponse && event.body;
-                // if (body && body.status !== 0) {
-                //     this.msg.error(body.error_message);
-                //     // 继续抛出错误中断后续所有 Pipe、subscribe 操作，因此：
-                //     // this.http.get('/').subscribe() 并不会触发
-                //     return ErrorObservable.throw(event);
-                // }
-                break;
             case 401: // 未登录状态码
                 this.goTo('/passport/login');
                 break;
             case 403:
             case 404:
             case 500:
-                this.goTo(`/${event.status}`);
-                break;
+
         }
         return of(event);
     }

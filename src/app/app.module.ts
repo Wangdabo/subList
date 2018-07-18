@@ -13,6 +13,8 @@ import { DefaultInterceptor } from '@core/net/default.interceptor';
 import { SimpleInterceptor } from '@delon/auth';
 import { TreeModule } from 'primeng/tree';
 
+// import {AuthInterceptorService } from '../service/noop-interceptor';
+import {NoopInterceptor} from './service/noopServe';
 
 
 // angular i18n
@@ -91,6 +93,7 @@ export function StartupServiceFactory(startupService: StartupService): Function 
         { provide: HTTP_INTERCEPTORS, useClass: DefaultInterceptor, multi: true},
         // 国际化
         { provide: ALAIN_I18N_TOKEN, useClass: I18NService, multi: false },
+        {provide: HTTP_INTERCEPTORS, useClass: NoopInterceptor, multi: true}, // 自己写的拦截器
         StartupService,
         {
             provide: APP_INITIALIZER,
