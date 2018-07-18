@@ -224,6 +224,7 @@ getElement() {
         if (event === 'merge') {
             this.mergeListInfo = [];
             this.mergeList = [];
+    
             for ( let i = 0; i < this.data.length; i++) {
                 // 清空数组
                 if (this.data[i].checked === true) {
@@ -252,8 +253,8 @@ getElement() {
 
         } else if (event === 'checking') {
               this.getSprofiles();
-             this.mergeisVisible = true
-        //    this.current = 0;
+              this.mergeisVisible = true
+           this.current = 0;
             // this.changeContent();
             // this.checkModalVisible = true; // 打开核对弹出框
 
@@ -261,6 +262,7 @@ getElement() {
             this.deliveryTime = moment(new Date()).format('YYYY-MM-DD');
             console.log(this.deliveryTime)
             this.isVisible = true;
+            this.importCurrent = 0;
             this.getSprofiles(); // 查询环境和时间
             this.workItem = false;
         } else {
@@ -477,10 +479,14 @@ getElement() {
             }
         }
     }
-
+   
+   hide(){
+       console.log('guanbi ')
+   }
 
    buttonEventMerge(event){
-      let url =appConfig.testUrl + '/deliveries/'+event+'/merge'
+
+      let url =appConfig.testUrl + '/deliveries/'+event.guid+'/merge'
         this.utilityService.putData( url, {}, {Authorization: this.token})
            .map(res => res.json())
            .subscribe(
@@ -488,6 +494,8 @@ getElement() {
                    console.log(val);
 
                    if (val.code == 200){
+                       event.event.check = true
+                       event.event.value = '已确认合并'
                     //    this.istextVisible = false;
                     //    this.detailVisible = false;
                        this.nznot.create('success', val.msg, val.msg);
