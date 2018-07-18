@@ -9,7 +9,7 @@ export class WorkitemModule {
     public itemName: string;
 
     // 需求编号
-    public seqNo: string;
+    public seqno: string;
 
     // 开发人员
     public developers: any;

@@ -303,13 +303,16 @@ export class SWorkitemComponent implements OnInit {
         this.workAdd.deliveryTime = moment(this.workAdd.deliveryTime).format('YYYY-MM-DD');
         this.workAdd.deliveryPlanTime = moment(this.workAdd.deliveryPlanTime).format('YYYY-MM-DD');
 
-
-
         if (_.isArray(this.workAdd.developers)) {
             this.workAdd.developers = this.workAdd.developers.join( ',' );
         } else {
         }
 
+       console.log(this.workAdd);
+        if (!this.workAdd.itemName || !this.workAdd.seqno || !this.workAdd.developers || !this.workAdd.owner || !this.workAdd.requirementDesc ) {
+            this.nznot.create('error', '信息不全！', '请检查信息是否完整');
+            return;
+        }
         if (this.isEdit) { // 修改
             this.utilityService.putData(appConfig.testUrl  + appConfig.API.sWorkitem , this.workAdd, {Authorization: this.token})
                 .map(res => res.json())
