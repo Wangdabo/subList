@@ -147,6 +147,9 @@ export class SBranchComponent implements OnInit {
     deleatData(event) {
 
     }
+    checkTrue(){
+
+    }
 
     // 顶部按钮
 
@@ -234,9 +237,37 @@ export class SBranchComponent implements OnInit {
         }
 
     }
-       checkversion(item,index){
+    isShowbranch:boolean;
+    checkmsg:any;
+    tag = '验证';
+       checkversion(item){
             console.log(item)
-
+    
+         this.utilityService.postData(appConfig.testUrl  + appConfig.API.sBranchadd +'/'+ 'path',{svnUrl:item}, {Authorization: this.token})
+                .map(res => res.json())
+                .subscribe(
+                    (val) => {
+                        console.log(val);
+                        if(val.code == 200){
+                           this.branch.lastVersion = val.result;
+                           this.isShowbranch = true
+                           this.tag = '通过'
+                        }
+                    },
+                (error)=>{
+                    if(error){
+                          this.isShowbranch = false
+                          this.checkmsg = error.json().msg;
+                            this.tag = '验证'
+                          this.nznot.create('error', error.json().msg,'');
+                    }
+                }
+                );
+        }
+        checkagin(item){
+            if(item == ''){
+                this.tag = '验证'
+            }
         }
 
 
