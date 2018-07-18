@@ -41,7 +41,7 @@
                         <td nz-td>{{j.confirmStatus }}</td>
                         <td nz-td>{{j.errorType }}</td>
                     <td nz-td>
-                      <span  style="color:red"  (click)="sonbuttonClick(3,j,l)" *ngIf="j.check == null" >
+                      <span  style="color:red;margin-left:0.5rem"   (click)="sonbuttonClick(3,j,l)" *ngIf="j.check == null" >
                              删除
                         </span>
                         <span style=" float: left;color:#108ee9" *ngIf=" j.check == null"  (click)="sonbuttonClick(4,j,l)">

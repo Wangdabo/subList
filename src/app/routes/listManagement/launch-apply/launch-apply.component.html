@@ -172,7 +172,7 @@
 
        <app-environment [deliveryTime]="deliveryTime" [isShowDate]="isShowDate" (isActive)="isActive($event)" [elementScice]="elementScice" *ngIf="current === 0"></app-environment>
 
-        <app-listfold [headerDate]="mergeHeader"  [buttons] ='buttons'  (buttonData)="buttonDataHandler($event)" (buttonEvent)="buttonEventlist($event)"  [initDate]="initDate" *ngIf="current === 1" ></app-listfold>
+        <app-listfold [headerDate]="mergeHeader"  [buttons] ='buttons'   (buttonEvent)="buttonEventMerge($event)"  [initDate]="initDate" *ngIf="current === 1" ></app-listfold>
 
          <!--<span >2222</span>-->
        <app-mergelist  *ngIf="current === 2" #child

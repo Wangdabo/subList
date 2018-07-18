@@ -57,8 +57,8 @@ export  class ListfoldComponent implements OnInit {
     @Output()
     isActive: EventEmitter<any> = new EventEmitter(); // 定义一个输出属性，当点击按钮的时候 发射出去
 
-     @Output()
-     buttonData: EventEmitter<any> = new EventEmitter(); // 定义一个输出属性，按钮点击事件，非必选
+    //  @Output()
+    //  buttonData: EventEmitter<any> = new EventEmitter(); // 定义一个输出属性，按钮点击事件，非必选
 
     @Output()
     selectedRow: EventEmitter<any> = new EventEmitter(); // 定义一个输出属性，按钮点击事件，非必选

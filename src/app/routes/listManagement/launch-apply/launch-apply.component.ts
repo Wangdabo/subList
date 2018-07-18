@@ -478,6 +478,36 @@ getElement() {
         }
     }
 
+
+   buttonEventMerge(event){
+      let url =appConfig.testUrl + '/deliveries/'+event+'/merge'
+        this.utilityService.putData( url, {}, {Authorization: this.token})
+           .map(res => res.json())
+           .subscribe(
+               (val) => {
+                   console.log(val);
+
+                   if (val.code == 200){
+                    //    this.istextVisible = false;
+                    //    this.detailVisible = false;
+                       this.nznot.create('success', val.msg, val.msg);
+                   }else{
+                         this.nznot.create('error', val.msg,'');
+                  }
+
+               }
+               ,
+               (error) => {
+
+                  if(error){
+                          this.nznot.create('error', error.json().msg,'');
+                    }
+               }
+           );
+
+       console.log(event);
+
+   }
     // 按钮点击事件
     buttonEventlist(event) {
         console.log(event)
@@ -527,6 +557,10 @@ getElement() {
     buttonDataHandler(event) {
 
         console.log(event);
+
+    }
+
+    buttonEventmerge(event) {
 
     }
 
@@ -853,7 +887,7 @@ getElement() {
 
     buttonEvent(event) {
         this.mergeId = event.guid;
-       console.log(event)
+ 
         if (event.names.key === 'merge') {
             this.idcheck = event.guid;
               let index = '';
