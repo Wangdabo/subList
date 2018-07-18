@@ -432,10 +432,7 @@ mergeClick(index){
       
     let S = '';
     console.log(this.guidprent)
-   if ( item === 0) {
-    
-       this.istextVisible = true;
-   }else {
+
        let  url = appConfig.testUrl + '/checks/delivery/' + this.guid + '/result';
        if (item === 1) {
            S = 'S';
@@ -471,7 +468,7 @@ mergeClick(index){
                     }
                }
            );
-   }
+   
 
 
     }
