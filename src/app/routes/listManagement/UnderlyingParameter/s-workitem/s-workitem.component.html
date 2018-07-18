@@ -4,7 +4,7 @@
 <nz-card [nzBordered]="false">
     <!--  form表单搜索 -->
     <form nz-form (ngSubmit)="search()" [nzLayout]="'inline'">
-        <div nz-row [nzGutter]="24">
+        <div nz-row  [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
             <div nz-col [nzSpan]="8" class="mb-md">
                 <div nz-form-item class="d-flex">
                     <div nz-form-label><label for="name">工作项名称</label></div>
@@ -21,11 +21,11 @@
                     </div>
                 </div>
             </div>
-           <div *ngIf="expandForm" nz-col [nzSpan]="8" class="mb-md">
+         <!--  <div *ngIf="expandForm" nz-col [nzSpan]="8" class="mb-md">
                     <div nz-form-item class="d-flex">
-                        <div nz-form-label><label>开发人员</label></div>
+                        <div nz-form-label><label for="name">开发人员</label></div>
                         <div nz-form-control class="flex-1">
-                            <nz-select style="width: 400px;"
+                            <nz-select style="width: 100%;"
                                        [nzMode]="'multiple'"
                                        [nzPlaceHolder]="'开发人员'"
                                        [(ngModel)]="workItem.developers"
@@ -33,24 +33,40 @@
                                        name='开发人员'>
                                 <nz-option
                                     *ngFor="let option of owner"
-                                    [nzLabel]="option.key"
-                                    [nzValue]="option.value">
+                                    [nzLabel]="option.svnUser"
+                                    [nzValue]="option.userId">
                                 </nz-option>
                             </nz-select>
                         </div>
                     </div>
-                </div>
-                <div *ngIf="expandForm" nz-col [nzSpan]="8" class="mb-md">
+                </div>-->
+           <div *ngIf="expandForm" nz-col [nzSpan]="8" class="mb-md">
                     <div nz-form-item class="d-flex">
                         <div nz-form-label><label for="name">项目负责人</label></div>
                         <div nz-form-control class="flex-1">
                             <nz-select [(ngModel)]="workItem.owner" name="owner" nzId="owner" [nzPlaceHolder]="'工作项负责人'" [nzShowSearch]="true" [nzSize]="'large'">
-                                <nz-option *ngFor="let i of owner; let idx = index" [nzLabel]="i.key" [nzValue]="i.value"></nz-option>
+                                <nz-option *ngFor="let i of owner; let idx = index" [nzLabel]="i.svnUser" [nzValue]="i.userId"></nz-option>
                             </nz-select>
                         </div>
                     </div>
+           </div>
+            <!--<div *ngIf="expandForm" nz-col [nzSpan]="8" class="mb-md">
+                <div nz-form-item class="d-flex">
+                    <div nz-form-label class="alignment"><label for="no">开发时间</label></div>
+                    <div nz-form-control class="flex-1">
+                        <nz-datepicker [(ngModel)]="workItem.developStartTime" [nzFormat]="'YYYY-MM-DD'"    name="developStartTime" [nzSize]="'large'" [nzPlaceHolder]="'启动开发时间'" nzId="developStartTime" class="d-block"></nz-datepicker>
+                    </div>
                 </div>
-                <div *ngIf="expandForm" nz-col [nzSpan]="8" class="mb-md">
+            </div>
+            <div *ngIf="expandForm" nz-col [nzSpan]="8" class="mb-md">
+                <div nz-form-item class="d-flex">
+                    <div nz-form-label class="alignment"><label for="no">计划时间</label></div>
+                    <div nz-form-control class="flex-1">
+                        <nz-datepicker [(ngModel)]="workItem.deliveryPlanTime" [nzFormat]="'YYYY-MM-DD'"    name="deliveryPlanTime" [nzSize]="'large'" [nzPlaceHolder]="'计划投产时间'" nzId="deliveryPlanTime" class="d-block"></nz-datepicker>
+                    </div>
+                </div>
+            </div>-->
+               <!-- <div *ngIf="expandForm" nz-col [nzSpan]="8" class="mb-md">
                     <div nz-form-item class="d-flex">
                         <div nz-form-label class="alignment"><label for="no">需求时间</label></div>
                         <div nz-form-control class="flex-1">
@@ -58,22 +74,8 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="expandForm" nz-col [nzSpan]="8" class="mb-md">
-                    <div nz-form-item class="d-flex">
-                        <div nz-form-label class="alignment"><label for="no">开发时间</label></div>
-                        <div nz-form-control class="flex-1">
-                            <nz-datepicker [(ngModel)]="workItem.developStartTime" [nzFormat]="'YYYY-MM-DD'"    name="developStartTime" [nzSize]="'large'" [nzPlaceHolder]="'启动开发时间'" nzId="developStartTime" class="d-block"></nz-datepicker>
-                        </div>
-                    </div>
-                </div>
-                <div *ngIf="expandForm" nz-col [nzSpan]="8" class="mb-md">
-                    <div nz-form-item class="d-flex">
-                        <div nz-form-label class="alignment"><label for="no">计划时间</label></div>
-                        <div nz-form-control class="flex-1">
-                            <nz-datepicker [(ngModel)]="workItem.deliveryPlanTime" [nzFormat]="'YYYY-MM-DD'"    name="deliveryPlanTime" [nzSize]="'large'" [nzPlaceHolder]="'计划投产时间'" nzId="deliveryPlanTime" class="d-block"></nz-datepicker>
-                        </div>
-                    </div>
-                </div>
+
+
                 <div *ngIf="expandForm" nz-col [nzSpan]="8" class="mb-md">
                     <div nz-form-item class="d-flex">
                         <div nz-form-label class="alignment"><label for="no">实际时间</label></div>
@@ -81,7 +83,7 @@
                             <nz-datepicker [(ngModel)]="workItem.deliveryTime" [nzFormat]="'YYYY-MM-DD'"    name="deliveryTime" [nzSize]="'large'" [nzPlaceHolder]="'实际投产时间'" nzId="deliveryTime" class="d-block"></nz-datepicker>
                         </div>
                     </div>
-                </div>
+                </div>-->
 
 
                 <div nz-col [nzSpan]="expandForm ? 24 : 8" class="mb-md" [class.text-right]="expandForm">

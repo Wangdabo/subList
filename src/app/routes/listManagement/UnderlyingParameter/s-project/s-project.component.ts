@@ -53,6 +53,7 @@ export class SProjectComponent implements OnInit {
     projectType = [
         {key: '普通工程', value: 'C'},
         {key: '特殊工程', value: 'S'},
+        {key: 'IBS工程', value: 'I'},
     ]
 
 
@@ -89,6 +90,7 @@ export class SProjectComponent implements OnInit {
 
     getData() {
         this.page = {
+            condition: this.productItem,
             page: {
                 current: this.productItem.pi,
                 size: this.productItem.size,
@@ -143,7 +145,15 @@ export class SProjectComponent implements OnInit {
             );
     }
 
+    // 查询方法
+    search() {
+        this.getData();
+    }
 
+    reset() {
+        this.productItem = new ProductModule();
+        this.getData();
+    }
     // 新增方法
     addHandler(event) {
         if (event === 'add') {

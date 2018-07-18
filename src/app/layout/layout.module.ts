@@ -36,6 +36,7 @@ const HEADERCOMPONENTS = [
 
 // passport
 import { LayoutPassportComponent } from './passport/passport.component';
+import { FooterComponent } from './default/footer/footer.component';
 const PASSPORT = [
     LayoutPassportComponent
 ];
@@ -46,7 +47,8 @@ const PASSPORT = [
     declarations: [
         ...COMPONENTS,
         ...HEADERCOMPONENTS,
-        ...PASSPORT
+        ...PASSPORT,
+        FooterComponent
     ],
     exports: [
         ...COMPONENTS,

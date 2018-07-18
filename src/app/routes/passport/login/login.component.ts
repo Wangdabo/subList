@@ -102,7 +102,7 @@ export class UserLoginComponent implements OnDestroy {
                         // 设置token
                         this.tokenService.set({
                             token: val.result.token,
-                            name: val.result.userInfo.userId,
+                            name: val.result.userInfo.svnUser,
                         });
                         this.router.navigate(['/']);
                     }
