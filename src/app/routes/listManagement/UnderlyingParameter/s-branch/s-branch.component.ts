@@ -92,7 +92,7 @@ export class SBranchComponent implements OnInit {
                          
                       
                         if (val.code == 200) {
-                            console.log(val);
+                           
                             this.data = val.result.records;
                             this.total = val.result.total; // 总数
                             this.pageTotal = val.result.pages * 10; // 页码
@@ -101,18 +101,17 @@ export class SBranchComponent implements OnInit {
                            let str = ''
                             for (let i = 0 ; i <  this.data.length; i ++) {
                                 console.log(this.data[i].fullPath.length)
-                                if(this.data[i].fullPath.length > 40){
-                                   star = this.data[i].fullPath.substr(0,20)
-                                   end = this.data[i].fullPath.substr(this.data[i].fullPath.length - 20)
-                                      this.data[i].fullPathstr = star + '...' + end;
-                                  
+                                if(this.data[i].fullPath.length > 100){
+                                   star = this.data[i].fullPath.substr(0,40)
+                                   end = this.data[i].fullPath.substr(this.data[i].fullPath.length - 40)
+                                      this.data[i].fullPathstr = star + '...' + end;  
                                 }else{
                                      this.data[i].fullPathstr = this.data[i].fullPath
                                 }
-                                 if(this.data[i].branchFor.length > 40){
+                                 if(this.data[i].branchFor.length > 20){
                                      
-                                   star = this.data[i].branchFor.substr(0,20)
-                                   end = this.data[i].branchFor.substr(this.data[i].branchFor.length - 20)
+                                   star = this.data[i].branchFor.substr(0,5)
+                                   end = this.data[i].branchFor.substr(this.data[i].branchFor.length - 5)
                                       this.data[i].branchForstr = star + '...' + end;
                                   
                                 }else{

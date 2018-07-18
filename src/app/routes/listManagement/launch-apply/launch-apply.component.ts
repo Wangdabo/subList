@@ -38,7 +38,8 @@ export class LaunchApplyComponent implements OnInit {
         this.userName = this.tokenService.get().name;
         this.getData();
         this.showAdd = true;
-        console.log(this.isNext);
+     
+        console.log(this.elementScice);
 
     }
 
@@ -60,9 +61,11 @@ export class LaunchApplyComponent implements OnInit {
     pageTotal: number; // 翻页总数
     deliveryResult = [
         {key: '0', value: '申请中'},
-        {key: 'S', value: '成功'},
-        {key: 'F', value: '失败'},
-        {key: 'C', value: '取消投放'},
+        {key: 'M', value: '已合并'},
+        {key: 'C', value: '核对中'},
+        {key: 'S', value: '核对成功'},
+        {key: 'F', value: '核对失败'},
+        {key: 'D', value: '投放成功'},
     ]
     buttons = [
         // {key: 'merge', value: '合并投放', if: true},
@@ -84,8 +87,8 @@ export class LaunchApplyComponent implements OnInit {
         { value: '打包窗口', key: 'packTiming', isclick: false, radio: false },
         { value: '申请人', key: 'proposer', isclick: false, radio: false },
         { value: '投放结果', key: 'deliveryResult', isclick: false, radio: false },
-        { value: '申请类型', key: 'deliveryType', isclick: false, radio: false },
-        { value: '程序数量', key: 'number', isclick: false, radio: false },
+        { value: '投放类型', key: 'deliveryType', isclick: false, radio: false },
+        // { value: '程序数量', key: 'number', isclick: false, radio: false },
 
     ];
 
@@ -132,10 +135,15 @@ export class LaunchApplyComponent implements OnInit {
     detailVisible = false;
      currentpage = 1;
     inputValue = '';
-
+   search = {
+        guidWorkitem:'',
+        proposer:'',
+        deliveryResult:''
+    };
         getData() {
-
+         console.log(this.elementScice)
             const page = {
+                condition:this.search,
                 page : {
                     size: 10,
                     current :  this.currentpage
@@ -523,9 +531,9 @@ export class LaunchApplyComponent implements OnInit {
 
 
     // 搜索框
-    search() {
+    // search() {
 
-    }
+    // }
 
 
     // 比对界面

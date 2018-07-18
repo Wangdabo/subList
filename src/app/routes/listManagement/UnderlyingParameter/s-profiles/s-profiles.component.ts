@@ -276,9 +276,9 @@ export class SProfilesComponent implements OnInit {
                         let star = '';
                         let end = '';
                         for ( let i = 0; i < this.data.length; i++) {
-                            if(this.data[i].fullPath.length > 40){
-                                   star = this.data[i].fullPath.substr(0,20)
-                                   end = this.data[i].fullPath.substr(this.data[i].fullPath.length - 20)
+                            if(this.data[i].fullPath.length > 100){
+                                   star = this.data[i].fullPath.substr(0,40)
+                                   end = this.data[i].fullPath.substr(this.data[i].fullPath.length - 40)
                                       this.data[i].fullPathstr = star + '...' + end;
                                   
                                 }else{
