@@ -39,6 +39,7 @@ export class SWorkitemComponent implements OnInit {
     modelTitle: string; // 默认名称
     headerDate = [  // 配置表头内容
         { value: '工作项名称', key: 'itemName', isclick: false },
+        // { value: '开发分支', key: 'fullPathstr', isclick: false },
         { value: '开发人员', key: 'developers', isclick: false },
         { value: '工作项负责人', key: 'owner', isclick: false },
         { value: '启动开发时间', key: 'developStartTime', isclick: false },
@@ -105,6 +106,14 @@ export class SWorkitemComponent implements OnInit {
                     _.forEach(this.data , function (value) {
                         if (value.itemStatus === '开发中') {
                             if (value.fullPath !== '') { // 说明存在分支
+                                // 截取
+                               /* let star = '';
+                                let end = '';
+                                let str = ''
+                                star = value.fullPath.substr(0, 20)
+                                end = value.fullPath.substr(value.fullPath.length - 20)
+                                value.fullPathstr = star + '...' + end;
+                                console.log(value)*/
                                 value.buttonData = [
                                     {key: 'upd', value: '修改'},
                                     {key: 'cenel', value: '取消'},
