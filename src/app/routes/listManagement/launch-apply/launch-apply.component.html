@@ -158,8 +158,8 @@
 </nz-modal>-->
 
 
-<nz-modal [nzVisible]="mergeisVisible"  [nzWidth]="1024" [nzTitle]="'合并投放 请指定投放日期和环境'"   [nzContent]="dictModal"
-          (nzOnCancel)="mergeisVisible=false" (nzOnOk)="savemergeisInfo()" [nzFooter]="is" >
+<nz-modal [nzVisible]="mergeisVisible"   [nzWidth]="1024" [nzTitle]="'合并投放 请指定投放日期和环境'"   [nzContent]="dictModal"
+          (nzOnCancel)="mergeisVisible=false" (nzOnOk)="savemergeisInfo()" [nzFooter]="is" nzZIndex = '10' >
     <ng-template #dictModal>
 
       <nz-steps [(nzCurrent)]="current"  [nzSize]="default">
@@ -205,9 +205,9 @@
                         <span>下一步</span>
                     </button>
 
-                    <button nz-col  nz-button [nzType]="'primary'" [nzOffset]="2"  (click)="done()" *ngIf="current === 2">
+                    <!--<button nz-col  nz-button [nzType]="'primary'" [nzOffset]="2"  (click)="done()" *ngIf="current === 2">
                         <span>确认</span>
-                    </button>
+                    </button>-->
 
             </div>
     </div>

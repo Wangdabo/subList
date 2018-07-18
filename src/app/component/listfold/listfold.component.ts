@@ -75,10 +75,13 @@ export  class ListfoldComponent implements OnInit {
         }
 
         buttonClick(event,guid) {
-            event.check = true;
-            event.value = '已确认合并'
-            
-        this.buttonEvent.emit(guid); // 点击了修改，打开弹出框，把修改的数据传递过去
+            // event.check = true;
+            // event.value = '已确认合并'
+            let obj ={
+                guid:guid,
+                event:event
+            }
+        this.buttonEvent.emit(obj); // 点击了修改，打开弹出框，把修改的数据传递过去
          
     }
 
