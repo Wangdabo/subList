@@ -1,4 +1,16 @@
 <!--默认布局-->
+<style>
+    .footer{
+        position: fixed;
+        bottom:0;
+        left:0;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        width:100%;
+        color:#666666;
+    }
+</style>
 <div class="wrapper">
     <div class="router-progress-bar" *ngIf="isFetching"></div>
     <app-header class="header"></app-header>
@@ -9,4 +21,5 @@
         <!--路由插座-->
         <router-outlet></router-outlet>
     </section>
+    <app-footer class="footer"></app-footer>
 </div>
