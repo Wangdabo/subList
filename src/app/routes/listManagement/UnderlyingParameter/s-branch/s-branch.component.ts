@@ -44,10 +44,10 @@ export class SBranchComponent implements OnInit {
     data: any[] = []; // 表格数据
     headerDate = [  // 配置表头内容
         {value: '分支类型', key: 'branchType', isclick: true},
-        {value: '代码全路径', key: 'fullPath', isclick: false},
+        {value: '代码全路径', key: 'fullPathstr', isclick: false},
         {value: '创建人', key: 'creater', isclick: false},
         {value: '创建时间', key: 'createTime', isclick: false},
-        {value: '分支作用说明', key: 'branchFor', isclick: false},
+        {value: '分支作用说明', key: 'branchForstr', isclick: false},
         // {value: '分支当前版本', key: 'currVersion', isclick: false},
         // {value: '分支起始版本', key: 'lastVersion', isclick: false},
     ];
@@ -96,7 +96,30 @@ export class SBranchComponent implements OnInit {
                             this.data = val.result.records;
                             this.total = val.result.total; // 总数
                             this.pageTotal = val.result.pages * 10; // 页码
+                            let star = '';
+                            let end = '';
+                           let str = ''
                             for (let i = 0 ; i <  this.data.length; i ++) {
+                                console.log(this.data[i].fullPath.length)
+                                if(this.data[i].fullPath.length > 40){
+                                   star = this.data[i].fullPath.substr(0,20)
+                                   end = this.data[i].fullPath.substr(this.data[i].fullPath.length - 20)
+                                      this.data[i].fullPathstr = star + '...' + end;
+                                  
+                                }else{
+                                     this.data[i].fullPathstr = this.data[i].fullPath
+                                }
+                                 if(this.data[i].branchFor.length > 40){
+                                     
+                                   star = this.data[i].branchFor.substr(0,20)
+                                   end = this.data[i].branchFor.substr(this.data[i].branchFor.length - 20)
+                                      this.data[i].branchForstr = star + '...' + end;
+                                  
+                                }else{
+                                       this.data[i].branchForstr = this.data[i].branchFor
+                                }
+                              
+                               
                                 this.data[i].buttonData = this.buttonData;
                                this.data[i].createTime = moment(this.data[i].createTime).format('YYYY-MM-DD');
                              
@@ -156,7 +179,11 @@ export class SBranchComponent implements OnInit {
                         let arr = [];
                       if(val.code == 200) {
                           
-                          self.getData();
+                              if ( !(( self.total - 1) % 10)) {
+                                        self.pageTotal = self.pageTotal - 10 ;
+                                        self.getData();
+                                    }
+                                    self.getData();
                 
                   self.nznot.create('success', val.msg, val.msg);
                         }else {

@@ -70,7 +70,7 @@ export class SProfilesComponent implements OnInit {
     headerDate = [  // 配置表头内容
         // { value: '环境代码', key: 'profilesCode', isclick: true},
         { value: '环境名称', key: 'profilesName', isclick: false},
-        { value: 'Release分支', key: 'fullPath', isclick: false },
+        { value: 'Release分支', key: 'fullPathstr', isclick: false },
         // { value: '主机IP', key: 'hostIp', isclick: false },
         // { value: '安装路径', key: 'installPath', isclick: false },
         // { value: '版本控制用户', key: 'csvUser', isclick: false, switch:false },
@@ -98,6 +98,7 @@ export class SProfilesComponent implements OnInit {
     branch:any;
     Ptitle:any;
     time = new Date();
+     tags = [];
 
     ngOnInit() {
         this.token  = this.tokenService.get().token;
@@ -106,9 +107,9 @@ export class SProfilesComponent implements OnInit {
 
     }
 
-            public tags = [];
-            public inputVisible = false;
-            public inputValue = '';
+          
+       inputVisible = false;
+       inputValue = '';
             // @ViewChild('input') input: NzInputDirectiveComponent;
             @ViewChild('input') private input: ElementRef;   
             handleClose(removedTag: any): void {
@@ -248,9 +249,15 @@ export class SProfilesComponent implements OnInit {
         {key: 'branchDDetail', value: '详情'}
    ]
    
+    search = {
+        profilesName:'',
+        manager:'',
+        isAllowDelivery:''
+    };
 
     getData() {
         const page = {
+             condition:this.search,
             page: {
                 size: 10,
                 current: this.profiles.page
@@ -266,8 +273,17 @@ export class SProfilesComponent implements OnInit {
                         console.log(this.data);
                         this.total = val.result.total; // 总数
                         this.pageTotal = val.result.pages * 10; // 页码
+                        let star = '';
+                        let end = '';
                         for ( let i = 0; i < this.data.length; i++) {
-                         
+                            if(this.data[i].fullPath.length > 40){
+                                   star = this.data[i].fullPath.substr(0,20)
+                                   end = this.data[i].fullPath.substr(this.data[i].fullPath.length - 20)
+                                      this.data[i].fullPathstr = star + '...' + end;
+                                  
+                                }else{
+                                     this.data[i].fullPathstr = this.data[i].fullPath
+                                }
                            
                             // this.data[i].buttonDataBranch = this.buttonDataBranch
                             if(this.data[i].fullPath == ''){
@@ -298,7 +314,7 @@ export class SProfilesComponent implements OnInit {
         if (event === 'add') {
             this.profiles = new SprofilesModule();
             this.Ptitle = '新增运行环境'
-
+            this.tags = [];
             this.mergeVisible = true;
         } else if (event === 'checking') {
             this.modalVisible = true; // 打开核对弹出框
@@ -341,7 +357,13 @@ export class SProfilesComponent implements OnInit {
                         .subscribe(
                             (val) => {
                                 if(val.code == 200) {
+                                     if ( !(( self.total - 1) % 10)) {
+                                        self.pageTotal = self.pageTotal - 10 ;
+                                        self.getData();
+                                    }
                                     self.getData();
+                                    //
+                                   
                                     self.nznot.create('success', val.msg, val.msg);
                                 }else {
                                     self.nznot.create('error',val.msg,'');
@@ -527,9 +549,9 @@ export class SProfilesComponent implements OnInit {
 
 
     // 搜索框
-    search() {
+    // search() {
 
-    }
+    // }
 
 
     // 比对界面

@@ -24,6 +24,8 @@ export class LaunchApplyComponent implements OnInit {
         private utilityService: UtilityService,
         private modal: NzModalService,
         private nznot: NzNotificationService,
+       private confirmServ: NzModalService,
+        
         @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
     ) { }
     token: any;
@@ -457,24 +459,40 @@ export class LaunchApplyComponent implements OnInit {
     buttonEventlist(event) {
         console.log(event)
         if(event.names.key == 'dels'){
-   
-            this.utilityService.deleatData(appConfig.testUrl  + appConfig.API.deliveries + '/' + event.guid , {Authorization: this.token})
-                            .map(res => res.json())
-                            .subscribe(
-                                (val) => {
-                                    if(val.code == 200){
-                                    this.nznot.create('success', val.msg , val.msg);
-                                    this.getData()
-                                 }else{
-                                 this.nznot.create('error', val.msg , val.msg);
-                                      }
-                                },
-                                (error)=>{
-                                 if(error){
-                                      this.nznot.create('error',error.json().msg,error.json().msg);
-                                 }
+         let self = this;
+            this.confirmServ.confirm({
+                title  : '您是否确认要删除这项内容!',
+                showConfirmLoading: true,
+                onOk() {
+                    self.utilityService.deleatData(appConfig.testUrl  + appConfig.API.deliveries + '/' + event.guid ,  {Authorization: self.token})
+                        .map(res => res.json())
+                        .subscribe(
+                            (val) => {
+                                if(val.code == 200) {
+                                     if ( !(( self.total - 1) % 10)) {
+                                        self.pageTotal = self.pageTotal - 10 ;
+                                        self.getData();
+                                    }
+                                    self.getData();
+                                    //
+                                   
+                                    self.nznot.create('success', val.msg, val.msg);
+                                }else {
+                                    self.nznot.create('error',val.msg,'');
                                 }
-                            );
+                            }   ,
+                            (error) => {
+                                if(error){
+                                       self.nznot.create('error',error.json().msg,'');
+                                }
+                             
+                            }
+                        );
+                },
+                onCancel() {
+                }
+            });
+          
         }
 
         
