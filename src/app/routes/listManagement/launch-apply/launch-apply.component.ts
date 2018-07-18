@@ -32,14 +32,16 @@ export class LaunchApplyComponent implements OnInit {
     userName: string;
     isNext = true;
     initDate:any;
+      elementScice: any; // 环境数据
 
     ngOnInit() {
         this.token  = this.tokenService.get().token;
         this.userName = this.tokenService.get().name;
+        this.getElement();
         this.getData();
         this.showAdd = true;
      
-        console.log(this.elementScice);
+    
 
     }
 
@@ -124,7 +126,7 @@ export class LaunchApplyComponent implements OnInit {
     page: any;
     total: number;
     pages: number;
-    elementScice: any; // 环境数据
+  
     branches: any[] = []; // 合并清单分支数组
     patchCount: any[] = []; // 投放小计
     detailList: any[] = []; // 合并清单代码数组
@@ -138,10 +140,11 @@ export class LaunchApplyComponent implements OnInit {
    search = {
         guidWorkitem:'',
         proposer:'',
-        deliveryResult:''
+        deliveryResult:'',
+        guidProfiles:''
     };
         getData() {
-         console.log(this.elementScice)
+       
             const page = {
                 condition:this.search,
                 page : {
@@ -178,7 +181,31 @@ export class LaunchApplyComponent implements OnInit {
 
     }
 
-
+getElement() {
+      this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfiles, {}, {Authorization: this.token})
+                .subscribe(
+                    (val) => {
+                       
+                        this.elementScice = val.result;
+  console.log(this.elementScice)
+                        for (let i = 0; i < this.elementScice.length; i++) {
+                            this.elementScice[i].packTiming = this.elementScice[i].packTiming.split(',');
+                            this.elementScice[i].Timing  = []
+                            for ( let s = 0; s < this.elementScice[i].packTiming.length; s ++) {
+                                let obj = {
+                                    time: this.elementScice[i].packTiming[s]
+                                };
+                                this.elementScice[i].Timing.push(obj);
+                            }
+                        }
+                        // 拼接
+                    },(error)=>{
+                        if(error){
+                          this.nznot.create('error', error.json().msg,'');
+                          }
+                    }
+                );
+}
 
     // 列表组件传过来的内容
     addHandler(event) {
@@ -209,30 +236,8 @@ export class LaunchApplyComponent implements OnInit {
                 }
                 this.mergeList.push(this.mergeListInfo[i].guid);
             }
-
-            this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfiles, {}, {Authorization: this.token})
-                .subscribe(
-                    (val) => {
-                        this.mergeisVisible = true;
-                        this.elementScice = val.result;
-
-                        for (let i = 0; i < this.elementScice.length; i++) {
-                            this.elementScice[i].packTiming = this.elementScice[i].packTiming.split(',');
-                            this.elementScice[i].Timing  = []
-                            for ( let s = 0; s < this.elementScice[i].packTiming.length; s ++) {
-                                let obj = {
-                                    time: this.elementScice[i].packTiming[s]
-                                };
-                                this.elementScice[i].Timing.push(obj);
-                            }
-                        }
-                        // 拼接
-                    },(error)=>{
-                        if(error){
-                          this.nznot.create('error', error.json().msg,'');
-                          }
-                    }
-                );
+             this.mergeisVisible = true;
+          
 
 
         } else if (event === 'checking') {
