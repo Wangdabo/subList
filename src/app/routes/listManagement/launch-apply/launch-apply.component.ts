@@ -102,7 +102,7 @@ export class LaunchApplyComponent implements OnInit {
         { value: '投放申请(别名)', key: 'applyAlias', isclick: false, radio: false },
         { value: '投放时间', key: 'deliveryTime', isclick: false, radio: false },
         { value: '投放结果', key: 'deliveryResult', isclick: false, radio: false },
-        { value: '申请类型', key: 'deliveryType', isclick: false, radio: false },
+        // { value: '申请类型', key: 'deliveryType', isclick: false, radio: false },
     ];
 
 
@@ -166,9 +166,10 @@ export class LaunchApplyComponent implements OnInit {
                                 this.data[i].deliveryTime = moment(this.data[i].deliveryTime).format('YYYY-MM-DD');
                                 this.data[i].guidProfiles = this.data[i].guidProfiles.target;
                                 this.data[i].guidWorkitem = this.data[i].guidWorkitem.target;
-                                this.data[i].buttonData = [{
-                                    key:'dels',value:'删除'
-                                }]
+                                this.data[i].buttonData = [
+                                    {key:'dels',value:'删除' },
+                                    {key:'detail',value:'详情'}
+                                    ]
                             }
                         }
 
@@ -179,6 +180,15 @@ export class LaunchApplyComponent implements OnInit {
                     }
                 );
 
+    }
+    reset(){
+         this.search = {
+        guidWorkitem:'',
+        proposer:'',
+        deliveryResult:'',
+        guidProfiles:''
+    };
+    this.getData();
     }
 
 getElement() {
@@ -487,7 +497,6 @@ getElement() {
                                         self.getData();
                                     }
                                     self.getData();
-                                    //
                                    
                                     self.nznot.create('success', val.msg, val.msg);
                                 }else {
@@ -506,6 +515,8 @@ getElement() {
                 }
             });
           
+        }else if(event.names.key == 'detail'){
+              
         }
 
         

@@ -239,14 +239,14 @@ export class SProfilesComponent implements OnInit {
         {key: 'dels', value: '删除' },
         {key: 'upd', value: '修改'},
         {key: 'correlation', value: '关联分支'},
-        {key: 'branchDDetail', value: '详情'}
+      
         
     ];
    buttonDataBranch = [
         {key: 'dels', value: '删除' },
         {key: 'upd', value: '修改'},
         {key: 'detail', value: '取消分支'},
-        {key: 'branchDDetail', value: '详情'}
+        {key: 'branchDDetail', value: '分支详情'}
    ]
    
     search = {
@@ -254,7 +254,7 @@ export class SProfilesComponent implements OnInit {
         manager:'',
         isAllowDelivery:''
     };
-
+ 
     getData() {
         const page = {
              condition:this.search,
@@ -263,10 +263,12 @@ export class SProfilesComponent implements OnInit {
                 current: this.profiles.page
             }
         };
+    
         this.utilityService.postData(appConfig.testUrl  + appConfig.API.allsProfiles, page, {Authorization: this.token})
             .map(res => res.json())
             .subscribe(
                 (val) => {
+                    
                       console.log(val)
                     if (val.code == 200) {
                         this.data = val.result.records;
@@ -276,9 +278,9 @@ export class SProfilesComponent implements OnInit {
                         let star = '';
                         let end = '';
                         for ( let i = 0; i < this.data.length; i++) {
-                            if(this.data[i].fullPath.length > 100){
-                                   star = this.data[i].fullPath.substr(0,40)
-                                   end = this.data[i].fullPath.substr(this.data[i].fullPath.length - 40)
+                            if(this.data[i].fullPath.length > 80){
+                                   star = this.data[i].fullPath.substr(0,30)
+                                   end = this.data[i].fullPath.substr(this.data[i].fullPath.length - 30)
                                       this.data[i].fullPathstr = star + '...' + end;
                                   
                                 }else{
@@ -300,6 +302,7 @@ export class SProfilesComponent implements OnInit {
                                 this.data[i].isAllowDelivery = false
                             }
                         }
+                        console.log( this.data)
                     }
                     // 拼接
                 }
