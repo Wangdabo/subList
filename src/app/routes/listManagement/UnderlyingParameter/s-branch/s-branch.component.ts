@@ -90,9 +90,7 @@ export class SBranchComponent implements OnInit {
                 .subscribe(
                     (val) => {
 
-
                         if (val.code == 200) {
-
                             this.data = val.result.records;
                             this.total = val.result.total; // 总数
                             this.pageTotal = val.result.pages * 10; // 页码
