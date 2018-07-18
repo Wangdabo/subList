@@ -137,7 +137,7 @@ export class SubListComponent implements OnInit {
         if (this.ifActive) { // 请求回来之后在打开页面
             this.reset = true;
             this.isPagination = false;
-            this.itemName = _.filter(this.workItem, this.workItemInfo)[0].itemName; // 绑定工作项名称
+            this.itemName = this.workItemInfo.itemName; // 绑定工作项名称
             this.getData();
         }
 

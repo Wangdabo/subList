@@ -117,5 +117,8 @@
   "lint-staged": {
     "src/**/*.ts": "lint:ts",
     "src/**/*.less": "lint:style"
-  }
+  },
+  "theme":{
+      "@icon-url":"'/assets/iconfont'"
+   }
 }

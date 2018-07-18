@@ -40,10 +40,8 @@ export class SWorkitemComponent implements OnInit {
         { value: '工作项名称', key: 'itemName', isclick: false },
         { value: '开发人员', key: 'developers', isclick: false },
         { value: '工作项负责人', key: 'owner', isclick: false },
-        { value: '收到需求时间', key: 'receiveTime', isclick: false },
         { value: '启动开发时间', key: 'developStartTime', isclick: false },
         { value: '计划投产时间', key: 'deliveryPlanTime', isclick: false },
-        { value: '实际投产时间', key: 'deliveryTime', isclick: false },
         { value: '工作项状态', key: 'itemStatus', isclick: false },
     ];
     // 传入按钮层
@@ -194,6 +192,8 @@ export class SWorkitemComponent implements OnInit {
                 this.isEdit = true;
 
             } else if (event.names.key  === 'association') {
+                this.assbranch = undefined;
+                this.branchdataInfo = false;
                 this.assVisible = true;
                 this.exitInfo = event;
                 this.getBranch();
