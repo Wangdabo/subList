@@ -26,7 +26,7 @@ export class SBranchComponent implements OnInit {
                 ) {
     }
     branch: SbranchModule = new  SbranchModule();
-    
+
     token: any;
     showAdd = true;
     isShowTotal = true;
@@ -38,7 +38,7 @@ export class SBranchComponent implements OnInit {
         this.getData();
         // this.showAdd = true;
         this.ptitle = '信息提示'
-        
+
     }
 
     data: any[] = []; // 表格数据
@@ -77,22 +77,22 @@ export class SBranchComponent implements OnInit {
     getData() {
         console.log(this.search)
             const page = {
-                condition:this.search,
+                condition: this.search,
                 page: {
                     size: 10,
                     current: this.branch.page
                 }
             };
             console.log(page);
-            
+
             this.utilityService.postData(appConfig.testUrl + appConfig.API.sBranch, page, {Authorization: this.token})
                 .map(res => res.json())
                 .subscribe(
                     (val) => {
-                         
-                      
+
+
                         if (val.code == 200) {
-                           
+
                             this.data = val.result.records;
                             this.total = val.result.total; // 总数
                             this.pageTotal = val.result.pages * 10; // 页码
@@ -104,27 +104,27 @@ export class SBranchComponent implements OnInit {
                                 if(this.data[i].fullPath.length > 100){
                                    star = this.data[i].fullPath.substr(0,40)
                                    end = this.data[i].fullPath.substr(this.data[i].fullPath.length - 40)
-                                      this.data[i].fullPathstr = star + '...' + end;  
+                                      this.data[i].fullPathstr = star + '...' + end;
                                 }else{
                                      this.data[i].fullPathstr = this.data[i].fullPath
                                 }
                                  if(this.data[i].branchFor.length > 20){
-                                     
+
                                    star = this.data[i].branchFor.substr(0,5)
                                    end = this.data[i].branchFor.substr(this.data[i].branchFor.length - 5)
                                       this.data[i].branchForstr = star + '...' + end;
-                                  
+
                                 }else{
                                        this.data[i].branchForstr = this.data[i].branchFor
                                 }
-                              
-                               
+
+
                                 this.data[i].buttonData = this.buttonData;
                                this.data[i].createTime = moment(this.data[i].createTime).format('YYYY-MM-DD');
-                             
-                                  
+
+
                           }
-                        
+
                         }else{
                          this.nznot.create('error',val.msg,'');
                         }
@@ -147,12 +147,12 @@ export class SBranchComponent implements OnInit {
     deleatData(event) {
 
     }
-  
+
     // 顶部按钮
-  
+
     addHandler(event) {
         console.log(this.branch)
-        
+
         if (event === 'add') {
              this.branch = new  SbranchModule();
              console.log()
@@ -166,7 +166,7 @@ export class SBranchComponent implements OnInit {
         let obj = event.guid;
 
         if (event.names.key === 'dels') { // 按钮传入删除方法
-              let self = this; 
+              let self = this;
     this.confirmServ.confirm({
       title  : '您是否确认要删除这项内容!',
       showConfirmLoading: true,
@@ -177,13 +177,13 @@ export class SBranchComponent implements OnInit {
                     (val) => {
                         let arr = [];
                       if(val.code == 200) {
-                          
+
                               if ( !(( self.total - 1) % 10)) {
                                         self.pageTotal = self.pageTotal - 10 ;
                                         self.getData();
                                     }
                                     self.getData();
-                
+
                   self.nznot.create('success', val.msg, val.msg);
                         }else {
                             self.nznot.create('error', val.msg, val.msg);
@@ -192,19 +192,19 @@ export class SBranchComponent implements OnInit {
                 (error) => {
                     self.nznot.create('error', error.msg,error.msg);
                 }
-                   
+
                 );
       },
       onCancel() {
       }
     });
-  
 
 
-           
+
+
         } else if (event.names.key === 'upd') {
-           
-           
+
+
                  this.branchType.forEach( function (i) {
                             console.log(i)
                             if(event.branchType == i.key) {
@@ -231,32 +231,32 @@ export class SBranchComponent implements OnInit {
                     }
                 }
                 );
-        } 
+        }
 
     }
        checkversion(item,index){
             console.log(item)
-            
+
         }
 
 
     addsubmit(){
-        
-        
+
+
         let obj = this.branch;
         console.log(this.branch)
           if(!obj.branchFor||!obj.fullPath||!obj.branchFor||!obj.lastVersion){
              this.nznot.create('error', '请输入完整的信息！','');
              return;
           }
-    
+
         if ( !obj.guid ) {
               this.utilityService.postData(appConfig.testUrl  + appConfig.API.sBranchadd ,obj, {Authorization: this.token})
       .map(res => res.json())
         .subscribe(
             (val) => {
                 console.log(this.branch);
-             
+
              if(val.code == 200) {
                   this.detailsVisible = false;
                  this.getData();
@@ -271,20 +271,20 @@ export class SBranchComponent implements OnInit {
                           this.nznot.create('error', error.json().msg,'');
                     }
                 }
-                
+
         );
     }else {
-             
+
                   console.log(this.branch);
-        
+
              this.utilityService.putData(appConfig.testUrl  + appConfig.API.sBranchadd, obj,{Authorization: this.token})
       .map(res => res.json())
         .subscribe(
             (val) => {
-              
+
              if(val.code == 200) {
-              
-                     
+
+
                   console.log(this.branch);
                   this.detailsVisible = false;
                   this.nznot.create('success', val.msg, val.msg);
@@ -297,10 +297,10 @@ export class SBranchComponent implements OnInit {
                           this.nznot.create('error', error.json().msg,'');
                     }
                 }
-                
+
         );
         }
-     
+
     }
 
 

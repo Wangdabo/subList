@@ -339,6 +339,7 @@ export class SubListComponent implements OnInit {
             this.nznot.create('error', '请检查是否勾选工程', '请检查是否勾选工程');
         }*/
         // 初始化数据
+        this.modalVisible = true;
         this.deliveryTime = moment(new Date()).format('YYYY-MM-DD');
         this.getcheckOptionOne();
 

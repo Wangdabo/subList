@@ -9,6 +9,7 @@ import { WorkitemModule } from '../../../../service/delivent/workItemModule';
 import { BranchModule} from '../../../../service/delivent/brachModule';
 import * as _ from 'lodash';
 import * as moment from 'moment';
+import {ProductModule} from '../../../../service/delivent/projectModule';
 
 @Component({
   selector: 'app-s-workitem',
@@ -88,6 +89,7 @@ export class SWorkitemComponent implements OnInit {
     }
     getData() {
         this.page = {
+            condition: this.workItem, // 搜索内容
             page: {
                 current: this.workItem.pi,
                 size: this.workItem.size,
@@ -127,6 +129,15 @@ export class SWorkitemComponent implements OnInit {
 
                 }
             );
+    }
+    // 查询方法
+    search() {
+        this.getData();
+    }
+    // 重置方法
+    reset() {
+        this.workItem = new WorkitemModule();
+        this.getData();
     }
     // 查询分支
     getBranch() {
