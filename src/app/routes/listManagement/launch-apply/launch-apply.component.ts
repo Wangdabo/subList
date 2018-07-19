@@ -423,7 +423,7 @@ getElement() {
                             }
                         }
 
-                              for  (let i = 0; i < this.checkModalData.length; i ++) {
+                     for  (let i = 0; i < this.checkModalData.length; i ++) {
                                       this.guidprent[i]['guid']=this.checkModalData[i].delivery.guid;
                                       this.guidprent[i]['guidWorkitem']=this.checkModalData[i].delivery.guidWorkitem.target
                             for (let j = 0; j < this.checkModalData[i].detailList.length; j ++) {
@@ -554,6 +554,21 @@ getElement() {
             });
           
         }else if(event.names.key == 'detail'){
+        this.utilityService.getData( appConfig.testUrl + appConfig.API.deliveries + '/' + event.guid + '/deliveryLists', {}, {Authorization: this.token})
+           .map(res => res.json())
+            .subscribe(
+                (val) => {
+                   console.log(val);
+                   if(val.code == 200){
+                       console.log(val)
+                        // this.mergeVisible = true;
+                   }
+                },(error)=>{
+                    if(error){
+                        this.nznot.create('error',error.json().msg,'');
+                    }
+                });
+           
               
         }
 

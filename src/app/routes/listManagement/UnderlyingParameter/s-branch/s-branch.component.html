@@ -83,9 +83,15 @@
                         <div nz-form-label nz-col [nzSpan]="4"><label for="name">分支全路径</label></div>
                         <div nz-form-control class="flex-1">
                               <!--<textarea rows="6"  nz-input [(ngModel)]="branch.branchFor"  nzRequired  nzId="branchFor" [ngModelOptions]="{standalone: true}" ></textarea>-->
-                            <nz-input [(ngModel)]="branch.fullPath" name="fullPath"  (nzBlur)="checkversion(branch.fullPath)" type='url' aria-required="true" [nzSize]="'large'" [nzPlaceHolder]="'分支全路径'" nzId="fullPath"></nz-input>
+                            <nz-input [(ngModel)]="branch.fullPath" name="fullPath" (ngModelChange)="checkagin(branch.fullPath)"  type='url' aria-required="true" [nzSize]="'large'" [nzPlaceHolder]="'分支全路径'" nzId="fullPath"></nz-input>
+                         <nz-alert *ngIf='isShowbranch == false' nzBanner nzMessage="验证异常"></nz-alert>
                         </div>
+                          <div nz-form-label nz-col [nzSpan]="2" ><button type="button"  (click)="checkversion(branch.fullPath)" nz-button [nzType]="'default'">
+                        <span>{{tag}}</span>
+                        </button>
+    </div>
                     </div>
+                   
                 </div>
 
                 <div nz-col [nzSpan]="24" class="mb-md">
