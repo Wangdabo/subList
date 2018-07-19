@@ -259,7 +259,7 @@ getElement() {
             this.deliveryTime = moment(new Date()).format('YYYY-MM-DD');
             console.log(this.deliveryTime)
             this.isVisible = true;
-            // this.importCurrent = 0;
+            this.importCurrent = 0;
             this.getSprofiles(); // 查询环境和时间
             this.workItem = false;
         } else {
