@@ -13,6 +13,8 @@ export class MergelistComponent implements OnInit {
     @Input() // 输入属性,接受父组件传入的数据
     elementScice: any[];
     @Input()
+    deliveryResult:any[];
+    @Input()
     deliveryTime: any;
     @Input()
     isNext: boolean;
@@ -47,9 +49,10 @@ export class MergelistComponent implements OnInit {
     arr = [{
         guidDelivery:'',
         deployWhere:'',
-        patchType:'',
+        patchType:''
 
     }]
+    disba = false;
 
     // deliveryTime
     constructor(private http: _HttpClient,
@@ -85,30 +88,35 @@ export class MergelistComponent implements OnInit {
       
         this.mergeClick.emit(index)
     }
+     errorId:any;
     sonbuttonClick(index,it,suoyin) {
           console.log(it)
          this.arr = [{
         guidDelivery:'',
         deployWhere:'',
-        patchType:'',
+        patchType:''
 
     }]
 
-     
+   
         switch(index){
             case 1:
                it.buttons = true;
              it.confirmStatus = '已合并'
+            
+             
              break;
               case 2:
                it.buttons = false;
              it.confirmStatus = '不投产'
+            
              break;
               case 3:
             //   it.check = false;
+            this.errorId=it.guid
              break;
               case 4:
-           
+            this.errorId=it.guid
                 // it.check = true;
          this.iStouchan = true;
              break;
@@ -136,10 +144,15 @@ export class MergelistComponent implements OnInit {
 
  
     soncheckSave(){
-        this.arr.forEach(element => {
-            console.log(element)
-        });
-            this.checkSave.emit(this.arr)
+      
+          this.errorId;
+          let obj=
+              {
+                  arr:this.arr,
+                  errorId:this.errorId
+              }
+          
+            this.checkSave.emit(obj)
     }
 
  }

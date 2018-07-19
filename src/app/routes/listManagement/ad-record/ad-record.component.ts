@@ -53,6 +53,14 @@ export class AdRecordComponent implements OnInit {
         {key: '0', value: '否'},
         {key: '1', value: '是'}
     ]
+     deliveryResults = [
+        {key: '0', value: '申请中'},
+        {key: 'M', value: '已合并'},
+        {key: 'C', value: '核对中'},
+        {key: 'S', value: '核对成功'},
+        {key: 'F', value: '核对失败'},
+        {key: 'D', value: '投放成功'},
+    ]
 
     // buttons = [
     //     {key: 'merge', value: '合并投放', if:true},
@@ -175,7 +183,7 @@ export class AdRecordComponent implements OnInit {
                         // .map(res => res.json())
                          .subscribe(
                          (val) => {
-                           console.log(val);
+                         
                             this.checkloading = false;
                           this.detailVisible = true;
                           this.checkModalData = val.result.deliveryDetails;
@@ -190,9 +198,14 @@ export class AdRecordComponent implements OnInit {
                              
                                       this.guidprent[i]['guid']=this.checkModalData[i].delivery.guid;
                                       this.guidprent[i]['guidWorkitem']=this.checkModalData[i].delivery.guidWorkitem.target
+
                             for (let j = 0; j < this.checkModalData[i].detailList.length; j ++) {
+                                    
+
                                 for (let x = 0; x < this.checkModalData[i].detailList[j].deliveryPatchDetails.length; x ++) {
+ 
                                     for (let  y = 0; y < this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList.length; y ++) {
+
                                            this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y]['buttons'] = null
                                         if (this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath) {
                                             index = this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.indexOf(this.checkModalData[i].detailList[j].projectName);
@@ -204,6 +217,7 @@ export class AdRecordComponent implements OnInit {
                                 }
                             }
                         }
+                        //   
                         
                                 }
                                 ,(error)=>{
@@ -253,8 +267,7 @@ mergeClick(index){
   
     let self = this; 
     this.modal.confirm({
-      title  : '您是否确认要进行这项操作!',
-     
+      title  : '您是否确认要进行这项操作!',     
       showConfirmLoading: true,
       onOk() {
            self.utilityService.putData( appConfig.testUrl +'/checks/'+self.mergeId+'/status/'+status, {}, {Authorization: self.token})
@@ -377,19 +390,23 @@ mergeClick(index){
       deployWhere:any;
     // 关闭核对清单
     checkSave(event) {
+        let objs =event.arr
+         
         this.iStouchan = false;
+     
+           
         const obj ={
-            guidDelivery:String(event.guidDelivery),
-            patchType:event.patchType,
-            deployWhere:event.deployWhere
+            guidDelivery:String(objs.guidDelivery),
+            patchType:objs.patchType,
+            deployWhere:objs.deployWhere
         }
     
-          this.utilityService.putData( appConfig.testUrl +'/checkLists/'+this.mergeId+'/delivery', obj, {Authorization: this.token})
+          this.utilityService.putData( appConfig.testUrl +'/checkLists/'+event.errorId+'/delivery', obj, {Authorization: this.token})
                         .map(res => res.json())
                          .subscribe(
                          (val) => {
                           if(val.code == 200) {
-
+                                  
                              this.mergeListData.forEach((result,i)=>{
                                  if(result.guid == this.mergeId){
                                      this.mergeListData[i].check = true;

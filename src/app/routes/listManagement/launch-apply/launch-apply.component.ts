@@ -1018,13 +1018,17 @@ getElement() {
 
        checkSavemerge(event) {
         this.iStouchan = false;
+         let objs =event.arr
+        
+        this.iStouchan = false;
         const obj ={
-            guidDelivery:event.guidDelivery,
-            patchType:event.patchType,
-            deployWhere:event.deployWhere
+            guidDelivery:String(objs.guidDelivery),
+            patchType:objs.patchType,
+            deployWhere:objs.deployWhere
         }
-          console.log(event)
-          this.utilityService.putData( appConfig.testUrl +'/checkLists/'+this.mergeId+'/delivery', obj, {Authorization: this.token})
+        
+          console.log(this.mergeId)
+          this.utilityService.putData( appConfig.testUrl +'/checkLists/'+event.errorId+'/delivery', obj, {Authorization: this.token})
                         .map(res => res.json())
                          .subscribe(
                          (val) => {

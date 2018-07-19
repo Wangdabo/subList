@@ -93,6 +93,12 @@
                     <div class="ad-desc-list__detail ng-star-inserted">{{j.delivery.proposer}}</div>
                 </div>
             </div>
+             <div nz-col [nzSpan]="12" class="mb-md">
+                <div  nz-form-item class="d-flex">
+                    <div class="ad-desc-list__term ng-star-inserted words">状态 :</div>
+                    <div class="ad-desc-list__detail ng-star-inserted">{{j.delivery.deliveryResult}}</div>
+                </div>
+            </div>
 
             <div  nz-col [nzSpan]="24" class="mb-md" *ngFor="let s of j.detailList ; let l = index">
                     <div>
@@ -127,8 +133,8 @@
                                 <td nz-td nz-col [nzSpan]="4">{{x.errorType}}</td>
                                 <td nz-td nz-col [nzSpan]="4">{{x.confirmStatus}}</td>
                                 <td nz-td nz-col [nzSpan]="4">
-                                   <a  style="color:#108ee9;" [ngClass]="x.buttons == true ? 'noactive' : ''" (click)="sonbuttonClick(1,x,q)">已合并&nbsp;</a>&nbsp;
-                                   <a style="color:red;" [ngClass]="x.buttons == false ? 'active' : ''" (click)="sonbuttonClick(2,x,q)">不投产&nbsp;</a>&nbsp;
+                                   <a  style="color:#108ee9;"  [ngClass]="x.buttons == true ? 'noactive' : ''"  (click)="sonbuttonClick(1,x,q)">已合并&nbsp;</a>&nbsp;
+                                   <a style="color:red;" [ngClass]="x.buttons == false ? 'active' : ''"   (click)="sonbuttonClick(2,x,q)">不投产&nbsp;</a>&nbsp;
                                 </td>
                             </tr>
                             </tbody>
@@ -137,11 +143,11 @@
             </div>
 
             <div  nz-col [nzSpan]="24" class="mb-md">
-                    <button  nz-col [nzSpan]="4"  [nzOffset]="'6'" nz-button  (click)="sonreturnsclick(0,j.delivery.guid)"  [nzType]="'primary'" [nzSize]="'large'">
+                    <button  nz-col [nzSpan]="4"  [disabled]="disba" [nzOffset]="'6'" nz-button  (click)="sonreturnsclick(0,j.delivery.guid)"  [nzType]="'primary'" [nzSize]="'large'">
                         <span>打回</span>
                     </button>
-
-                    <button   nz-col  [nzSpan]="4"  [nzOffset]="'3'" nz-button  (click)="sonreturnsclick(1,j.delivery.guid)"  [nzType]="'primary'" [nzSize]="'large'">
+ 
+                    <button   nz-col  [nzSpan]="4" [disabled]="disba"  [nzOffset]="'3'" nz-button  (click)="sonreturnsclick(1,j.delivery.guid)"  [nzType]="'primary'" [nzSize]="'large'">
                         <span>成功</span>
                     </button>
             </div>
