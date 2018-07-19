@@ -1148,48 +1148,54 @@ getElement() {
             }
         })
 
-        let success = true;
-        let token = this.token;
-        let url = appConfig.testUrl + appConfig.API.excel + '/' + workGuid + '/excel';
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);    // 也可以使用POST方式，根据接口
-        xhr.responseType = 'blob';  // 返回类型blob
-        xhr.setRequestHeader('Authorization',token); // 可以定义请求头带给后端
-        // 定义请求完成的处理函数，请求前也可以增加加载框/禁用下载按钮逻辑
-        xhr.onload = function () {
-            console.log(this);
-            // 请求完成
-            if (this.status === 200) {
-                success = true;
-                // 返回200
-                let blob = this.response;
-                let reader = new FileReader();
-                reader.readAsDataURL(blob);  // 转换为base64，可以直接放入a表情href
-                reader.onload = function (e) {
-                    console.log(e.target)
-                    let target: any = e.target;
-                    // 转换完成，创建一个a标签用于下载
-                    let a = document.createElement('a');
-                    a.download = '清单.xlsx';
-                    // a.href = e.target.result;  会报错，是因为类型检查机制，没有这个result，所以用target任意属性来接受一下，就可以跳过类型检查机制了
-                    a.href = target.result;
-                    $('body').append(a);  // 修复firefox中无法触发click
-                    a.click();
-                    $(a).remove();
-                };
-            } else {
-                success = false;
-            }
-        };
-        // 发送ajax请求
-        xhr.send();
+        if(workGuid !== '') {
+            let success = true;
+            let token = this.token;
+            let url = appConfig.testUrl + appConfig.API.excel + '/' + workGuid + '/excel';
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);    // 也可以使用POST方式，根据接口
+            xhr.responseType = 'blob';  // 返回类型blob
+            xhr.setRequestHeader('Authorization',token); // 可以定义请求头带给后端
+            // 定义请求完成的处理函数，请求前也可以增加加载框/禁用下载按钮逻辑
+            xhr.onload = function () {
+                console.log(this);
+                // 请求完成
+                if (this.status === 200) {
+                    success = true;
+                    // 返回200
+                    let blob = this.response;
+                    let reader = new FileReader();
+                    reader.readAsDataURL(blob);  // 转换为base64，可以直接放入a表情href
+                    reader.onload = function (e) {
+                        console.log(e.target)
+                        let target: any = e.target;
+                        // 转换完成，创建一个a标签用于下载
+                        let a = document.createElement('a');
+                        a.download = '清单.xls';
+                        // a.href = e.target.result;  会报错，是因为类型检查机制，没有这个result，所以用target任意属性来接受一下，就可以跳过类型检查机制了
+                        a.href = target.result;
+                        $('body').append(a);  // 修复firefox中无法触发click
+                        a.click();
+                        $(a).remove();
+                    };
+                } else {
+                    success = false;
+                }
+            };
+            // 发送ajax请求
+            xhr.send();
 
-        if (success) {
-            this.nznot.create('success', '请稍后！', '正在下载！');
+            if (success) {
+                this.nznot.create('success', '请稍后！', '正在下载！');
+            } else {
+                this.nznot.create('error', '下载错误！', '请稍后！');
+            }
+            this.isVisible = false;
         } else {
-            this.nznot.create('error', '下载错误！', '请稍后！');
+            this.nznot.create('error',  '请选择工作项', '' ) ;
         }
-        this.isVisible = false;
+
+
     }
 }
 
