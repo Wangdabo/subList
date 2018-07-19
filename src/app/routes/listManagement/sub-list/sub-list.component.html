@@ -6,7 +6,7 @@
 
 
 <!--引入list组件-->
-<div class="ui-g">
+<div class="ui-g" >
     <div class="ui-g-3" >
         <nz-card [nzBordered]="false">
             <div nz-row  [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
@@ -78,7 +78,7 @@
 
             <div nz-row  *ngIf="active" style="margin-top: 3%;"  [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
                 <div  nz-col [nzSpan]="8" [nzOffset]="'8'" class="mb-md">
-                    <button    nz-button  (click)="listreset()"  [nzType]="'primary'" [nzSize]="'large'">
+                    <button    nz-button  (click)="listreset()"  [nzLoading]="loading"  [nzType]="'primary'" [nzSize]="'large'">
                         <span>清单整理</span>
                     </button>
                 </div>
@@ -86,7 +86,7 @@
 
         </nz-card>
     </div>
-    <div class="ui-g-9">
+    <div class="ui-g-9" >
         <nz-card  *ngIf="reset" [nzBordered]="false">
             <form nz-form (ngSubmit)="seach()" [nzLayout]="'inline'">
                 <div nz-row  [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">

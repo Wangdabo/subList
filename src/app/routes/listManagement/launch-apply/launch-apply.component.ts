@@ -7,7 +7,7 @@ import {NzModalService, NzNotificationService} from 'ng-zorro-antd';
 import {Router} from '@angular/router';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
 import { ResponseContentType } from '@angular/http';
-
+import * as $ from 'jquery';
 
 import * as moment from 'moment';
 import * as _ from 'lodash';
@@ -25,7 +25,7 @@ export class LaunchApplyComponent implements OnInit {
         private modal: NzModalService,
         private nznot: NzNotificationService,
        private confirmServ: NzModalService,
-        
+
         @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
     ) { }
     token: any;
@@ -40,9 +40,6 @@ export class LaunchApplyComponent implements OnInit {
         this.getElement();
         this.getData();
         this.showAdd = true;
-     
-    
-
     }
 
     showAdd: boolean; // 是否有修改
@@ -126,7 +123,7 @@ export class LaunchApplyComponent implements OnInit {
     page: any;
     total: number;
     pages: number;
-  
+
     branches: any[] = []; // 合并清单分支数组
     patchCount: any[] = []; // 投放小计
     detailList: any[] = []; // 合并清单代码数组
@@ -144,7 +141,7 @@ export class LaunchApplyComponent implements OnInit {
         guidProfiles:''
     };
         getData() {
-       
+
             const page = {
                 condition:this.search,
                 page : {
@@ -195,7 +192,7 @@ getElement() {
       this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfiles, {}, {Authorization: this.token})
                 .subscribe(
                     (val) => {
-                       
+
                         this.elementScice = val.result;
   console.log(this.elementScice)
                         for (let i = 0; i < this.elementScice.length; i++) {
@@ -224,7 +221,7 @@ getElement() {
         if (event === 'merge') {
             this.mergeListInfo = [];
             this.mergeList = [];
-    
+
             for ( let i = 0; i < this.data.length; i++) {
                 // 清空数组
                 if (this.data[i].checked === true) {
@@ -248,7 +245,7 @@ getElement() {
                 this.mergeList.push(this.mergeListInfo[i].guid);
             }
              this.mergeisVisible = true;
-          
+
 
 
         } else if (event === 'checking') {
@@ -262,7 +259,7 @@ getElement() {
             this.deliveryTime = moment(new Date()).format('YYYY-MM-DD');
             console.log(this.deliveryTime)
             this.isVisible = true;
-            this.importCurrent = 0;
+            // this.importCurrent = 0;
             this.getSprofiles(); // 查询环境和时间
             this.workItem = false;
         } else {
@@ -270,7 +267,7 @@ getElement() {
             console.log('详情界面');
         }
     }
-   
+
     // 列表传入的翻页数据
     monitorHandler(event) {
       this.currentpage = event;
@@ -479,7 +476,7 @@ getElement() {
             }
         }
     }
-   
+
    hide(){
        console.log('guanbi ')
    }
@@ -535,7 +532,7 @@ getElement() {
                                         self.getData();
                                     }
                                     self.getData();
-                                   
+
                                     self.nznot.create('success', val.msg, val.msg);
                                 }else {
                                     self.nznot.create('error',val.msg,'');
@@ -545,14 +542,14 @@ getElement() {
                                 if(error){
                                        self.nznot.create('error',error.json().msg,'');
                                 }
-                             
+
                             }
                         );
                 },
                 onCancel() {
                 }
             });
-          
+
         }else if(event.names.key == 'detail'){
         this.utilityService.getData( appConfig.testUrl + appConfig.API.deliveries + '/' + event.guid + '/deliveryLists', {}, {Authorization: this.token})
            .map(res => res.json())
@@ -568,11 +565,11 @@ getElement() {
                         this.nznot.create('error',error.json().msg,'');
                     }
                 });
-           
-              
+
+
         }
 
-        
+
 
     }
 
@@ -910,7 +907,7 @@ getElement() {
 
     buttonEvent(event) {
         this.mergeId = event.guid;
- 
+
         if (event.names.key === 'merge') {
             this.idcheck = event.guid;
               let index = '';
@@ -1118,7 +1115,7 @@ getElement() {
             return;
         }
 
-        if (this.current === 0) {
+        if (this.importCurrent === 0) {
             // 测试接口,先测试
             console.log(url)
             this.utilityService.postData( url, exportObj,  {Authorization: this.token})
@@ -1140,56 +1137,9 @@ getElement() {
 
 
 
-/*    downloadFile(): Observable<Blob> {
-
-        let applicationsUrl = appConfig.testUrl + appConfig.API.excel + '/124/excel';
-        console.log(applicationsUrl);
-        let headers = new Headers({Authorization: this.token});
-        console.log(headers);
-        let options = new RequestOptions({ headers: headers,  responseType: ResponseContentType.Blob });
-
-      /!*  return this.http.get(applicationsUrl, options)
-            .map(res => res.blob())
-            .subscribe(
-                (val) => {
-                    console.log(val)
-                })
-            .catch(this.handleError);*!/
-      return   this.utilityService.getData(applicationsUrl , {}, {Authorization: this.token})
-                .map(res => res.blob())
-                .subscribe(
-                      (val) => {
-
-                      })
-                .catch(this.handleError);
-
-    }*/
-
-/*    this.myService.downloadFile(this.id).subscribe(blob => {
-    importedSaveAs(blob, this.fileName);
-}
-)*/
-
-
 
     // 保存
     importSave() {
-        /*let headers = new Headers();
-        headers.append('Authorization', this.token);
-        return this.utilityService.getData(appConfig.testUrl + appConfig.API.excel + '/124/excel' , {}, headers)
-            .map(res => new Blob([res._body], { type: 'application/vnd.ms-excel' })
-            .subscribe(
-                    (val) => {
-                        console.log(val)
-                    }
-             )*/
-
-
-        /* downloadFile().subscribe(blob => {
-             importedSaveAs(blob, '123.xls');
-         });
-       */
-
         let workGuid = ''
         _.forEach(this.appendSelect , function (select) {
             if (select.check) {
@@ -1197,18 +1147,52 @@ getElement() {
             }
         })
 
-        this.utilityService.getData( appConfig.testUrl + appConfig.API.excel + '/' + workGuid + '/excel', { responseType: 'blob' }, {Authorization: this.token})
-            .subscribe(
-                (val) => {
-                   console.log(val);
-                });
+        let success = true;
+        let token = this.token;
+        let url = appConfig.testUrl + appConfig.API.excel + '/' + workGuid + '/excel';
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);    // 也可以使用POST方式，根据接口
+        xhr.responseType = 'blob';  // 返回类型blob
+        xhr.setRequestHeader('Authorization',token); // 可以定义请求头带给后端
+        // 定义请求完成的处理函数，请求前也可以增加加载框/禁用下载按钮逻辑
+        xhr.onload = function () {
+            console.log(this);
+            // 请求完成
+            if (this.status === 200) {
+                success = true;
+                // 返回200
+                let blob = this.response;
+                let reader = new FileReader();
+                reader.readAsDataURL(blob);  // 转换为base64，可以直接放入a表情href
+                reader.onload = function (e) {
+                    console.log(e.target)
+                    let target: any = e.target;
+                    // 转换完成，创建一个a标签用于下载
+                    let a = document.createElement('a');
+                    a.download = '清单.xlsx';
+                    // a.href = e.target.result;  会报错，是因为类型检查机制，没有这个result，所以用target任意属性来接受一下，就可以跳过类型检查机制了
+                    a.href = target.result;
+                    $('body').append(a);  // 修复firefox中无法触发click
+                    a.click();
+                    $(a).remove();
+                };
+            } else {
+                success = false;
+            }
+        };
+        // 发送ajax请求
+        xhr.send();
 
-
-
+        if (success) {
+            this.nznot.create('success', '请稍后！', '正在下载！');
+        } else {
+            this.nznot.create('error', '下载错误！', '请稍后！');
+        }
         this.isVisible = false;
     }
-
-
-
-
 }
+
+
+$('#ces').on('click', function () {
+    alert('hi,jquery!');
+})

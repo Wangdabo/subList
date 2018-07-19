@@ -37,7 +37,7 @@
                         <nz-input [(ngModel)]="search.proposer" name="proposer" [nzSize]="'large'" [nzPlaceHolder]="'申请人'" nzId="proposer"></nz-input>
                     </div>
                 </div>
-            </div>   
+            </div>
 
             <div nz-col [nzSpan]="6" class="mb-md">
                 <div nz-form-item class="d-flex">
@@ -52,7 +52,7 @@
             <div nz-col [nzSpan]="4" class="mb-md" [class.text-right]="expandForm">
                 <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="loading" [nzSize]="'large'">查询</button>
                 <button nz-button type="reset" (click)="reset()" [nzSize]="'large'" class="mx-sm">重置</button>
-             
+
             </div>
         </div>
     </form>
@@ -288,10 +288,9 @@
                 <button  nz-col  [nzOffset]="2"  nz-button  [nzType]="'default'" (click)="nextImport()" *ngIf="importCurrent < 1"  [disabled]="isNext">
                     <span>下一步</span>
                 </button>
-                <button nz-col  nz-button [nzType]="'primary'" [nzOffset]="2"  (click)="importSave()" *ngIf="importCurrent === 1">
+                <button nz-col  nz-button [nzType]="'primary'" [nzOffset]="2"  [nzLoading]="loading"  (click)="importSave()" *ngIf="importCurrent === 1">
                     <span>确认</span>
                 </button>
-
             </div>
         </div>
     </ng-template>
@@ -569,3 +568,5 @@
 
     </ng-template>
 </nz-modal>
+
+

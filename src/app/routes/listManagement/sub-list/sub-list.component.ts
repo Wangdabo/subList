@@ -26,7 +26,7 @@ export class SubListComponent implements OnInit {
         @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService, // 依赖注入 注入token
     ) { }
 
-
+    loading = false;
     search: any;
     workItmseach: any;
     workItm = [
@@ -135,10 +135,11 @@ export class SubListComponent implements OnInit {
     // 整理清单
     listreset() {
         if (this.ifActive) { // 请求回来之后在打开页面
-            this.reset = true;
             this.isPagination = false;
             this.itemName = this.workItemInfo.itemName; // 绑定工作项名称
+            this.loading = true;
             this.getData();
+
         }
 
     }
@@ -185,6 +186,8 @@ export class SubListComponent implements OnInit {
         this.utilityService.getData(appConfig.testUrl  + appConfig.API.sDeliveryList + '/'+ this.bransguid + '/history', {}, {Authorization: this.token})
             .subscribe(
                 (val) => {
+                    this.loading = false;
+                    this.reset = true; // 打开右侧内容
                     this.textcssList = val.result;
                     let index = 0;
                     for (let i = 0; i < this.textcssList.length; i ++) {
@@ -225,10 +228,10 @@ export class SubListComponent implements OnInit {
                                 }
                             }
                         }
-
                     }
                 },
                 (error) => {
+                    this.loading = false;
                     this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
                 }
             );
