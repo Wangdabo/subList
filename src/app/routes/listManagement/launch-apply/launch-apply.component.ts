@@ -555,7 +555,7 @@ getElement() {
           
         }else if(event.names.key == 'detail'){
         this.utilityService.getData( appConfig.testUrl + appConfig.API.deliveries + '/' + event.guid + '/deliveryLists', {}, {Authorization: this.token})
-           .map(res => res.json())
+        //    .map(res => res.json())
             .subscribe(
                 (val) => {
                    console.log(val);
@@ -564,9 +564,10 @@ getElement() {
                         // this.mergeVisible = true;
                    }
                 },(error)=>{
-                    if(error){
-                        this.nznot.create('error',error.json().msg,'');
-                    }
+                    console.log(error)
+                    // if(error){
+                    //     this.nznot.create('error',error.json().msg,'');
+                    // }
                 });
            
               
