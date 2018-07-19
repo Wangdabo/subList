@@ -34,7 +34,7 @@ export class SubListComponent implements OnInit {
         {key: '002', value: 'TWS项目组'},
         {key: '003', value: 'RTS项目组'}
     ];
- 
+
     title: '请输入工作组代码';
     active: boolean;
     reset: boolean;
@@ -553,7 +553,6 @@ export class SubListComponent implements OnInit {
                                 this.appendTitle = '投放成功';
                                 this.modalVisible = false; // 关闭
                                 this.launchVisible  = true; // 显示详情
-                                this.getData();
                             },
                             (error) => {
                                 this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
