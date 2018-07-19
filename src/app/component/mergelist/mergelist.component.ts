@@ -44,12 +44,12 @@ export class MergelistComponent implements OnInit {
     @Output()
     checkSave:EventEmitter<any> = new EventEmitter();
 
-    arr ={
+    arr = [{
         guidDelivery:'',
         deployWhere:'',
         patchType:'',
 
-    }
+    }]
 
     // deliveryTime
     constructor(private http: _HttpClient,
@@ -87,12 +87,12 @@ export class MergelistComponent implements OnInit {
     }
     sonbuttonClick(index,it,suoyin) {
           console.log(it)
-         this.arr = {
-                guidDelivery:'',
-                deployWhere:'',
-                patchType:'',
+         this.arr = [{
+        guidDelivery:'',
+        deployWhere:'',
+        patchType:'',
 
-            };
+    }]
 
      
         switch(index){
@@ -108,6 +108,7 @@ export class MergelistComponent implements OnInit {
             //   it.check = false;
              break;
               case 4:
+           
                 // it.check = true;
          this.iStouchan = true;
              break;
@@ -135,7 +136,9 @@ export class MergelistComponent implements OnInit {
 
  
     soncheckSave(){
-        
+        this.arr.forEach(element => {
+            console.log(element)
+        });
             this.checkSave.emit(this.arr)
     }
 

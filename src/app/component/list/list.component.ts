@@ -34,7 +34,8 @@ export class ListComponent implements OnInit {
 
     header: any[]; // 表头数据
     obj: any[];
-
+   @Input()
+   nzShowIcon:boolean
     @Input() // 输入属性,接受父组件传入的数据
     initDate: any[];
     @Input() // 输入属性,接受父组件传递的表头
@@ -61,7 +62,8 @@ export class ListComponent implements OnInit {
     deleteTitle: string;
     @Input() // 输入属性,接受父组件传入的数据
     isShowTotal: boolean;
-
+    @Input()
+    isShowTotalhead:boolean
     data: any[] = [];
 
     @Output()
@@ -98,10 +100,17 @@ export class ListComponent implements OnInit {
     ngOnInit() {
         this.headerDate = this.headerDate;
         this.moreData = this.moreData; // 绑定更多数据
+        // this.isShowTotalhead = true
+        this.checkTotal()
       
     }
 
-
+    checkTotal(){
+     console.log(this.isShowTotalhead)
+     if(this.isShowTotalhead == undefined){
+         this.isShowTotalhead = true;
+     }
+    }
 
     // 打开模态框方法,点击之后应该往外部发射事件，告诉父组件点击了这个按钮
     add(event) {
