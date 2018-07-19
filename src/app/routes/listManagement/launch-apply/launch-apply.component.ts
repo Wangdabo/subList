@@ -307,7 +307,7 @@ getElement() {
                     );
     }
 
-
+  checkId:any;
     current = 0;
 
     loading:any;
@@ -344,6 +344,7 @@ getElement() {
         //   this.current += 1;
           let arr = [];
         this.loading = true;
+     
         // 跳转核对列表
         this.utilityService.getData( url, {}, {Authorization: this.token})
             // .map(res => res.json())
@@ -405,7 +406,9 @@ getElement() {
                         .map(res => res.json())
                          .subscribe(
                          (val) => {
+                             this.checkId = val.result.check.guid;
                              console.log(val)
+
                                this.checkloading = false;
                             this.current += 1;
                          this.checkListVisible = true;
@@ -881,7 +884,7 @@ getElement() {
 
                 showConfirmLoading: true,
                 onOk() {
-                    self.utilityService.putData( appConfig.testUrl +'/checks/'+self.idcheck+'/status/'+status, {}, {Authorization: self.token})
+                    self.utilityService.putData( appConfig.testUrl +'/checks/'+self.checkId+'/status/'+status, {}, {Authorization: self.token})
                                     .map(res => res.json())
                                     .subscribe(
                                 (val) => {
