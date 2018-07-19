@@ -1198,8 +1198,3 @@ getElement() {
 
     }
 }
-
-
-$('#ces').on('click', function () {
-    alert('hi,jquery!');
-})
