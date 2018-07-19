@@ -34,7 +34,7 @@ export class SubListComponent implements OnInit {
         {key: '002', value: 'TWS项目组'},
         {key: '003', value: 'RTS项目组'}
     ];
-
+ 
     title: '请输入工作组代码';
     active: boolean;
     reset: boolean;
@@ -42,7 +42,7 @@ export class SubListComponent implements OnInit {
     textList: any;
     token: any; // 保存token信息
     bransguid: string;
-
+   isShowTotalhead = false
     deliveryTime: any; // 投放时间
     deliveryName: string; // 投放别名
     mergeilsItem: MergelistModuleergeList = new MergelistModuleergeList();

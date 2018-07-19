@@ -124,6 +124,7 @@ export class AdRecordComponent implements OnInit {
 
         if (event === 'merge') {
 
+
             
             // this.mergeVisible = true;
         } else if (event === 'checking') {
@@ -186,6 +187,7 @@ export class AdRecordComponent implements OnInit {
                             }
                         }
                          for  (let i = 0; i < this.checkModalData.length; i ++) {
+                             
                                       this.guidprent[i]['guid']=this.checkModalData[i].delivery.guid;
                                       this.guidprent[i]['guidWorkitem']=this.checkModalData[i].delivery.guidWorkitem.target
                             for (let j = 0; j < this.checkModalData[i].detailList.length; j ++) {
@@ -255,10 +257,11 @@ mergeClick(index){
      
       showConfirmLoading: true,
       onOk() {
-           self.utilityService.putData( appConfig.testUrl +'/checks/'+self.idcheck+'/status/'+status, {}, {Authorization: self.token})
+           self.utilityService.putData( appConfig.testUrl +'/checks/'+self.mergeId+'/status/'+status, {}, {Authorization: self.token})
                         .map(res => res.json())
                          .subscribe(
                        (val) => {
+                           console.log(self.mergeId);
                           if(val.code == 200) {
                        
                            self.nznot.create('success',val.msg,'');
@@ -369,14 +372,14 @@ mergeClick(index){
 
     }
 
-      guidDelivery:any;
+      guidDelivery:string;
       patchType:any;
       deployWhere:any;
     // 关闭核对清单
     checkSave(event) {
         this.iStouchan = false;
         const obj ={
-            guidDelivery:event.guidDelivery,
+            guidDelivery:String(event.guidDelivery),
             patchType:event.patchType,
             deployWhere:event.deployWhere
         }

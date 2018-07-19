@@ -134,16 +134,17 @@
                    <div *ngFor="let s of i.deliveryPatchDetails; let l2 = index;">
                        <!--只有才config的时候 才会选择 其他都是默认显示-->
                        <div *ngIf="i.projectType ==='C' || i.projectType ==='I'" style="border: 1px solid #ccc;"  nz-col [nzSpan]="24" class="mb-md">
-                           <div  nz-col [nzSpan]="12" nz-form-item class="d-flex">
-                               <div nz-form-label><label>导出类型</label></div>
+                          <div nz-col [nzSpan]="24" style="border: 1px solid #d2eafb; background-color: #ecf6fd;padding-top: 1rem;">
+                             <div  nz-col [nzSpan]="10" [nzOffset]="2"  nz-form-item class="d-flex">
+                               <div nz-form-label><label>导出为</label></div>
                                <div style="margin-top: 5px" class="ad-desc-list__detail ng-star-inserted">{{s.patchType}}</div>
                            </div>
-
-                           <div nz-col [nzSpan]="12" nz-form-item class="d-flex">
+                           <div nz-col [nzSpan]="9" [nzOffset]="3" nz-form-item class="d-flex">
                                <div nz-form-label><label>部署到</label></div>
                                <div style="margin-top: 5px" class="ad-desc-list__detail ng-star-inserted">{{s.deployWhere}}</div>
                            </div>
-                           <div nz-col [nzSpan]="24" nz-form-item class="d-flex">
+                           </div>
+                           <div nz-col [nzSpan]="24" nz-form-item class="d-flex" style="margin-top:-1rem">
                                <app-list  style="margin-top:20px;width: 100%"  #child
                                           [parsentList]="s"
                                           [isShowTotal]="isShowTotal"
@@ -160,7 +161,9 @@
                                           (buttonEvent)="buttonEvent($event)"
                                           (selectedRow)="selectedRow($event)"
                                           [headerDate]="i.headerData"
-                                          [moreData]="moreData" ></app-list>
+                                          [moreData]="moreData"
+                                         [isShowTotalhead]='isShowTotalhead'
+                                           ></app-list>
                            </div>
 
                        </div>
