@@ -504,7 +504,6 @@ export class SubListComponent implements OnInit {
         this.profiles = [];
         for (let i = 0; i < this.elementScice.length; i ++) {
             if (this.elementScice[i].check && this.elementScice[i].times) {
-                console.log()
                 if (_.isUndefined(this.elementScice[i].deliveryName)) { // 如果是undefined, 那么就给一个默认的别名
                     let obj = {
                         guidProfiles: this.elementScice[i].guid,
@@ -513,6 +512,7 @@ export class SubListComponent implements OnInit {
                         name: this.elementScice[i].manager,
                         applyAlias: this.workItemInfo.itemName // 默认别名 工作项名称
                     };
+                    this.profiles.push(obj);
                 } else {
                     let obj = {
                         guidProfiles: this.elementScice[i].guid,
@@ -521,6 +521,7 @@ export class SubListComponent implements OnInit {
                         name: this.elementScice[i].manager,
                         applyAlias: this.elementScice[i].deliveryName
                     };
+                    this.profiles.push(obj);
                 }
 
             }
