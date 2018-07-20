@@ -80,7 +80,9 @@ export class SBranchComponent implements OnInit {
                 condition: this.search,
                 page: {
                     size: 10,
-                    current: this.branch.page
+                    current: this.branch.page,
+                    orderByField: 'guid',
+                    asc: false
                 }
             };
             console.log(page);
