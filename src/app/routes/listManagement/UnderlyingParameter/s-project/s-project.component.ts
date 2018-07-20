@@ -196,6 +196,8 @@ export class SProjectComponent implements OnInit {
                 this.productAdd = event; // 修改类型问题
                 if (event.projectType === '特殊工程') {
                     event.projectType = 'S';
+                } else if (event.projectType === 'IBS工程') {
+                    event.projectType = 'I';
                 } else {
                     event.projectType = 'C';
                 }

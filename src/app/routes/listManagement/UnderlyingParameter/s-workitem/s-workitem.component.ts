@@ -94,6 +94,8 @@ export class SWorkitemComponent implements OnInit {
             page: {
                 current: this.workItem.pi,
                 size: this.workItem.size,
+                orderByField: 'guid',
+                asc: false // asc 默认是true  升序排序，时间类型 用false， 降序
             }
         };
         this.utilityService.postData(appConfig.testUrl  + appConfig.API.workItemList , this.page, {Authorization: this.token})
