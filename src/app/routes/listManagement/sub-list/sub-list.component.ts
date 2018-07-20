@@ -349,6 +349,7 @@ export class SubListComponent implements OnInit {
         this.modalVisible = true;
         this.deliveryTime = moment(new Date()).format('YYYY-MM-DD');
         this.getcheckOptionOne();
+
     }
 
     selectedCities = [];
@@ -393,6 +394,12 @@ export class SubListComponent implements OnInit {
                     for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
                         for ( let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
                             if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].checked) {
+                                if ( !_.isUndefined(this.textcssList[i].deliveryPatchDetails[j].fileList[n].deployWhere) && !_.isUndefined(this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchSelect)) {
+                                    this.textcssList[i].deliveryPatchDetails[j].fileList[n].deployWhere = this.textcssList[i].deliveryPatchDetails[j].fileList[n].deploySelect;
+                                    this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchType = this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchSelect;
+                                }
+
+
                                 array.push(this.textcssList[i].deliveryPatchDetails[j].fileList[n]);
                             }
                         }
