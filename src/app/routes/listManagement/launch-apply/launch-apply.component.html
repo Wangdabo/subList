@@ -463,10 +463,10 @@
 </nz-modal>
 <!--合并投放-->
 <nz-modal [nzVisible]="mergeVisible"  [nzWidth]="1324" [nzTitle]="'查看申请清单'"  [nzContent]="mergeModal"
-          (nzOnCancel)="mergeVisible=false" (nzOnOk)="checkSave()">
+          (nzOnCancel)="mergeVisible=false" [nzFooter]="ewqewq">
     <ng-template #mergeModal>
         <div nz-row [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
-    
+
 
             <div nz-col [nzSpan]="24" class="mb-md">
                 <div  nz-form-item class="d-flex">
@@ -476,7 +476,7 @@
 
               <div  nz-col [nzSpan]="24" class="mb-md" *ngFor="let s of mergeListDetail ; let l = index">
                 <div *ngFor="let j of s.deliveryPatchDetails" style="margin-bottom: 2rem;">
-                   
+
                         <nz-table #nzTables   nzBordered  [nzIsPagination]="false" [nzDataSource]="s.deliveryPatchDetails">
                             <tbody nz-tbody nz-col [nzSpan]="24"  >
                             <tr  nz-tbody-tr nz-col [nzSpan]="24" class="trborder">
@@ -496,21 +496,21 @@
                                 <td class="bcolor"  nz-td nz-col [nzSpan]="16">代码</td>
                                 <td class="bcolor"  nz-td nz-col [nzSpan]="4">变动类型</td>
                                 <td class="bcolor"  nz-td nz-col [nzSpan]="4">清单来源</td>
-                              
+
                             </tr>
                             <tr nz-tbody-tr nz-col [nzSpan]="24"  *ngFor="let k of j.fileList">
-                                <td nz-td nz-col [nzSpan]="16" style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;"  title="{{k.fullPath}}">{{k.fullPath}}</td> 
+                                <td nz-td nz-col [nzSpan]="16" style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;"  title="{{k.fullPath}}">{{k.fullPath}}</td>
                                 <td nz-td nz-col [nzSpan]="4">{{k.commitType}}</td>
                                 <td nz-td nz-col [nzSpan]="4">{{k.fromType}}</td>
-                              
+
                             </tr>
                             </tbody>
                         </nz-table>
-                     
+
                     </div>
             </div>
 
-    
+
         </div>
 
     </ng-template>
