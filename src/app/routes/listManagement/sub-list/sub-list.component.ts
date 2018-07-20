@@ -564,7 +564,7 @@ export class SubListComponent implements OnInit {
                                 this.appendTitle = '投放成功';
                                 this.modalVisible = false; // 关闭
                                 this.launchVisible  = true; // 显示详情
-                                this.getData();
+                                // this.getData();
                             },
                             (error) => {
                                 this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);

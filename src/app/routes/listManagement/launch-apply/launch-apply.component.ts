@@ -147,7 +147,9 @@ export class LaunchApplyComponent implements OnInit {
                 condition:this.search,
                 page : {
                     size: 10,
-                    current :  this.currentpage
+                    current :  this.currentpage,
+                    orderByField: 'guid',
+                    asc: false // asc 默认是true  升序排序，时间类型 用false， 降序
                 }
             };
             this.utilityService.postData(appConfig.testUrl  + appConfig.API.list, page, { Authorization: this.token})
@@ -345,7 +347,7 @@ getElement() {
         //   this.current += 1;
           let arr = [];
         this.loading = true;
-     
+
         // 跳转核对列表
         this.utilityService.getData( url, {}, {Authorization: this.token})
             // .map(res => res.json())
@@ -559,10 +561,10 @@ getElement() {
             let end = '';
         this.utilityService.getData( appConfig.testUrl + appConfig.API.deliveries + '/' + event.guid + '/deliveryLists', {}, {Authorization: this.token})
             .subscribe(
-                (val) => {       
-                   if(val.code == 200){      
+                (val) => {
+                   if(val.code == 200){
                         this.mergeListDetail = val.result
-                          
+
                         this.mergeVisible = true;
                    }
                 },(error)=>{
@@ -1024,14 +1026,14 @@ getElement() {
        checkSavemerge(event) {
         this.iStouchan = false;
          let objs =event.arr
-        
+
         this.iStouchan = false;
         const obj ={
             guidDelivery:String(objs.guidDelivery),
             patchType:objs.patchType,
             deployWhere:objs.deployWhere
         }
-        
+
           console.log(this.mergeId)
           this.utilityService.putData( appConfig.testUrl +'/checkLists/'+event.errorId+'/delivery', obj, {Authorization: this.token})
                         .map(res => res.json())
