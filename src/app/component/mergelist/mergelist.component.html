@@ -1,5 +1,4 @@
-
-             <div nz-col [nzSpan]="24" class="mb-md">
+        <div nz-col [nzSpan]="24" class="mb-md">
                 <div  nz-form-item class="d-flex">
                  <button nz-col [nzSpan]="5" [nzOffset]="2" nz-button [nzType]="'default'"  (click)="sonmergeClick(0)">
                     <span>暂缓核对</span>
@@ -11,9 +10,7 @@
                     <span>完成核对</span>
                 </button>
                 </div>
-            </div>
-
-        <div >
+        </div>
 
         <div nz-row [nzType]="'flex'" [nzJustify]="'start'" nz-col [nzSpan]="24"  >
             <nz-table #nzTable [nzLoading]="checkloading" [nzDataSource]="mergeListData" [nzIsPagination]="false">
@@ -55,17 +52,14 @@
                     </tr>
                 </tbody>
                 </nz-table>
-        
-        </div>
 
+        </div>
            <div nz-row [nzType]="'flex'" [nzJustify]="'start'" nz-col [nzSpan]="24"  *ngFor="let j of checkModalData" >
-     
             <div nz-col [nzSpan]="24" class="mb-md">
                 <div  nz-form-item class="d-flex work">
                     <h2>{{j.delivery.guidWorkitem.target}}</h2>
                 </div>
             </div>
-
             <div nz-col [nzSpan]="6" class="mb-md">
                 <div  nz-form-item class="d-flex">
                     <div class="ad-desc-list__term ng-star-inserted words">投放计划 :</div>
@@ -120,8 +114,8 @@
                             <tr nz-tbody-tr nz-col [nzSpan]="24">
                                 <td class="bcolor"  nz-td nz-col [nzSpan]="8">代码</td>
                                 <td class="bcolor"  nz-td nz-col [nzSpan]="4">变动类型</td>
-               
-                               
+
+
                                 <td class="bcolor"  nz-td nz-col [nzSpan]="4">描述</td>
                                  <td class="bcolor"  nz-td nz-col [nzSpan]="4">状态</td>
                                 <td class="bcolor"  nz-td nz-col [nzSpan]="4">操作</td>
@@ -129,7 +123,7 @@
                             <tr nz-tbody-tr nz-col [nzSpan]="24"  *ngFor="let x of k.fileList;let q = index">
                                 <td nz-td nz-col [nzSpan]="8" style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;"  title="{{x.fullPath}}">{{x.fullPath}}</td>
                                 <td nz-td nz-col [nzSpan]="4">{{x.commitType}}</td>
-            
+
                                 <td nz-td nz-col [nzSpan]="4">{{x.errorType}}</td>
                                 <td nz-td nz-col [nzSpan]="4">{{x.confirmStatus}}</td>
                                 <td nz-td nz-col [nzSpan]="4">
@@ -146,21 +140,21 @@
                     <button  nz-col [nzSpan]="4"  [disabled]="disba" [nzOffset]="'6'" nz-button  (click)="sonreturnsclick(0,j.delivery.guid)"  [nzType]="'primary'" [nzSize]="'large'">
                         <span>打回</span>
                     </button>
- 
+
                     <button   nz-col  [nzSpan]="4" [disabled]="disba"  [nzOffset]="'3'" nz-button  (click)="sonreturnsclick(1,j.delivery.guid)"  [nzType]="'primary'" [nzSize]="'large'">
                         <span>成功</span>
                     </button>
             </div>
          </div>
 
-   <nz-modal [nzVisible]="istextVisible"  [nzWidth]="600" [nzTitle]="'请输入打回理由（选填）'"   [nzContent]="modaltextTitle"
+            <nz-modal [nzVisible]="istextVisible"  [nzWidth]="600" [nzTitle]="'请输入打回理由（选填）'"   [nzContent]="modaltextTitle"
           (nzOnCancel)="istextVisible=false"  (nzOnOk)="sonreturnsclick(2,guid)" nzZIndex=1000>
       <ng-template #modaltextTitle>
         <textarea rows="6"  nz-input [(ngModel)]="inputValue" ></textarea>
     </ng-template>
 </nz-modal>
 
-<nz-modal [nzVisible]="iStouchan"   [nzWidth]="1024" [nzTitle]="'工作项投放申请'" nzZIndex=1000  [nzContent]="detailVisibleModalModal"
+            <nz-modal [nzVisible]="iStouchan"   [nzWidth]="1024" [nzTitle]="'工作项投放申请'" nzZIndex=1000  [nzContent]="detailVisibleModalModal"
           (nzOnCancel)="iStouchan=false" (nzOnOk)="soncheckSave()">
     <ng-template #detailVisibleModalModal>
 
@@ -201,6 +195,6 @@
     </ng-template>
 </nz-modal>
 
-<div class="example" *ngIf='loading == true'>
-      <nz-spin></nz-spin>
+     <div class="example" *ngIf='loading == true'>
+        <nz-spin></nz-spin>
       </div>
