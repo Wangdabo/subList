@@ -103,19 +103,22 @@ export class SProjectComponent implements OnInit {
                     this.data = val.result.records;
                     this.total = val.result.total;
                     this.pageTotal = val.result.pages * 10;
-                    console.log(this.data)
                     _.forEach(this.data , function (value) {
-
                         if (!_.isUndefined(value.deployConfig)) {
-
                             if (value.deployConfig !== 'default') {
-                                let jsonPar = JSON.parse(value.deployConfig)
+                                let jsonPar = JSON.parse(value.deployConfig);
+                                var str = ''
+                                // console.log(jsonPar)
                                 _.forEach(jsonPar , function (json) {
-                                    // 先这样。如果想严谨  利用冒泡函数 两两相加即可,然后赋值
-                                    value.exportShow = json.exportType;
+                                    // 把exportType拼接逻辑 如果是空，那就添加exportType
+                                    if (str === '') {
+                                        str = str + json.exportType;
+                                    }else { // 如果不是空，那就中间+,
+                                        str = str + ',' + json.exportType;
+                                    }
+                                    value.exportShow = str;
                                     value.deployShow = json.deployType;
                                 })
-
                             } else {
                                 value.deployShow = value.deployConfig;
                                 value.exportShow = value.deployConfig;
