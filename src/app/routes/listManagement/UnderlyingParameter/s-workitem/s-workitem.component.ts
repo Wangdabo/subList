@@ -156,7 +156,7 @@ export class SWorkitemComponent implements OnInit {
             .subscribe(
                 (val) => {
                  this.branch = val.result;
-                 console.log(val);
+
             });
     }
     // 查询人员
@@ -293,9 +293,9 @@ export class SWorkitemComponent implements OnInit {
                 (val) => {
                   this.branchData = val.result;
                   this.branchdataInfo = true; // 默认不显示详情
+                  this.branchData.createTime = moment(this.branchData.createTime).format('YYYY-MM-DD');
                 }
             );
-
     }
 
     // 弹出框确定
