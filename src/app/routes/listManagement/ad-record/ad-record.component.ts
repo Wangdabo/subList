@@ -102,7 +102,9 @@ export class AdRecordComponent implements OnInit {
         const page = {
             page : {
                 size: 10,
-                current : index
+                current : index,
+                 orderByField: 'guid',
+                    asc: false
             }
         };
         this.utilityService.postData(appConfig.testUrl  + appConfig.API.checklist, page, { Authorization: this.token})

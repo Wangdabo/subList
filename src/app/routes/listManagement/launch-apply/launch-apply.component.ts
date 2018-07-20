@@ -134,6 +134,7 @@ export class LaunchApplyComponent implements OnInit {
     detailVisible = false;
      currentpage = 1;
     inputValue = '';
+    mergeListDetail:any[]=[] //投放申请详情
    search = {
         guidWorkitem:'',
         proposer:'',
@@ -554,14 +555,15 @@ getElement() {
             });
 
         }else if(event.names.key == 'detail'){
+            let star = '';
+            let end = '';
         this.utilityService.getData( appConfig.testUrl + appConfig.API.deliveries + '/' + event.guid + '/deliveryLists', {}, {Authorization: this.token})
-        //    .map(res => res.json())
             .subscribe(
-                (val) => {
-                   console.log(val);
-                   if(val.code == 200){
-                       console.log(val)
-                        // this.mergeVisible = true;
+                (val) => {       
+                   if(val.code == 200){      
+                        this.mergeListDetail = val.result
+                          
+                        this.mergeVisible = true;
                    }
                 },(error)=>{
                     console.log(error)
