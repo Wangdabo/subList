@@ -87,7 +87,7 @@
         </nz-card>
     </div>
     <div class="ui-g-9" >
-        <nz-card  *ngIf="reset" [nzBordered]="false">
+        <nz-card   [nzBordered]="false">
             <form nz-form (ngSubmit)="seach()" [nzLayout]="'inline'">
                 <div nz-row  [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
                     <div nz-col [nzSpan]="8" class="mb-md">
@@ -125,11 +125,11 @@
                     <!--<i class="{{s.icon}}"></i>-->
                     <span>投放</span>
                 </button>
-                <button  style="margin-right: 1%"   nz-button  (click)="appendSave()"  [nzType]="'primary'" [nzSize]="'large'">
+                <button  style="margin-right: 1%"  *ngIf="reset" nz-button  (click)="appendSave()"  [nzType]="'primary'" [nzSize]="'large'">
                     <span>追加到</span>
                 </button>
             </div>
-            <nz-collapseset  nzAccordion>
+            <nz-collapseset  nzAccordion  *ngIf="reset">
                 <nz-collapse *ngFor="let i of textcssList; let l1 = index" [nzTitle]="i.projectName" [nzActive]="true">
                    <div *ngFor="let s of i.deliveryPatchDetails; let l2 = index;">
                        <!--只有才config的时候 才会选择 其他都是默认显示-->
