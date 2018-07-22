@@ -254,7 +254,7 @@ getElement() {
         } else if (event === 'checking') {
               this.getSprofiles();
               this.mergeisVisible = true
-           this.current = 0;
+              this.current = 0;
             // this.changeContent();
             // this.checkModalVisible = true; // 打开核对弹出框
 
@@ -417,18 +417,43 @@ getElement() {
                          this.checkListVisible = true;
                           this.checkModalData = val.result.deliveryDetails;
                           this.mergeListData  = val.result.mergeLists;
+                           let star = '';
+                          let end = '';
                         for  (let i = 0; i < this.mergeListData.length; i ++) {
-                            this.mergeListData[i]['check'] = null;
+                              if(this.mergeListData[i].confirmStatus=='加入投放'){
+                                this.mergeListData[i]['checkbuttons'] = true;
+                            }else{
+                                this.mergeListData[i]['checkbuttons'] = false;
+                            }
                             if (this.mergeListData[i].fullPath) {
 
                                 indexs = this.mergeListData[i].fullPath.indexOf(this.mergeListData[i].partOfProject);
                                 this.mergeListData[i].fullPath = this.mergeListData[i].fullPath.substring(indexs, this.mergeListData[i].fullPath.length);
-                            }
+                        if(this.mergeListData[i].fullPath.length > 40){
+                                                        star = this.mergeListData[i].fullPath.substr(0,20)
+                                                        end = this.mergeListData[i].fullPath.substr(this.mergeListData[i].fullPath.length - 20)
+                                                           this.mergeListData[i].fullPathstr = star + '...' + end;
+                                                        }else{
+                                                            this.mergeListData[i].fullPathstr =this.mergeListData[i].fullPath
+                                                     }     
+                         }
+                           if(this.mergeListData[i].programName.length > 40){
+                                                        star = this.mergeListData[i].programName.substr(0,10)
+                                                        end = this.mergeListData[i].programName.substr(this.mergeListData[i].programName.length - 10)
+                                                           this.mergeListData[i].programNamestr = star + '...' + end;
+                                                        }else{
+                                                            this.mergeListData[i].programNamestr =this.mergeListData[i].programName
+                                                     }
                         }
 
                      for  (let i = 0; i < this.checkModalData.length; i ++) {
-                                      this.guidprent[i]['guid']=this.checkModalData[i].delivery.guid;
-                                      this.guidprent[i]['guidWorkitem']=this.checkModalData[i].delivery.guidWorkitem.target
+                                      let obj = {
+                                  guid:this.checkModalData[i].delivery.guid,
+                                  guidWorkitem:this.checkModalData[i].delivery.guidWorkitem.target
+                              }
+                                    //   this.guidprent[i]['guid']=this.checkModalData[i].delivery.guid;
+                                    //   this.guidprent[i]['guidWorkitem']=this.checkModalData[i].delivery.guidWorkitem.target
+                              this.guidprent.push(obj);
                             for (let j = 0; j < this.checkModalData[i].detailList.length; j ++) {
                                 for (let x = 0; x < this.checkModalData[i].detailList[j].deliveryPatchDetails.length; x ++) {
                                     for (let  y = 0; y < this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList.length; y ++) {
@@ -436,7 +461,13 @@ getElement() {
                                         if (this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath) {
                                             index = this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.indexOf(this.checkModalData[i].detailList[j].projectName);
                                             this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath = this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.substring(index, this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.length);
-
+                                             if(this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.length > 80){
+                                                        star = this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.substr(0,20)
+                                                        end = this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.substr(this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.length - 20)
+                                                            this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPathstr = star + '...' + end;
+                                                        }else{
+                                                           this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPathstr =this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath
+                                                     }
 
                               }
                                     }
@@ -888,7 +919,6 @@ loading2 = false
                 let self = this;
                 this.modal.confirm({
                 title  : '您是否确认要进行这项操作!',
-
                 showConfirmLoading: true,
                 onOk() {
                     self.utilityService.putData( appConfig.testUrl +'/checks/'+self.checkId+'/status/'+status, {}, {Authorization: self.token})
@@ -898,9 +928,9 @@ loading2 = false
                                          self.loading1 = false;
                                        self.loading2 = false;
                                     if(val.code == 200) {
-
                                     self.nznot.create('success',val.msg,'');
-                                        self.detailVisible =false;
+                                    //  self.detailVisible =false;
+                                     self.mergeisVisible =false;
                                     }else{
                                             self.nznot.create('error', val.msg,'');
                                     }
@@ -1047,7 +1077,12 @@ loading2 = false
                          .subscribe(
                          (val) => {
                           if(val.code == 200) {
-
+                    this.mergeListData.forEach((result,i)=>{
+                                 if(result.guid == event.errorId){
+                                     this.mergeListData[i].checkbuttons = true;
+                                       this.mergeListData[i].confirmStatus = '加入投放';
+                                 }
+                             })
                            this.nznot.create('success',val.msg,'');
                                 //
 

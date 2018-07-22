@@ -194,17 +194,32 @@ export class AdRecordComponent implements OnInit {
                           let star = '';
                           let end = '';
                         for  (let i = 0; i < this.mergeListData.length; i ++) {
+                            if(this.mergeListData[i].confirmStatus=='加入投放'){
+                                this.mergeListData[i]['checkbuttons'] = true;
+                            }else{
+                                this.mergeListData[i]['checkbuttons'] = false;
+                            }
+                          
                             if (this.mergeListData[i].fullPath) {
                                 indexs = this.mergeListData[i].fullPath.indexOf(this.mergeListData[i].partOfProject);
                                 this.mergeListData[i].fullPath = this.mergeListData[i].fullPath.substring(indexs, this.mergeListData[i].fullPath.length);
-                                                  if(this.mergeListData[i].fullPath.length > 80){
+                                                  if(this.mergeListData[i].fullPath.length > 40){
                                                         star = this.mergeListData[i].fullPath.substr(0,20)
                                                         end = this.mergeListData[i].fullPath.substr(this.mergeListData[i].fullPath.length - 20)
                                                            this.mergeListData[i].fullPathstr = star + '...' + end;
                                                         }else{
                                                             this.mergeListData[i].fullPathstr =this.mergeListData[i].fullPath
-                                                     }   
+                                                     }
+                                                    
+
                          }
+                           if(this.mergeListData[i].programName.length > 40){
+                                                        star = this.mergeListData[i].programName.substr(0,10)
+                                                        end = this.mergeListData[i].programName.substr(this.mergeListData[i].programName.length - 10)
+                                                           this.mergeListData[i].programNamestr = star + '...' + end;
+                                                        }else{
+                                                            this.mergeListData[i].programNamestr =this.mergeListData[i].programName
+                                                     }
                         }
                          for  (let i = 0; i < this.checkModalData.length; i ++) {
                              
@@ -436,10 +451,12 @@ mergeClick(index){
                          .subscribe(
                          (val) => {
                           if(val.code == 200) {
-                                  
+                                //   this.mergeListData[event.errorId]
                              this.mergeListData.forEach((result,i)=>{
-                                 if(result.guid == this.mergeId){
-                                     this.mergeListData[i].check = true;
+
+                                 if(result.guid == event.errorId){
+                                     this.mergeListData[i].checkbuttons = true;
+                                       this.mergeListData[i].confirmStatus = '加入投放';
                                  }
                              })
                                  console.log(this.mergeListData)

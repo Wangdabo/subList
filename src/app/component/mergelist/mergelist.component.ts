@@ -116,12 +116,13 @@ export class MergelistComponent implements OnInit {
             
              break;
               case 3:
-            //   it.check = false;
+           
             this.errorId=it.guid
              break;
               case 4:
             this.errorId=it.guid
-                // it.check = true;
+                // it.checkbuttons = true;
+                //   it.confirmStatus = '加入投放'
          this.iStouchan = true;
              break;
         }
