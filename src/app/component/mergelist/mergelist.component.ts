@@ -22,6 +22,8 @@ export class MergelistComponent implements OnInit {
     iStouchan: boolean;
     @Input()
     istextVisible:boolean;
+    // @Input()
+    //  loading:boolean;
     @Input()
     checkModalData:any[];
     @Input()
@@ -33,7 +35,9 @@ export class MergelistComponent implements OnInit {
     @Input()
     checkloading:boolean;
     @Input()
-    loading:boolean;
+    loading1:boolean;
+     @Input()
+    loading2:boolean;
     @Output()
 
     isActive: EventEmitter<any> = new EventEmitter(); // 定义一个输出属性，当点击按钮的时候 发射出去
@@ -63,7 +67,7 @@ export class MergelistComponent implements OnInit {
     ngOnInit() {
         this.elementScice = this.elementScice;
         this.checkloading = false;
-        this.loading = false;
+        // this.loading = false;
          console.log(this.guidprent);
     }
 
@@ -85,7 +89,7 @@ export class MergelistComponent implements OnInit {
 
     }
     sonmergeClick(index) {
-      
+         
         this.mergeClick.emit(index)
     }
      errorId:any;
@@ -135,6 +139,7 @@ export class MergelistComponent implements OnInit {
         if(index == 0){
             this.istextVisible = true
         }
+      
          let obj = {
             index:index,
             id : id

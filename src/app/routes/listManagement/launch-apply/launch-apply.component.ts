@@ -866,7 +866,8 @@ getElement() {
             }
 
 
-
+loading1 = false
+loading2 = false
     mergeClick(index){
             let status = '';
                 switch(index){
@@ -874,10 +875,12 @@ getElement() {
                     this.detailVisible = false
                     return;
 
-                        case 1 :
+                   case 1 :
+                      this.loading1 = true;
                     status  = 'F'
                     break;
                         case 2 :
+                     this.loading2 = true;
                     status = 'S'
                     break;
              }
@@ -892,6 +895,8 @@ getElement() {
                                     .map(res => res.json())
                                     .subscribe(
                                 (val) => {
+                                         self.loading1 = false;
+                                       self.loading2 = false;
                                     if(val.code == 200) {
 
                                     self.nznot.create('success',val.msg,'');
@@ -899,7 +904,9 @@ getElement() {
                                     }else{
                                             self.nznot.create('error', val.msg,'');
                                     }
-                                    },(error)=>{
+                                },(error)=>{
+                                    self.loading1 = false;
+                                    self.loading2 = false;
                                         if(error){
                                                 self.nznot.create('error', error.json().msg,'');
                                         }

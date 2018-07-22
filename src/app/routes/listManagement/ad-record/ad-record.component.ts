@@ -95,7 +95,7 @@ export class AdRecordComponent implements OnInit {
     test: string;
     page: any;
     total: number;
-
+    loading = false
 
 
     getData(index) {
@@ -160,9 +160,9 @@ export class AdRecordComponent implements OnInit {
       mergeListData: any[] = []; // 核查有异议的数据
          checkModalData: any[] = []; // 核查清单数据
          guidprent=[
-             {guid:'',
-            guidWorkitem:''
-        }
+            // { guid:'',
+            //  guidWorkitem:''
+            //    }
             
          ]
          
@@ -175,7 +175,7 @@ export class AdRecordComponent implements OnInit {
         this.mergeId = event.guid;
 
         if (event.names.key === 'merge') {
-
+              
             this.idcheck = event.guid;
               let index = '';
               let indexs = '';
@@ -189,36 +189,56 @@ export class AdRecordComponent implements OnInit {
                             this.checkloading = false;
                           this.detailVisible = true;
                           this.checkModalData = val.result.deliveryDetails;
+                          console.log(  this.checkModalData)
                           this.mergeListData  = val.result.mergeLists;
+                          let star = '';
+                          let end = '';
                         for  (let i = 0; i < this.mergeListData.length; i ++) {
                             if (this.mergeListData[i].fullPath) {
                                 indexs = this.mergeListData[i].fullPath.indexOf(this.mergeListData[i].partOfProject);
                                 this.mergeListData[i].fullPath = this.mergeListData[i].fullPath.substring(indexs, this.mergeListData[i].fullPath.length);
-                            }
+                                                  if(this.mergeListData[i].fullPath.length > 80){
+                                                        star = this.mergeListData[i].fullPath.substr(0,20)
+                                                        end = this.mergeListData[i].fullPath.substr(this.mergeListData[i].fullPath.length - 20)
+                                                           this.mergeListData[i].fullPathstr = star + '...' + end;
+                                                        }else{
+                                                            this.mergeListData[i].fullPathstr =this.mergeListData[i].fullPath
+                                                     }   
+                         }
                         }
                          for  (let i = 0; i < this.checkModalData.length; i ++) {
                              
-                                      this.guidprent[i]['guid']=this.checkModalData[i].delivery.guid;
-                                      this.guidprent[i]['guidWorkitem']=this.checkModalData[i].delivery.guidWorkitem.target
+                              let obj = {
+                                  guid:this.checkModalData[i].delivery.guid,
+                                  guidWorkitem:this.checkModalData[i].delivery.guidWorkitem.target
+                              }
+                                    //  let checkingloading = {checkingloading:false}
+                                      this.guidprent.push(obj);
+                                    //    this.checkModalData[i].delivery.push(checkingloading);
+                                       this.checkModalData[i].delivery.checkingloading = false; 
 
-                            for (let j = 0; j < this.checkModalData[i].detailList.length; j ++) {
-                                    
-
+                            for (let j = 0; j < this.checkModalData[i].detailList.length; j ++) {                                   
                                 for (let x = 0; x < this.checkModalData[i].detailList[j].deliveryPatchDetails.length; x ++) {
  
                                     for (let  y = 0; y < this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList.length; y ++) {
-
                                            this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y]['buttons'] = null
                                         if (this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath) {
                                             index = this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.indexOf(this.checkModalData[i].detailList[j].projectName);
                                             this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath = this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.substring(index, this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.length);
-                                      
-
+                                              if(this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.length > 80){
+                                                        star = this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.substr(0,20)
+                                                        end = this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.substr(this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.length - 20)
+                                                            this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPathstr = star + '...' + end;
+                                                        }else{
+                                                           this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPathstr =this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath
+                                                     }
+                                                  
                               }
                                     }
                                 }
                             }
                         }
+                        console.log(this.checkModalData);
                         //   
                         
                                 }
@@ -251,19 +271,23 @@ export class AdRecordComponent implements OnInit {
 
 
     }
-
+loading1 = false
+loading2 = false
 mergeClick(index){
     let status = '';
+    
    switch(index){
        case 0 :
        this.detailVisible = false
        return;
     
          case 1 :
+         this.loading1 = true;
        status  = 'F'
        break;
          case 2 :
        status = 'S'
+       this.loading2 = true;
        break;
    }
   
@@ -277,6 +301,8 @@ mergeClick(index){
                          .subscribe(
                        (val) => {
                            console.log(self.mergeId);
+                           self.loading1 = false;
+                           self.loading2 = false;
                           if(val.code == 200) {
                        
                            self.nznot.create('success',val.msg,'');
@@ -285,6 +311,8 @@ mergeClick(index){
                                 self.nznot.create('error', val.msg,'');
                           }
                          },(error)=>{
+                           self.loading1 = false;
+                           self.loading2 = false;
                               if(error){
                                     self.nznot.create('error', error.json().msg,'');
                               }
@@ -451,13 +479,12 @@ mergeClick(index){
    returnsclick(event) {
        let item = event.index
        this.guid=event.id
-      
-    let S = '';
+       let S = '';
     console.log(this.guidprent)
 
        let  url = appConfig.testUrl + '/checks/delivery/' + this.guid + '/result';
        if (item === 1) {
-           S = 'S';
+           S = 'S';              
        }else {
            S = 'F';
        }
@@ -471,7 +498,6 @@ mergeClick(index){
            .map(res => res.json())
            .subscribe(
                (val) => {
-                   console.log(val);
 
                    if (val.code == 200){
                        this.istextVisible = false;
@@ -484,7 +510,7 @@ mergeClick(index){
                }
                ,
                (error) => {
-                  
+             
                   if(error){
                           this.nznot.create('error', error.json().msg,'');
                     }
