@@ -293,6 +293,9 @@ export class SProjectComponent implements OnInit {
                     (val) => {
                         this.nznot.create('success', val.msg , val.msg);
                         this.getData();
+                    },
+                    error => {
+                        this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
                     }
                 );
         } else {
@@ -302,6 +305,9 @@ export class SProjectComponent implements OnInit {
                     (val) => {
                         this.nznot.create('success', val.msg , val.msg);
                         this.getData();
+                    },
+                    error => {
+                        this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
                     }
                 );
         }

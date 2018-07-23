@@ -11,8 +11,8 @@ export class I18NService implements AlainI18NService {
     private _default = 'zh-CN'; // 默认语言
 
     private _langs = [
-        { code: 'en', text: 'English' },
-        { code: 'zh-CN', text: '中文' }
+        { code: 'zh-CN', text: '中文' },
+        // { code: 'en', text: 'English' },
     ];
 
     constructor(
