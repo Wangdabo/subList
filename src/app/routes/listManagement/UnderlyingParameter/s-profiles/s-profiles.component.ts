@@ -305,6 +305,10 @@ export class SProfilesComponent implements OnInit {
                         console.log( this.data)
                     }
                     // 拼接
+                },(error)=>{
+                     if(error){
+                        this.nznot.create('error', error.json().msg,'');
+                        }
                 }
             );
     }
@@ -389,18 +393,11 @@ export class SProfilesComponent implements OnInit {
             this.Ptitle = '修改运行环境'
             let arr = [];
 
-            arr = event.packTiming.split(',');
             this.profiles = new SprofilesModule();
             event.checkOptionsOne =  this.profiles.checkOptionsOne;
             this.profiles = event
-            arr.forEach( j=> {
-                this.profiles.checkOptionsOne.forEach( function (i) {
-                    if(j == i.value){
-                        i.checked = true;
-                    }
-                })
-
-            })
+            this.tags = event.packTiming.split(',')
+      
             this.mergeVisible = true;
         }
         else if (event.names.key === 'correlation') {

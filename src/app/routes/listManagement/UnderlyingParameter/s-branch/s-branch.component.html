@@ -31,7 +31,7 @@
                 </div>
                  <div  nz-col [nzSpan]="4" class="mb-md">
                     <div nz-form-item class="d-flex">
-                        <div nz-form-label><label>分支类型</label></div>
+                        <!--<div nz-form-label><label>分支类型</label></div>-->
                         <div nz-form-control class="flex-1">
                             <nz-select style="width: 200px;"
                                        [nzPlaceHolder]="'分支类型'"
@@ -62,7 +62,7 @@
 </nz-card>
 
 <nz-modal [nzVisible]="detailsVisible"  [nzWidth]="1024" [nzTitle]="ptitle"  [nzConfirmLoading]="false" [nzContent]="mergeModal"
-          (nzOnCancel)="detailsVisible=false" [nzFooter]="is">
+          (nzOnCancel)="change()" [nzFooter]="is">
     <ng-template #mergeModal>
         <form nz-form (ngSubmit)="addsubmit()" [nzLayout]="'inline'">
             <div nz-row [nzGutter]="24">

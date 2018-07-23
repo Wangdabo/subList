@@ -22,6 +22,10 @@ export class MergelistComponent implements OnInit {
     iStouchan: boolean;
     @Input()
     istextVisible:boolean;
+    @Input()
+    checkStatus:boolean;
+    @Input()
+    title:any;
     // @Input()
     //  loading:boolean;
     @Input()
@@ -56,7 +60,7 @@ export class MergelistComponent implements OnInit {
         patchType:''
 
     }]
-    disba = false;
+   returnID:any;
 
     // deliveryTime
     constructor(private http: _HttpClient,
@@ -67,7 +71,7 @@ export class MergelistComponent implements OnInit {
     ngOnInit() {
         this.elementScice = this.elementScice;
         this.checkloading = false;
-        // this.loading = false;
+        // this.title =  this.title;
          console.log(this.guidprent);
     }
 
@@ -136,16 +140,28 @@ export class MergelistComponent implements OnInit {
         }
         this.buttonClick.emit(obj)
     }
-    sonreturnsclick(index,id){
+    sonreturnsclick(index,it){
+        // let guid = it
         if(index == 0){
             this.istextVisible = true
+            this.returnID = it
+            // guid = it.guid;
+        }else{
+        //   if(index == 1){
+        //     guid = it.guid;
+        //     }
+            let obj = {
+                index:index,
+                it : it,
+                        }
+            // console.log(obj)
+            this.returnsclick.emit(obj)
+            if(index == 2 ){
+            this.istextVisible = false
+                  }
         }
-      
-         let obj = {
-            index:index,
-            id : id
-        }
-        this.returnsclick.emit(obj)
+       
+     
     }
 
  

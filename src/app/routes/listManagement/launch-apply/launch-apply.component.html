@@ -158,7 +158,7 @@
 </nz-modal>-->
 
 
-<nz-modal [nzVisible]="mergeisVisible"   [nzWidth]="1024" [nzTitle]="'合并投放 请指定投放日期和环境'"   [nzContent]="dictModal"
+<nz-modal [nzVisible]="mergeisVisible"   [nzWidth]="1024" [nzTitle]="'请指定投放日期和环境'"   [nzContent]="dictModal"
           (nzOnCancel)="mergeisVisible=false" (nzOnOk)="savemergeisInfo()" [nzFooter]="is" nzZIndex = '10' >
     <ng-template #dictModal>
 
@@ -189,6 +189,8 @@
             [mergeListData]="mergeListData"
             [checkModalData]='checkModalData'
             [deliveryResult]='deliveryResult'
+            [checkStatus]='checkStatus'
+             [title]='title'
             >
 
         </app-mergelist>

@@ -4,7 +4,7 @@ export class SbranchModule {
     public page = '1';
     // 分支类型
     public branchType: any;
-
+    public branchTypeText: any;
     // 代码全路径
     public fullPath: any;
 

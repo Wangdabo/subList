@@ -100,6 +100,7 @@ export class SBranchComponent implements OnInit {
                             let end = '';
                            let str = ''
                             for (let i = 0 ; i <  this.data.length; i ++) {
+                                this.data[i].branchTypeText =  this.data[i].branchType
                                 console.log(this.data[i].fullPath.length)
                                 if(this.data[i].fullPath.length > 100){
                                    star = this.data[i].fullPath.substr(0,40)
@@ -206,19 +207,18 @@ export class SBranchComponent implements OnInit {
 
 
         } else if (event.names.key === 'upd') {
-
-
-                 this.branchType.forEach( function (i) {
+            let a = event
+            this.detailsVisible = true;
+                 this.branch = event;   
+                 this.branchType.forEach(i=>{
                             console.log(i)
-                            if(event.branchType == i.key) {
-                                event.branchType = i.value;
+                            if(  this.branch.branchType == i.key) {
+                                 this.branch.branchType = i.value;
                             }
                  })
-                  this.branch = event;
             this.ptitle = '修改分支'
-            this.detailsVisible = true;
-             console.log(this.branch);
-              console.log(event);
+          
+            
         }  else if (event.names.key === 'details') {
           this.detailsVisible = true
             this.utilityService.getData(appConfig.testUrl  + appConfig.API.sBranchadd +'/'+ obj,{}, {Authorization: this.token})
@@ -270,6 +270,10 @@ export class SBranchComponent implements OnInit {
             }
         }
 
+change(){
+    this.getData()
+    this.detailsVisible=false
+}
 
     addsubmit(){
 
@@ -283,14 +287,15 @@ export class SBranchComponent implements OnInit {
 
         if ( !obj.guid ) {
               this.utilityService.postData(appConfig.testUrl  + appConfig.API.sBranchadd ,obj, {Authorization: this.token})
-      .map(res => res.json())
-        .subscribe(
+            .map(res => res.json())
+           .subscribe(
             (val) => {
                 console.log(this.branch);
-
+            
              if(val.code == 200) {
+                   this.getData();
                   this.detailsVisible = false;
-                 this.getData();
+               
 
                   this.nznot.create('success', val.msg, val.msg);
              }else {
@@ -314,7 +319,7 @@ export class SBranchComponent implements OnInit {
             (val) => {
 
              if(val.code == 200) {
-
+                this.getData();
 
                   console.log(this.branch);
                   this.detailsVisible = false;

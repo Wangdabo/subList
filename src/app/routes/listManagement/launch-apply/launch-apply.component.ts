@@ -58,6 +58,7 @@ export class LaunchApplyComponent implements OnInit {
     deliveryTime: any; // 投放日期
     isShowTotal = true;
     pageTotal: number; // 翻页总数
+    checkStatus = true;
     deliveryResult = [
         {key: '0', value: '申请中'},
         {key: 'M', value: '已合并'},
@@ -80,7 +81,7 @@ export class LaunchApplyComponent implements OnInit {
 
     headerDate = [  // 配置表头内容
         { value: '别名', key: 'applyAlias', isclick: false, radio: false},
-        { value: '工作项', key: 'guidWorkitem', isclick: true, radio: false },
+        { value: '工作项', key: 'guidWorkitem', isclick: false, radio: false },
         { value: '投放时间', key: 'deliveryTime', isclick: false, radio: false },
         { value: '运行环境', key: 'guidProfiles', isclick: false, radio: false },
         { value: '打包窗口', key: 'packTiming', isclick: false, radio: false },
@@ -93,7 +94,7 @@ export class LaunchApplyComponent implements OnInit {
 
      mergeHeader = [  // 配置表头内容
 
-        { value: '工作项', key: 'guidWorkitem', isclick: true, radio: false },
+        { value: '工作项', key: 'guidWorkitem', isclick: false, radio: false },
         { value: '分支', key: 'branch', isclick: false, radio: false },
         { value: '申请人', key: 'proposer', isclick: false, radio: false },
         { value: '投放申请(别名)', key: 'applyAlias', isclick: false, radio: false },
@@ -175,9 +176,11 @@ export class LaunchApplyComponent implements OnInit {
 
 
                     },
-                    (error) => {
-                        console.log(error);
-                    }
+                    (error)=>{
+                     if(error){
+                        this.nznot.create('error', error.json().msg,'');
+                        }
+                }
                 );
 
     }
@@ -365,6 +368,7 @@ getElement() {
                             arr[i]['projectList'] = val.result[i].projectList;
                             arr[i]['expand'] =false;
                             arr[i]['check'] = true;
+                             arr[i]['deliveryTime'] = moment(val.result[i].deliveryTime).format('YYYY-MM-DD');
                              if(val.result[i].delivery.deliveryResult === "申请中"){
                                   arr[i]['buttonData']= [ {check: false, value: '未确认合并'}];
                             }else{
@@ -454,6 +458,11 @@ getElement() {
                                     //   this.guidprent[i]['guid']=this.checkModalData[i].delivery.guid;
                                     //   this.guidprent[i]['guidWorkitem']=this.checkModalData[i].delivery.guidWorkitem.target
                               this.guidprent.push(obj);
+                            //   if(  this.checkModalData[i].delivery.deliveryResult =='核对成功' || this.checkModalData[i].delivery.deliveryResult =='核对失败' ){
+                            //               this.checkModalData[i].delivery.disabledS = true; 
+                            //          }else{
+                                         this.checkModalData[i].delivery.disabledS = false; 
+                            //          }
                             for (let j = 0; j < this.checkModalData[i].detailList.length; j ++) {
                                 for (let x = 0; x < this.checkModalData[i].detailList[j].deliveryPatchDetails.length; x ++) {
                                     for (let  y = 0; y < this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList.length; y ++) {
@@ -794,14 +803,17 @@ getElement() {
            .subscribe(
                (val) => {
                    console.log(val);
-
+               
                    if (val.code == 200){
+                      
+
                        this.istextVisible = false;
                        this.checkListVisible = false;
                        this.nznot.create('success', val.msg, val.msg);
                    }else{
                          this.nznot.create('error', val.msg,'');
                   }
+                         console.log(this.istextVisible)
 
                }
                ,
@@ -903,7 +915,7 @@ loading2 = false
             let status = '';
                 switch(index){
                     case 0 :
-                    this.detailVisible = false
+                    this.mergeisVisible = false
                     return;
 
                    case 1 :
@@ -1012,14 +1024,13 @@ loading2 = false
 
    returnsclick(event) {
        let item = event.index
-       this.mergeguid=event.id
+       this.mergeguid=event.it.guid
 
     let S = '';
     console.log(this.guidprent)
-    if ( item === 0) {
-
-        this.istextVisible = true;
-    }else {
+    // if ( item === 0) {
+    //     this.istextVisible = true;
+    // }else {
         let  url = appConfig.testUrl + '/checks/delivery/' + this.mergeguid + '/result';
         if (item === 1) {
             S = 'S';
@@ -1039,8 +1050,19 @@ loading2 = false
                    console.log(val);
 
                    if (val.code == 200){
-                       this.istextVisible = false;
-                    //    this.detailVisible = false;
+                        
+                        if(item === 1 ){
+                           event.it.disabledS = true
+                           event.it.deliveryResult = '核对成功'
+                       }else  if(item === 2 ){
+                          this.istextVisible = false;
+                           event.it.disabledS = true
+                           event.it.deliveryResult = '核对失败'
+                            // alert( this.istextVisible)
+                       }
+                    //    console.log( this.istextVisible)
+                    
+                
                        this.nznot.create('success', val.msg, val.msg);
                    }else{
                          this.nznot.create('error', val.msg,'');
@@ -1055,7 +1077,7 @@ loading2 = false
                     }
                }
            );
-       }
+    //    }
 
 
     }
