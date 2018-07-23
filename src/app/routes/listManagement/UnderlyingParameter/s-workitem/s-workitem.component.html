@@ -13,14 +13,14 @@
                     </div>
                 </div>
             </div>
-            <div nz-col [nzSpan]="8" class="mb-md">
+            <!--<div nz-col [nzSpan]="8" class="mb-md">
                 <div nz-form-item class="d-flex">
                     <div nz-form-label><label for="name">需求编号</label></div>
                     <div nz-form-control class="flex-1">
                         <nz-input [(ngModel)]="workItem.seqNo" name="seqNo" [nzSize]="'large'" [nzPlaceHolder]="'需求编号'" nzId="seqNo"></nz-input>
                     </div>
                 </div>
-            </div>
+            </div>-->
          <!--  <div *ngIf="expandForm" nz-col [nzSpan]="8" class="mb-md">
                     <div nz-form-item class="d-flex">
                         <div nz-form-label><label for="name">开发人员</label></div>
@@ -40,7 +40,7 @@
                         </div>
                     </div>
                 </div>-->
-           <div *ngIf="expandForm" nz-col [nzSpan]="8" class="mb-md">
+           <div  nz-col [nzSpan]="8" class="mb-md">
                     <div nz-form-item class="d-flex">
                         <div nz-form-label><label for="name">项目负责人</label></div>
                         <div nz-form-control class="flex-1">
@@ -89,10 +89,10 @@
                 <div nz-col [nzSpan]="expandForm ? 24 : 8" class="mb-md" [class.text-right]="expandForm">
                 <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="loading" [nzSize]="'large'">查询</button>
                 <button nz-button type="reset" (click)="reset()" [nzSize]="'large'" class="mx-sm">重置</button>
-                <a (click)="expandForm=!expandForm">
+                <!--<a (click)="expandForm=!expandForm">
                     {{expandForm ? '收起' : '展开'}}
                     <i class="anticon" [class.anticon-down]="!expandForm" [class.anticon-up]="expandForm"></i>
-                </a>
+                </a>-->
             </div>
         </div>
     </form>

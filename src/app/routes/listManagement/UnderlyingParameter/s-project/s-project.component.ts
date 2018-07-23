@@ -145,6 +145,9 @@ export class SProjectComponent implements OnInit {
 
 
                 }
+                , error => {
+                    this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
+                }
             );
     }
 
