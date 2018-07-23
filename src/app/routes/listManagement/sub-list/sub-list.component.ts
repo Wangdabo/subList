@@ -318,17 +318,17 @@ export class SubListComponent implements OnInit {
     // 投放申请
     Serve() {
         // 不做判断
-        /*      for (let i = 0; i < this.textcssList.length; i ++) {
-            if (this.textcssList[i].projectType !== 'C' && this.textcssList[i].projectType !== 'I') { // 说明是config或者default工程，需要让用户手动选择
-                for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
-                    for ( let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
-                        if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].checked) {
-                            if ( !_.isUndefined(this.textcssList[i].deliveryPatchDetails[j].fileList[n].deployWhere) && !_.isUndefined(this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchSelect)) {
-                                this.isGou = true;
+              /*for (let i = 0; i < this.textcssList.length; i ++) {
+                    if (this.textcssList[i].projectType !== 'C' && this.textcssList[i].projectType !== 'I') { // 说明是config或者default工程，需要让用户手动选择
+                        for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
+                            for ( let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
+                                if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].checked) {
+                                    if ( !_.isUndefined(this.textcssList[i].deliveryPatchDetails[j].fileList[n].deployWhere) && !_.isUndefined(this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchSelect)) {
+                                        this.isGou = true;
+                                    }
+                                }
                             }
                         }
-                    }
-                }
             } else {
                 for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
                     for ( let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
@@ -338,15 +338,39 @@ export class SubListComponent implements OnInit {
                     }
                 }
             }
-        }
-        // this.copytextList = _.cloneDeep(this.textcssList); // 拷贝内容
-        if (this.isGou) {
-            this.modalVisible = true;
-        } else {
-            this.nznot.create('error', '请检查是否勾选工程', '请检查是否勾选工程');
         }*/
-        // 初始化数据
-        this.modalVisible = true;
+
+        if (_.isUndefined(this.textcssList)) {
+            this.nznot.create('error', '请先整理清单', '请先整理清单');
+        } else {
+            for (let i = 0; i < this.textcssList.length; i ++) {
+                if (this.textcssList[i].projectType !== 'C' && this.textcssList[i].projectType !== 'I') { // 说明是config或者default工程，需要让用户手动选择
+                    for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
+                        for (let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
+                            if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].checked) {
+                                if (_.isUndefined(this.textcssList[i].deliveryPatchDetails[j].fileList[n].deploySelect) && _.isUndefined(this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchSelect)) {
+                                    this.isGou = false; // 只要不满足就为false,  结束循环
+                                    return;
+                                }
+                                this.isGou = true; // 全部选中，则可以打开弹窗
+
+                            }
+                        }
+
+                    }
+                }
+            }
+            if (this.isGou) {
+                this.modalVisible = true;
+            } else {
+                this.modalVisible = false;
+                this.nznot.create('error', '请检查是否勾选导出和部署', '请检查是否勾选导出和部署');
+            }
+        }
+
+
+
+
         this.deliveryTime = moment(new Date()).format('YYYY-MM-DD');
         this.getcheckOptionOne();
 
