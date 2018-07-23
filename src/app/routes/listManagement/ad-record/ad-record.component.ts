@@ -33,7 +33,7 @@ export class AdRecordComponent implements OnInit {
     list: any[] = [];
     ngOnInit() {
         this.token  = this.tokenService.get().token;
-        this.getData(1);
+        this.getData();
         this.showAdd = true;
 
     }
@@ -96,13 +96,13 @@ export class AdRecordComponent implements OnInit {
     page: any;
     total: number;
     loading = false
+    index = 1;
 
-
-    getData(index) {
+    getData() {
         const page = {
             page : {
                 size: 10,
-                current : index,
+                current : this.index,
                  orderByField: 'guid',
                     asc: false
             }
@@ -123,7 +123,11 @@ export class AdRecordComponent implements OnInit {
                     }
 
 
-                },
+                },(error)=>{
+                     if(error){
+                        this.nznot.create('error', error.json().msg,'');
+                        }
+                }
             );
     }
 
@@ -149,7 +153,8 @@ export class AdRecordComponent implements OnInit {
 
     // 列表传入的翻页数据
     monitorHandler(event) {
-     this.getData(event);
+        this.index =event
+     this.getData();
     }
 
     // 接受子组件删除的数据 单条还是多条
@@ -171,6 +176,8 @@ export class AdRecordComponent implements OnInit {
     // 按钮点击事件
     idcheck:any
     checkloading:any;
+    checkStatus:boolean;
+    title:any;
     buttonEvent(event) {
         this.mergeId = event.guid;
 
@@ -189,22 +196,46 @@ export class AdRecordComponent implements OnInit {
                             this.checkloading = false;
                           this.detailVisible = true;
                           this.checkModalData = val.result.deliveryDetails;
-                          console.log(  this.checkModalData)
+                          console.log(val)
+                          if(val.result.check.checkStatus == '正在核对'){
+                                this.checkStatus = true
+                               
+                          }else{
+                               this.title = val.result.check.checkStatus
+                                this.checkStatus = false
+                          }
+                         
+                        
                           this.mergeListData  = val.result.mergeLists;
                           let star = '';
                           let end = '';
                         for  (let i = 0; i < this.mergeListData.length; i ++) {
+                            if(this.mergeListData[i].confirmStatus=='加入投放'){
+                                this.mergeListData[i]['checkbuttons'] = true;
+                            }else{
+                                this.mergeListData[i]['checkbuttons'] = false;
+                            }
+                          
                             if (this.mergeListData[i].fullPath) {
                                 indexs = this.mergeListData[i].fullPath.indexOf(this.mergeListData[i].partOfProject);
                                 this.mergeListData[i].fullPath = this.mergeListData[i].fullPath.substring(indexs, this.mergeListData[i].fullPath.length);
-                                                  if(this.mergeListData[i].fullPath.length > 80){
+                                                  if(this.mergeListData[i].fullPath.length > 40){
                                                         star = this.mergeListData[i].fullPath.substr(0,20)
                                                         end = this.mergeListData[i].fullPath.substr(this.mergeListData[i].fullPath.length - 20)
                                                            this.mergeListData[i].fullPathstr = star + '...' + end;
                                                         }else{
                                                             this.mergeListData[i].fullPathstr =this.mergeListData[i].fullPath
-                                                     }   
+                                                     }
+                                                    
+
                          }
+                           if(this.mergeListData[i].programName.length > 40){
+                                                        star = this.mergeListData[i].programName.substr(0,10)
+                                                        end = this.mergeListData[i].programName.substr(this.mergeListData[i].programName.length - 10)
+                                                           this.mergeListData[i].programNamestr = star + '...' + end;
+                                                        }else{
+                                                            this.mergeListData[i].programNamestr =this.mergeListData[i].programName
+                                                     }
                         }
                          for  (let i = 0; i < this.checkModalData.length; i ++) {
                              
@@ -216,6 +247,13 @@ export class AdRecordComponent implements OnInit {
                                       this.guidprent.push(obj);
                                     //    this.checkModalData[i].delivery.push(checkingloading);
                                        this.checkModalData[i].delivery.checkingloading = false; 
+                                     if(  this.checkModalData[i].delivery.deliveryResult =='核对中' ){
+                                          this.checkModalData[i].delivery.disabledS = false; 
+                                     }else{
+                                         this.checkModalData[i].delivery.disabledS = true; 
+                                     }
+                                      
+
 
                             for (let j = 0; j < this.checkModalData[i].detailList.length; j ++) {                                   
                                 for (let x = 0; x < this.checkModalData[i].detailList[j].deliveryPatchDetails.length; x ++) {
@@ -301,6 +339,7 @@ mergeClick(index){
                          .subscribe(
                        (val) => {
                            console.log(self.mergeId);
+                           self.getData()
                            self.loading1 = false;
                            self.loading2 = false;
                           if(val.code == 200) {
@@ -436,10 +475,12 @@ mergeClick(index){
                          .subscribe(
                          (val) => {
                           if(val.code == 200) {
-                                  
+                                //   this.mergeListData[event.errorId]
                              this.mergeListData.forEach((result,i)=>{
-                                 if(result.guid == this.mergeId){
-                                     this.mergeListData[i].check = true;
+
+                                 if(result.guid == event.errorId){
+                                     this.mergeListData[i].checkbuttons = true;
+                                       this.mergeListData[i].confirmStatus = '加入投放';
                                  }
                              })
                                  console.log(this.mergeListData)
@@ -473,14 +514,14 @@ mergeClick(index){
         this.isVisible = false; // 关闭弹出框
     }
 
-  istextVisible = false;
-  inputValue:any;
-  guid:any;
+    istextVisible = false;
+    inputValue:any;
+    guid:any;
    returnsclick(event) {
        let item = event.index
-       this.guid=event.id
+       this.guid=event.it.guid
        let S = '';
-    console.log(this.guidprent)
+    
 
        let  url = appConfig.testUrl + '/checks/delivery/' + this.guid + '/result';
        if (item === 1) {
@@ -500,8 +541,19 @@ mergeClick(index){
                (val) => {
 
                    if (val.code == 200){
+                         console.log(this.istextVisible )
+                            
                        this.istextVisible = false;
-                       this.detailVisible = false;
+                         
+                       if(item === 1 ){
+                           event.it.disabledS = true
+                           event.it.deliveryResult = '核对成功'
+                       }else  if(item === 2 ){
+                           event.it.disabledS = true
+                           event.it.deliveryResult = '核对失败'
+                       }
+                 
+             console.log(this.istextVisible )
                        this.nznot.create('success', val.msg, val.msg);
                    }else{
                          this.nznot.create('error', val.msg,'');
