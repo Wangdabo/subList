@@ -41,7 +41,7 @@ export class LaunchApplyComponent implements OnInit {
         this.getData();
         this.showAdd = true;
     }
-
+    loadingnext =false;
     showAdd: boolean; // 是否有修改
     isStatus = true;
     configTitle = '详情'
@@ -255,9 +255,12 @@ getElement() {
 
 
         } else if (event === 'checking') {
+            this.loadingnext = false
               this.getSprofiles();
               this.mergeisVisible = true
               this.current = 0;
+              
+      console.log(this.loadingnext)
             // this.changeContent();
             // this.checkModalVisible = true; // 打开核对弹出框
 
@@ -325,6 +328,7 @@ getElement() {
     }
 
     next(): void {
+        this.loadingnext = true;
         // this.current = 0;
         let profiles = '';
         let packTiming = '';
@@ -359,7 +363,7 @@ getElement() {
                        this.loading = false;
                     console.log(val)
                     if (val.code === '200') {
-
+                        this.loadingnext = false;
                        this.current += 1;
                        console.log(this.current)
                           for(let i = 0;i<val.result.length;i++){
@@ -413,6 +417,7 @@ getElement() {
                         .map(res => res.json())
                          .subscribe(
                          (val) => {
+                              this.loadingnext = false;
                              this.checkId = val.result.check.guid;
                              console.log(val)
 
@@ -539,6 +544,7 @@ getElement() {
                    if (val.code == 200){
                        event.event.check = true
                        event.event.value = '已确认合并'
+                       this.loadingnext = false;
                     //    this.istextVisible = false;
                     //    this.detailVisible = false;
                        this.nznot.create('success', val.msg, val.msg);
@@ -964,8 +970,9 @@ loading2 = false
 
     buttonEvent(event) {
         this.mergeId = event.guid;
-
+  
         if (event.names.key === 'merge') {
+           
             this.idcheck = event.guid;
               let index = '';
               let indexs = '';

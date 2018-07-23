@@ -50,7 +50,7 @@
                 </div>
             </div>
             <div nz-col [nzSpan]="4" class="mb-md" [class.text-right]="expandForm">
-                <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="loading" [nzSize]="'large'">查询</button>
+                <button nz-button type="submit" [nzType]="'primary'"  [nzSize]="'large'">查询</button>
                 <button nz-button type="reset" (click)="reset()" [nzSize]="'large'" class="mx-sm">重置</button>
 
             </div>
@@ -205,7 +205,7 @@
                     </button>
 
 
-                    <button  nz-col  [nzOffset]="2"  nz-button [nzType]="'default'" (click)="next()" *ngIf="current < 2" [disabled]="isNext">
+                    <button  nz-col  [nzOffset]="2"  nz-button [nzType]="'default'" [nzLoading]="loadingnext" (click)="next()" *ngIf="current < 2" [disabled]="isNext">
                         <span>下一步</span>
                     </button>
 
