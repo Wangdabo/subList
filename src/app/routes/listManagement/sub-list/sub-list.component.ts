@@ -342,22 +342,32 @@ export class SubListComponent implements OnInit {
 
         if (_.isUndefined(this.textcssList)) {
             this.nznot.create('error', '请先整理清单', '请先整理清单');
+            return;
         } else {
             for (let i = 0; i < this.textcssList.length; i ++) {
                 if (this.textcssList[i].projectType !== 'C' && this.textcssList[i].projectType !== 'I') { // 说明是config或者default工程，需要让用户手动选择
                     for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
                         for (let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
                             if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].checked) {
+                                console.log(this.textcssList[i].deliveryPatchDetails[j].fileList[n].deploySelect)
+                                console.log(this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchSelect)
                                 if (_.isUndefined(this.textcssList[i].deliveryPatchDetails[j].fileList[n].deploySelect) && _.isUndefined(this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchSelect)) {
                                     this.isGou = false; // 只要不满足就为false,  结束循环
-                                    return;
+                                    break;
                                 }
-                                this.isGou = true; // 全部选中，则可以打开弹窗
+                                // 如果等于空字符串
+                                if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].deploySelect === null ||  this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchSelect === null) {
+                                    this.isGou = false; // 只要不满足就为false,  结束循环
+                                    break;
+                                }
 
+                                this.isGou = true; // 全部选中，则可以打开弹窗
                             }
                         }
 
                     }
+                } else {
+                    this.isGou = true; // 其他工程，直接打开
                 }
             }
             if (this.isGou) {
@@ -367,9 +377,6 @@ export class SubListComponent implements OnInit {
                 this.nznot.create('error', '请检查是否勾选导出和部署', '请检查是否勾选导出和部署');
             }
         }
-
-
-
 
         this.deliveryTime = moment(new Date()).format('YYYY-MM-DD');
         this.getcheckOptionOne();
@@ -532,6 +539,7 @@ export class SubListComponent implements OnInit {
       } else {
           this.nznot.create('error', '请检查信息是否全部填写', '请检查信息是否全部填写');
       }*/
+
         this.profiles = [];
         for (let i = 0; i < this.elementScice.length; i ++) {
             if (this.elementScice[i].check && this.elementScice[i].times) {
@@ -599,6 +607,7 @@ export class SubListComponent implements OnInit {
                             },
                             (error) => {
                                 this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
+                                this.getData();
                             }
                         );
                 },
