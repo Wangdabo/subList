@@ -60,12 +60,12 @@ export class LaunchApplyComponent implements OnInit {
     pageTotal: number; // 翻页总数
     checkStatus = true;
     deliveryResult = [
-        {key: '0', value: '申请中'},
-        {key: 'M', value: '已合并'},
-        {key: 'C', value: '核对中'},
-        {key: 'S', value: '核对成功'},
-        {key: 'F', value: '核对失败'},
-        {key: 'D', value: '投放成功'},
+        {key: '0', value: '申请中',color:'skyblue'},
+        {key: 'M', value: '已合并',color:'orange'},
+        {key: 'C', value: '核对中',color:'orange'},
+        {key: 'S', value: '核对成功',color:'green'},
+        {key: 'F', value: '核对失败',color:'red'},
+        {key: 'D', value: '投放成功',color:'green'},
     ]
     buttons = [
         // {key: 'merge', value: '合并投放', if: true},
