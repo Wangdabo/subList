@@ -41,8 +41,9 @@
                     <td nz-td>{{j.patchType }}</td>
                         <!--<td nz-td>{{j.deployWhere }}</td>-->
                     <td nz-td>{{j.commitType }}</td>
-                        <td nz-td>{{j.confirmStatus }}</td>
-                        <td nz-td>{{j.errorType }}</td>
+                        <td nz-td *ngIf="j.confirmStatus == '删除'" style="color:red">{{j.confirmStatus }}</td>
+                           <td nz-td *ngIf="j.confirmStatus != '删除'" [ngClass]="j.confirmStatus == '加入投放' ? 'picbtn' : ''">{{j.confirmStatus }}</td>
+                        <td nz-td >{{j.errorType }}</td>
                     <td nz-td *ngIf='checkStatus == true'>
                       <span  style="color:red;margin-left:0.5rem"    (click)="sonbuttonClick(3,j,l)" >
                              删除
@@ -50,7 +51,7 @@
                         <span style=" float:left;color:#108ee9"  [ngClass]="j.checkbuttons == true ? 'noactive' : ''"  (click)="sonbuttonClick(4,j,l)">
                         加入投放
                         </span>
-                        <span *ngIf='j.check == true'>已投放</span>
+                        <!--<span *ngIf='j.check == true'>已投放</span>-->
                     </td>
                     </tr>
                 </tbody>
@@ -117,20 +118,18 @@
                             </tr>
                             <tr nz-tbody-tr nz-col [nzSpan]="24">
                                 <td class="bcolor"  nz-td nz-col [nzSpan]="8">代码</td>
-                                <td class="bcolor"  nz-td nz-col [nzSpan]="4">变动类型</td>
-
-
-                                <td class="bcolor"  nz-td nz-col [nzSpan]="4">描述</td>
-                                 <td class="bcolor"  nz-td nz-col [nzSpan]="4">状态</td>
-                                <td class="bcolor"  nz-td nz-col [nzSpan]="4">操作</td>
+                                <td class="bcolor"  nz-td nz-col [nzSpan]="4" >变动类型</td>
+                                <td class="bcolor"  nz-td nz-col [nzSpan]="checkStatus == true ? '4' : '6'">描述</td>
+                                 <td class="bcolor"  nz-td nz-col [nzSpan]="checkStatus == true ? '4' : '6'">状态</td>
+                                <td class="bcolor"*ngIf='checkStatus == true'  nz-td nz-col [nzSpan]="4">操作</td>
                             </tr>
                             <tr nz-tbody-tr nz-col [nzSpan]="24"  *ngFor="let x of k.fileList;let q = index">
                                 <td nz-td nz-col [nzSpan]="8"  title="{{x.fullPath}}">{{x.fullPathstr}}</td>
                                 <td nz-td nz-col [nzSpan]="4">{{x.commitType}}</td>
-
-                                <td nz-td nz-col [nzSpan]="4">{{x.errorType}}</td>
-                                <td nz-td nz-col [nzSpan]="4">{{x.confirmStatus}}</td>
-                                <td nz-td nz-col [nzSpan]="4">
+                                <td nz-td nz-col [nzSpan]="checkStatus == true ? '4' : '6'" >{{x.errorType}}</td>
+                                <td nz-td nz-col [nzSpan]="checkStatus == true ? '4' : '6'" *ngIf="x.confirmStatus == '不投产'" style="color:red">{{x.confirmStatus}}</td>
+                                <td nz-td nz-col [nzSpan]="checkStatus == true ? '4' : '6'" *ngIf="x.confirmStatus != '不投产'" [ngClass]="x.confirmStatus == '已合并' ? 'picbtn' : ''">{{x.confirmStatus}}</td>
+                                <td nz-td nz-col [nzSpan]="4" *ngIf='checkStatus == true'>
                                    <a  style="color:#108ee9;"  [ngClass]="x.buttons == true ? 'noactive' : ''"  (click)="sonbuttonClick(1,x,q)">已合并&nbsp;</a>&nbsp;
                                    <a style="color:red;" [ngClass]="x.buttons == false ? 'active' : ''"   (click)="sonbuttonClick(2,x,q)">不投产&nbsp;</a>&nbsp;
                                 </td>
@@ -140,7 +139,7 @@
                     </div>
             </div>
 
-            <div  nz-col [nzSpan]="24" class="mb-md">
+            <div  nz-col [nzSpan]="24" class="mb-md" *ngIf='checkStatus == true'>
                     <button  nz-col [nzSpan]="4"   [disabled]="j.delivery.disabledS" [nzOffset]="'6'" nz-button  (click)="sonreturnsclick(0,j.delivery)"  [nzType]="'primary'" [nzSize]="'large'">
                         <span>打回</span>
                     </button>
