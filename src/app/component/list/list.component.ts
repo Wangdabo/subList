@@ -102,7 +102,7 @@ export class ListComponent implements OnInit {
         this.moreData = this.moreData; // 绑定更多数据
         // this.isShowTotalhead = true
         this.checkTotal()
-      
+
     }
 
     checkTotal(){
@@ -232,5 +232,28 @@ export class ListComponent implements OnInit {
         // this.getData();
     }
 
+    deplayArray = [];
+    isshow = false;
+
+    onChanges(p, d, a, l) { // 选择值和完整json数组
+        console.log(p) // 选择值
+        console.log(d) // 匹配值
+        l.isshow = true; // 显示部署为
+        let obj = {}
+        var arr;
+        for (let i  in d){
+            console.log(d[i])
+            if (i === p) {
+                arr = d[i].split(',');
+                for (let s = 0; s < arr.length; s++) {
+                    obj = {
+                        value: arr[s],
+                        label: arr[s],
+                    }
+                    a.push(obj);
+                }
+            }
+        }
+    }
 
 }

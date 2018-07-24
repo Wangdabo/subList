@@ -15,7 +15,15 @@
                         <div nz-form-label><label>工作项</label></div>
                         <div style="margin-left: 1%; margin-top:-1%" nz-form-control class="flex-1">
                             <!--<nz-input [nzType]="'search'" [nzPlaceHolder]="'请选择工作项'" [(ngModel)]="search"    (nzOnSearch)="onSearch($event)"></nz-input>-->
-                            <nz-select style="width:100%" [(ngModel)]="workItmseach" name="workItmseach" (ngModelChange)="checkSelect(workItmseach)" (nzOpenChange)="openChange()"  [nzSize]="'large'" [nzPlaceHolder]="'选择工作项'" nzId="workItmseach">
+                            <nz-select style="width:100%"
+                                       [(ngModel)]="workItmseach"
+                                       name="workItmseach"
+                                       (ngModelChange)="checkSelect(workItmseach)"
+                                       (nzOpenChange)="openChange()"
+                                       [nzSize]="'large'"
+                                       [nzPlaceHolder]="'选择工作项'"
+                                       nzId="workItmseach"
+                                       [nzNotFoundContent]="'暂无内容'">
                                 <nz-option  *ngFor="let i of workItem;" [nzLabel]="i.itemName" [nzValue]="i.guid"></nz-option>
                             </nz-select>
                         </div>
@@ -184,7 +192,7 @@
                                       (buttonEvent)="buttonEvent($event)"
                                       (selectedRow)="selectedRow($event)"
                                       [headerDate]="i.headerData"
-                                      [moreData]="moreData" 
+                                      [moreData]="moreData"
                                        [isShowTotalhead]='isShowTotalhead'
                                       ></app-list>
                        </div>
@@ -207,7 +215,7 @@
                 <div nz-form-item class="d-flex">
                     <div nz-form-label class="alignment"><label for="no">投放日期</label></div>
                     <div nz-form-control class="flex-1">
-                        <nz-datepicker [(ngModel)]="deliveryTime" [nzFormat]="'YYYY-MM-DD'"    name="deliveryTime" [nzSize]="'large'" [nzPlaceHolder]="'投放日期'" nzId="deliveryTime" class="d-block"></nz-datepicker>
+                        <nz-datepicker [(ngModel)]="deliveryTime" [nzFormat]="'YYYY-MM-DD'"  [nzDisabledDate]="disabledDate"   name="deliveryTime" [nzSize]="'large'" [nzPlaceHolder]="'投放日期'" nzId="deliveryTime" class="d-block"></nz-datepicker>
                     </div>
                 </div>
             </div>
