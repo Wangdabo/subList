@@ -210,7 +210,6 @@ export class SubListComponent implements OnInit {
                                     this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchArray = this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchType.split(',');
                                     this.textcssList[i].deliveryPatchDetails[j].fileList[n].deployArray = this.arrarObj(this.textcssList[i].deliveryPatchDetails[j].fileList[n].deployArray);
                                     this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchArray = this.arrarObj(this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchArray);
-                                    // this.textcssList[i].deliveryPatchDetails[j].fileList[n].buttonData = ['详情'];
                                     this.textcssList[i].deliveryPatchDetails[j].fileList[n].checked = true; // 默认请求
                                     this.textcssList[i].deliveryPatchDetails[j].fileList[n].commitDate = moment(this.textcssList[i].deliveryPatchDetails[j].fileList[n].commitDate).format('YYYY-MM-DD HH:mm:ss');
                                 }
@@ -225,8 +224,6 @@ export class SubListComponent implements OnInit {
                                     // 截取字符串
                                     index = this.textcssList[i].deliveryPatchDetails[j].fileList[n].fullPath.indexOf(this.textcssList[i].deliveryPatchDetails[j].fileList[n].partOfProject);
                                     this.textcssList[i].deliveryPatchDetails[j].fileList[n].fullName = this.textcssList[i].deliveryPatchDetails[j].fileList[n].fullPath.substring(index, this.textcssList[i].deliveryPatchDetails[j].fileList[n].fullPath.length);
-
-                                    // this.textcssList[i].deliveryPatchDetails[j].fileList[n].buttonData = ['详情'];
                                     this.textcssList[i].deliveryPatchDetails[j].fileList[n].checked = true; // 默认请求
                                     this.textcssList[i].deliveryPatchDetails[j].fileList[n].commitDate = moment(this.textcssList[i].deliveryPatchDetails[j].fileList[n].commitDate).format('YYYY-MM-DD HH:mm:ss');
                                 }
@@ -236,6 +233,7 @@ export class SubListComponent implements OnInit {
                 },
                 (error) => {
                     this.loading = false;
+                    this.textcssList = []
                     this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
                 }
             );
@@ -339,10 +337,9 @@ export class SubListComponent implements OnInit {
                 }
             }
         }*/
-
+        this.modalVisible = false;
         if (_.isUndefined(this.textcssList)) {
-            this.nznot.create('error', '请先整理清单', '请先整理清单');
-            return;
+            this.modalVisible = true;
         } else {
             for (let i = 0; i < this.textcssList.length; i ++) {
                 if (this.textcssList[i].projectType !== 'C' && this.textcssList[i].projectType !== 'I') { // 说明是config或者default工程，需要让用户手动选择
@@ -377,10 +374,8 @@ export class SubListComponent implements OnInit {
                 this.nznot.create('error', '请检查是否勾选导出和部署', '请检查是否勾选导出和部署');
             }
         }
-
         this.deliveryTime = moment(new Date()).format('YYYY-MM-DD');
         this.getcheckOptionOne();
-
     }
 
     selectedCities = [];
@@ -404,42 +399,37 @@ export class SubListComponent implements OnInit {
         /*拼数据*/
         let objsss = false; // 前端判定是否正确
         let array = [];
-        if (this.textcssList) { // 是否存在
-            for (let i = 0; i < this.textcssList.length; i ++) {
-                if (this.textcssList[i].projectType === 'C' || this.textcssList[i].projectType === 'I' ) { // 说明是config工程，需要让用户手动选择
-                    for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
-                        for ( let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
-                            if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].checked) {
-                                // if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].deployWhere !== undefined && this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchSelect !== undefined) {
-                                if ( !_.isUndefined(this.textcssList[i].deliveryPatchDetails[j].fileList[n].deployWhere) && !_.isUndefined(this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchSelect)) {
-                                    this.textcssList[i].deliveryPatchDetails[j].fileList[n].deployWhere = this.textcssList[i].deliveryPatchDetails[j].fileList[n].deploySelect;
-                                    this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchType = this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchSelect;
+        if (!_.isUndefined(this.textcssList)) { // 是否存在
+            let cloneText = _.cloneDeep(this.textcssList);
+            for (let i = 0; i < cloneText.length; i ++) {
+                if (cloneText[i].projectType === 'C' || cloneText[i].projectType === 'I' ) { // 说明是config工程，需要让用户手动选择
+                    for (let j = 0; j < cloneText[i].deliveryPatchDetails.length; j++) {
+                        for ( let n = 0; n < cloneText[i].deliveryPatchDetails[j].fileList.length; n++) {
+                            if (cloneText[i].deliveryPatchDetails[j].fileList[n].checked) {
+                                if ( !_.isUndefined(cloneText[i].deliveryPatchDetails[j].fileList[n].deployWhere) && !_.isUndefined(cloneText[i].deliveryPatchDetails[j].fileList[n].patchSelect)) {
+                                    cloneText[i].deliveryPatchDetails[j].fileList[n].deployWhere = cloneText[i].deliveryPatchDetails[j].fileList[n].deploySelect;
+                                    cloneText[i].deliveryPatchDetails[j].fileList[n].patchType = cloneText[i].deliveryPatchDetails[j].fileList[n].patchSelect;
                                 }
                                 // 处理转换逻辑，把radio选中的给后台
-                                array.push(this.textcssList[i].deliveryPatchDetails[j].fileList[n]);
+                                array.push(cloneText[i].deliveryPatchDetails[j].fileList[n]);
                             }
-
                         }
                     }
                 } else {
-                    for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
-                        for ( let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
-                            if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].checked) {
-                                if ( !_.isUndefined(this.textcssList[i].deliveryPatchDetails[j].fileList[n].deployWhere) && !_.isUndefined(this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchSelect)) {
-                                    this.textcssList[i].deliveryPatchDetails[j].fileList[n].deployWhere = this.textcssList[i].deliveryPatchDetails[j].fileList[n].deploySelect;
-                                    this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchType = this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchSelect;
+                    for (let j = 0; j < cloneText[i].deliveryPatchDetails.length; j++) {
+                        for ( let n = 0; n < cloneText[i].deliveryPatchDetails[j].fileList.length; n++) {
+                            if (cloneText[i].deliveryPatchDetails[j].fileList[n].checked) {
+                                if ( !_.isUndefined(cloneText[i].deliveryPatchDetails[j].fileList[n].deployWhere) && !_.isUndefined(cloneText[i].deliveryPatchDetails[j].fileList[n].patchSelect)) {
+                                    cloneText[i].deliveryPatchDetails[j].fileList[n].deployWhere = cloneText[i].deliveryPatchDetails[j].fileList[n].deploySelect;
+                                    cloneText[i].deliveryPatchDetails[j].fileList[n].patchType = cloneText[i].deliveryPatchDetails[j].fileList[n].patchSelect;
                                 }
-
-
-                                array.push(this.textcssList[i].deliveryPatchDetails[j].fileList[n]);
+                                array.push(cloneText[i].deliveryPatchDetails[j].fileList[n]);
                             }
                         }
                     }
                 }
 
             }
-        } else {
-            this.nznot.create('error', '请至少选择一个工程进行投放' , '');
         }
 
 
@@ -604,15 +594,16 @@ export class SubListComponent implements OnInit {
                                 this.modalVisible = false; // 关闭
                                 this.launchVisible  = true; // 显示详情
                                 // this.getData();
+                                this.textcssList = [];
                             },
                             (error) => {
                                 this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
-                                this.getData();
+                               // this.getData();
                             }
                         );
                 },
                 (error) => {
-                    this.getData();
+                    // this.getData();
                     this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
                 }
             );
