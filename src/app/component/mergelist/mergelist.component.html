@@ -11,7 +11,7 @@
                 </button>
                 </div>
                 <div *ngIf='checkStatus == false'  nz-form-item class="d-flex">
-                    <h2 style="text-align:center;width:100%">{{title}}</h2>
+                    <span style="text-align:center;width:100%"><i  style="font-size: 1.8rem" class="anticon anticon-{{title == '核对完成' ? 'check' : 'close'}}-circle"  [ngClass]="title == '核对完成' ? 'pic' : 'picclose'" ></i><span style="font-size: 1.8rem;margin-left: 1rem;">{{title}}</span></span>
                 </div>
         </div>
 
@@ -26,11 +26,11 @@
                     <th nz-th ><span>名称</span></th>
                     <th nz-th><span>路径</span></th>
                    <th nz-th><span>类型</span></th>
-                    <th nz-th><span>部署于</span></th>
+                    <!--<th nz-th><span>部署于</span></th>-->
                     <th nz-th ><span>提交状态</span></th>
                     <th nz-th><span>确认状态</span></th>
                     <th nz-th ><span>描述</span></th>
-                    <th nz-th><span>操作</span></th>
+                    <th nz-th *ngIf='checkStatus == true'><span>操作</span></th>
                     </tr>
                 </thead>
                 <tbody nz-tbody>
@@ -39,15 +39,15 @@
                     <td nz-td title="{{j.programName}}">{{j.programNamestr }}</td>
                         <td nz-td title="{{j.fullPath}}">{{j.fullPathstr }}</td>
                     <td nz-td>{{j.patchType }}</td>
-                        <td nz-td>{{j.deployWhere }}</td>
+                        <!--<td nz-td>{{j.deployWhere }}</td>-->
                     <td nz-td>{{j.commitType }}</td>
                         <td nz-td>{{j.confirmStatus }}</td>
                         <td nz-td>{{j.errorType }}</td>
-                    <td nz-td>
+                    <td nz-td *ngIf='checkStatus == true'>
                       <span  style="color:red;margin-left:0.5rem"    (click)="sonbuttonClick(3,j,l)" >
                              删除
                         </span>
-                        <span style=" color:#108ee9"  [ngClass]="j.checkbuttons == true ? 'noactive' : ''"  (click)="sonbuttonClick(4,j,l)">
+                        <span style=" float:left;color:#108ee9"  [ngClass]="j.checkbuttons == true ? 'noactive' : ''"  (click)="sonbuttonClick(4,j,l)">
                         加入投放
                         </span>
                         <span *ngIf='j.check == true'>已投放</span>
@@ -60,9 +60,10 @@
            <div nz-row [nzType]="'flex'" [nzJustify]="'start'" nz-col [nzSpan]="24"  *ngFor="let j of checkModalData" >
             <div nz-col [nzSpan]="24" class="mb-md">
                 <div  nz-form-item class="d-flex work">
-                    <h2>{{j.delivery.guidWorkitem.target}}</h2>
+                    <h2>{{j.delivery.guidWorkitem.target}}</h2><span *ngIf="j.delivery.deliveryResult != '核对失败'" [ngClass]="j.delivery.deliveryResult == '核对成功'||j.delivery.deliveryResult == '投放成功'?'pic' : ''"  style="margin-left: 1rem;margin-top: 0.4rem;">{{j.delivery.deliveryResult}}</span>
+              <span *ngIf="j.delivery.deliveryResult == '核对失败'"  style="margin-left: 1rem;margin-top: 0.4rem;color:red">{{j.delivery.deliveryResult}}</span>
                 </div>
-            </div>
+            </div>                                                                
             <div nz-col [nzSpan]="6" class="mb-md">
                 <div  nz-form-item class="d-flex">
                     <div class="ad-desc-list__term ng-star-inserted words">投放计划 :</div>
@@ -90,12 +91,12 @@
                     <div class="ad-desc-list__detail ng-star-inserted">{{j.delivery.proposer}}</div>
                 </div>
             </div>
-             <div nz-col [nzSpan]="12" class="mb-md">
+             <!--<div nz-col [nzSpan]="12" class="mb-md">
                 <div  nz-form-item class="d-flex">
                     <div class="ad-desc-list__term ng-star-inserted words">状态 :</div>
                     <div class="ad-desc-list__detail ng-star-inserted">{{j.delivery.deliveryResult}}</div>
                 </div>
-            </div>
+            </div>-->
 
             <div  nz-col [nzSpan]="24" class="mb-md" *ngFor="let s of j.detailList ; let l = index">
                     <div>
