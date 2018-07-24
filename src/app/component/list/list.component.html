@@ -81,12 +81,13 @@
 
             <span *ngIf="d.radio">
                 <!--因为ngIf和ngFor不能在同一行中使用，所以要分行来用，为什么不用div而是用ng-container，是因为div受样式或者说全局样式干扰，<ng-container>是不受任何干扰的。-->
-               <ng-container *ngIf = "d.type == 'deployArray'">
+               <ng-container *ngIf = "d.type == 'deployArray' && initDate[l].isshow == true">
                    <nz-select
                             style="width: 200px;"
                            nzAllowClear
                            [nzPlaceHolder]="'部署为'"
                            [(ngModel)]="initDate[l].deploySelect"
+                            [nzNotFoundContent]="'暂无数据'"
                            nzShowSearch>
                           <nz-option
                               *ngFor="let t of initDate[l].deployArray"
@@ -101,6 +102,7 @@
                         nzAllowClear
                         [nzPlaceHolder]="'导出为'"
                         [(ngModel)]="initDate[l].patchSelect"
+                        (ngModelChange)="onChanges(initDate[l].patchSelect, initDate[l].depolyJsonArray,initDate[l].deployArray, initDate[l])"
                         nzShowSearch>
                           <nz-option
                               *ngFor="let t of initDate[l].patchArray"
@@ -126,10 +128,10 @@
             <!--<a *ngIf="showAdd" style="color:#108ee9;" (click)="add(i)">{{configTitle}}</a>&nbsp;-->
             <a *ngFor="let c of i.buttonData" style="color:#108ee9;" (click)="buttonClick(i, c, l)">
                    {{c.value}} &nbsp;
-                
+
                 </a>
-              
-            
+
+
         </td>
     </tr>
       <tr nz-tbody-tr *ngIf="data.expand">
