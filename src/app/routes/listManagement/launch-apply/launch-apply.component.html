@@ -303,19 +303,29 @@
   <!--核对清单详细-->
 
 <!--合并投放-->
-<nz-modal [nzVisible]="mergeVisible"  [nzWidth]="1324" [nzTitle]="'查看申请清单'"  [nzContent]="mergeModal"
+<nz-modal [nzVisible]="mergeVisible"  [nzWidth]="1324" [nzTitle]="'查看申请清单明细'"  [nzContent]="mergeModal"
           (nzOnCancel)="mergeVisible=false" [nzFooter]="ewqewq">
     <ng-template #mergeModal>
         <div nz-row [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
 
 
             <div nz-col [nzSpan]="24" class="mb-md">
-                <div  nz-form-item class="d-flex">
-                    <div class="ad-desc-list__term ng-star-inserted">清单明细:</div>
+               
+                <div nz-form-item class="d-flex">
+                    <div nz-form-label><label>svn地址</label></div>
+                    <div nz-form-control class="flex-1">
+                        {{mergeListDetail.fullPath}}
+                    </div>
+                </div>
+             <div nz-form-item class="d-flex">
+                    <div nz-form-label><label>代码清单总计</label></div>
+                    <div nz-form-control class="flex-1">
+                        {{mergeListDetail.count}}
+                    </div>
                 </div>
             </div>
 
-              <div  nz-col [nzSpan]="24" class="mb-md" *ngFor="let s of mergeListDetail ; let l = index">
+              <div  nz-col [nzSpan]="24" class="mb-md" *ngFor="let s of mergeListDetail.deliveryProjectDetails ; let l = index">
                 <div *ngFor="let j of s.deliveryPatchDetails" style="margin-bottom: 2rem;">
 
                         <nz-table #nzTables   nzBordered  [nzIsPagination]="false" [nzDataSource]="s.deliveryPatchDetails">
@@ -327,22 +337,26 @@
 
                             <tr nz-tbody-tr nz-col [nzSpan]="24" class="trborder">
                                 <td class="bcolor"  nz-td nz-col [nzSpan]="8">编译为</td>
-                                <td nz-td nz-col [nzSpan]="16">{{j.deployWhere}}</td>
+                                <td nz-td nz-col [nzSpan]="16">{{j.patchType }}</td>
                             </tr>
                             <tr  nz-tbody-tr nz-col [nzSpan]="24" class="trborder">
                                 <td class="bcolor"  nz-td nz-col [nzSpan]="8">部署到</td>
-                                <td nz-td nz-col [nzSpan]="16">{{j.patchType }}</td>
+                                <td nz-td nz-col [nzSpan]="16">{{j.deployWhere}}</td>
                             </tr>
+                              <!--<tr  nz-tbody-tr nz-col [nzSpan]="24" class="trborder">
+                                <td class="bcolor"  nz-td nz-col [nzSpan]="8">svn地址</td>
+                                <td nz-td nz-col [nzSpan]="16">{{j.deployWhere}}</td>
+                            </tr>-->
                             <tr nz-tbody-tr nz-col [nzSpan]="24">
-                                <td class="bcolor"  nz-td nz-col [nzSpan]="16">代码</td>
-                                <td class="bcolor"  nz-td nz-col [nzSpan]="4">变动类型</td>
-                                <td class="bcolor"  nz-td nz-col [nzSpan]="4">清单来源</td>
+                                <td class="bcolor"  nz-td nz-col [nzSpan]="18">代码</td>
+                                <td class="bcolor"  nz-td nz-col [nzSpan]="3">变动类型</td>
+                                <td class="bcolor"  nz-td nz-col [nzSpan]="3">清单来源</td>
 
                             </tr>
-                            <tr nz-tbody-tr nz-col [nzSpan]="24"  *ngFor="let k of j.fileList">
-                                <td nz-td nz-col [nzSpan]="16" style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;"  title="{{k.fullPath}}">{{k.fullPath}}</td>
-                                <td nz-td nz-col [nzSpan]="4">{{k.commitType}}</td>
-                                <td nz-td nz-col [nzSpan]="4">{{k.fromType}}</td>
+                            <tr nz-tbody-tr nz-col [nzSpan]="24"  *ngFor="let k of j.fileList" [ngClass]="(k%2) != 0 ? 'active' : ''" >
+                                <td nz-td nz-col [nzSpan]="18" title="{{mergeListDetail.fullPath}}{{k.fullPath}}">{{k.fullPath}}  </td>
+                                <td nz-td nz-col [nzSpan]="3" >{{k.commitType}}</td>
+                                <td nz-td nz-col [nzSpan]="3">{{k.fromType}}</td>
 
                             </tr>
                             </tbody>
