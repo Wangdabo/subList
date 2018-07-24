@@ -233,6 +233,7 @@ export class SubListComponent implements OnInit {
                 },
                 (error) => {
                     this.loading = false;
+                    this.textcssList = []
                     this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
                 }
             );
@@ -412,7 +413,6 @@ export class SubListComponent implements OnInit {
                                 // 处理转换逻辑，把radio选中的给后台
                                 array.push(cloneText[i].deliveryPatchDetails[j].fileList[n]);
                             }
-
                         }
                     }
                 } else {
