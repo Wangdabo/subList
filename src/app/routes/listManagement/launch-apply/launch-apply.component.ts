@@ -315,6 +315,9 @@ getElement() {
                         }
                     );
     }
+    // changeloadingnext(){
+    //     this.loadingnext = false;
+    // }
 
   checkId:any;
     current = 0;
@@ -345,6 +348,7 @@ getElement() {
             url = appConfig.testUrl + '/checks/profiles/' + profiles + '/packTiming/' + packTiming;
           }else {
             this.nznot.create('error', '请选择运行环境！', '请选择运行环境！');
+              this.loadingnext = false;
             return;
         }
 
@@ -361,9 +365,10 @@ getElement() {
             .subscribe(
                 (val) => {
                        this.loading = false;
+                      this.loadingnext = false;
                     console.log(val)
                     if (val.code === '200') {
-                        this.loadingnext = false;
+                         
                        this.current += 1;
                        console.log(this.current)
                           for(let i = 0;i<val.result.length;i++){
@@ -386,10 +391,12 @@ getElement() {
 
                                 }else{
                                     this.nznot.create('error',val.msg,val.msg);
+                                  
                                 }
                             },
                             (error) => {
                                 // console.log(error)
+                                 this.loadingnext = false;
                                 if(error){
                                     let msg = error.json();
                                      this.nznot.create('error', msg.msg, '');
@@ -491,6 +498,7 @@ getElement() {
 
                                 }
                                 ,(error)=>{
+                                     this.loadingnext = false;
                                   if(error){
                                    this.nznot.create('error', error.json().msg,'');
                                       }

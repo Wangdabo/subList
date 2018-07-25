@@ -40,11 +40,13 @@ export class EnvironmentComponent implements OnInit {
     };
 
      onChange(item) {
+        
         for (let i = 0; i < this.elementScice.length; i ++) {
             if (this.elementScice[i].guid !== item && this.elementScice[i].check === true) {
                 this.elementScice[i].check = false;
             }
         }
+         
 
     }
 
