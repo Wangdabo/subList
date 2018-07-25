@@ -170,7 +170,7 @@
 
     <div class="steps-content" >
 
-       <app-environment [deliveryTime]="deliveryTime" [isShowDate]="isShowDate" (isActive)="isActive($event)" [elementScice]="elementScice" *ngIf="current === 0"></app-environment>
+       <app-environment [deliveryTime]="deliveryTime" (loadingnext)='changeloadingnext($event)' [isShowDate]="isShowDate" (isActive)="isActive($event)" [elementScice]="elementScice" *ngIf="current === 0"></app-environment>
 
         <app-listfold [headerDate]="mergeHeader"  [buttons] ='buttons'   (buttonEvent)="buttonEventMerge($event)"  [initDate]="initDate" *ngIf="current === 1" ></app-listfold>
 

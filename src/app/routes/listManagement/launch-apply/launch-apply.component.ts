@@ -315,6 +315,9 @@ getElement() {
                         }
                     );
     }
+    changeloadingnext(){
+        this.loadingnext = false;
+    }
 
   checkId:any;
     current = 0;
@@ -361,9 +364,10 @@ getElement() {
             .subscribe(
                 (val) => {
                        this.loading = false;
+                      
                     console.log(val)
                     if (val.code === '200') {
-                        this.loadingnext = false;
+                         this.loadingnext = false;
                        this.current += 1;
                        console.log(this.current)
                           for(let i = 0;i<val.result.length;i++){
@@ -386,10 +390,12 @@ getElement() {
 
                                 }else{
                                     this.nznot.create('error',val.msg,val.msg);
+                                     this.loadingnext = false;
                                 }
                             },
                             (error) => {
                                 // console.log(error)
+                                 this.loadingnext = false;
                                 if(error){
                                     let msg = error.json();
                                      this.nznot.create('error', msg.msg, '');
@@ -491,6 +497,7 @@ getElement() {
 
                                 }
                                 ,(error)=>{
+                                     this.loadingnext = false;
                                   if(error){
                                    this.nznot.create('error', error.json().msg,'');
                                       }
