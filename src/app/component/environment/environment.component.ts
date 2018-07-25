@@ -16,14 +16,11 @@ export class EnvironmentComponent implements OnInit {
     deliveryTime: any;
      @Input()
     isNext: boolean;
-    //   @Input()
-    //    loadingnext: boolean;
       @Input()
     isShowDate: boolean;
       @Output()
     isActive: EventEmitter<any> = new EventEmitter(); // 定义一个输出属性，当点击按钮的时候 发射出去
-     @Output()
-    loadingnext: EventEmitter<any> = new EventEmitter(); // 定义一个输出属性，当点击按钮的时候 发射出去
+
     // deliveryTime
     constructor(private http: _HttpClient,
                 public msg: NzMessageService,) {
@@ -43,7 +40,7 @@ export class EnvironmentComponent implements OnInit {
     };
 
      onChange(item) {
-        this.loadingnext.emit(item)
+        
         for (let i = 0; i < this.elementScice.length; i ++) {
             if (this.elementScice[i].guid !== item && this.elementScice[i].check === true) {
                 this.elementScice[i].check = false;
