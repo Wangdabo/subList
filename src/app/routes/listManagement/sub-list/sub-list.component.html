@@ -54,13 +54,13 @@
                         <div nz-col [nzSpan]="24" class="mb-md">
                             <div  nz-form-item class="d-flex" style="font-size: 18px;">
                                 <div class="ad-desc-list__term ng-star-inserted">收到需求时间:</div>
-                                <div class="ad-desc-list__detail ng-star-inserted">{{workItemInfo.receiveTime}}</div>
+                                <div class="ad-desc-list__detail ng-star-inserted">{{workItemInfo.receiveTime | date:'yyyy-MM-dd'}}</div>
                             </div>
                         </div>
                         <div nz-col [nzSpan]="24" class="mb-md">
                             <div  nz-form-item class="d-flex" style="font-size: 18px;">
                                 <div class="ad-desc-list__term ng-star-inserted">计划投产时间:</div>
-                                <div class="ad-desc-list__detail ng-star-inserted">{{workItemInfo.deliveryplanTime}}</div>
+                                <div class="ad-desc-list__detail ng-star-inserted">{{workItemInfo.deliveryPlanTime | date:'yyyy-MM-dd'}}</div>
                             </div>
                         </div>
                     </div>

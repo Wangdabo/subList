@@ -98,14 +98,14 @@ export class SubListComponent implements OnInit {
 
     openChange() {
         this.getworkData(); // 调用工作项信息
-    };
+    }
+
     // 下拉框选择
     checkSelect(event) {
+        console.log(this.workItem)
         for (var i = 0; i < this.workItem.length; i ++ ) {
             if (this.workItem[i].guid === event) {
                 this.workItemInfo = this.workItem[i];
-                this.workItemInfo.receiveTime = moment(this.workItemInfo.receiveTime).format('YYYY-MM-DD HH:mm:ss');
-                this.workItemInfo.deliveryplanTime = moment(this.workItemInfo.deliveryplanTime).format('YYYY-MM-DD HH:mm:ss');
             }
         }
 
@@ -118,7 +118,6 @@ export class SubListComponent implements OnInit {
         this.utilityService.getData(appConfig.testUrl  + appConfig.API.sWorkitem + '/' + event + '/branchDetail', {}, {Authorization: this.token})
             .subscribe(
                 (val) => {
-
                     this.branchDetail = val.result.fullPath;
                     this.bransguid = val.result.guid;
                     this.ifActive = true;
@@ -132,8 +131,6 @@ export class SubListComponent implements OnInit {
                     this.selectApply = false; // 投放和补录按钮按钮隐藏
                 }
             );
-
-
     }
 
 
@@ -342,7 +339,7 @@ export class SubListComponent implements OnInit {
   }*/
         this.modalVisible = false;
 
-        if (_.isUndefined(this.textcssList) || this.textcssList.length === 0) { 
+        if (_.isUndefined(this.textcssList) || this.textcssList.length === 0) {
             this.modalVisible = true;
         } else {
             for (let i = 0; i < this.textcssList.length; i ++) {

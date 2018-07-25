@@ -145,7 +145,7 @@ export class LaunchApplyComponent implements OnInit {
         getData() {
 
             const page = {
-                condition:this.search,
+                condition: this.search,
                 page : {
                     size: 10,
                     current :  this.currentpage,
@@ -259,7 +259,7 @@ getElement() {
               this.getSprofiles();
               this.mergeisVisible = true
               this.current = 0;
-              
+
       console.log(this.loadingnext)
             // this.changeContent();
             // this.checkModalVisible = true; // 打开核对弹出框
@@ -444,7 +444,7 @@ getElement() {
                                                            this.mergeListData[i].fullPathstr = star + '...' + end;
                                                         }else{
                                                             this.mergeListData[i].fullPathstr =this.mergeListData[i].fullPath
-                                                     }     
+                                                     }
                          }
                            if(this.mergeListData[i].programName.length > 40){
                                                         star = this.mergeListData[i].programName.substr(0,10)
@@ -464,9 +464,9 @@ getElement() {
                                     //   this.guidprent[i]['guidWorkitem']=this.checkModalData[i].delivery.guidWorkitem.target
                               this.guidprent.push(obj);
                             //   if(  this.checkModalData[i].delivery.deliveryResult =='核对成功' || this.checkModalData[i].delivery.deliveryResult =='核对失败' ){
-                            //               this.checkModalData[i].delivery.disabledS = true; 
+                            //               this.checkModalData[i].delivery.disabledS = true;
                             //          }else{
-                                         this.checkModalData[i].delivery.disabledS = false; 
+                                         this.checkModalData[i].delivery.disabledS = false;
                             //          }
                             for (let j = 0; j < this.checkModalData[i].detailList.length; j ++) {
                                 for (let x = 0; x < this.checkModalData[i].detailList[j].deliveryPatchDetails.length; x ++) {
@@ -809,9 +809,9 @@ getElement() {
            .subscribe(
                (val) => {
                    console.log(val);
-               
+
                    if (val.code == 200){
-                      
+
 
                        this.istextVisible = false;
                        this.checkListVisible = false;
@@ -970,9 +970,9 @@ loading2 = false
 
     buttonEvent(event) {
         this.mergeId = event.guid;
-  
+
         if (event.names.key === 'merge') {
-           
+
             this.idcheck = event.guid;
               let index = '';
               let indexs = '';
@@ -1057,7 +1057,7 @@ loading2 = false
                    console.log(val);
 
                    if (val.code == 200){
-                        
+
                         if(item === 1 ){
                            event.it.disabledS = true
                            event.it.deliveryResult = '核对成功'
@@ -1068,8 +1068,8 @@ loading2 = false
                             // alert( this.istextVisible)
                        }
                     //    console.log( this.istextVisible)
-                    
-                
+
+
                        this.nznot.create('success', val.msg, val.msg);
                    }else{
                          this.nznot.create('error', val.msg,'');
