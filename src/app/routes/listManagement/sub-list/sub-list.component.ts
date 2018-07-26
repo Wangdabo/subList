@@ -748,7 +748,7 @@ export class SubListComponent implements OnInit {
     // 日期禁选方法
     disabledDate(current: Date): boolean {
         // console.log(this)
-        console.log(JSON.parse(localStorage.getItem('name')))
+        // console.log(JSON.parse(localStorage.getItem('name'))) // 逻辑暂停，先不搞
         if (current) {
             if (!_.isFunction(current.getTime())) {
                 // return  current.getTime() < ( Date.now() - 24 * 60 * 60 * 1000); // 跟昨天比较，如果小于禁选
