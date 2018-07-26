@@ -52,7 +52,7 @@ export class SProjectComponent implements OnInit {
     // 枚举值
     projectType = [
         {key: '普通工程', value: 'C'},
-        {key: '特殊工程', value: 'S'},
+        {key: '可选工程', value: 'S'},
         {key: 'IBS工程', value: 'I'},
     ]
 
@@ -88,14 +88,26 @@ export class SProjectComponent implements OnInit {
         this.getData();
     }
 
-    getData() {
-        this.page = {
-            condition: this.productItem,
-            page: {
-                current: this.productItem.pi,
-                size: this.productItem.size,
-            }
-        };
+    getData(options?) {
+        if (options) {
+            this.page = {
+                condition: options,
+                page: {
+                    current: 1,
+                    size: this.productItem.size,
+                }
+            };
+        } else {
+            this.page = {
+                condition: this.productItem,
+                page: {
+                    current: this.productItem.pi,
+                    size: this.productItem.size,
+                }
+            };
+        }
+
+
         this.utilityService.postData(appConfig.testUrl  + appConfig.API.sProjectList , this.page, {Authorization: this.token})
             .map(res => res.json())
             .subscribe(
@@ -153,7 +165,7 @@ export class SProjectComponent implements OnInit {
 
     // 查询方法
     search() {
-        this.getData();
+        this.getData(this.productItem);
     }
 
     reset() {
@@ -200,7 +212,7 @@ export class SProjectComponent implements OnInit {
             if (event.names.key === 'upd') {
                 this.modelTitle = '修改工程';
                 this.productAdd = event; // 修改类型问题
-                if (event.projectType === '特殊工程') {
+                if (event.projectType === '可选工程') {
                     event.projectType = 'S';
                 } else if (event.projectType === 'IBS工程') {
                     event.projectType = 'I';
