@@ -88,16 +88,29 @@ export class SWorkitemComponent implements OnInit {
         this.getOper()
         this.initDate(); // 默认时间
     }
-    getData() {
-        this.page = {
-            condition: this.workItem, // 搜索内容
-            page: {
-                current: this.workItem.pi,
-                size: this.workItem.size,
-                orderByField: 'guid',
-                asc: false // asc 默认是true  升序排序，时间类型 用false， 降序
-            }
-        };
+    getData(option?) {
+        if(option) {
+            this.page = {
+                condition: option, // 搜索内容
+                page: {
+                    current: 1, // 查询引起的，默认为1，否则会出问题,比如在第四页查询，这个匹配值没有四页，那就会为空
+                    size: this.workItem.size,
+                    orderByField: 'guid',
+                    asc: false // asc 默认是true  升序排序，时间类型 用false， 降序
+                }
+            };
+        } else {
+            this.page = {
+                condition: this.workItem, // 搜索内容
+                page: {
+                    current: this.workItem.pi,
+                    size: this.workItem.size,
+                    orderByField: 'guid',
+                    asc: false // asc 默认是true  升序排序，时间类型 用false， 降序
+                }
+            };
+        }
+
         this.utilityService.postData(appConfig.testUrl  + appConfig.API.workItemList , this.page, {Authorization: this.token})
             .map(res => res.json())
             .subscribe(
@@ -146,7 +159,7 @@ export class SWorkitemComponent implements OnInit {
     }
     // 查询方法
     search() {
-        this.getData();
+        this.getData(this.workItem);
     }
     // 重置方法
     reset() {
