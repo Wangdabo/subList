@@ -8,7 +8,7 @@
 <!--引入list组件-->
 <nz-card [nzBordered]="false">
     <!--  form表单搜索 -->
-    <form nz-form (ngSubmit)="getData()" [nzLayout]="'inline'">
+    <form nz-form (ngSubmit)="getData('search')" [nzLayout]="'inline'">
         <div nz-row  [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
             <!--<div nz-col [nzSpan]="6" class="mb-md">
                 <div nz-form-item class="d-flex">
@@ -23,7 +23,7 @@
                     <div nz-form-label><label>运行环境</label></div>
                     <div nz-form-control class="flex-1">
 
-                         <nz-select style="width:100%"   nzAllowClear  nzShowSearch  [(ngModel)]="search.guidProfiles"  name="deliveryResult" [nzSize]="'large'" [nzPlaceHolder]="'投放结果'" nzId="deliveryResult">
+                         <nz-select style="width:100%"   nzAllowClear  nzShowSearch  [(ngModel)]="search.guidProfiles"  name="deliveryResult" [nzSize]="'large'" [nzPlaceHolder]="'运行环境'" nzId="deliveryResult">
                             <nz-option  *ngFor="let i of elementScice;" [nzLabel]="i.profilesName" [nzValue]="i.guid"></nz-option>
                         </nz-select>
                         <!--<nz-input [(ngModel)]="search.guidProfiles" name="guidProfiles" [nzSize]="'large'" [nzPlaceHolder]="'运行环境'" nzId="guidProfiles"></nz-input>-->
