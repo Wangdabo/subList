@@ -222,8 +222,8 @@ export class AdRecordComponent implements OnInit {
                             if (this.mergeListData[i].fullPath) {
                                 indexs = this.mergeListData[i].fullPath.indexOf(this.mergeListData[i].partOfProject);
                                 this.mergeListData[i].fullPath = this.mergeListData[i].fullPath.substring(indexs, this.mergeListData[i].fullPath.length);
-                                                  if(this.mergeListData[i].fullPath.length > 40){
-                                                        star = this.mergeListData[i].fullPath.substr(0,20)
+                                                  if(this.mergeListData[i].fullPath.length > 30){
+                                                        star = this.mergeListData[i].fullPath.substr(0,10)
                                                         end = this.mergeListData[i].fullPath.substr(this.mergeListData[i].fullPath.length - 20)
                                                            this.mergeListData[i].fullPathstr = star + '...' + end;
                                                         }else{
