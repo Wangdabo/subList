@@ -142,8 +142,11 @@ export class LaunchApplyComponent implements OnInit {
         deliveryResult:'',
         guidProfiles:''
     };
-        getData() {
+        getData(type?) {
 
+           if(type == 'search'){
+               this.currentpage = 1
+           }
             const page = {
                 condition:this.search,
                 page : {

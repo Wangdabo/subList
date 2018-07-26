@@ -99,6 +99,9 @@ export class AdRecordComponent implements OnInit {
     index = 1;
 
     getData() {
+        //   if(type == 'search'){
+        //        this.index = 1
+        //    }
         const page = {
             page : {
                 size: 10,

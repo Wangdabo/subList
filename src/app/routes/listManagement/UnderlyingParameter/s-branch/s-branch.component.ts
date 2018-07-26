@@ -74,8 +74,11 @@ export class SBranchComponent implements OnInit {
         fullPath:'',
         branchFor:''
     };
-    getData() {
-        console.log(this.search)
+    getData(type?) {
+        
+        if(type == 'search'){
+              this.branch.page = '1'
+           }
             const page = {
                 condition: this.search,
                 page: {

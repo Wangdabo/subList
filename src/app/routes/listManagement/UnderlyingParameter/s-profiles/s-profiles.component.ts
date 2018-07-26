@@ -255,7 +255,10 @@ export class SProfilesComponent implements OnInit {
         isAllowDelivery:''
     };
  
-    getData() {
+    getData(type?) {
+           if(type == 'search'){
+              this.profiles.page = '1'
+           }
         const page = {
              condition:this.search,
             page: {
