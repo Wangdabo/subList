@@ -726,15 +726,14 @@ export class SubListComponent implements OnInit {
     }
 
     // 日期禁选方法
-
     disabledDate(current: Date): boolean {
         let array = JSON.parse(localStorage.getItem('name'));
-        if(array) {
-            for( var i = 0; i < array.length; i++) {
+        if (array) {
+            for ( let i = 0; i < array.length; i++) {
                 return  current.getTime() < (array[i].deliveryTime - 24 * 60 * 60 * 1000);  // 跟默认的时间比，如果小于禁选
             }
         }
-        
+
     }
 
 }
