@@ -712,15 +712,17 @@ export class SubListComponent implements OnInit {
             .subscribe(
                 (val) => {
                         this.elementScice = val.result;
-                        localStorage.setItem('name', JSON.stringify(val.result));
+
                         for (let i = 0; i < this.elementScice.length; i++) {
-                            this.elementScice[i].deliveryTime = new Date(this.elementScice[i].deliveryTime ); // 初始化时间
+                            this.elementScice[i].deliveryTime = new Date(this.elementScice[i].deliveryTime); // 初始化时间
+                            this.elementScice[i].unixTime = moment(this.elementScice[i].deliveryTime).format('YYYY-MM-DD 00:00:00.000')
                             for (let s = 0; s < this.elementScice[i].packTimeDetails.length; s ++) {
                                 if (this.elementScice[i].packTimeDetails[s].isOptions === 'D') {
                                     this.elementScice[i].times = this.elementScice[i].packTimeDetails[s].packTime;
                                 }
                             }
                         }
+                    localStorage.setItem('name', JSON.stringify(_.cloneDeep(this.elementScice)));
                     }
                  );
     }
@@ -728,13 +730,28 @@ export class SubListComponent implements OnInit {
     // 日期禁选方法
     disabledDate(current: Date): boolean {
         let array = JSON.parse(localStorage.getItem('name'));
+        console.log(array)
         if (array) {
             for ( let i = 0; i < array.length; i++) {
-                return  current.getTime() < (array[i].deliveryTime - 24 * 60 * 60 * 1000);  // 跟默认的时间比，如果小于禁选
+                // return  current.getTime() < (array[i].deliveryTime - 24 * 60 * 60 * 1000);  // 跟默认的时间比，如果小于禁选
+                return  current.getTime() < new Date(array[i].unixTime).getTime();  // 跟默认的时间比，如果小于禁选
+            }
+        }
+    }
+
+/*
+    // 日期禁选方法
+    disabledDate(current: Date): boolean {
+
+        let array = JSON.parse(localStorage.getItem('name'));
+        if (array) {
+            for ( let i = 0; i < array.length; i++) {
+                let times = moment(_.cloneDeep(array[i].deliveryTime)).format('YYYY-MM-DD 00:00:00.000'); // 思路 因为描述不同，转成0点0分0秒
+                return  current.getTime()  <  new Date(times).getTime();  // 跟默认的时间比，如果小于禁选
             }
         }
 
-    }
+    }*/
 
 }
 
