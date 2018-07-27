@@ -726,17 +726,15 @@ export class SubListComponent implements OnInit {
     }
 
     // 日期禁选方法
-    nzValue:any;
-    disabledDate(current: Date): boolean {
-        console.log(this)
-        // console.log(JSON.parse(localStorage.getItem('name'))) // 逻辑暂停，先不搞
-        if (current) {
-            if (!_.isFunction(current.getTime())) {
-                // return  current.getTime() < ( Date.now() - 24 * 60 * 60 * 1000); // 跟昨天比较，如果小于禁选
-                return  current.getTime() < ( this.nzValue.getTime() - 24 * 60 * 60 * 1000); // 跟默认的时间比，如果小于禁选
-            }
 
+    disabledDate(current: Date): boolean {
+        let array = JSON.parse(localStorage.getItem('name'));
+        if(array) {
+            for( var i = 0; i < array.length; i++) {
+                return  current.getTime() < (array[i].deliveryTime - 24 * 60 * 60 * 1000);  // 跟默认的时间比，如果小于禁选
+            }
         }
+        
     }
 
 }
