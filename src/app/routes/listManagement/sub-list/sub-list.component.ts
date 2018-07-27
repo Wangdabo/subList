@@ -418,7 +418,7 @@ export class SubListComponent implements OnInit {
             guidBranch : this.bransguid,
             dliveryAddRequest: {
                 profiles: this.profiles,
-                deliveryTime: moment(this.deliveryTime).format('YYYY-MM-DD'),
+                // deliveryTime: moment(this.deliveryTime).format('YYYY-MM-DD'),
             },
             guidWorkitem: this.workItemInfo.guid,
             deliveryList: array,
@@ -519,7 +519,8 @@ export class SubListComponent implements OnInit {
                         profilesName: this.elementScice[i].profilesName,
                         packTiming: this.elementScice[i].times,
                         name: this.elementScice[i].manager,
-                        applyAlias: this.workItemInfo.itemName // 默认别名 工作项名称
+                        applyAlias: this.workItemInfo.itemName, // 默认别名 工作项名称
+                        deliveryTime: moment(this.elementScice[i].deliveryTime).format('YYYY-MM-DD')
                     };
                     this.profiles.push(obj);
                 } else {
@@ -528,7 +529,8 @@ export class SubListComponent implements OnInit {
                         profilesName: this.elementScice[i].profilesName,
                         packTiming: this.elementScice[i].times,
                         name: this.elementScice[i].manager,
-                        applyAlias: this.elementScice[i].deliveryName
+                        applyAlias: this.elementScice[i].deliveryName,
+                        deliveryTime: moment(this.elementScice[i].deliveryTime).format('YYYY-MM-DD')
                     };
                     this.profiles.push(obj);
                 }
@@ -538,9 +540,10 @@ export class SubListComponent implements OnInit {
         this.dataChange();
         let obj = {
             guidWorkitem: this.workItemInfo.guid,
-            deliveryTime: this.splicingObj.dliveryAddRequest.deliveryTime,
+            // deliveryTime: this.splicingObj.dliveryAddRequest.deliveryTime,
             profiles: this.profiles
         };
+        console.log(obj)
         this.utilityService.postData(appConfig.testUrl  + '/deliveries/putDelivery', obj, {Authorization: this.token})
             .map(res => res.json())
             .subscribe(

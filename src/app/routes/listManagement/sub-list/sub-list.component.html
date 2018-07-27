@@ -234,8 +234,13 @@
                             </div>
                             <div nz-col [nzSpan]="10">
                                    <div nz-col [nzSpan]="6" *ngFor="let t of s.packTimeDetails; let d = index" >
-                                       <input style="margin-top: 10px;" [disabled]="!s.check || t.isOptions ==='N'"   [(ngModel)]="s.times"   [value]="t.packTime"   [name]="s.profilesName"
-                                              type="radio" />&nbsp;{{t.packTime}}
+                                    <!--   <input style="margin-top: 10px;"  [disabled]="!s.check || t.isOptions ==='N'"   [(ngModel)]="s.times"   [value]="t.packTime"   [name]="s.profilesName"
+                                              type="radio" />&nbsp;{{t.packTime}}-->
+                                       <nz-radio-group [(ngModel)]="s.times">
+                                           <label  [nzDisabled]="!s.check || t.isOptions ==='N'" nz-radio [nzValue]="t.packTime">
+                                               <span>{{t.packTime}}</span>
+                                           </label>
+                                       </nz-radio-group>
                                    </div>
                             </div>
                             <div nz-col [nzSpan]="6">
