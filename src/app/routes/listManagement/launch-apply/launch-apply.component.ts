@@ -78,6 +78,7 @@ export class LaunchApplyComponent implements OnInit {
     mergeList: any[] = [];
     mergeListInfo: any[] = [];
     profiles: any[] = [];
+    updEnvironment = false;
 
     headerDate = [  // 配置表头内容
         { value: '别名', key: 'applyAlias', isclick: false, radio: false},
@@ -156,6 +157,16 @@ export class LaunchApplyComponent implements OnInit {
                     asc: false // asc 默认是true  升序排序，时间类型 用false， 降序
                 }
             };
+            let button =[   
+                 {key:'dels',value:'删除' },
+                 {key:'detail',value:'详情'},
+               
+                       ]
+              let buttonupd =[   
+                 {key:'dels',value:'删除' },
+                 {key:'detail',value:'详情'},
+                 {key:'upd',value:'修改'}
+                       ]
             this.utilityService.postData(appConfig.testUrl  + appConfig.API.list, page, { Authorization: this.token})
                 .map(res => res.json())
                 .subscribe(
@@ -170,10 +181,12 @@ export class LaunchApplyComponent implements OnInit {
                                 this.data[i].deliveryTime = moment(this.data[i].deliveryTime).format('YYYY-MM-DD');
                                 this.data[i].guidProfiles = this.data[i].guidProfiles.target;
                                 this.data[i].guidWorkitem = this.data[i].guidWorkitem.target;
-                                this.data[i].buttonData = [
-                                    {key:'dels',value:'删除' },
-                                    {key:'detail',value:'详情'}
-                                    ]
+                                if(this.data[i].deliveryResult == '申请中'){
+                                     this.data[i].buttonData = buttonupd
+                                }else{
+                                    this.data[i].buttonData = button
+                                }
+                               
                             }
                         }
 
@@ -573,12 +586,14 @@ getElement() {
                }
            );
 
-       console.log(event);
+    
 
    }
+  updPackTiming = []
+  guidDelivery :any;
     // 按钮点击事件
     buttonEventlist(event) {
-        console.log(event)
+      
         if(event.names.key == 'dels'){
          let self = this;
             this.confirmServ.confirm({
@@ -632,10 +647,81 @@ getElement() {
                 });
 
 
+        }else if(event.names.key == 'upd'){
+           
+        this.guidDelivery = event.guid;
+         this.utilityService.getData( appConfig.testUrl +'/deliveries/'+event.guid + '/profileDateilVerify', {}, {Authorization: this.token})
+            .subscribe(
+                (val) => {
+                    console.log(val);
+                   if(val.code == 200){
+                       this.updPackTiming  = val.result
+                       localStorage.setItem('time', moment(this.updPackTiming['deliveryTime']).format('YYYY-MM-DD 00:00:00.000'));
+                      
+                      for(let i =0;i<this.updPackTiming['packTimeDetails'].length;i++){
+                          if(this.updPackTiming['packTimeDetails'][i]['isOptions']=='D'){
+                             this.updPackTiming['packTimeDetails'][i]['isOptions'] = true
+                             this.updPackTiming['packTiming']   =   this.updPackTiming['packTimeDetails'][i]['packTime'] 
+                          }else{
+                                 this.updPackTiming['packTimeDetails'][i]['isOptions'] = false
+                          }
+                      }
+                           this.updEnvironment = true;
+                   }
+                   console.log( this.updPackTiming)
+                },(error)=>{
+                    console.log(error)
+                    if(error){
+                        this.nznot.create('error',error.json().msg,'');
+                    }
+                });
         }
 
 
 
+
+    }
+      _disabledDate(current: Date): boolean {
+
+
+        
+    return current && current.getTime() < Date.now();
+  }
+    submitUpd(){
+        let obj ={
+            guidDelivery:this.guidDelivery,
+            deliveryTime:this.updPackTiming['deliveryTime'],
+            packTiming:this.updPackTiming['packTiming']
+        }
+        console.log(obj);
+    
+          this.utilityService.putData( appConfig.testUrl +'/deliveries/deliveryTimePackTime', obj, {Authorization: this.token})
+            .subscribe(
+                (val) => {
+                       this.updEnvironment = false;
+                    console.log(val);
+                    this.getData();
+                   if(val.code == 200){
+                           this.nznot.create('success',val.msg,'');
+                       this.updPackTiming  = val.result
+                      for(let i =0;i<this.updPackTiming['packTimeDetails'].length;i++){
+                          if(this.updPackTiming['packTimeDetails'][i]['isOptions']=='D'){
+                             this.updPackTiming['packTimeDetails'][i]['isOptions'] = true
+                          }else{
+                                 this.updPackTiming['packTimeDetails'][i]['isOptions'] = false
+                          }
+                      }
+                    
+                          
+                   }
+                   console.log( this.updPackTiming)
+                },(error)=>{
+                    console.log(error)
+                      
+                    if(error){
+                        this.nznot.create('error',error.json().msg,'');
+                    }
+                });
     }
 
     // 列表按钮方法
