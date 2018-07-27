@@ -158,6 +158,44 @@
 </nz-modal>-->
 
 
+<nz-modal [nzVisible]="updEnvironment"   [nzWidth]="1024" [nzTitle]="'修改当前工作项的投放时间与窗口'"   [nzContent]="updModal"
+          (nzOnCancel)="updEnvironment=false" (nzOnOk)="submitUpd()"  nzZIndex = '20' >
+    <ng-template #updModal>
+
+
+            <div  nz-form-item class="d-flex">
+                <div nz-form-label><label for="itemType">当前运行环境</label></div>
+                <div nz-form-control class="flex-1">
+                   {{updPackTiming.profilesName}}
+                </div>
+            </div>
+             <div  nz-form-item class="d-flex">
+                <div nz-form-label><label for="itemType">时间</label></div>
+                 <div nz-form-control class="flex-1">
+               <nz-datepicker [(ngModel)]="updPackTiming.deliveryTime" [nzPlaceHolder]="'请选择日期'" [nzDisabledDate]="_disabledDate"></nz-datepicker>
+                   <!--{{updPackTiming.profilesName}}-->
+                </div>
+            </div>
+              <div  nz-form-item class="d-flex">
+                <div nz-form-label><label for="itemType">窗口</label></div>
+                 <div nz-form-control class="flex-1">
+                       <!--<label nz-radio [(ngModel)]="updPackTiming.PackTiming" *ngFor="let t of updPackTiming.packTimeDetails; let d = index">
+                                <span>{{t.packTime}}</span>
+                            </label>-->
+                            <nz-radio-group [(ngModel)]="updPackTiming.packTiming">
+                                <label *ngFor="let i of updPackTiming['packTimeDetails'];" nz-radio [nzValue]="i.packTime">
+                                    <span>{{i.packTime}}</span>
+                                </label>
+                              </nz-radio-group>
+                        
+                    
+                    
+            </div>
+       </div>
+   
+   </ng-template>
+</nz-modal>
+
 <nz-modal [nzVisible]="mergeisVisible"   [nzWidth]="1024" [nzTitle]="'请指定投放日期和环境'"   [nzContent]="dictModal"
           (nzOnCancel)="mergeisVisible=false" (nzOnOk)="savemergeisInfo()" [nzFooter]="is" nzZIndex = '20' >
     <ng-template #dictModal>
