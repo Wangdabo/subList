@@ -233,9 +233,9 @@
                                 </nz-datepicker>
                             </div>
                             <div nz-col [nzSpan]="10">
-                                   <div nz-col [nzSpan]="6" *ngFor="let t of s.Timing; let d = index" >
-                                       <input style="margin-top: 10px;" [disabled]="!s.check"   [(ngModel)]="s.times"   [value]="t.time"   [name]="s.profilesName"
-                                              type="radio" />&nbsp;{{t.time}}
+                                   <div nz-col [nzSpan]="6" *ngFor="let t of s.packTimeDetails; let d = index" >
+                                       <input style="margin-top: 10px;" [disabled]="!s.check || t.isOptions ==='N'"   [(ngModel)]="s.times"   [value]="t.packTime"   [name]="s.profilesName"
+                                              type="radio" />&nbsp;{{t.packTime}}
                                    </div>
                             </div>
                             <div nz-col [nzSpan]="6">

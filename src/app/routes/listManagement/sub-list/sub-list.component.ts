@@ -727,27 +727,23 @@ export class SubListComponent implements OnInit {
          this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfiles, {}, {Authorization: this.token})
             .subscribe(
                 (val) => {
-                    this.elementScice = val.result;
-                    localStorage.setItem('name', JSON.stringify(val.result));
-                    for (let i = 0; i < this.elementScice.length; i++) {
-                        this.elementScice[i].deliveryTime = new Date(1532761926000); // 初始化时间
-                        this.elementScice[i].packTiming = this.elementScice[i].packTiming.split(',');
-                        this.elementScice[i].Timing  = []
-                        for ( let s = 0; s < this.elementScice[i].packTiming.length; s ++) {
-                            let obj = {
-                                time: this.elementScice[i].packTiming[s]
-                            };
-                            this.elementScice[i].Timing.push(obj);
+                        this.elementScice = val.result;
+                        localStorage.setItem('name', JSON.stringify(val.result));
+                        for (let i = 0; i < this.elementScice.length; i++) {
+                            this.elementScice[i].deliveryTime = new Date(this.elementScice[i].deliveryTime ); // 初始化时间
+                            for (let s = 0; s < this.elementScice[i].packTimeDetails.length; s ++) {
+                                if (this.elementScice[i].packTimeDetails[s].isOptions === 'D') {
+                                    this.elementScice[i].times = this.elementScice[i].packTimeDetails[s].packTime;
+                                }
+                            }
                         }
-                    }
-                    return val.result;
                     }
                  );
     }
 
     // 日期禁选方法
     disabledDate(current: Date): boolean {
-        // console.log(this)
+        console.log(this)
         // console.log(JSON.parse(localStorage.getItem('name'))) // 逻辑暂停，先不搞
         if (current) {
             if (!_.isFunction(current.getTime())) {

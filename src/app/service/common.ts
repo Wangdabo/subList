@@ -16,7 +16,7 @@ export let appConfig = {
         logout: '/logout', // 登出
         sWorkitem: '/sWorkitem', // 查询工作项、修改、删除
         sDeliveryList: '/sDeliveryList', // 整理清单
-        sProfiles: '/sProfiles/list',  // 投放申请查询
+        sProfiles: '/sProfiles/packTimeVerify',  // 投放申请查询
         allsProfiles: '/sProfiles/all',  // 投放申请查询
 
         getBranch: '/sProfiles/relevanceBranch', // 未支配的分支
