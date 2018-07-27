@@ -733,8 +733,8 @@ export class SubListComponent implements OnInit {
         console.log(array)
         if (array) {
             for ( let i = 0; i < array.length; i++) {
-                // return  current.getTime() < (array[i].deliveryTime - 24 * 60 * 60 * 1000);  // 跟默认的时间比，如果小于禁选
-                return  current.getTime() < new Date(array[i].unixTime).getTime();  // 跟默认的时间比，如果小于禁选
+                return  current.getTime() < (array[i].deliveryTime - 24 * 60 * 60 * 1000);  // 跟默认的时间比，如果小于禁选
+                // return  current.getTime() < new Date(array[i].unixTime).getTime();  // 跟默认的时间比，如果小于禁选
             }
         }
     }
