@@ -16,6 +16,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import {CardModule} from 'primeng/card';
 import {CheckboxModule} from 'primeng/checkbox';
 import {RadioButtonModule} from 'primeng/radiobutton';
+import {CalendarModule} from 'primeng/calendar';
 
 // region: third libs
 import { CountdownModule } from 'ngx-countdown';
@@ -32,7 +33,8 @@ const THIRDMODULES = [
     ContextMenuModule,
     CardModule,
     CheckboxModule,
-    RadioButtonModule
+    RadioButtonModule,
+    CalendarModule
 ];
 // endregion
 

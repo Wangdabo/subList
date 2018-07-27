@@ -67,18 +67,18 @@ export class SubListComponent implements OnInit {
     appendSelect: any; // 可追加的环境和方法
     selectApply = false; // 环境按钮
 
+    initData: any;
     ngOnInit() {
         this.active = false;
         this.reset = false;
         this.token  = this.tokenService.get().token; // 绑定token
         this.userName  = this.tokenService.get().name; // 绑定token
-        this.getcheckOptionOne();
         this.copysplicingObj = {};
         this.copysplicingObj.dliveryAddRequest = {};
         this.copysplicingObj.dliveryAddRequest.profiles = [];
         this.copysplicingObj.deliveryList = [];
+        this.getcheckOptionOne();
     }
-
 
 
 
@@ -102,7 +102,6 @@ export class SubListComponent implements OnInit {
 
     // 下拉框选择
     checkSelect(event) {
-        console.log(this.workItem)
         for (var i = 0; i < this.workItem.length; i ++ ) {
             if (this.workItem[i].guid === event) {
                 this.workItemInfo = this.workItem[i];
@@ -291,26 +290,6 @@ export class SubListComponent implements OnInit {
     }
 
 
-    // 调用投放环境接口
-    getcheckOptionOne() {
-        this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfiles, {}, {Authorization: this.token})
-            .subscribe(
-                (val) => {
-                    this.elementScice = val.result;
-                    for (let i = 0; i < this.elementScice.length; i++) {
-                        this.elementScice[i].packTiming = this.elementScice[i].packTiming.split(',');
-                        this.elementScice[i].Timing  = []
-                        for ( let s = 0; s < this.elementScice[i].packTiming.length; s ++) {
-                            let obj = {
-                                time: this.elementScice[i].packTiming[s]
-                            };
-                            this.elementScice[i].Timing.push(obj);
-                        }
-                    }
-
-                }
-            );
-    }
 
 
     // 投放申请
@@ -742,14 +721,37 @@ export class SubListComponent implements OnInit {
             );
     }
 
+
+    // 调用投放环境接口
+    getcheckOptionOne() {
+         this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfiles, {}, {Authorization: this.token})
+            .subscribe(
+                (val) => {
+                        this.elementScice = val.result;
+                        localStorage.setItem('name', JSON.stringify(val.result));
+                        for (let i = 0; i < this.elementScice.length; i++) {
+                            this.elementScice[i].deliveryTime = new Date(this.elementScice[i].deliveryTime ); // 初始化时间
+                            for (let s = 0; s < this.elementScice[i].packTimeDetails.length; s ++) {
+                                if (this.elementScice[i].packTimeDetails[s].isOptions === 'D') {
+                                    this.elementScice[i].times = this.elementScice[i].packTimeDetails[s].packTime;
+                                }
+                            }
+                        }
+                    }
+                 );
+    }
+
+    // 日期禁选方法
     disabledDate(current: Date): boolean {
+        console.log(this)
+        // console.log(JSON.parse(localStorage.getItem('name'))) // 逻辑暂停，先不搞
         if (current) {
             if (!_.isFunction(current.getTime())) {
-                return  current.getTime() < ( Date.now() - 24 * 60 * 60 * 1000); // 跟昨天比较，如果小于禁选
+                // return  current.getTime() < ( Date.now() - 24 * 60 * 60 * 1000); // 跟昨天比较，如果小于禁选
+                return  current.getTime() < ( this.nzValue.getTime() - 24 * 60 * 60 * 1000); // 跟默认的时间比，如果小于禁选
             }
 
         }
-
     }
 
 }
