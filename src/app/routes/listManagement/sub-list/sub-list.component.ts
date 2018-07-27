@@ -412,13 +412,10 @@ export class SubListComponent implements OnInit {
             }
         }
 
-
-
         this.splicingObj = {
             guidBranch : this.bransguid,
             dliveryAddRequest: {
                 profiles: this.profiles,
-                // deliveryTime: moment(this.deliveryTime).format('YYYY-MM-DD'),
             },
             guidWorkitem: this.workItemInfo.guid,
             deliveryList: array,
@@ -515,7 +512,7 @@ export class SubListComponent implements OnInit {
             if (this.elementScice[i].check && this.elementScice[i].times) {
                 if (_.isUndefined(this.elementScice[i].deliveryName)) { // 如果是undefined, 那么就给一个默认的别名
                     let obj = {
-                        guidProfiles: this.elementScice[i].guid,
+                        guidProfiles: this.elementScice[i].guidProfile,
                         profilesName: this.elementScice[i].profilesName,
                         packTiming: this.elementScice[i].times,
                         name: this.elementScice[i].manager,
@@ -525,7 +522,7 @@ export class SubListComponent implements OnInit {
                     this.profiles.push(obj);
                 } else {
                     let obj = {
-                        guidProfiles: this.elementScice[i].guid,
+                        guidProfiles: this.elementScice[i].guidProfile,
                         profilesName: this.elementScice[i].profilesName,
                         packTiming: this.elementScice[i].times,
                         name: this.elementScice[i].manager,
@@ -538,56 +535,40 @@ export class SubListComponent implements OnInit {
             }
         }
         this.dataChange();
-        let obj = {
-            guidWorkitem: this.workItemInfo.guid,
-            // deliveryTime: this.splicingObj.dliveryAddRequest.deliveryTime,
-            profiles: this.profiles
-        };
-        console.log(obj)
-        this.utilityService.postData(appConfig.testUrl  + '/deliveries/putDelivery', obj, {Authorization: this.token})
+        for ( let i = 0; i < this.splicingObj.deliveryList.length; i++) {
+            if (this.splicingObj.deliveryList[i].commitType === '新增') {
+                this.splicingObj.deliveryList[i].commitType = 'A';
+            } else if (this.splicingObj.deliveryList[i].commitType === '删除') {
+                this.splicingObj.deliveryList[i].commitType = 'D';
+            }else if (this.splicingObj.deliveryList[i].commitType === '修改') {
+                this.splicingObj.deliveryList[i].commitType = 'M';
+            }
+
+            if (this.splicingObj.deliveryList[i].fromType === '手动补录') {
+                this.splicingObj.deliveryList[i].fromType = 'A';
+            } else if (this.splicingObj.deliveryList[i].fromType === '分支提交') {
+                this.splicingObj.deliveryList[i].fromType = 'B';
+            }else if (this.splicingObj.deliveryList[i].fromType === '标准清单') {
+                this.splicingObj.deliveryList[i].fromType = 'S';
+            } else {
+                this.splicingObj.deliveryList[i].fromType = 'M';
+            }
+        }
+        this.utilityService.postData(appConfig.testUrl  + appConfig.API.sDeliveryList +  '/deliveryAndDeliveryList', this.splicingObj, {Authorization: this.token})
             .map(res => res.json())
             .subscribe(
-                (val) => {
-                    for ( let i = 0; i < this.splicingObj.deliveryList.length; i++) {
-                        if (this.splicingObj.deliveryList[i].commitType === '新增') {
-                            this.splicingObj.deliveryList[i].commitType = 'A';
-                        } else if (this.splicingObj.deliveryList[i].commitType === '删除') {
-                            this.splicingObj.deliveryList[i].commitType = 'D';
-                        }else if (this.splicingObj.deliveryList[i].commitType === '修改') {
-                            this.splicingObj.deliveryList[i].commitType = 'M';
-                        }
-
-                        if (this.splicingObj.deliveryList[i].fromType === '手动补录') {
-                            this.splicingObj.deliveryList[i].fromType = 'A';
-                        } else if (this.splicingObj.deliveryList[i].fromType === '分支提交') {
-                            this.splicingObj.deliveryList[i].fromType = 'B';
-                        }else if (this.splicingObj.deliveryList[i].fromType === '标准清单') {
-                            this.splicingObj.deliveryList[i].fromType = 'S';
-                        } else {
-                            this.splicingObj.deliveryList[i].fromType = 'M';
-                        }
-                    }
-                    this.utilityService.postData(appConfig.testUrl  + appConfig.API.sDeliveryList +  '/deliveryAndDeliveryList', this.splicingObj, {Authorization: this.token})
-                        .map(res => res.json())
-                        .subscribe(
-                            (suc) => {
-                                this.nznot.create('success', suc.code , suc.msg);
-                                this.detailInfo = suc.result;
-                                this.appendTitle = '投放成功';
-                                this.modalVisible = false; // 关闭
-                                this.launchVisible  = true; // 显示详情
-                                // this.getData();
-                                this.textcssList = [];
-                            },
-                            (error) => {
-                                this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
-                                // this.getData();
-                            }
-                        );
+                (suc) => {
+                    this.nznot.create('success', suc.code , suc.msg);
+                    this.detailInfo = suc.result;
+                    this.appendTitle = '投放成功';
+                    this.modalVisible = false; // 关闭
+                    this.launchVisible  = true; // 显示详情
+                    // this.getData();
+                    this.textcssList = [];
                 },
                 (error) => {
-                    // this.getData();
                     this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
+                    // this.getData();
                 }
             );
     }
