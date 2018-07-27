@@ -745,6 +745,7 @@ export class SubListComponent implements OnInit {
     }
 
     // 日期禁选方法
+    nzValue:any;
     disabledDate(current: Date): boolean {
         console.log(this)
         // console.log(JSON.parse(localStorage.getItem('name'))) // 逻辑暂停，先不搞
