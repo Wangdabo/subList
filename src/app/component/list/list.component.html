@@ -115,10 +115,19 @@
 
             <span *ngIf="d.switch">
 
-                   <nz-switch [ngModel]="i.isAllowDelivery"  (ngModelChange)="status(i,$event)">
+                 <!--<nz-switch [ngModel]="i.isAllowDelivery" nzLoading (ngModelChange)="status(i,$event)">
                         <span checked>是</span>
                         <span unchecked>否</span>
-                 </nz-switch>
+                 </nz-switch>-->
+                 <!--<button *ngIf='i.isAllowDelivery' (ngModelChange)="status(i,true)">是</button>-->
+                 <button *ngIf='i.isAllowDelivery'  nz-button [nzType]="'primary'" [nzLoading]='i.switch' (click)="status(i,false)">
+                    <span>是</span>
+                    </button>
+                     <button *ngIf='!i.isAllowDelivery'  nz-button [nzType]="'danger'"  [nzLoading]='i.switch' (click)="status(i,true)">
+                    <span>否</span>
+                    </button>
+                   <!--<button *ngIf='!i.isAllowDelivery' (ngModelChange)="status(i,false)">否</button>-->
+                  <!--<nz-switch [ngModel]="i.isAllowDelivery" nzLoading nzCheckedChildren="开" nzUnCheckedChildren="关" (ngModelChange)="status(i,$event)"></nz-switch>-->
             </span>
         </td>
 

@@ -64,6 +64,8 @@ export class ListComponent implements OnInit {
     isShowTotal: boolean;
     @Input()
     isShowTotalhead:boolean
+   @Input()
+   switch:boolean
     data: any[] = [];
 
     @Output()
@@ -185,7 +187,7 @@ export class ListComponent implements OnInit {
     }
     status(i,event) {
         i.status = event
-
+        i.switch = false
    this.getStatus.emit(i); // 把要删除的内容发射给父组件
     }
 

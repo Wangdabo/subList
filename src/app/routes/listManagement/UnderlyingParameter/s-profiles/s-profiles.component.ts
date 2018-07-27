@@ -505,8 +505,12 @@ export class SProfilesComponent implements OnInit {
         console.log(event);
 
     }
+    // switch = false
     // switch开关方法
     getStatus(event) {
+        console.log(event);
+        event.switch = true
+        // let isAllowDelivery = event.isAllowDelivery
         let status = '';
         if(event.status === true){
             status = '1'
@@ -517,19 +521,29 @@ export class SProfilesComponent implements OnInit {
             guid: event.guid,
             isAllowDelivery: status
         }
-        console.log(obj)
+        // console.log(obj)
         this.utilityService.putData(appConfig.testUrl  + appConfig.API.getStatus, obj,{Authorization: this.token})
             .map(res => res.json())
             .subscribe(
                 (val) => {
+                     event.switch = false
+                        this.getData()
+                        event.isAllowDelivery = event.status
+                        console.log(event)
                     if(val.code == 200) {
                         this.nznot.create('success', val.msg, val.msg);
                     }else {
+                        // event.isAllowDelivery = true
                         this.nznot.create('error', val.msg, '');
                     }
+                    // console.log(event)
                 }   ,
                 (error)=>{
+                     event.switch = false
+                    //   event.isAllowDelivery = true
+                    //   console.log( event)
                     if(error){
+                      
                           this.nznot.create('error', error.json().msg,'');
                     }
                 }
