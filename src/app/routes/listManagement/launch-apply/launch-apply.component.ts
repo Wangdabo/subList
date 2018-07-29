@@ -157,16 +157,20 @@ export class LaunchApplyComponent implements OnInit {
                     asc: false // asc 默认是true  升序排序，时间类型 用false， 降序
                 }
             };
-            let button =[   
+            let button =[
                  {key:'dels',value:'删除' },
                  {key:'detail',value:'详情'},
-               
+
                        ]
-              let buttonupd =[   
+              let buttonupd =[
                  {key:'dels',value:'删除' },
                  {key:'detail',value:'详情'},
                  {key:'upd',value:'修改'}
                        ]
+
+            let buttonsuccess =[
+                {key:'detail',value:'详情'},
+            ]
             this.utilityService.postData(appConfig.testUrl  + appConfig.API.list, page, { Authorization: this.token})
                 .map(res => res.json())
                 .subscribe(
@@ -178,15 +182,18 @@ export class LaunchApplyComponent implements OnInit {
                             this.total = val.result.total; // 总数
                             this.pageTotal = val.result.pages * 10; // 页码
                             for ( let i = 0; i < this.data.length; i++) {
+                                console.log(this.data[i].deliveryResult)
                                 this.data[i].deliveryTime = moment(this.data[i].deliveryTime).format('YYYY-MM-DD');
                                 this.data[i].guidProfiles = this.data[i].guidProfiles.target;
                                 this.data[i].guidWorkitem = this.data[i].guidWorkitem.target;
                                 if(this.data[i].deliveryResult == '申请中'){
                                      this.data[i].buttonData = buttonupd
-                                }else{
+                                } else if(this.data[i].deliveryResult == '投放成功') {
+                                    this.data[i].buttonData = buttonsuccess
+                                } else{
                                     this.data[i].buttonData = button
                                 }
-                               
+
                             }
                         }
 
@@ -384,7 +391,7 @@ getElement() {
                       this.loadingnext = false;
                     console.log(val)
                     if (val.code === '200') {
-                         
+
                        this.current += 1;
                        console.log(this.current)
                           for(let i = 0;i<val.result.length;i++){
@@ -407,7 +414,7 @@ getElement() {
 
                                 }else{
                                     this.nznot.create('error',val.msg,val.msg);
-                                  
+
                                 }
                             },
                             (error) => {
@@ -586,14 +593,14 @@ getElement() {
                }
            );
 
-    
+
 
    }
   updPackTiming = []
   guidDelivery :any;
     // 按钮点击事件
     buttonEventlist(event) {
-      
+
         if(event.names.key == 'dels'){
          let self = this;
             this.confirmServ.confirm({
@@ -648,7 +655,7 @@ getElement() {
 
 
         }else if(event.names.key == 'upd'){
-           
+
         this.guidDelivery = event.guid;
          this.utilityService.getData( appConfig.testUrl +'/deliveries/'+event.guid + '/profileDateilVerify', {}, {Authorization: this.token})
             .subscribe(
@@ -657,11 +664,11 @@ getElement() {
                    if(val.code == 200){
                        this.updPackTiming  = val.result
                        localStorage.setItem('time', moment(this.updPackTiming['deliveryTime']).format('YYYY-MM-DD 00:00:00.000'));
-                      
+
                       for(let i =0;i<this.updPackTiming['packTimeDetails'].length;i++){
                           if(this.updPackTiming['packTimeDetails'][i]['isOptions']=='D'){
                              this.updPackTiming['packTimeDetails'][i]['isOptions'] = true
-                             this.updPackTiming['packTiming']   =   this.updPackTiming['packTimeDetails'][i]['packTime'] 
+                             this.updPackTiming['packTiming']   =   this.updPackTiming['packTimeDetails'][i]['packTime']
                           }else{
                                  this.updPackTiming['packTimeDetails'][i]['isOptions'] = false
                           }
@@ -684,7 +691,7 @@ getElement() {
       _disabledDate(current: Date): boolean {
 
 
-        
+
     return current && current.getTime() < Date.now();
   }
     submitUpd(){
@@ -694,7 +701,7 @@ getElement() {
             packTiming:this.updPackTiming['packTiming']
         }
         console.log(obj);
-    
+
           this.utilityService.putData( appConfig.testUrl +'/deliveries/deliveryTimePackTime', obj, {Authorization: this.token})
             .subscribe(
                 (val) => {
@@ -711,13 +718,13 @@ getElement() {
                                  this.updPackTiming['packTimeDetails'][i]['isOptions'] = false
                           }
                       }
-                    
-                          
+
+
                    }
                    console.log( this.updPackTiming)
                 },(error)=>{
                     console.log(error)
-                      
+
                     if(error){
                         this.nznot.create('error',error.json().msg,'');
                     }

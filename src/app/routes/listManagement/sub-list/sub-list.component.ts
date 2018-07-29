@@ -730,12 +730,14 @@ export class SubListComponent implements OnInit {
     // 日期禁选方法
     disabledDate(current: Date): boolean {
         let array = JSON.parse(localStorage.getItem('name'));
-        console.log(array)
+
         if (array) {
             for ( let i = 0; i < array.length; i++) {
-                return  current.getTime() < (array[i].deliveryTime - 24 * 60 * 60 * 1000);  // 跟默认的时间比，如果小于禁选
-                // return  current.getTime() < new Date(array[i].unixTime).getTime();  // 跟默认的时间比，如果小于禁选
+                console.log(new Date(array[i].unixTime).getTime())
+               return  current.getTime() < (array[i].deliveryTime - 24 * 60 * 60 * 1000);  // 跟默认的时间比，如果小于禁选
+                    // return  current.getTime() < new Date(array[i].unixTime).getTime();  // 跟默认的时间比，如果小于禁选
             }
+
         }
     }
 
@@ -752,6 +754,26 @@ export class SubListComponent implements OnInit {
         }
 
     }*/
+
+    // 比较时间
+    onChange(time, array) {
+        if (time.getTime() !== new Date(array.unixTime).getTime()) {
+            _.forEach(array.packTimeDetails , function (value) {
+                // value.isOptions = 'Y';
+                if (value.isOptions === 'N') {
+                    value.isOptions = 'No'
+                }
+            }
+        } else {
+            _.forEach(array.packTimeDetails , function (value) {
+                // value.isOptions = 'Y';
+                if (value.isOptions === 'No' && value.isOptions) {
+                    value.isOptions = 'N';
+                }
+            }
+        }
+    }
+
 
 }
 

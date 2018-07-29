@@ -96,7 +96,7 @@
     </div>
     <div class="ui-g-9" >
         <nz-card *ngIf="selectApply"   [nzBordered]="false">
-            <form   nz-form (ngSubmit)="seach()" [nzLayout]="'inline'">
+            <!--<form   nz-form (ngSubmit)="seach()" [nzLayout]="'inline'">
                 <div nz-row  [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
                     <div nz-col [nzSpan]="8" class="mb-md">
                         <div nz-form-item class="d-flex">
@@ -123,7 +123,7 @@
                         </a>
                     </div>
                 </div>
-            </form>
+            </form>-->
             <div  style="margin: 2%  0px">
                <!-- <button  style="margin-right: 1%"   nz-button  (click)="Supplementary()"  [nzType]="'primary'" [nzSize]="'large'">
                     <i class="anticon anticon-plus"></i>
@@ -216,7 +216,7 @@
                     <div nz-form-label><label for="itemType">投放到:</label></div>
                     <div nz-form-control class="flex-1">
                         <div nz-col [nzSpan]="24" class="mb-md" *ngFor="let s of elementScice ;let l = index">
-                            <div nz-col [nzSpan]="4">
+                            <div nz-col [nzSpan]="7">
                                 <label  nz-checkbox  [(ngModel)]="s.check">&nbsp;&nbsp;<span>{{s.profilesName}}</span></label>
                             </div>
                             <div nz-col [nzSpan]="4">
@@ -229,10 +229,11 @@
                                     [nzDisabledDate]="disabledDate"
                                     [nzSize]="'large'"
                                     [nzPlaceHolder]="'投放日期'"
+                                    (ngModelChange)="onChange(s.deliveryTime, s)"
                                     class="d-block">
                                 </nz-datepicker>
                             </div>
-                            <div nz-col [nzSpan]="10">
+                            <div nz-col [nzSpan]="9">
                                    <div nz-col [nzSpan]="6" *ngFor="let t of s.packTimeDetails; let d = index" >
                                     <!--   <input style="margin-top: 10px;"  [disabled]="!s.check || t.isOptions ==='N'"   [(ngModel)]="s.times"   [value]="t.packTime"   [name]="s.profilesName"
                                               type="radio" />&nbsp;{{t.packTime}}-->
@@ -243,7 +244,7 @@
                                        </nz-radio-group>
                                    </div>
                             </div>
-                            <div nz-col [nzSpan]="6">
+                            <div nz-col [nzSpan]="4">
                                 <nz-input [(ngModel)]="s.deliveryName" name="deliveryName"  [disabled]="!s.check" [nzSize]="'large'" [nzPlaceHolder]="'投放代号'" nzId="deliveryName"></nz-input>
                             </div>
                         </div>
