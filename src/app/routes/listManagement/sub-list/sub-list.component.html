@@ -221,14 +221,23 @@
                             </div>
                             <div nz-col [nzSpan]="4">
                                 <!--<p-calendar [(ngModel)]="s.deliveryTime"   dateFormat="YYYY-MM-DD"></p-calendar>-->
-                                <nz-datepicker
+                              <!--  <nz-datepicker
                                     [(ngModel)]="s.deliveryTime"
                                     [nzDisabled]="!s.check"
                                     [nzFormat]="'YYYY-MM-DD'"
                                     [title]='s.deliveryTime'
                                     [nzDisabledDate]="disabledDate"
                                     [nzSize]="'large'"
-                                    [nzPlaceHolder]="'投放日期'"
+                                    [nzPlaceHolder]="l"
+                                    (ngModelChange)="onChange(s.deliveryTime, s)"
+                                    class="d-block">
+                                </nz-datepicker>-->
+                                <nz-datepicker
+                                    [(ngModel)]="s.deliveryTime"
+                                    [nzDisabled]="!s.check"
+                                    [nzFormat]="'YYYY-MM-DD'"
+                                    [nzSize]="'large'"
+                                    [nzPlaceHolder]="'选择时间'"
                                     (ngModelChange)="onChange(s.deliveryTime, s)"
                                     class="d-block">
                                 </nz-datepicker>

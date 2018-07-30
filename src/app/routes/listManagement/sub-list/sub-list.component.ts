@@ -271,7 +271,7 @@ export class SubListComponent implements OnInit {
 
     // 处理行为代码，跳转、弹出框、其他交互
     isActive(event) {
-        console.log(event);
+
     }
 
 
@@ -286,7 +286,6 @@ export class SubListComponent implements OnInit {
 
     // 补录清单方法
     Supplementary() {
-        console.log(1);
     }
 
 
@@ -294,28 +293,6 @@ export class SubListComponent implements OnInit {
 
     // 投放申请
     Serve() {
-        // 不做判断
-        /*for (let i = 0; i < this.textcssList.length; i ++) {
-              if (this.textcssList[i].projectType !== 'C' && this.textcssList[i].projectType !== 'I') { // 说明是config或者default工程，需要让用户手动选择
-                  for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
-                      for ( let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
-                          if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].checked) {
-                              if ( !_.isUndefined(this.textcssList[i].deliveryPatchDetails[j].fileList[n].deployWhere) && !_.isUndefined(this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchSelect)) {
-                                  this.isGou = true;
-                              }
-                          }
-                      }
-                  }
-      } else {
-          for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
-              for ( let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
-                  if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].checked) {
-                      this.isGou = true;
-                  }
-              }
-          }
-      }
-  }*/
         this.modalVisible = false;
 
         if (_.isUndefined(this.textcssList) || this.textcssList.length === 0) {
@@ -378,7 +355,8 @@ export class SubListComponent implements OnInit {
     dataChange() {
         /*拼数据*/
         let objsss = false; // 前端判定是否正确
-        let array = [];
+        let array = []; // 选中的
+        let noarray = []; // 未选中的
         if (!_.isUndefined(this.textcssList)) { // 是否存在
             let cloneText = _.cloneDeep(this.textcssList);
             for (let i = 0; i < cloneText.length; i ++) {
@@ -392,6 +370,8 @@ export class SubListComponent implements OnInit {
                                 }
                                 // 处理转换逻辑，把radio选中的给后台
                                 array.push(cloneText[i].deliveryPatchDetails[j].fileList[n]);
+                            } else {
+                                noarray.push(this.textcssList[i].deliveryPatchDetails[j].fileList[n]);
                             }
                         }
                     }
@@ -404,6 +384,8 @@ export class SubListComponent implements OnInit {
                                     cloneText[i].deliveryPatchDetails[j].fileList[n].patchType = cloneText[i].deliveryPatchDetails[j].fileList[n].patchSelect;
                                 }
                                 array.push(cloneText[i].deliveryPatchDetails[j].fileList[n]);
+                            } else {
+                                noarray.push(this.textcssList[i].deliveryPatchDetails[j].fileList[n]);
                             }
                         }
                     }
@@ -411,7 +393,6 @@ export class SubListComponent implements OnInit {
 
             }
         }
-
         this.splicingObj = {
             guidBranch : this.bransguid,
             dliveryAddRequest: {
@@ -637,9 +618,8 @@ export class SubListComponent implements OnInit {
                 submitArray.push(select.guid); // guid 集合
             }
         })
-
-
-        let array = [];
+        let array = []; // 选中的
+        let noarray = []; // 未选中的
         for (let i = 0; i < this.textcssList.length; i ++) {
             if (this.textcssList[i].projectType !== 'C' && this.textcssList[i].projectType !== 'I') { // 说明是config工程，需要让用户手动选择
                 for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
@@ -651,6 +631,8 @@ export class SubListComponent implements OnInit {
                             }
                             // 处理转换逻辑，把radio选中的给后台
                             array.push(this.textcssList[i].deliveryPatchDetails[j].fileList[n]);
+                        } else {
+                            noarray.push(this.textcssList[i].deliveryPatchDetails[j].fileList[n]);
                         }
 
                     }
@@ -660,6 +642,8 @@ export class SubListComponent implements OnInit {
                     for ( let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
                         if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].checked) {
                             array.push(this.textcssList[i].deliveryPatchDetails[j].fileList[n]);
+                        } else {
+                            noarray.push(this.textcssList[i].deliveryPatchDetails[j].fileList[n]);
                         }
                     }
                 }
@@ -727,20 +711,48 @@ export class SubListComponent implements OnInit {
     }
 
     // 日期禁选方法
-    disabledDate(current: Date): boolean {
+   /* disabledDate(current: Date): boolean {
         let array = JSON.parse(localStorage.getItem('name'));
-        if (array) {
-            for ( let i = 0; i < array.length; i++) {
-                console.log(new Date(array[i].unixTime).getTime())
-               // return  current.getTime() < (array[i].deliveryTime - 24 * 60 * 60 * 1000);  // 跟默认的时间比，如果小于禁选
-                    return  current.getTime() < new Date(array[i].unixTime).getTime();  // 跟默认的时间比，如果小于禁选
-            }
+        let index = this.nzPlaceHolder;
+        let arrays = array[this.nzPlaceHolder];
 
+        let bol: boolean;
+        for ( let i = 0; i < array.length; i++) {
+            if (i === index) {
+                if(current.getTime() < (new Date(array[i].unixTime).getTime()) {
+                    bol = true;
+                } else {
+                    bol = false;
+                }
+
+            }
+            // return  current.getTime() < (new Date(array[i].unixTime).getTime());  // 跟默认的时间比，如果小于禁选
+            // return  current.getTime() < (new Date(array[i].unixTime).getTime());  // 跟默认的时间比，如果小于禁选
         }
-    }
+
+
+
+   /!*     if (array) {
+            for ( let i = 0; i < array.length; i++) {
+                if (i === index) {
+                    return  current.getTime() < (new Date(array[i].unixTime).getTime());  // 跟默认的时间比，如果小于禁选
+                }
+               // return  current.getTime() < (array[i].deliveryTime - 24 * 60 * 60 * 1000);  // 跟默认的时间比，如果小于禁选
+               // return  current.getTime() < (new Date(array[i].unixTime).getTime()  -  24 * 60 * 60 * 1000 );  // 跟默认的时间比，如果小于禁选
+               /!* if (current.getTime() - new Date(array[i].unixTime).getTime() === 0) {
+                    return true; // 禁选
+                }
+                return false;*!/
+            }
+        }*!/
+    }*/
+
+
+
 
     // 比较时间
     onChange(time, array) {
+        console.log(time)
         if (time.getTime() !== new Date(array.unixTime).getTime()) {
            for (let i = 0; i < array.packTimeDetails.length; i++) {
                if (array.packTimeDetails[i].isOptions === 'N') {
@@ -753,10 +765,14 @@ export class SubListComponent implements OnInit {
                     array.packTimeDetails[i].isOptions = 'N';
                 }
             }
+        }
 
+        if (time.getTime() < new Date(array.unixTime).getTime()) {
+            array.deliveryTime = new Date(array.unixTime).getTime();
+            this.nznot.create('error', '选择时间不能小于初始时间' , '');
+        } else {
         }
     }
-
 
 }
 
