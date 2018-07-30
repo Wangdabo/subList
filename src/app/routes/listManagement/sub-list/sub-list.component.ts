@@ -712,7 +712,6 @@ export class SubListComponent implements OnInit {
             .subscribe(
                 (val) => {
                         this.elementScice = val.result;
-
                         for (let i = 0; i < this.elementScice.length; i++) {
                             this.elementScice[i].deliveryTime = new Date(this.elementScice[i].deliveryTime); // 初始化时间
                             this.elementScice[i].unixTime = moment(this.elementScice[i].deliveryTime).format('YYYY-MM-DD 00:00:00.000')
@@ -730,47 +729,31 @@ export class SubListComponent implements OnInit {
     // 日期禁选方法
     disabledDate(current: Date): boolean {
         let array = JSON.parse(localStorage.getItem('name'));
-
         if (array) {
             for ( let i = 0; i < array.length; i++) {
                 console.log(new Date(array[i].unixTime).getTime())
-               return  current.getTime() < (array[i].deliveryTime - 24 * 60 * 60 * 1000);  // 跟默认的时间比，如果小于禁选
-                    // return  current.getTime() < new Date(array[i].unixTime).getTime();  // 跟默认的时间比，如果小于禁选
+               // return  current.getTime() < (array[i].deliveryTime - 24 * 60 * 60 * 1000);  // 跟默认的时间比，如果小于禁选
+                    return  current.getTime() < new Date(array[i].unixTime).getTime();  // 跟默认的时间比，如果小于禁选
             }
 
         }
     }
 
-/*
-    // 日期禁选方法
-    disabledDate(current: Date): boolean {
-
-        let array = JSON.parse(localStorage.getItem('name'));
-        if (array) {
-            for ( let i = 0; i < array.length; i++) {
-                let times = moment(_.cloneDeep(array[i].deliveryTime)).format('YYYY-MM-DD 00:00:00.000'); // 思路 因为描述不同，转成0点0分0秒
-                return  current.getTime()  <  new Date(times).getTime();  // 跟默认的时间比，如果小于禁选
-            }
-        }
-
-    }*/
-
     // 比较时间
     onChange(time, array) {
         if (time.getTime() !== new Date(array.unixTime).getTime()) {
-           /* _.forEach(array.packTimeDetails , function (value) {
-                // value.isOptions = 'Y';
-                if (value.isOptions === 'N') {
-                    value.isOptions = 'No';
-                }
-            }*/
+           for (let i = 0; i < array.packTimeDetails.length; i++) {
+               if (array.packTimeDetails[i].isOptions === 'N') {
+                   array.packTimeDetails[i].isOptions = 'No';
+               }
+           }
         } else {
-           /* _.forEach(array.packTimeDetails , function (value) {
-                // value.isOptions = 'Y';
-                if (value.isOptions === 'No' && value.isOptions) {
-                    value.isOptions = 'N';
+            for (let i = 0; i < array.packTimeDetails.length; i++) {
+                if (array.packTimeDetails[i].isOptions === 'No') {
+                    array.packTimeDetails[i].isOptions = 'N';
                 }
-            }*/
+            }
+
         }
     }
 
