@@ -708,7 +708,7 @@ export class SubListComponent implements OnInit {
 
     // 调用投放环境接口
     getcheckOptionOne() {
-         this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfiles, {}, {Authorization: this.token})
+         this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfiless, {}, {Authorization: this.token})
             .subscribe(
                 (val) => {
                         this.elementScice = val.result;
@@ -758,19 +758,19 @@ export class SubListComponent implements OnInit {
     // 比较时间
     onChange(time, array) {
         if (time.getTime() !== new Date(array.unixTime).getTime()) {
-            _.forEach(array.packTimeDetails , function (value) {
+           /* _.forEach(array.packTimeDetails , function (value) {
                 // value.isOptions = 'Y';
                 if (value.isOptions === 'N') {
-                    value.isOptions = 'No'
+                    value.isOptions = 'No';
                 }
-            }
+            }*/
         } else {
-            _.forEach(array.packTimeDetails , function (value) {
+           /* _.forEach(array.packTimeDetails , function (value) {
                 // value.isOptions = 'Y';
                 if (value.isOptions === 'No' && value.isOptions) {
                     value.isOptions = 'N';
                 }
-            }
+            }*/
         }
     }
 
