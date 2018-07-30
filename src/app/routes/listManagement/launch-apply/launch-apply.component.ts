@@ -223,7 +223,7 @@ getElement() {
                     (val) => {
 
                         this.elementScice = val.result;
-  console.log(this.elementScice)
+                           console.log(this.elementScice)
                         for (let i = 0; i < this.elementScice.length; i++) {
                             this.elementScice[i].packTiming = this.elementScice[i].packTiming.split(',');
                             this.elementScice[i].Timing  = []
@@ -663,14 +663,16 @@ getElement() {
                     console.log(val);
                    if(val.code == 200){
                        this.updPackTiming  = val.result
-                       localStorage.setItem('time', moment(this.updPackTiming['deliveryTime']).format('YYYY-MM-DD 00:00:00.000'));
-
+                     
+                      this.updPackTiming['unixTime'] = moment(this.updPackTiming['deliveryTime']).format('YYYY-MM-DD 00:00:00.000')
+                       localStorage.setItem('time',this.updPackTiming['unixTime']);
                       for(let i =0;i<this.updPackTiming['packTimeDetails'].length;i++){
+                          
                           if(this.updPackTiming['packTimeDetails'][i]['isOptions']=='D'){
-                             this.updPackTiming['packTimeDetails'][i]['isOptions'] = true
+                            //  this.updPackTiming['packTimeDetails'][i]['check'] = true
                              this.updPackTiming['packTiming']   =   this.updPackTiming['packTimeDetails'][i]['packTime']
                           }else{
-                                 this.updPackTiming['packTimeDetails'][i]['isOptions'] = false
+                                //  this.updPackTiming['packTimeDetails'][i]['check'] = false
                           }
                       }
                            this.updEnvironment = true;
@@ -690,10 +692,29 @@ getElement() {
     }
       _disabledDate(current: Date): boolean {
 
+        let time = localStorage.getItem('time');
+        // console.log(time);
 
+    return current && current.getTime() < new Date(time).getTime();
 
-    return current && current.getTime() < Date.now();
+    
   }
+    onChange(updPackTiming) {
+        if (updPackTiming.deliveryTime.getTime() !== new Date(updPackTiming.unixTime).getTime()) {
+           for (let i = 0; i < updPackTiming.packTimeDetails.length; i++) {
+               if (updPackTiming.packTimeDetails[i].isOptions === 'N') {
+                   updPackTiming.packTimeDetails[i].isOptions = 'No';
+               }
+           }
+        } else {
+            for (let i = 0; i < updPackTiming.packTimeDetails.length; i++) {
+                if (updPackTiming.packTimeDetails[i].isOptions === 'No') {
+                    updPackTiming.packTimeDetails[i].isOptions = 'N';
+                }
+            }
+
+        }
+    }
     submitUpd(){
         let obj ={
             guidDelivery:this.guidDelivery,
@@ -706,20 +727,9 @@ getElement() {
             .subscribe(
                 (val) => {
                        this.updEnvironment = false;
-                    console.log(val);
                     this.getData();
                    if(val.code == 200){
                            this.nznot.create('success',val.msg,'');
-                       this.updPackTiming  = val.result
-                      for(let i =0;i<this.updPackTiming['packTimeDetails'].length;i++){
-                          if(this.updPackTiming['packTimeDetails'][i]['isOptions']=='D'){
-                             this.updPackTiming['packTimeDetails'][i]['isOptions'] = true
-                          }else{
-                                 this.updPackTiming['packTimeDetails'][i]['isOptions'] = false
-                          }
-                      }
-
-
                    }
                    console.log( this.updPackTiming)
                 },(error)=>{

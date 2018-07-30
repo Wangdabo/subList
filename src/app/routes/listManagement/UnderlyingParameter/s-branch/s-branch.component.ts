@@ -57,7 +57,7 @@ export class SBranchComponent implements OnInit {
     details: any[] = [];
     mergeVisible = false;
       buttons = [
-        {key: 'add', value: '新增', if: true},
+        {key: 'add', value: '补录', if: true},
     ]
     buttonData = [
         // {key: 'details', value: '详情'},
@@ -164,7 +164,7 @@ export class SBranchComponent implements OnInit {
              this.branch = new  SbranchModule();
              console.log()
               this.detailsVisible = true;
-              this.ptitle = '新增分支'
+              this.ptitle = '补录分支'
         }
     }
     // 按钮点击事件
