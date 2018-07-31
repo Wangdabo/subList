@@ -527,15 +527,17 @@
                     </div>
                     <div nz-col [nzSpan]="24" style="border:1px solid #cccccc;" >
                         <div style="margin: 20px 0px;" nz-col [nzSpan]="24">
-                            <div nz-col [nzSpan]="4">工作项名称</div>
-                            <div nz-col [nzSpan]="8">工作项别名</div>
-                            <div nz-col [nzSpan]="10">打包窗口即环境</div>
+                            <div nz-col [nzSpan]="5">工作项名称</div>
+                            <div nz-col [nzSpan]="6">工作项别名</div>
+                            <div nz-col [nzSpan]="4">投放时间</div>
+                            <div nz-col [nzSpan]="7">打包窗口即环境</div>
                         </div>
 
                         <div  nz-col [nzSpan]="24" *ngFor = 'let i of detailInfo' style="margin:10px 0px;">
-                            <div nz-col [nzSpan]="4">{{i.guidWorkitem.target}}</div>
-                            <div nz-col [nzSpan]="8">{{i.applyAlias}}</div>
-                            <div nz-col [nzSpan]="10">{{i.guidProfiles.target}}@{{i.packTiming}}</div>
+                            <div nz-col [nzSpan]="5">{{i.guidWorkitem.target}}</div>
+                            <div nz-col [nzSpan]="6">{{i.applyAlias}}</div>
+                            <div nz-col [nzSpan]="4">{{i.deliveryTime  | date:'yyyy-MM-dd'}}</div>
+                            <div nz-col [nzSpan]="7">{{i.guidProfiles.target}}@{{i.packTiming}}</div>
                         </div>
 
                     </div>
