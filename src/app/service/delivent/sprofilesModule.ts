@@ -5,6 +5,8 @@ export class SprofilesModule {
     // 环境代码
        public profilesCode: any;
 
+   //提交标识
+    public artf:number;
 
         // 环境名称
        public profilesName: any;

@@ -70,7 +70,7 @@ export class SProfilesComponent implements OnInit {
     headerDate = [  // 配置表头内容
         // { value: '环境代码', key: 'profilesCode', isclick: true},
         { value: '环境名称', key: 'profilesName', isclick: false},
-        { value: 'Release分支', key: 'fullPathstr', isclick: false },
+        { value: 'Release分支', key: 'fullPathstr', isclick: false,title:true },
         // { value: '主机IP', key: 'hostIp', isclick: false },
         // { value: '安装路径', key: 'installPath', isclick: false },
         // { value: '版本控制用户', key: 'csvUser', isclick: false, switch:false },
@@ -135,10 +135,17 @@ export class SProfilesComponent implements OnInit {
                 this.inputValue = '';
                 this.inputVisible = false;
             }
-   submitForm() {
+
+            // 管理分支
+            active = true; 
+            tabChange(obj){
+               this.active = obj;
+               console.log(this.active);
+            }
+               submitForm() {
         console.log(this.tags);
         let objarr = [];
-        if(this.tags.length == 0){
+        if (this.tags.length === 0) {
               this.nznot.create('errpr', '请添加打包窗口', '');
               return;
         }
@@ -149,10 +156,24 @@ export class SProfilesComponent implements OnInit {
                 .map(res => res.json())
                 .subscribe(
                     (val) => {
+
                         this.getData();
                         if(val.code == 200) {
-
-                            this.mergeVisible = false;
+                            this.workId = val.result.guid
+                             this.mergeVisible = false;
+                                this.modal.open({
+                                title: '信息提示',
+                                content: val.msg+'是否需要立即关联分支？',
+                                okText: '确定',
+                                cancelText: '取消',
+                                onOk: () => {
+                                    this.isCorrelation = true;
+                                },
+                                onCancel: () => {
+                                     
+                                }
+                            });
+                           
 
                             this.nznot.create('success', val.msg, val.msg);
                         }else {
@@ -246,8 +267,29 @@ export class SProfilesComponent implements OnInit {
         {key: 'dels', value: '删除' },
         {key: 'upd', value: '修改'},
         {key: 'detail', value: '取消分支'},
-        {key: 'branchDDetail', value: '分支详情'}
+        {key: 'branchDDetail', value: '分支详情'},
+        {key: 'project', value: '拉工程'}
    ]
+    branchType = [
+        {key: 'feature', value: 'F',selector:false},
+        {key: 'hot', value: 'H' ,selector:false},
+    ]
+      addBranch = {
+        fullPath:'',
+        branchFor:''
+    };
+    tabs = [
+    {
+      active: true,
+      name  : '选择已有分支',
+  
+    },
+    {
+      active: false,
+      name  : '新增分支',
+      
+    }
+  ];
    
     search = {
         profilesName:'',
@@ -281,9 +323,10 @@ export class SProfilesComponent implements OnInit {
                         let star = '';
                         let end = '';
                         for ( let i = 0; i < this.data.length; i++) {
-                            if(this.data[i].fullPath.length > 80){
-                                   star = this.data[i].fullPath.substr(0,30)
-                                   end = this.data[i].fullPath.substr(this.data[i].fullPath.length - 30)
+                            this.data[i].itemName = this.data[i].fullPath
+                            if(this.data[i].fullPath.length > 60){
+                                   star = this.data[i].fullPath.substr(0,20)
+                                   end = this.data[i].fullPath.substr(this.data[i].fullPath.length - 20)
                                       this.data[i].fullPathstr = star + '...' + end;
                                   
                                 }else{
@@ -323,7 +366,7 @@ export class SProfilesComponent implements OnInit {
 
         if (event === 'add') {
             this.profiles = new SprofilesModule();
-            this.Ptitle = '新增运行环境'
+            this.Ptitle = '新增运行环境';
             this.tags = [];
             this.mergeVisible = true;
         } else if (event === 'checking') {
@@ -349,6 +392,33 @@ export class SProfilesComponent implements OnInit {
     branchData: BranchModule = new BranchModule();
     branchdataInfo: boolean; // 分支详情
     tips = false;
+    projectInfo = false;
+prolist: any[] = [];//工程列表
+// 工程穿梭框
+
+
+filterOption(inputValue, option) {
+    return option.description.indexOf(inputValue) > -1;
+  }
+
+  searchpro(ret: any) {
+    console.log('nzSearchChange', ret);
+  }
+
+  select(ret: any) {
+    console.log('nzSelectChange', ret);
+  }
+  subPro = []
+  change(ret: any) {
+     for(let i = 0 ; i < ret.list.length; i++){
+         ret.list[i]['status'] =  ret.to
+     }
+    console.log('nzChange', ret);
+  }
+
+list = [];
+
+workId:string;//工作项ID
     // 按钮点击事件
     buttonEvent(event) {
 
@@ -392,7 +462,58 @@ export class SProfilesComponent implements OnInit {
             });
 
 
-        } else if (event.names.key === 'upd') {
+        } else if(event.names.key ==='project'){
+
+                   this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfilesadd + '/' +  event.guid + '/project',  {},  {Authorization: this.token})
+                            .subscribe(
+                                (val) => {
+                               let others = [];
+                               let own = []
+                                  
+                                   if(val.result.others.length > 0){
+                                        for(let j= 0; j < val.result.others.length;j++){
+                                          val.result.others[j]['exit']='left'
+                                   }
+                                }
+                                    if(val.result.own.length > 0){
+                                   for(let j= 0; j < val.result.own.length;j++){
+                                   
+                                          val.result.own[j]['exit']='right'
+                                   }
+                                    }
+                                    others = val.result.others;
+                                    own = val.result.own;
+                                    if(own.length > 0){
+                                           others = others.concat(own)
+                                    }
+                               const ret = [];
+                                for (let i = 0; i < others.length; i++) {
+
+                                ret.push({
+                                    key: i.toString(),
+                                    title:others[i]['projectName'],
+                                    guid:others[i]['guid'],
+                                    status: others[i]['exit'],
+                                    description: others[i]['projectName'],
+                                    direction: others[i]['exit'] =='left' ? 'left' : 'right',
+                                    disabled:others[i]['exit'] =='right'
+                                });
+                                }
+                                this.list = ret;
+                                
+
+                                     this.projectInfo = true
+                                  console.log(this.list);
+
+                                    // this.nznot.create('success',val.msg,val.msg);
+                                    // this.getData();
+                                },
+                                (error) => {
+                                    this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
+                                }
+                            );
+               
+            } else if (event.names.key === 'upd') {
             this.Ptitle = '修改运行环境'
             let arr = [];
 
@@ -404,6 +525,8 @@ export class SProfilesComponent implements OnInit {
             this.mergeVisible = true;
         }
         else if (event.names.key === 'correlation') {
+            this.addBranch.branchFor = '';
+            this.addBranch.fullPath = ''
             this.Ptitle='关联分支'
             this.utilityService.getData(appConfig.testUrl  + appConfig.API.getBranch, {},{Authorization: this.token})
 
@@ -467,16 +590,96 @@ export class SProfilesComponent implements OnInit {
 
     }
 
+
+
+subProject(){
+    console.log(this.list);
+    let projectGuids = []
+    // this.projectInfo = false;
+    for(let i = 0 ; i < this.list.length; i ++){
+            if(this.list[i].status == 'right'&&this.list[i].disabled == false){ 
+            projectGuids.push(this.list[i].guid);
+        }
+       
+        
+    }
+     
+          this.utilityService.postData(appConfig.testUrl  + appConfig.API.sProfilesadd + '/' + this.profilesGuid + '/project' ,{projectGuids:projectGuids}, {Authorization: this.token})
+                             .map(res => res.json())
+                            .subscribe(
+                                (val) => {
+                                    this.projectInfo = false;
+                                    this.nznot.create('success', val.msg , val.msg);
+                                    this.getData();
+                                } ,
+                            (error) => {
+                                if(error){
+                                       this.nznot.create('error',error.json().msg,'');
+                                }
+                             
+                            }
+                            );
+}
 // 关联分支方法
+
     saveCorrelation(item) {
         let url = ''
         if (item === 'C'){
-            url = '/' + this.profilesGuid + '/branch/' +this.branch;
+            console.log(this.active);
+       
+            if(this.active == false){ //选择新增分支
+                    let id =''
+            if(this.addBranch.branchFor =='' || this.addBranch.fullPath == ''){
+                 this.nznot.create('error', '请输入完整分支信息', '');
+                 return;
+            }
+             if(this.workId){
+                 id =this.workId
+             }else{
+                  id = this.profilesGuid
+             };
+           this.utilityService.postData(appConfig.testUrl  + appConfig.API.sProfilesadd + '/' + id + '/branch',  this.addBranch, {Authorization: this.token})
+            .timeout(5000)
+            .map(res => res.json())
+            .subscribe(
+                (val) => {
+                    this.getData();
+                      this.isCorrelation = false;
+                    this.nznot.create('success',val.msg,val.msg);
+                }
+                ,
+                    error => {
+                        this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
+                    }
+            );
+        }else{
+                 url = '/' + this.profilesGuid + '/branch/' +this.branch;
+                 this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfilesadd + url, {},{Authorization: this.token})
+            .subscribe(
+                (val) => {
+                    console.log(val)
+                    if(val.code == 200) {
+                        this.getData()
+                        this.nznot.create('success', val.msg, val.msg);
+                        this.branch = null;// 清空
+                        this.isCorrelation = false;
+                    }else {
+                        this.nznot.create('error', val.msg, '');
+                    }
+                }  ,
+                (error)=>{
+                    if(error){
+                          this.nznot.create('error', error.json().msg,'');
+                    }
+                }
+            );  
+            }
+      
+
+
         }else {
             url = '/' + this.profilesGuid + '/cancel';
-        }
-
-        this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfilesadd + url, {},{Authorization: this.token})
+               this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfilesadd + url, {},{Authorization: this.token})
             .subscribe(
                 (val) => {
                     console.log(val)
@@ -496,6 +699,9 @@ export class SProfilesComponent implements OnInit {
                 }
             );
 
+        }
+
+     
             this.branch=''
     }
     //

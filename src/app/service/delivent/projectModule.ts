@@ -19,6 +19,7 @@ export class ProductModule {
 
     // 导出类型
     public exportType: any;
-
+    
+      public fullPath: any;
 
 }

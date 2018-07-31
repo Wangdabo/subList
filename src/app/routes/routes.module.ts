@@ -43,7 +43,7 @@ import { MergelistComponent } from '../component/mergelist/mergelist.component';
 
 
 @NgModule({
-    imports: [ SharedModule, RouteRoutingModule, NzTreeModule ], // 模块把特性合并成离散单元的一种方式，当应用需要模块的特性时，将其添加到imports数组中，它告诉Angular应用需要它们来正常工作。
+    imports: [ SharedModule, RouteRoutingModule, NzTreeModule ], // 模块把feature合并成离散单元的一种方式，当应用需要模块的feature时，将其添加到imports数组中，它告诉Angular应用需要它们来正常工作。
     declarations: [ // 声明当前module控制的组件，创建的指令和管道也要添加至declarations数组中
         DashboardV1Component,
         // 登录页

@@ -178,11 +178,9 @@ export class LaunchApplyComponent implements OnInit {
 
                         if (val.code == 200) {
                             this.data = val.result.records;
-                            console.log(this.data);
                             this.total = val.result.total; // 总数
                             this.pageTotal = val.result.pages * 10; // 页码
                             for ( let i = 0; i < this.data.length; i++) {
-                                console.log(this.data[i].deliveryResult)
                                 this.data[i].deliveryTime = moment(this.data[i].deliveryTime).format('YYYY-MM-DD');
                                 this.data[i].guidProfiles = this.data[i].guidProfiles.target;
                                 this.data[i].guidWorkitem = this.data[i].guidWorkitem.target;
@@ -223,7 +221,6 @@ getElement() {
                     (val) => {
 
                         this.elementScice = val.result;
-                           console.log(this.elementScice)
                         for (let i = 0; i < this.elementScice.length; i++) {
                             this.elementScice[i].packTiming = this.elementScice[i].packTiming.split(',');
                             this.elementScice[i].Timing  = []
@@ -283,20 +280,19 @@ getElement() {
               this.mergeisVisible = true
               this.current = 0;
 
-      console.log(this.loadingnext)
+
             // this.changeContent();
             // this.checkModalVisible = true; // 打开核对弹出框
 
         } else if (event === 'export') {
             this.deliveryTime = moment(new Date()).format('YYYY-MM-DD');
-            console.log(this.deliveryTime)
             this.isVisible = true;
             this.importCurrent = 0;
             this.getSprofiles(); // 查询环境和时间
             this.workItem = false;
         } else {
-            console.log(event)
-            console.log('详情界面');
+
+
         }
     }
 
@@ -389,11 +385,11 @@ getElement() {
                 (val) => {
                        this.loading = false;
                       this.loadingnext = false;
-                    console.log(val)
+
                     if (val.code === '200') {
 
                        this.current += 1;
-                       console.log(this.current)
+
                           for(let i = 0;i<val.result.length;i++){
                                arr[i]=val.result[i].delivery
                             arr[i]['branch']=val.result[i].branch
@@ -410,7 +406,7 @@ getElement() {
                           }
 
                         this.initDate = arr;
-                        // console.log(arr)
+
 
                                 }else{
                                     this.nznot.create('error',val.msg,val.msg);
@@ -418,7 +414,7 @@ getElement() {
                                 }
                             },
                             (error) => {
-                                // console.log(error)
+
                                  this.loadingnext = false;
                                 if(error){
                                     let msg = error.json();
@@ -439,18 +435,16 @@ getElement() {
                     }
 
                     if( flage == true ) {
-                            console.log(this.current)
+
                            let index = '';
                              let indexs = '';
-                             console.log(url);
+
             this.utilityService.postData(url, {}, {Authorization: this.token})
                         .map(res => res.json())
                          .subscribe(
                          (val) => {
                               this.loadingnext = false;
                              this.checkId = val.result.check.guid;
-                             console.log(val)
-
                                this.checkloading = false;
                             this.current += 1;
                          this.checkListVisible = true;
@@ -536,7 +530,7 @@ getElement() {
     }
 
     done(): void {
-        console.log('done');
+
     }
 
     changeContent(): void {
@@ -560,7 +554,7 @@ getElement() {
     }
 
    hide(){
-       console.log('guanbi ')
+
    }
 
    buttonEventMerge(event){
@@ -570,8 +564,6 @@ getElement() {
            .map(res => res.json())
            .subscribe(
                (val) => {
-                   console.log(val);
-
                    if (val.code == 200){
                        event.event.check = true
                        event.event.value = '已确认合并'
@@ -596,7 +588,7 @@ getElement() {
 
 
    }
-  updPackTiming = []
+  updPackTiming = {}
   guidDelivery :any;
     // 按钮点击事件
     buttonEventlist(event) {
@@ -647,7 +639,7 @@ getElement() {
                         this.mergeVisible = true;
                    }
                 },(error)=>{
-                    console.log(error)
+
                     // if(error){
                     //     this.nznot.create('error',error.json().msg,'');
                     // }
@@ -655,31 +647,28 @@ getElement() {
 
 
         }else if(event.names.key == 'upd'){
-
+  
         this.guidDelivery = event.guid;
          this.utilityService.getData( appConfig.testUrl +'/deliveries/'+event.guid + '/profileDateilVerify', {}, {Authorization: this.token})
             .subscribe(
                 (val) => {
-                    console.log(val);
+
                    if(val.code == 200){
                        this.updPackTiming  = val.result
+                    
                      
                       this.updPackTiming['unixTime'] = moment(this.updPackTiming['deliveryTime']).format('YYYY-MM-DD 00:00:00.000')
                        localStorage.setItem('time',this.updPackTiming['unixTime']);
                       for(let i =0;i<this.updPackTiming['packTimeDetails'].length;i++){
-                          
-                          if(this.updPackTiming['packTimeDetails'][i]['isOptions']=='D'){
-                            //  this.updPackTiming['packTimeDetails'][i]['check'] = true
-                             this.updPackTiming['packTiming']   =   this.updPackTiming['packTimeDetails'][i]['packTime']
-                          }else{
-                                //  this.updPackTiming['packTimeDetails'][i]['check'] = false
-                          }
+                        //    this.updPackTiming['packTiming']   =   event.packTiming
+                  
                       }
+                       this.updPackTiming['deliveryTime'] = new Date(this.updPackTiming['deliveryTime']);
                            this.updEnvironment = true;
                    }
-                   console.log( this.updPackTiming)
+               
                 },(error)=>{
-                    console.log(error)
+                   
                     if(error){
                         this.nznot.create('error',error.json().msg,'');
                     }
@@ -691,13 +680,9 @@ getElement() {
 
     }
       _disabledDate(current: Date): boolean {
-
         let time = localStorage.getItem('time');
-        // console.log(time);
-
     return current && current.getTime() < new Date(time).getTime();
 
-    
   }
     onChange(updPackTiming) {
         if (updPackTiming.deliveryTime.getTime() !== new Date(updPackTiming.unixTime).getTime()) {
@@ -721,7 +706,7 @@ getElement() {
             deliveryTime:this.updPackTiming['deliveryTime'],
             packTiming:this.updPackTiming['packTiming']
         }
-        console.log(obj);
+
 
           this.utilityService.putData( appConfig.testUrl +'/deliveries/deliveryTimePackTime', obj, {Authorization: this.token})
             .subscribe(
@@ -731,9 +716,8 @@ getElement() {
                    if(val.code == 200){
                            this.nznot.create('success',val.msg,'');
                    }
-                   console.log( this.updPackTiming)
+               
                 },(error)=>{
-                    console.log(error)
 
                     if(error){
                         this.nznot.create('error',error.json().msg,'');
@@ -744,7 +728,7 @@ getElement() {
     // 列表按钮方法
     buttonDataHandler(event) {
 
-        console.log(event);
+  
 
     }
 
@@ -759,7 +743,7 @@ getElement() {
        if (event) {
             this.isNext = false;
        }
-        console.log(event);
+      
     }
 
 
@@ -799,7 +783,7 @@ getElement() {
             .map(res => res.json())
             .subscribe(
                 (val) => {
-                    console.log(val)
+
                     if (val.code === '200') {
                           this.checkListVisible = true;
                           this.checkModalData = val.result.deliveryDetails;
@@ -874,7 +858,7 @@ getElement() {
             .subscribe(
                 (val) => {
                     if (val.code == 200) {
-                        console.log(val)
+
 
                      }else {
                          this.nznot.create('error', val.msg, val.msg);
@@ -922,23 +906,16 @@ getElement() {
            .map(res => res.json())
            .subscribe(
                (val) => {
-                   console.log(val);
-
                    if (val.code == 200){
-
-
                        this.istextVisible = false;
                        this.checkListVisible = false;
                        this.nznot.create('success', val.msg, val.msg);
                    }else{
                          this.nznot.create('error', val.msg,'');
                   }
-                         console.log(this.istextVisible)
-
-               }
+           }
                ,
                (error) => {
-                   console.log(error);
                   if(error){
                           this.nznot.create('error', error.json().msg,'');
                     }
@@ -966,7 +943,7 @@ getElement() {
             .map(res => res.json())
             .subscribe(
                 (val) => {
-                    console.log(val)
+
                     if (val.code == 200) {
 
                         this.nznot.create('success', val.msg, val.msg);
@@ -999,8 +976,6 @@ getElement() {
             let type = event.index;
             let id = event.id;
             let soyin = event.soyin;
-            console.log(type);
-            console.log(id);
             if(type=='4'){
 
            this.iStouchan =true
@@ -1095,8 +1070,6 @@ loading2 = false
                         // .map(res => res.json())
                          .subscribe(
                          (val) => {
-                           console.log(val);
-
                           this.detailVisible = true;
                           this.checkModalData = val.result.deliveryDetails;
                           this.mergeData  = val.result.mergeLists;
@@ -1123,10 +1096,8 @@ loading2 = false
                                 }
                             }
                         }
-                        console.log(this.guidprent)
                                 }
                                 ,(error)=>{
-                                    console.log(error)
                                   if(error){
                                     this.nznot.create('error', error.json().msg,'');
                                       }
@@ -1146,12 +1117,7 @@ loading2 = false
    returnsclick(event) {
        let item = event.index
        this.mergeguid=event.it.guid
-
-    let S = '';
-    console.log(this.guidprent)
-    // if ( item === 0) {
-    //     this.istextVisible = true;
-    // }else {
+         let S = '';
         let  url = appConfig.testUrl + '/checks/delivery/' + this.mergeguid + '/result';
         if (item === 1) {
             S = 'S';
@@ -1168,8 +1134,6 @@ loading2 = false
            .map(res => res.json())
            .subscribe(
                (val) => {
-                   console.log(val);
-
                    if (val.code == 200){
 
                         if(item === 1 ){
@@ -1179,11 +1143,7 @@ loading2 = false
                           this.istextVisible = false;
                            event.it.disabledS = true
                            event.it.deliveryResult = '核对失败'
-                            // alert( this.istextVisible)
                        }
-                    //    console.log( this.istextVisible)
-
-
                        this.nznot.create('success', val.msg, val.msg);
                    }else{
                          this.nznot.create('error', val.msg,'');
@@ -1213,8 +1173,6 @@ loading2 = false
             patchType:objs.patchType,
             deployWhere:objs.deployWhere
         }
-
-          console.log(this.mergeId)
           this.utilityService.putData( appConfig.testUrl +'/checkLists/'+event.errorId+'/delivery', obj, {Authorization: this.token})
                         .map(res => res.json())
                          .subscribe(
@@ -1266,11 +1224,9 @@ loading2 = false
 
     // 合并的确定
     determine() {
-        console.log('确定成功');
         this.mergeVisible = false;
     }
     moreclick() {
-        console.log('sssss');
     }
 
 
@@ -1314,7 +1270,6 @@ loading2 = false
 
         if (this.importCurrent === 0) {
             // 测试接口,先测试
-            console.log(url)
             this.utilityService.postData( url, exportObj,  {Authorization: this.token})
                 .map(res => res.json())
                 .subscribe(
@@ -1354,7 +1309,7 @@ loading2 = false
             xhr.setRequestHeader('Authorization',token); // 可以定义请求头带给后端
             // 定义请求完成的处理函数，请求前也可以增加加载框/禁用下载按钮逻辑
             xhr.onload = function () {
-                console.log(this);
+
                 // 请求完成
                 if (this.status === 200) {
                     success = true;
@@ -1363,7 +1318,6 @@ loading2 = false
                     let reader = new FileReader();
                     reader.readAsDataURL(blob);  // 转换为base64，可以直接放入a表情href
                     reader.onload = function (e) {
-                        console.log(e.target)
                         let target: any = e.target;
                         // 转换完成，创建一个a标签用于下载
                         let a = document.createElement('a');
