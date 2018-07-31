@@ -474,24 +474,28 @@ workId:string;//工作项ID
                                let own = []
                                   
                                    if(val.result.others.length > 0){
+
                                         for(let j= 0; j < val.result.others.length;j++){
                                           val.result.others[j]['exit']='left'
                                    }
                                 }
                                     if(val.result.own.length > 0){
+
                                    for(let j= 0; j < val.result.own.length;j++){
                                    
                                           val.result.own[j]['exit']='right'
                                    }
                                     }
+                           
                                     others = val.result.others;
                                     own = val.result.own;
-                                    if(own.length > 0){
+                                      if(own.length > 0 && others.length > 0){
                                            others = others.concat(own)
+                                    }else if(others.length == 0 && own.length > 0 ){
+                                         others = own
                                     }
                                const ret = [];
                                 for (let i = 0; i < others.length; i++) {
-
                                 ret.push({
                                     key: i.toString(),
                                     title:others[i]['projectName'],

@@ -317,6 +317,8 @@ workId:string;//工作项ID
                                           val.result.own[j]['exit']='right'
                                    }
                                     }
+                                    console.log(val.result.own.length)
+                                    console.log(val.result.others.length)
                                     others = val.result.others;
                                     own = val.result.own;
                                     if(own.length > 0 && others.length > 0){
