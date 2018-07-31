@@ -286,21 +286,9 @@
                     <div nz-form-control class="flex-1">
                         <div nz-col [nzSpan]="24" class="mb-md" *ngFor="let s of elementScice ;let l = index">
                             <div nz-col [nzSpan]="7">
-                                <label  nz-checkbox  [(ngModel)]="s.check">&nbsp;&nbsp;<span>{{s.profilesName}}</span></label>
+                                <label  nz-checkbox  [(ngModel)]="s.check" [nzDisabled]="s.disabled" >&nbsp;&nbsp;<span>{{s.profilesName}}</span></label>
                             </div>
                             <div nz-col [nzSpan]="4">
-                                <!--<p-calendar [(ngModel)]="s.deliveryTime"   dateFormat="YYYY-MM-DD"></p-calendar>-->
-                              <!--  <nz-datepicker
-                                    [(ngModel)]="s.deliveryTime"
-                                    [nzDisabled]="!s.check"
-                                    [nzFormat]="'YYYY-MM-DD'"
-                                    [title]='s.deliveryTime'
-                                    [nzDisabledDate]="disabledDate"
-                                    [nzSize]="'large'"
-                                    [nzPlaceHolder]="l"
-                                    (ngModelChange)="onChange(s.deliveryTime, s)"
-                                    class="d-block">
-                                </nz-datepicker>-->
                                 <nz-datepicker
                                     [(ngModel)]="s.deliveryTime"
                                     [nzDisabled]="!s.check"

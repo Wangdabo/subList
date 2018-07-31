@@ -78,7 +78,6 @@ export class SubListComponent implements OnInit {
         this.copysplicingObj.dliveryAddRequest = {};
         this.copysplicingObj.dliveryAddRequest.profiles = [];
         this.copysplicingObj.deliveryList = [];
-        // this.getcheckOptionOne();
     }
 
 
@@ -131,6 +130,7 @@ export class SubListComponent implements OnInit {
                     this.selectApply = false; // 投放和补录按钮按钮隐藏
                 }
             );
+        this.getcheckOptionOne();
     }
 
 
@@ -321,9 +321,9 @@ export class SubListComponent implements OnInit {
     // 投放申请
     Serve() {
         this.modalVisible = false;
-
         if (_.isUndefined(this.textcssList) || this.textcssList.length === 0) {
             this.modalVisible = true;
+            console.log(this.elementScice)
         } else {
             // 修改的判断逻辑
             for (let i = 0; i < this.textcssList.length; i ++) {
@@ -331,8 +331,6 @@ export class SubListComponent implements OnInit {
                     for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
                         for (let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
                             if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].checked) {
-                                console.log(this.textcssList[i].deliveryPatchDetails[j].fileList[n].deploySelect)
-                                console.log(this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchSelect)
                                 if (_.isUndefined(this.textcssList[i].deliveryPatchDetails[j].fileList[n].deploySelect) && _.isUndefined(this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchSelect)) {
                                     this.isGou = false; // 只要不满足就为false,  结束循环
                                     break;
@@ -342,7 +340,6 @@ export class SubListComponent implements OnInit {
                                     this.isGou = false; // 只要不满足就为false,  结束循环
                                     break;
                                 }
-
                                 this.isGou = true; // 全部选中，则可以打开弹窗
                             }
                         }
@@ -352,15 +349,12 @@ export class SubListComponent implements OnInit {
                     this.isGou = true; // 其他工程，直接打开
                 }
             }
-
             // 修改的未提交的判断逻辑
             for (let i = 0; i < this.stashList.length; i ++) {
                 if (this.stashList[i].projectType !== 'C' && this.stashList[i].projectType !== 'I') { // 说明是config或者default工程，需要让用户手动选择
                     for (let j = 0; j < this.stashList[i].deliveryPatchDetails.length; j++) {
                         for (let n = 0; n < this.stashList[i].deliveryPatchDetails[j].fileList.length; n++) {
                             if (this.stashList[i].deliveryPatchDetails[j].fileList[n].checked) {
-                                console.log(this.stashList[i].deliveryPatchDetails[j].fileList[n].deploySelect)
-                                console.log(this.stashList[i].deliveryPatchDetails[j].fileList[n].patchSelect)
                                 if (_.isUndefined(this.stashList[i].deliveryPatchDetails[j].fileList[n].deploySelect) && _.isUndefined(this.stashList[i].deliveryPatchDetails[j].fileList[n].patchSelect)) {
                                     this.isGou = false; // 只要不满足就为false,  结束循环
                                     break;
@@ -370,8 +364,8 @@ export class SubListComponent implements OnInit {
                                     this.isGou = false; // 只要不满足就为false,  结束循环
                                     break;
                                 }
-
                                 this.isGou = true; // 全部选中，则可以打开弹窗
+
                             }
                         }
 
@@ -380,33 +374,23 @@ export class SubListComponent implements OnInit {
                     this.isGou = true; // 其他工程，直接打开
                 }
             }
-
+            // 判断是否勾选
             if (this.isGou) {
                 this.modalVisible = true;
             } else {
                 this.modalVisible = false;
                 this.nznot.create('error', '请检查是否勾选导出和部署', '请检查是否勾选导出和部署');
             }
+
         }
 
         this.deliveryTime = moment(new Date()).format('YYYY-MM-DD');
-        this.getcheckOptionOne();
     }
 
     selectedCities = [];
 
-    // 合并投放
-    checkOptionsOne = [
-        { label: 'TWS改版', value: 'TWS' },
-        { label: '1618 国际结算', value: '1618' },
-        { label: '无纸化',  value: 'wu' }
-    ]
-
-
 
     profiles: any;
-
-
 
 
     // 数据处理
@@ -673,16 +657,8 @@ export class SubListComponent implements OnInit {
             );
     }
 
-
-
-
-
     subSave() {
-
-
     }
-
-
 
     // 追加代码逻辑
     appendSave() {
@@ -945,6 +921,8 @@ export class SubListComponent implements OnInit {
         } else {
         }
     }
+
+
 
 }
 
