@@ -91,7 +91,7 @@ export class SProfilesComponent implements OnInit {
     ]
 
     test: string;
-    page: any;
+    page = 1;
     total: number;
     pageTotal: number;
     branshList:any[] = [];
@@ -157,7 +157,7 @@ export class SProfilesComponent implements OnInit {
                 .subscribe(
                     (val) => {
 
-                        this.getData();
+                       
                         if(val.code == 200) {
                             this.workId = val.result.guid
                              this.mergeVisible = false;
@@ -186,6 +186,7 @@ export class SProfilesComponent implements OnInit {
                     }
                 }
                     );
+                     this.getData();
         }else{
             console.log(this.profiles)
             //   this.profiles.isAllowDelivery = ' ';
@@ -296,18 +297,20 @@ export class SProfilesComponent implements OnInit {
         manager:'',
         isAllowDelivery:''
     };
- 
+    
+    
     getData(type?) {
            if(type == 'search'){
-              this.profiles.page = '1'
+              this.page = 1
            }
         const page = {
              condition:this.search,
             page: {
                 size: 10,
-                current: this.profiles.page
+                current: this.page
             }
         };
+        console.log(page)
     
         this.utilityService.postData(appConfig.testUrl  + appConfig.API.allsProfiles, page, {Authorization: this.token})
             .map(res => res.json())
@@ -812,7 +815,7 @@ subProject(){
 
     // 列表传入的翻页数据
     monitorHandler(event) {
-        this.profiles.page = event;
+        this.page = event;
         this.getData();
     }
     // 关闭核对清单
