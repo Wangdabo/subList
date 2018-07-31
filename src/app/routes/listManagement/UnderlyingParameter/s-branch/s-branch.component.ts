@@ -65,7 +65,7 @@ export class SBranchComponent implements OnInit {
         {key: 'upd', value: '修改'}
     ];
     branchType = [
-        {key: '特性', value: 'F',selector:false},
+        {key: 'feature', value: 'F',selector:false},
         {key: 'hot', value: 'H' ,selector:false},
         {key: 'release', value: 'R' ,selector:false},
     ]

@@ -1,5 +1,7 @@
 // 工作项
 export class WorkitemModule {
+    //提交标识
+    public artf:number;
     // 当前页数
     public pi: number = 1;
     // 每业个数

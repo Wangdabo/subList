@@ -74,19 +74,23 @@
 <nz-modal [nzVisible]="isCorrelation"  [nzWidth]="1000" [nzTitle]="Ptitle"  [nzConfirmLoading]="false" [nzContent]="correlationModal"
           (nzOnCancel)="isCorrelation=false" (nzOnOk)="saveCorrelation('C')">
     <ng-template #correlationModal>
-        <div nz-row [nzGutter]="24">
-            <div  nz-col [nzSpan]="24" class="mb-md">
-                <div  nz-col [nzSpan]="4" style="line-height:2;text-align:right" ><label for="status">Release分支</label></div>
+          <nz-tabset  >
+            <nz-tab *ngFor="let tab of tabs" (nzSelect)="tabChange(tab.active)">
+            <ng-template #nzTabHeading>
+            {{tab.name}}
+            </ng-template>
+            <div *ngIf="tab.active == true">
+                <div nz-row [nzGutter]="24">
+                    <div  nz-col [nzSpan]="24" class="mb-md">
+                        <div  nz-col [nzSpan]="4" style="line-height:2;text-align:right" ><label for="status">Release分支</label></div>
 
-                <nz-select  nz-col [nzSpan]="20"   [(ngModel)]="branch"  (ngModelChange)="checkBranch(branch)" nzId="status" [nzPlaceHolder]="'分支类型'" [nzShowSearch]="true" [nzSize]="'large'">
-                    <nz-option *ngFor="let i of branshList; let idx = index"  [nzLabel]="i.fullPath" [nzValue]="i.guid"></nz-option>
-                     <nz-option *ngIf="tips" nzDisabled  nzLabel="当前无可用发版分支" ></nz-option>
-                </nz-select>
-            </div>
-        </div>
-
-
-    <div nz-row [nzGutter]="24" *ngIf='isShowDetail == true'>
+                        <nz-select  nz-col [nzSpan]="20"   [(ngModel)]="branch"  (ngModelChange)="checkBranch(branch)" nzId="status" [nzPlaceHolder]="'分支类型'" [nzShowSearch]="true" [nzSize]="'large'">
+                            <nz-option *ngFor="let i of branshList; let idx = index"  [nzLabel]="i.fullPath" [nzValue]="i.guid"></nz-option>
+                            <nz-option *ngIf="tips" nzDisabled  nzLabel="当前无可用发版分支" ></nz-option>
+                        </nz-select>
+                 </div>
+               </div>
+               <div nz-row [nzGutter]="24" *ngIf='isShowDetail == true'>
             <div  nz-col [nzSpan]="24" class="mb-md">
                 <div  nz-col [nzSpan]="4" style="line-height:2;text-align:right" ><label for="status">分支路径</label></div>
                 <div  nz-col [nzSpan]="4" style="line-height:2;text-align:left" ><label for="status">{{branchDetali.fullPath}}</label></div>
@@ -103,7 +107,65 @@
                 <div  nz-col [nzSpan]="4" style="line-height:2;text-align:left" ><label for="status">{{branchDetali.creater}}</label></div>
             </div>
         </div>
+            </div>
+             <div *ngIf="tab.active == false">
+                <!--<div nz-col [nzSpan]="22" class="mb-md">
+                    <div nz-form-item class="d-flex">
+                        <div nz-form-label  nz-col [nzSpan]="4"><label for="name">分支作用</label></div>
+                        <div nz-form-control class="flex-1"  nz-col [nzSpan]="19" >
+                            <nz-input [(ngModel)]="addBranch.branchFor" name="branchFor"   type='text' aria-required="true" [nzSize]="'large'" [nzPlaceHolder]="'分支作用说明'" nzId="branchFor"></nz-input>
+                        </div>
+                    </div>
+                </div>-->
+              <div nz-col [nzSpan]="22" class="mb-md">
+                    <div nz-form-item class="d-flex">
+                        <div nz-form-label  nz-col [nzSpan]="4"><label for="name">分支作用</label></div>
+                        <div nz-form-control class="flex-1"  nz-col [nzSpan]="19" >
+                            <nz-input [(ngModel)]="addBranch.branchFor" name="branchFor"   type='text' aria-required="true" [nzSize]="'large'" [nzPlaceHolder]="'分支作用说明'" nzId="branchFor"></nz-input>
+                        </div>
+                    </div>
+                    <div nz-form-item class="d-flex">
+                        <div nz-form-label nz-col [nzSpan]="4"><label for="name">分支全路径</label></div>
+                        <div nz-form-control class="flex-1" nz-col [nzSpan]="19">
+                           
+                            <nz-input [(ngModel)]="addBranch.fullPath" name="fullPath" (ngModelChange)="checkagin(addBranch.fullPath)"  type='url' aria-required="true" [nzSize]="'large'" [nzPlaceHolder]="'分支全路径'" nzId="fullPath"></nz-input>
+               
+                        </div>
+                    
+                    </div>
+                   
+                </div>
+            </div>
+            </nz-tab>
+            </nz-tabset>
+   
+
+
+    
     </ng-template>
+</nz-modal>
+
+<!--拉工程-->
+<!--工程-->
+<nz-modal [nzVisible]="projectInfo" [nzWidth]="1024" [nzTitle]="'工程管理'" [nzConfirmLoading]="loading" [nzContent]="projectContent"
+          (nzOnCancel)="projectInfo=false" (nzOnOk)="subProject()">
+    <ng-template #projectContent>
+              <nz-transfer
+                    [nzDataSource]="list"
+                    nzShowSearch
+                  
+                    [nzListStyle]="{'width.%': 45, 'height.px': 300}"
+                    [nzFilterOption]="filterOption"
+                    (nzSearchChange)="searchpro($event)"
+                    (nzSelectChange)="select($event)"
+                    (nzChange)="change($event)"
+                    >
+                    <ng-template #render let-item>
+                    {{item.description}}
+                    </ng-template>
+                  
+                </nz-transfer>
+            </ng-template>
 </nz-modal>
 <nz-modal [nzVisible]="mergeVisible"  [nzWidth]="800" [nzTitle]="Ptitle"  [nzConfirmLoading]="false" [nzContent]="mergeModal"
           (nzOnCancel)="mergeVisible=false" [nzFooter]="is">
@@ -177,7 +239,19 @@
                         </div>
                     </div>
                 </div>
+                  <div nz-col [nzSpan]="24" class="mb-md">
+                    <div nz-form-item class="d-flex">
+                        <div nz-form-label nz-col [nzSpan]="8"><label for="name">ARTF</label></div>
+                        <div style="padding-left: 1px;">
+                       <nz-input-number  [(ngModel)]="profiles.artf"  name="artf"  [nzSize]="large"  [nzMin]="1" [nzStep]="1" nzId="artf"></nz-input-number>
 
+                        </div>
+              
+                    </div>
+                </div>
+
+
+   
 
 
                 <div nz-col [nzSpan]="24" class="mb-md">

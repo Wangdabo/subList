@@ -73,7 +73,7 @@ npm run serve:hmr
 
 ![Architecture](https://github.com/cipchk/delon/blob/master/_screenshot/architecture.png)
 
-## 特性
+## feature
 
 + 基于 `ng-zorro-antd`
 + 响应式
