@@ -78,7 +78,7 @@ export class SubListComponent implements OnInit {
         this.copysplicingObj.dliveryAddRequest = {};
         this.copysplicingObj.dliveryAddRequest.profiles = [];
         this.copysplicingObj.deliveryList = [];
-        this.getcheckOptionOne();
+        // this.getcheckOptionOne();
     }
 
 
