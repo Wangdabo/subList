@@ -81,9 +81,9 @@
 
             <span *ngIf="d.radio">
                 <!--因为ngIf和ngFor不能在同一行中使用，所以要分行来用，为什么不用div而是用ng-container，是因为div受样式或者说全局样式干扰，<ng-container>是不受任何干扰的。-->
-               <ng-container *ngIf = "d.type == 'deployArray' && initDate[l].isshow == true">
+               <ng-container *ngIf = "d.type == 'deployArray' && initDate[l].isshow == true && i.checked">
                    <nz-select
-                            style="width: 200px;"
+                            style="width: 150px;"
                            nzAllowClear
                            [nzPlaceHolder]="'部署为'"
                            [(ngModel)]="initDate[l].deploySelect"
@@ -98,7 +98,7 @@
                </ng-container>
                 <ng-container *ngIf="d.type !== 'deployArray'" >
                     <nz-select
-                        style="width: 200px;"
+                        style="width: 150px;"
                         nzAllowClear
                         [nzPlaceHolder]="'导出为'"
                         [(ngModel)]="initDate[l].patchSelect"
