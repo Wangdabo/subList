@@ -49,7 +49,7 @@ export class SWorkitemComponent implements OnInit {
      checkOptionsOne = [
     { label: '新建分支', value: 'branch', checked: true },
     { label: '新建工程', value: 'project', checked: false },
-   
+
   ];
     // 传入按钮层
     moreData = {
@@ -62,12 +62,12 @@ export class SWorkitemComponent implements OnInit {
     {
       active: true,
       name  : '选择已有分支',
-  
+
     },
     {
       active: false,
       name  : '新增分支',
-      
+
     }
   ];
     test: string;
@@ -154,9 +154,9 @@ export class SWorkitemComponent implements OnInit {
                                 }else{
                                     value.itemNamestr = value.itemName
                                 }
-                             
-                            
-                              
+
+
+
                         if (value.itemStatus === '开发中') {
                             if (value.fullPath !== '') { // 说明存在分支
                                 // 截取
@@ -169,18 +169,18 @@ export class SWorkitemComponent implements OnInit {
                                 console.log(value)*/
                                 value.buttonData = [
                                     {key: 'upd', value: '修改'},
-                                    {key: 'cenel', value: '取消'},
+                                    {key: 'cenel', value: '关闭'},
                                     {key: 'close', value: '取消分支'},
                                     {key: 'branchDDetail', value: '分支详情'},
-                                     {key: 'project', value: '拉工程'}
-                                 
+                                    {key: 'project', value: '拉工程'},
+                                    {key: 'putProductStatus', value: '已投产'}
                                 ];
                             } else {
                                 value.buttonData = [
                                     {key: 'upd', value: '修改'},
-                                    {key: 'cenel', value: '取消'},
+                                    {key: 'cenel', value: '关闭'},
                                     {key: 'association', value: '关联分支'},
-                                   
+
                                 ];
                             }
                         }
@@ -259,7 +259,7 @@ export class SWorkitemComponent implements OnInit {
         this.getData();
     }
 
-    
+
 projectInfo = false;
 prolist: any[] = [];//工程列表
 // 工程穿梭框
@@ -301,13 +301,11 @@ workId:string;//工作项ID
                 this.isEdit = true;
 
             } else if(event.names.key ==='project'){
-
                    this.utilityService.getData(appConfig.testUrl  + appConfig.API.sWorkitem + '/' +  event.guid + '/project',  {},  {Authorization: this.token})
                             .subscribe(
                                 (val) => {
                                let others = [];
                                let own = []
-                                  
                                    if(val.result.others.length > 0){
                                         for(let j= 0; j < val.result.others.length;j++){
                                           val.result.others[j]['exit']='left'
@@ -315,7 +313,7 @@ workId:string;//工作项ID
                                 }
                                     if(val.result.own.length > 0){
                                    for(let j= 0; j < val.result.own.length;j++){
-                                   
+
                                           val.result.own[j]['exit']='right'
                                    }
                                     }
@@ -338,7 +336,7 @@ workId:string;//工作项ID
                                 });
                                 }
                                 this.list = ret;
-                                
+
 
                                      this.projectInfo = true
                                   console.log(this.list);
@@ -350,7 +348,7 @@ workId:string;//工作项ID
                                     this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
                                 }
                             );
-               
+
             } else if (event.names.key  === 'association') {
                 this.assbranch = undefined;
                 this.branchdataInfo = false;
@@ -359,6 +357,30 @@ workId:string;//工作项ID
                 this.addBranch.branchType = '';
                 this.exitInfo = event;
                 this.getBranch();
+            } else if (event.names.key  === 'putProductStatus') {
+                this.modal.open({
+                    title: '已投产',
+                    content: '您是否确定已投产?',
+                    okText: '确定',
+                    cancelText: '取消',
+                    onOk: () => {
+                        this.utilityService.putData(appConfig.testUrl  + appConfig.API.sWorkitem + '/' +  event.guid + '/putProductStatus',  {},  {Authorization: this.token})
+                            .map(res => res.json())
+                            .subscribe(
+                                (val) => {
+                                    console.log(val)
+                                    this.nznot.create('success', val.msg, val.msg);
+                                    this.getData();
+                                },
+                                (error) => {
+                                    this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
+                                }
+                            );
+                    },
+                    onCancel: () => {
+
+                    }
+                });
             } else if (event.names.key  === 'close') {
                 this.modal.open({
                     title: '取消关联',
@@ -425,13 +447,13 @@ subProject(){
     let projectGuids = []
     // this.projectInfo = false;
     for(let i = 0 ; i < this.list.length; i ++){
-            if(this.list[i].status == 'right'&&this.list[i].disabled == false){ 
+            if(this.list[i].status == 'right'&&this.list[i].disabled == false){
             projectGuids.push(this.list[i].guid);
         }
-       
-        
+
+
     }
-     
+
           this.utilityService.postData(appConfig.testUrl  + appConfig.API.sWorkitem + '/' + this.workId + '/project' ,{projectGuids:projectGuids}, {Authorization: this.token})
                              .map(res => res.json())
                             .subscribe(
@@ -444,7 +466,7 @@ subProject(){
                                 if(error){
                                        this.nznot.create('error',error.json().msg,'');
                                 }
-                             
+
                             }
                             );
 }
@@ -467,7 +489,7 @@ subProject(){
     }
 
     // 弹出框确定
-    
+
     save() {
         this.workAdd.receiveTime = moment(this.workAdd.receiveTime).format('YYYY-MM-DD');
         this.workAdd.developStartTime = moment(this.workAdd.developStartTime).format('YYYY-MM-DD');
@@ -520,7 +542,7 @@ subProject(){
                         }else{
                               this.nznot.create('error', val.msg , val.msg);
                         }
-                         
+
                         this.getData();
                     },
                     error => {
@@ -529,7 +551,7 @@ subProject(){
                 );
                   this.modalVisible = false;
         }
-      
+
 
     }
 
@@ -539,7 +561,7 @@ subProject(){
         console.log(this.exitInfo)
         let url = '';
         if(this.active == true){//选择已有分支
-          
+
          this.utilityService.getData(appConfig.testUrl  + appConfig.API.sWorkitem + '/' + this.exitInfo.guid + '/branch/'  + this.assbranch,   {}, {Authorization: this.token})
             .timeout(5000)
             .subscribe(
@@ -577,9 +599,9 @@ subProject(){
                     }
             );
         }
-         
+
           this.assVisible = false;
-      
-       
+
+
     }
 }
