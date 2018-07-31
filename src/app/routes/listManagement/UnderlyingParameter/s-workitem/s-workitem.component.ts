@@ -319,8 +319,10 @@ workId:string;//工作项ID
                                     }
                                     others = val.result.others;
                                     own = val.result.own;
-                                    if(own.length > 0){
+                                    if(own.length > 0 && others.length > 0){
                                            others = others.concat(own)
+                                    }else if(others.length == 0 && own.length > 0 ){
+                                         others = own
                                     }
                                const ret = [];
                                 for (let i = 0; i < others.length; i++) {
