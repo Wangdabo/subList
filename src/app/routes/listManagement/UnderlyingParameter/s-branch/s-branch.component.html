@@ -58,7 +58,7 @@
 
     <app-list #child [initDate]="data" [configTitle]="configTitle"  [showAdd]="showAdd" [isPagination]="isPagination"  [buttons] ='buttons' (addCreat)="addHandler($event)" (buttonData)="buttonDataHandler($event)" (pageNumber)="monitorHandler($event)"
               (deleatData)="deleatData($event)" (isActive)="isActive($event)" (buttonEvent)="buttonEvent($event)"  [headerDate]="headerDate"
-              [moreData]="moreData" [total]="total" [isShowTotal]="isShowTotal" [pageTotal] = 'pageTotal'></app-list>
+              [moreData]="moreData" [total]="total" [isShowTotal]="isShowTotal" [pageindex]='pageIndex' [pageTotal] = 'pageTotal'></app-list>
 </nz-card>
 
 <nz-modal [nzVisible]="detailsVisible"  [nzWidth]="1024" [nzTitle]="ptitle"  [nzConfirmLoading]="false" [nzContent]="mergeModal"

@@ -474,6 +474,18 @@ subProject(){
                             }
                             );
 }
+
+ 
+           isShowIp = false;
+            checkArtf(event){
+              let MOBILE_REGEXP =/^\+?[1-9][0-9]*$/;
+              console.log(MOBILE_REGEXP.test(event));
+              if(MOBILE_REGEXP.test(event)==true){
+                      this.isShowIp = false
+              }else{
+                  this.isShowIp = true;
+              }
+            }
     // 选中复选框方法
     selectedRow(event) {
 
@@ -504,6 +516,10 @@ subProject(){
             this.workAdd.developers = this.workAdd.developers.join( ',' );
         } else {
         }
+        if(this.isShowIp == true){
+            this.nznot.create('error', 'ARTF格式不正确', '请检查ARTF');
+            return;
+        }
 
        console.log(this.workAdd);
         if (!this.workAdd.itemName || !this.workAdd.seqno || !this.workAdd.developers || !this.workAdd.owner || !this.workAdd.requirementDesc ) {
@@ -517,6 +533,7 @@ subProject(){
                     (val) => {
                         this.nznot.create('success', val.msg , val.msg);
                         this.getData();
+                       
                     },
                     error => {
                         this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
@@ -530,6 +547,7 @@ subProject(){
                     (val) => {
                       console.log(val)
                         if(val.code == 200){
+                             this.modalVisible = false;
                               this.modal.open({
                                 title: '信息提示',
                                 content: val.msg+'是否需要立即关联分支？',
@@ -538,6 +556,7 @@ subProject(){
                                 onOk: () => {
                                     this.workId = val.result.guid
                                     this.assVisible = true;
+                                    
                                 },
                                 onCancel: () => {
 
@@ -553,7 +572,7 @@ subProject(){
                         this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
                     }
                 );
-                  this.modalVisible = false;
+                 
         }
 
 

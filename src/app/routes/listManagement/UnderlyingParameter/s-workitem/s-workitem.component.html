@@ -216,10 +216,12 @@
                     <div nz-form-label nz-col [nzSpan]="3" class="alignment">
                         <label for="no">ARTF</label>
                     </div>
-                    <div style="padding-left: 1px;">
-                      <nz-input-number  [(ngModel)]="workAdd.artf"  name="artf"  [nzSize]="large"  [nzMin]="1" [nzStep]="1" nzId="artf"></nz-input-number>
-
+                     <div nz-form-control nz-col [nzSpan]="21">
+                        <nz-input [(ngModel)]="workAdd.artf" nzAutosize=true  (ngModelChange)="checkArtf(workAdd.artf)"  name="artf" [nzSize]="'large'" [nzPlaceHolder]="'请输入ARTF'"
+                                  nzId="artf"></nz-input>
+                                  <nz-alert *ngIf='isShowIp == true' nzBanner nzMessage="只能输入数字类型"></nz-alert>
                     </div>
+             
                 </div>
             </div>
         </div>
