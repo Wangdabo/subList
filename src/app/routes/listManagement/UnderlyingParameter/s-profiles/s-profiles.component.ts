@@ -94,7 +94,7 @@ export class SProfilesComponent implements OnInit {
     page = 1;
     total: number;
     pageTotal: number;
-    branshList:any[] = [];
+    branshList = [];
     branch:any;
     Ptitle:any;
     time = new Date();
@@ -146,9 +146,23 @@ export class SProfilesComponent implements OnInit {
         console.log(this.tags);
         let objarr = [];
         if (this.tags.length === 0) {
-              this.nznot.create('errpr', '请添加打包窗口', '');
+              this.nznot.create('error', '请添加打包窗口', '');
               return;
         }
+        if(this.isShowIp == true){
+               this.nznot.create('error', '请检查IP地址格式是否正确！', '');
+              return;
+        }
+         if(this.isShowartf == true){
+               this.nznot.create('error', '请检查ARTF格式是否正确！', '');
+              return;
+        }
+          if(!this.profiles.artf || !this.profiles.profilesName || !this.profiles.installPath || !this.profiles.hostIp || !this.profiles.csvUser || !this.profiles.manager){
+               this.nznot.create('error', '请检查信息是否完整！', '');
+              return;
+          }
+        
+  
         this.profiles.packTiming = this.tags.join(',')
         if ( ! this.profiles.guid ) {
             // this.profiles.isAllowDelivery = ' ';
@@ -233,6 +247,17 @@ export class SProfilesComponent implements OnInit {
                   this.isShowIp = true;
               }
             }
+
+              isShowartf = false;
+            checkArtf(event){
+              let MOBILE_REGEXP =/^\+?[1-9][0-9]*$/;
+              console.log(MOBILE_REGEXP.test(event));
+              if(MOBILE_REGEXP.test(event)==true){
+                      this.isShowartf = false
+              }else{
+                  this.isShowartf = true;
+              }
+            }
         checkBranch(branch){
             console.log(branch);
              this.isShowDetail = true
@@ -297,7 +322,7 @@ export class SProfilesComponent implements OnInit {
         manager:'',
         isAllowDelivery:''
     };
-    
+    pageIndex = 1
     
     getData(type?) {
            if(type == 'search'){
@@ -323,6 +348,7 @@ export class SProfilesComponent implements OnInit {
                         console.log(this.data);
                         this.total = val.result.total; // 总数
                         this.pageTotal = val.result.pages * 10; // 页码
+                         this.pageIndex = val.result.current;
                         let star = '';
                         let end = '';
                         for ( let i = 0; i < this.data.length; i++) {
@@ -388,6 +414,8 @@ export class SProfilesComponent implements OnInit {
 
     // 接受子组件删除的数据 单条还是多条
     deleatData(event) {
+
+
 
     }
     profilesGuid:any;
@@ -550,7 +578,8 @@ workId:string;//工作项ID
                           }else{
                                this.tips = false;
                           }
-                            
+                          console.log(this.tips)
+                              console.log(this.branshList.length)
                         }else {
                             this.nznot.create('error', val.msg, val.msg);
                         }

@@ -59,6 +59,8 @@ export class ListComponent implements OnInit {
     @Input() // 输入属性,接受父组件传入的数据
     pageTotal: number;
     @Input() // 输入属性,接受父组件传入的数据
+    pageindex: number;
+    @Input() // 输入属性,接受父组件传入的数据
     deleteTitle: string;
     @Input() // 输入属性,接受父组件传入的数据
     isShowTotal: boolean;

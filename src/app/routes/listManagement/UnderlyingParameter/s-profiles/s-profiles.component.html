@@ -242,9 +242,11 @@
                   <div nz-col [nzSpan]="24" class="mb-md">
                     <div nz-form-item class="d-flex">
                         <div nz-form-label nz-col [nzSpan]="8"><label for="name">ARTF</label></div>
-                        <div style="padding-left: 1px;">
-                       <nz-input-number  [(ngModel)]="profiles.artf"  name="artf"  [nzSize]="large"  [nzMin]="1" [nzStep]="1" nzId="artf"></nz-input-number>
-
+                            <div nz-form-control class="flex-1">
+            
+                        <nz-input [(ngModel)]="profiles.artf" nzAutosize=true  (ngModelChange)="checkArtf(profiles.artf)"  name="artf" [nzSize]="'large'" [nzPlaceHolder]="'请输入ARTF'"
+                                  nzId="artf"></nz-input>
+                                  <nz-alert *ngIf='isShowartf == true' nzBanner nzMessage="只能输入数字类型"></nz-alert>
                         </div>
               
                     </div>

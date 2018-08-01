@@ -46,7 +46,7 @@
           [nzPageSize]="q.ps" [nzLoading]="loading"
           [nzIsPagination]="isPagination"
           (nzPageIndexChange)="pageChange($event)"
-          [nzPageIndex]='q.pi'>
+          [nzPageIndex]='pageindex'>
     <thead nz-thead>
     <tr>
         <th nz-th [nzCheckbox]="true" *ngIf="isShowTotal == true">

@@ -74,16 +74,17 @@ export class SBranchComponent implements OnInit {
         fullPath:'',
         branchFor:''
     };
+    page = '1'
+    pageIndex = 1
     getData(type?) {
-        
         if(type == 'search'){
-              this.branch.page = '1'
+              this.page = '1'
            }
             const page = {
                 condition: this.search,
                 page: {
                     size: 10,
-                    current: this.branch.page,
+                    current: this.page,
                     orderByField: 'guid',
                     asc: false
                 }
@@ -94,14 +95,14 @@ export class SBranchComponent implements OnInit {
                 .map(res => res.json())
                 .subscribe(
                     (val) => {
-
                         if (val.code == 200) {
                             this.data = val.result.records;
                             this.total = val.result.total; // 总数
                             this.pageTotal = val.result.pages * 10; // 页码
+                            this.pageIndex = val.result.current;
                             let star = '';
                             let end = '';
-                           let str = ''
+                            let str = ''
                             for (let i = 0 ; i <  this.data.length; i ++) {
                                 this.data[i].branchTypeText =  this.data[i].branchType
                                 console.log(this.data[i].fullPath.length)
@@ -143,7 +144,7 @@ export class SBranchComponent implements OnInit {
     }
 
     monitorHandler(event) {
-        this.branch.page = event;
+        this.page = event;
           this.getData();
     }
 
