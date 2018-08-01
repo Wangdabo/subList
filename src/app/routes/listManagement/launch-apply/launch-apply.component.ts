@@ -165,7 +165,8 @@ export class LaunchApplyComponent implements OnInit {
               let buttonupd =[
                  {key:'dels',value:'删除' },
                  {key:'detail',value:'详情'},
-                 {key:'upd',value:'修改'}
+                 {key:'upd',value:'修改'},
+                 {key:'copy',value:'复制投放'},
                        ]
 
             let buttonsuccess =[
@@ -663,11 +664,11 @@ getElement() {
                     console.log(val);
                    if(val.code == 200){
                        this.updPackTiming  = val.result
-                     
+
                       this.updPackTiming['unixTime'] = moment(this.updPackTiming['deliveryTime']).format('YYYY-MM-DD 00:00:00.000')
                        localStorage.setItem('time',this.updPackTiming['unixTime']);
                       for(let i =0;i<this.updPackTiming['packTimeDetails'].length;i++){
-                          
+
                           if(this.updPackTiming['packTimeDetails'][i]['isOptions']=='D'){
                             //  this.updPackTiming['packTimeDetails'][i]['check'] = true
                              this.updPackTiming['packTiming']   =   this.updPackTiming['packTimeDetails'][i]['packTime']
@@ -684,6 +685,8 @@ getElement() {
                         this.nznot.create('error',error.json().msg,'');
                     }
                 });
+        } else if (event.names.key == 'copy') {
+            console.log('点我干嘛')
         }
 
 
@@ -697,7 +700,7 @@ getElement() {
 
     return current && current.getTime() < new Date(time).getTime();
 
-    
+
   }
     onChange(updPackTiming) {
         if (updPackTiming.deliveryTime.getTime() !== new Date(updPackTiming.unixTime).getTime()) {

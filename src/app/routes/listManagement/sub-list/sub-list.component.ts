@@ -107,12 +107,10 @@ export class SubListComponent implements OnInit {
                 this.workItemInfo = this.workItem[i];
             }
         }
-
         this.copyinfos = _.cloneDeep(this.workItemInfo.developers);
         this.workItemInfo.copyinfos = this.copyinfos.split(',');
 
         this.showAdd = true; // 默认没有新增
-
         // 请求信息
         this.utilityService.getData(appConfig.testUrl  + appConfig.API.sWorkitem + '/' + event + '/branchDetail', {}, {Authorization: this.token})
             .subscribe(
@@ -130,7 +128,8 @@ export class SubListComponent implements OnInit {
                     this.selectApply = false; // 投放和补录按钮按钮隐藏
                 }
             );
-        this.getcheckOptionOne();
+        this.getcheckOptionOne(event);
+        this.reset  = false;
     }
 
 
@@ -323,65 +322,80 @@ export class SubListComponent implements OnInit {
         this.modalVisible = false;
         if (_.isUndefined(this.textcssList) || this.textcssList.length === 0) {
             this.modalVisible = true;
-            console.log(this.elementScice)
+            // 不选清单, 禁选
+            for (let i = 0; i < this.elementScice.length; i ++) {
+                if (this.elementScice[i].delivered) {
+                    this.elementScice[i].disabled = true;
+                }
+            }
         } else {
+            this.modalVisible = false;
+            let array = []; // 定义数组
             // 修改的判断逻辑
             for (let i = 0; i < this.textcssList.length; i ++) {
                 if (this.textcssList[i].projectType !== 'C' && this.textcssList[i].projectType !== 'I') { // 说明是config或者default工程，需要让用户手动选择
                     for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
                         for (let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
                             if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].checked) {
-                                if (_.isUndefined(this.textcssList[i].deliveryPatchDetails[j].fileList[n].deploySelect) && _.isUndefined(this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchSelect)) {
-                                    this.isGou = false; // 只要不满足就为false,  结束循环
-                                    break;
+                                if ((this.textcssList[i].deliveryPatchDetails[j].fileList[n].deploySelect !== undefined && this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchSelect !== undefined ) && (this.textcssList[i].deliveryPatchDetails[j].fileList[n].deploySelect !== null && this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchSelect !== null)) {
+                                    array.push(this.textcssList[i].deliveryPatchDetails[j].fileList[n])
                                 }
-                                // 如果等于空字符串
-                                if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].deploySelect === null ||  this.textcssList[i].deliveryPatchDetails[j].fileList[n].patchSelect === null) {
-                                    this.isGou = false; // 只要不满足就为false,  结束循环
-                                    break;
-                                }
-                                this.isGou = true; // 全部选中，则可以打开弹窗
                             }
                         }
 
                     }
                 } else {
-                    this.isGou = true; // 其他工程，直接打开
+                    for (let j = 0; j < this.textcssList[i].deliveryPatchDetails.length; j++) {
+                        for (let n = 0; n < this.textcssList[i].deliveryPatchDetails[j].fileList.length; n++) {
+                            if (this.textcssList[i].deliveryPatchDetails[j].fileList[n].checked) {
+                                array.push(this.textcssList[i].deliveryPatchDetails[j].fileList[n])
+                            } else {
+                            }
+                        }
+
+                    }
                 }
             }
+
             // 修改的未提交的判断逻辑
             for (let i = 0; i < this.stashList.length; i ++) {
                 if (this.stashList[i].projectType !== 'C' && this.stashList[i].projectType !== 'I') { // 说明是config或者default工程，需要让用户手动选择
                     for (let j = 0; j < this.stashList[i].deliveryPatchDetails.length; j++) {
                         for (let n = 0; n < this.stashList[i].deliveryPatchDetails[j].fileList.length; n++) {
                             if (this.stashList[i].deliveryPatchDetails[j].fileList[n].checked) {
-                                if (_.isUndefined(this.stashList[i].deliveryPatchDetails[j].fileList[n].deploySelect) && _.isUndefined(this.stashList[i].deliveryPatchDetails[j].fileList[n].patchSelect)) {
-                                    this.isGou = false; // 只要不满足就为false,  结束循环
-                                    break;
+                                if ((this.stashList[i].deliveryPatchDetails[j].fileList[n].deploySelect !== undefined && this.stashList[i].deliveryPatchDetails[j].fileList[n].patchSelect !== undefined ) && (this.stashList[i].deliveryPatchDetails[j].fileList[n].deploySelect !== null && this.stashList[i].deliveryPatchDetails[j].fileList[n].patchSelect !== null)) {
+                                    array.push(this.stashList[i].deliveryPatchDetails[j].fileList[n])
                                 }
-                                // 如果等于空字符串
-                                if (this.stashList[i].deliveryPatchDetails[j].fileList[n].deploySelect === null ||  this.stashList[i].deliveryPatchDetails[j].fileList[n].patchSelect === null) {
-                                    this.isGou = false; // 只要不满足就为false,  结束循环
-                                    break;
-                                }
-                                this.isGou = true; // 全部选中，则可以打开弹窗
-
                             }
                         }
 
                     }
                 } else {
-                    this.isGou = true; // 其他工程，直接打开
+                    for (let j = 0; j < this.stashList[i].deliveryPatchDetails.length; j++) {
+                        for (let n = 0; n < this.stashList[i].deliveryPatchDetails[j].fileList.length; n++) {
+                            if (this.stashList[i].deliveryPatchDetails[j].fileList[n].checked) {
+                                array.push(this.stashList[i].deliveryPatchDetails[j].fileList[n])
+                            } else {
+                            }
+                        }
+
+                    }
                 }
             }
-            // 判断是否勾选
-            if (this.isGou) {
+
+            if (array.length > 0) {
                 this.modalVisible = true;
+                // 选清单, 必选
+                for (let i = 0; i < this.elementScice.length; i ++) {
+                    if (this.elementScice[i].delivered) {
+                        this.elementScice[i].disabled = true;
+                        this.elementScice[i].check = true;
+                    }
+                }
             } else {
                 this.modalVisible = false;
                 this.nznot.create('error', '请检查是否勾选导出和部署', '请检查是否勾选导出和部署');
             }
-
         }
 
         this.deliveryTime = moment(new Date()).format('YYYY-MM-DD');
@@ -839,8 +853,8 @@ export class SubListComponent implements OnInit {
 
 
     // 调用投放环境接口
-    getcheckOptionOne() {
-         this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfiless, {}, {Authorization: this.token})
+    getcheckOptionOne(guid) {
+         this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfiless + '/' + guid +'/delivered', {}, {Authorization: this.token})
             .subscribe(
                 (val) => {
                         this.elementScice = val.result;
