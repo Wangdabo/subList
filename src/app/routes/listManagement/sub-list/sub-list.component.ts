@@ -854,7 +854,7 @@ export class SubListComponent implements OnInit {
 
     // 调用投放环境接口
     getcheckOptionOne(guid) {
-         this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfiless + '/' + guid +'/delivered', {}, {Authorization: this.token})
+         this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfiless + '/' + guid + '/delivered', {}, {Authorization: this.token})
             .subscribe(
                 (val) => {
                         this.elementScice = val.result;

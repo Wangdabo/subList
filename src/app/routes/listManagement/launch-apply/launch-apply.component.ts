@@ -33,6 +33,7 @@ export class LaunchApplyComponent implements OnInit {
     isNext = true;
     initDate:any;
       elementScice: any; // 环境数据
+    elementCopy: any; // copy环境接口
 
     ngOnInit() {
         this.token  = this.tokenService.get().token;
@@ -59,6 +60,7 @@ export class LaunchApplyComponent implements OnInit {
     isShowTotal = true;
     pageTotal: number; // 翻页总数
     checkStatus = true;
+    copyseniorGuid: string;
     deliveryResult = [
         {key: '0', value: '申请中',color:'skyblue'},
         {key: 'M', value: '已合并',color:'orange'},
@@ -135,6 +137,9 @@ export class LaunchApplyComponent implements OnInit {
     isShowDate = false;
     detailVisible = false;
     copyVisible = false;
+    launchVisible = false;
+    detailInfo: any; // 投放之后的详情
+    copyTitle: string;
      currentpage = 1;
     inputValue = '';
     mergeListDetail:any[]=[] //投放申请详情
@@ -168,7 +173,7 @@ export class LaunchApplyComponent implements OnInit {
                  {key:'dels',value:'删除' },
                  {key:'detail',value:'详情'},
                  {key:'upd',value:'修改'},
-                 {key:'copy',value:'复制投放'},
+                 {key:'copy',value:'投放新环境'},
                        ]
 
             let buttonsuccess =[
@@ -186,8 +191,11 @@ export class LaunchApplyComponent implements OnInit {
                             this.pageIndex = val.result.current;
                             for ( let i = 0; i < this.data.length; i++) {
                                 this.data[i].deliveryTime = moment(this.data[i].deliveryTime).format('YYYY-MM-DD');
+                                this.data[i].profilesGuid = this.data[i].guidProfiles.source;
                                 this.data[i].guidProfiles = this.data[i].guidProfiles.target;
+                                this.data[i].workGuid = this.data[i].guidWorkitem.source;
                                 this.data[i].guidWorkitem = this.data[i].guidWorkitem.target;
+
                                 if(this.data[i].deliveryResult == '申请中'){
                                      this.data[i].buttonData = buttonupd
                                 } else if(this.data[i].deliveryResult == '投放成功') {
@@ -243,6 +251,32 @@ getElement() {
                     }
                 );
 }
+
+    // 调用投放环境接口
+    getcheckOptionOne(guid) {
+        this.utilityService.getData(appConfig.testUrl  + appConfig.API.copyProfiless + '/' + guid + '/delivered', {}, {Authorization: this.token})
+            .subscribe(
+                (val) => {
+                    this.elementCopy = val.result;
+                    for (let i = 0; i < this.elementCopy.length; i++) {
+                        this.elementCopy[i].deliveryName = '第一次投放'
+                        this.elementCopy[i].deliveryTime = new Date(this.elementCopy[i].deliveryTime); // 初始化时间
+                        this.elementCopy[i].unixTime = moment(this.elementCopy[i].deliveryTime).format('YYYY-MM-DD 00:00:00.000')
+                        if (this.elementCopy[i].delivered) { // 如果为true，那么checkbox即radio全部禁选
+                            console.log(this.elementCopy[i].delivered)
+                            this.elementCopy[i].disabled = true;
+                        }
+                        for (let s = 0; s < this.elementCopy[i].packTimeDetails.length; s ++) {
+                            if (this.elementCopy[i].packTimeDetails[s].isOptions === 'D') {
+                                this.elementCopy[i].times = this.elementCopy[i].packTimeDetails[s].packTime;
+                            }
+                        }
+
+                    }
+                    console.log( this.elementCopy )
+                }
+            );
+    }
 
     // 列表组件传过来的内容
     addHandler(event) {
@@ -677,10 +711,26 @@ getElement() {
                 },(error)=>{
 
                     if(error){
-                        this.nznot.create('error',error.json().msg,'');
+                        this.nznot.create('error', error.json().msg, '');
                     }
                 });
         } else if (event.names.key === 'copy') {
+            this.copyseniorGuid = event.guid;
+            this.getcheckOptionOne(event.workGuid);
+
+
+           /* this.utilityService.putData( appConfig.testUrl + appConfig.API.newProfiles, {}, {Authorization: this.token})
+            .map(res => res.json())
+                .subscribe(
+                    (val) => {
+                       console.log(val);
+                    },
+                    (error) => {
+                        if(error){
+                            this.nznot.create('error', error.json().msg, '');
+                        }
+                    });*/
+
             this.copyVisible = true;
         }
 
@@ -1355,4 +1405,74 @@ loading2 = false
 
 
     }
+
+    // 拷贝投放
+    copySave() {
+        this.profiles = [];
+        for (let i = 0; i < this.elementCopy.length; i ++) {
+
+            if (this.elementCopy[i].check && this.elementCopy[i].times) {
+                let obj = {
+                    guidProfiles: this.elementCopy[i].guidProfile,
+                    profilesName: this.elementCopy[i].profilesName,
+                    packTiming: this.elementCopy[i].times,
+                    applyAlias: this.elementCopy[i].deliveryName,
+                    deliveryTime: moment(this.elementCopy[i].deliveryTime).format('YYYY-MM-DD')
+                };
+                this.profiles.push(obj);
+            }
+        }
+        let splicingObj = {
+            guidDelivery : this.copyseniorGuid, // 清单的guid
+            profiles: this.profiles,
+        };
+
+        this.utilityService.postData(appConfig.testUrl  + appConfig.API.newProfiles, splicingObj, {Authorization: this.token})
+            .map(res => res.json())
+            .subscribe(
+                (val) => {
+                    this.nznot.create('success', val.code , val.msg);
+                    this.copyVisible = false;
+                    this.launchVisible = true;
+                    this.copyTitle = '投放新环境成功';
+                    this.detailInfo = val.result; // 返回的数据有问题
+                },
+                (error) => {
+                    this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
+                    // this.getData();
+                 }
+            );
+
+    }
+
+    // 比较copy的时间
+    oncopyChange(time, array) {
+        console.log(time)
+        if (time.getTime() !== new Date(array.unixTime).getTime()) {
+            for (let i = 0; i < array.packTimeDetails.length; i++) {
+                if (array.packTimeDetails[i].isOptions === 'N') {
+                    array.packTimeDetails[i].isOptions = 'No';
+                }
+            }
+        } else {
+            for (let i = 0; i < array.packTimeDetails.length; i++) {
+                if (array.packTimeDetails[i].isOptions === 'No') {
+                    array.packTimeDetails[i].isOptions = 'N';
+                }
+            }
+        }
+
+        if (time.getTime() < new Date(array.unixTime).getTime()) {
+            array.deliveryTime = new Date(array.unixTime).getTime();
+            this.nznot.create('error', '选择时间不能小于初始时间' , '');
+        } else {
+        }
+    }
+
+    copyCancel() {
+        this.getData(); // 重新查询
+        this.launchVisible = false;
+    }
+
+
 }
