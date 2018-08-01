@@ -108,6 +108,7 @@
         (selectedRow)="selectedRow($event)"
         [headerDate]="headerDate"
          [moreData]="moreData"
+        [pageindex]='pageIndex'
         [total]="total"
         [isShowTotal]="isShowTotal"
         [showAdd]="showAdd"
@@ -126,7 +127,7 @@
                     <div nz-col [nzSpan]="21" nz-form-control >
                         <nz-input [(ngModel)]="workAdd.itemName" name="itemName" [nzSize]="'large'" [nzPlaceHolder]="'工作项名称'" nzId="itemName"></nz-input>
                     </div>
-                  
+
                 </div>
             </div>
             <div nz-col [nzSpan]="24" class="mb-md">
@@ -221,7 +222,7 @@
                                   nzId="artf"></nz-input>
                                   <nz-alert *ngIf='isShowIp == true' nzBanner nzMessage="只能输入数字类型"></nz-alert>
                     </div>
-             
+
                 </div>
             </div>
         </div>
@@ -233,9 +234,9 @@
 <nz-modal [nzVisible]="assVisible" [nzWidth]="1024" [nzTitle]="'关联分支'" [nzConfirmLoading]="loading" [nzContent]="assContent"
           (nzOnCancel)="assVisible=false" (nzOnOk)="assSave()">
     <ng-template #assContent>
-       
 
-       
+
+
             <nz-tabset  >
             <nz-tab *ngFor="let tab of tabs" (nzSelect)="tabChange(tab.active)">
             <ng-template #nzTabHeading>
@@ -331,7 +332,7 @@
             </div>
             </nz-tab>
             </nz-tabset>
-           
+
     </ng-template>
 </nz-modal>
 <!--工程-->
@@ -351,7 +352,7 @@
                     <ng-template #render let-item>
                     {{item.description}}
                     </ng-template>
-                  
+
                 </nz-transfer>
             </ng-template>
 </nz-modal>

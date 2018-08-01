@@ -75,7 +75,7 @@ export class SProjectComponent implements OnInit {
         'error': false
     }];
 
-
+    pageIndex = 1
 
 
     ngOnInit() {
@@ -114,6 +114,7 @@ export class SProjectComponent implements OnInit {
                 (val) => {
                     this.data = val.result.records;
                     this.total = val.result.total;
+                    this.pageIndex = val.result.current;
                     this.pageTotal = val.result.pages * 10;
                     _.forEach(this.data , function (value) {
                         if (!_.isUndefined(value.deployConfig)) {
@@ -189,7 +190,7 @@ export class SProjectComponent implements OnInit {
 
   isShowbranch:boolean;
     checkmsg:any;
-  
+
        checkversion(item){
             console.log(item)
            if(this.tag == '通过'){
@@ -201,7 +202,7 @@ export class SProjectComponent implements OnInit {
                     (val) => {
                         console.log(val);
                         if(val.code == 200){
-                        
+
                            this.isShowbranch = true
                            this.tag = '通过'
                         }

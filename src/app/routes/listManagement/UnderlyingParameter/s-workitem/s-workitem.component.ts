@@ -47,16 +47,16 @@ export class SWorkitemComponent implements OnInit {
         { value: '工作项状态', key: 'itemStatus', isclick: false },
     ];
      checkOptionsOne = [
-    { label: '新建分支', value: 'branch', checked: true },
-    { label: '新建工程', value: 'project', checked: false },
-
-  ];
+        { label: '新建分支', value: 'branch', checked: true },
+        { label: '新建工程', value: 'project', checked: false },
+    ];
     // 传入按钮层
     moreData = {
         morebutton: true,
         buttonData: [
         ]
     }
+    pageIndex = 1
     expand = false;
     tabs = [
     {
@@ -143,6 +143,7 @@ export class SWorkitemComponent implements OnInit {
                     this.data = val.result.records;
                     this.total = val.result.total;
                     this.pageTotal = val.result.pages * 10;
+                    this.pageIndex = val.result.current;
                     _.forEach(this.data , function (value) {
                         let star = '';
                                 let end = '';
@@ -475,7 +476,7 @@ subProject(){
                             );
 }
 
- 
+
            isShowIp = false;
             checkArtf(event){
               let MOBILE_REGEXP =/^\+?[1-9][0-9]*$/;
@@ -533,7 +534,7 @@ subProject(){
                     (val) => {
                         this.nznot.create('success', val.msg , val.msg);
                         this.getData();
-                       
+
                     },
                     error => {
                         this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
@@ -556,7 +557,7 @@ subProject(){
                                 onOk: () => {
                                     this.workId = val.result.guid
                                     this.assVisible = true;
-                                    
+
                                 },
                                 onCancel: () => {
 
@@ -572,7 +573,7 @@ subProject(){
                         this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
                     }
                 );
-                 
+
         }
 
 

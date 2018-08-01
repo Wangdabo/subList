@@ -137,6 +137,7 @@ export class LaunchApplyComponent implements OnInit {
      currentpage = 1;
     inputValue = '';
     mergeListDetail:any[]=[] //投放申请详情
+    pageIndex: 1;
    search = {
         guidWorkitem:'',
         proposer:'',
@@ -180,6 +181,7 @@ export class LaunchApplyComponent implements OnInit {
                             this.data = val.result.records;
                             this.total = val.result.total; // 总数
                             this.pageTotal = val.result.pages * 10; // 页码
+                            this.pageIndex = val.result.current;
                             for ( let i = 0; i < this.data.length; i++) {
                                 this.data[i].deliveryTime = moment(this.data[i].deliveryTime).format('YYYY-MM-DD');
                                 this.data[i].guidProfiles = this.data[i].guidProfiles.target;
@@ -647,7 +649,7 @@ getElement() {
 
 
         }else if(event.names.key == 'upd'){
-  
+
         this.guidDelivery = event.guid;
          this.utilityService.getData( appConfig.testUrl +'/deliveries/'+event.guid + '/profileDateilVerify', {}, {Authorization: this.token})
             .subscribe(
@@ -655,20 +657,20 @@ getElement() {
 
                    if(val.code == 200){
                        this.updPackTiming  = val.result
-                    
-                     
+
+
                       this.updPackTiming['unixTime'] = moment(this.updPackTiming['deliveryTime']).format('YYYY-MM-DD 00:00:00.000')
                        localStorage.setItem('time',this.updPackTiming['unixTime']);
                       for(let i =0;i<this.updPackTiming['packTimeDetails'].length;i++){
                         //    this.updPackTiming['packTiming']   =   event.packTiming
-                  
+
                       }
                        this.updPackTiming['deliveryTime'] = new Date(this.updPackTiming['deliveryTime']);
                            this.updEnvironment = true;
                    }
-               
+
                 },(error)=>{
-                   
+
                     if(error){
                         this.nznot.create('error',error.json().msg,'');
                     }
@@ -716,7 +718,7 @@ getElement() {
                    if(val.code == 200){
                            this.nznot.create('success',val.msg,'');
                    }
-               
+
                 },(error)=>{
 
                     if(error){
@@ -728,7 +730,7 @@ getElement() {
     // 列表按钮方法
     buttonDataHandler(event) {
 
-  
+
 
     }
 
@@ -743,7 +745,7 @@ getElement() {
        if (event) {
             this.isNext = false;
        }
-      
+
     }
 
 

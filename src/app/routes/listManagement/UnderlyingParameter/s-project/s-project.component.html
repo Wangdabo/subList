@@ -34,6 +34,7 @@
         [initDate]="data"
         [isPagination]="isPagination"
         [buttons] ='buttons'
+        [pageindex]='pageIndex'
         (addCreat)="addHandler($event)"
         (buttonData)="buttonDataHandler($event)"
         (pageNumber)="monitorHandler($event)"
@@ -83,7 +84,7 @@
                         </button>
     </div>
                     </div>
-                   
+
                 </div>
             <div nz-col [nzSpan]="24" class="mb-md">
                 <div *ngFor="let i of diconfig; let index = index">
