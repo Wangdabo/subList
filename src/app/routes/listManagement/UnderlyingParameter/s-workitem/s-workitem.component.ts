@@ -101,8 +101,8 @@ export class SWorkitemComponent implements OnInit {
         {key: 'hot', value: 'H' ,selector:false},
     ]
      addBranch = {
-        branchType:'',
-        branchFor:''
+        branchType: null,
+        branchFor: null
     };
     ngOnInit() {
         this.showAdd = true;
@@ -355,13 +355,17 @@ workId:string;//工作项ID
                             );
 
             } else if (event.names.key  === 'association') {
+             
                 this.assbranch = undefined;
                 this.branchdataInfo = false;
-                this.assVisible = true;
-                this.addBranch.branchFor = '';
-                this.addBranch.branchType = '';
-                this.exitInfo = event;
                 this.getBranch();
+                this.addBranch.branchFor = null;
+                this.addBranch.branchType = null;
+                this.assVisible = true;
+              console.log(this.active)
+                this.exitInfo = event;
+                
+            
             } else if (event.names.key  === 'putProductStatus') {
                 this.modal.open({
                     title: '已投产',
@@ -584,13 +588,19 @@ subProject(){
     assSave() {
         console.log(this.exitInfo)
         let url = '';
-        if(this.active == true){//选择已有分支
+        console.log(this.assbranch);
 
+        if(this.active == true){//选择已有分支
+         if(this.assbranch == undefined){
+              this.nznot.create('error', '请输入完整分支信息', '');
+             return;
+         }
          this.utilityService.getData(appConfig.testUrl  + appConfig.API.sWorkitem + '/' + this.exitInfo.guid + '/branch/'  + this.assbranch,   {}, {Authorization: this.token})
             .timeout(5000)
             .subscribe(
                 (val) => {
                  this.getData();
+                 this.assVisible = false;
                  this.nznot.create('success',val.msg,val.msg);
                 }
                 ,
@@ -600,7 +610,8 @@ subProject(){
             );
         }else{
             let id =''
-            if(this.addBranch.branchFor =='' || this.addBranch.branchType == ''){
+            console.log(this.addBranch)
+            if(this.addBranch.branchFor == null || this.addBranch.branchType == null){
                  this.nznot.create('error', '请输入完整分支信息', '');
                  return;
             }
@@ -614,6 +625,7 @@ subProject(){
             .map(res => res.json())
             .subscribe(
                 (val) => {
+                      this.assVisible = false;
                     this.getData();
                     this.nznot.create('success',val.msg,val.msg);
                 }
@@ -624,8 +636,7 @@ subProject(){
             );
         }
 
-          this.assVisible = false;
-
+        
 
     }
 }

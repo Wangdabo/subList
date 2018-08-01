@@ -689,6 +689,10 @@ subProject(){
                     }
             );
         }else{
+            if(this.branch == null){
+             this.nznot.create('error', '请输入完整分支信息', '');
+                return;
+            }
                  url = '/' + this.profilesGuid + '/branch/' +this.branch;
                  this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfilesadd + url, {},{Authorization: this.token})
             .subscribe(

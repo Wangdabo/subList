@@ -236,6 +236,7 @@ export class SBranchComponent implements OnInit {
                 (error)=>{
                     if(error){
                           this.nznot.create('error', error.json().msg,'');
+                         
                     }
                 }
                 );
@@ -267,7 +268,8 @@ export class SBranchComponent implements OnInit {
                           this.isShowbranch = false
                           this.checkmsg = error.json().msg;
                             this.tag = '验证'
-                          this.nznot.create('error', error.json().msg,'');
+                        //   this.nznot.create('error', error.json().msg,'');
+                            this.nznot.html("<strong>自定义通知栏内HTML</strong><br><p style='width:300px;word-break:normal;white-space:pre-warp;word-wrapL:break-word;'>"+error.json().msg+"</p>");
                     }
                 }
                 );
