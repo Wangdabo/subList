@@ -192,7 +192,7 @@ export class SProjectComponent implements OnInit {
   
        checkversion(item){
             console.log(item)
-           if(this.tag='通过'){
+           if(this.tag == '通过'){
                return;
            }
          this.utilityService.postData(appConfig.testUrl  + appConfig.API.sBranchadd +'/'+ 'path',{svnUrl:item}, {Authorization: this.token})
@@ -211,7 +211,7 @@ export class SProjectComponent implements OnInit {
                           this.isShowbranch = false
                           this.checkmsg = error.json().msg;
                           this.tag  = '验证'
-                          this.nznot.create('error', error.json().msg,'');
+                          this.nznot.create('error', '',error.json().msg);
                     }
                 }
                 );

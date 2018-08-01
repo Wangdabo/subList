@@ -246,10 +246,11 @@ export class SBranchComponent implements OnInit {
     checkmsg:any;
     tag = '验证';
        checkversion(item){
-            console.log(item)
-          if(this.tag = '通过'){
+           
+          if(this.tag == '通过'){
               return;
           }
+           console.log(item)
          this.utilityService.postData(appConfig.testUrl  + appConfig.API.sBranchadd +'/'+ 'path',{svnUrl:item}, {Authorization: this.token})
                 .map(res => res.json())
                 .subscribe(
