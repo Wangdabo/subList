@@ -161,6 +161,7 @@ export class SBranchComponent implements OnInit {
         console.log(this.branch)
 
         if (event === 'add') {
+            this.tag = '验证'
              this.branch = new  SbranchModule();
              console.log()
               this.detailsVisible = true;
@@ -245,7 +246,9 @@ export class SBranchComponent implements OnInit {
     tag = '验证';
        checkversion(item){
             console.log(item)
-    
+          if(this.tag = '通过'){
+              return;
+          }
          this.utilityService.postData(appConfig.testUrl  + appConfig.API.sBranchadd +'/'+ 'path',{svnUrl:item}, {Authorization: this.token})
                 .map(res => res.json())
                 .subscribe(
@@ -268,9 +271,9 @@ export class SBranchComponent implements OnInit {
                 );
         }
         checkagin(item){
-            if(item == ''){
+         
                 this.tag = '验证'
-            }
+           
         }
 
 change(){

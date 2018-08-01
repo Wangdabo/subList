@@ -189,10 +189,12 @@ export class SProjectComponent implements OnInit {
 
   isShowbranch:boolean;
     checkmsg:any;
-    tag = '验证';
+  
        checkversion(item){
             console.log(item)
-    
+           if(this.tag='通过'){
+               return;
+           }
          this.utilityService.postData(appConfig.testUrl  + appConfig.API.sBranchadd +'/'+ 'path',{svnUrl:item}, {Authorization: this.token})
                 .map(res => res.json())
                 .subscribe(
@@ -208,16 +210,14 @@ export class SProjectComponent implements OnInit {
                     if(error){
                           this.isShowbranch = false
                           this.checkmsg = error.json().msg;
-                            this.tag = '验证'
+                          this.tag  = '验证'
                           this.nznot.create('error', error.json().msg,'');
                     }
                 }
                 );
         }
    checkagin(item){
-            if(item == ''){
-                this.tag = '验证'
-            }
+      this.tag  = '验证'
         }
 
 
@@ -238,11 +238,12 @@ export class SProjectComponent implements OnInit {
         this.getData();
     }
 
-
+    tag = '验证'
     // 按钮点击事件方法
     buttonEvent(event) {
         if (!_.isNull(event.names)) {
             if (event.names.key === 'upd') {
+                this.tag = '验证'
                 this.modelTitle = '修改工程';
                 this.productAdd = event; // 修改类型问题
                 if (event.projectType === '可选工程') {

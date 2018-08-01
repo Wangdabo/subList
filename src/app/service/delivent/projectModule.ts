@@ -21,5 +21,6 @@ export class ProductModule {
     public exportType: any;
     
       public fullPath: any;
+    
 
 }
