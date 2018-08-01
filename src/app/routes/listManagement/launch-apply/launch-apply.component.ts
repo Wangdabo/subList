@@ -134,6 +134,7 @@ export class LaunchApplyComponent implements OnInit {
     mergeListData: any[] = []; // 核查有异议的数据
     isShowDate = false;
     detailVisible = false;
+    copyVisible = false;
      currentpage = 1;
     inputValue = '';
     mergeListDetail:any[]=[] //投放申请详情
@@ -166,7 +167,8 @@ export class LaunchApplyComponent implements OnInit {
               let buttonupd =[
                  {key:'dels',value:'删除' },
                  {key:'detail',value:'详情'},
-                 {key:'upd',value:'修改'}
+                 {key:'upd',value:'修改'},
+                 {key:'copy',value:'复制投放'},
                        ]
 
             let buttonsuccess =[
@@ -657,13 +659,16 @@ getElement() {
 
                    if(val.code == 200){
                        this.updPackTiming  = val.result
-
-
                       this.updPackTiming['unixTime'] = moment(this.updPackTiming['deliveryTime']).format('YYYY-MM-DD 00:00:00.000')
                        localStorage.setItem('time',this.updPackTiming['unixTime']);
                       for(let i =0;i<this.updPackTiming['packTimeDetails'].length;i++){
-                        //    this.updPackTiming['packTiming']   =   event.packTiming
 
+                          if(this.updPackTiming['packTimeDetails'][i]['isOptions']=='D'){
+                            //  this.updPackTiming['packTimeDetails'][i]['check'] = true
+                             this.updPackTiming['packTiming']   =   this.updPackTiming['packTimeDetails'][i]['packTime']
+                          }else{
+                                //  this.updPackTiming['packTimeDetails'][i]['check'] = false
+                          }
                       }
                        this.updPackTiming['deliveryTime'] = new Date(this.updPackTiming['deliveryTime']);
                            this.updEnvironment = true;
@@ -675,6 +680,8 @@ getElement() {
                         this.nznot.create('error',error.json().msg,'');
                     }
                 });
+        } else if (event.names.key === 'copy') {
+            this.copyVisible = true;
         }
 
 
@@ -684,7 +691,6 @@ getElement() {
       _disabledDate(current: Date): boolean {
         let time = localStorage.getItem('time');
     return current && current.getTime() < new Date(time).getTime();
-
   }
     onChange(updPackTiming) {
         if (updPackTiming.deliveryTime.getTime() !== new Date(updPackTiming.unixTime).getTime()) {
