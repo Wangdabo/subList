@@ -134,6 +134,7 @@ export class LaunchApplyComponent implements OnInit {
     mergeListData: any[] = []; // 核查有异议的数据
     isShowDate = false;
     detailVisible = false;
+    copyVisible = false;
      currentpage = 1;
     inputValue = '';
     mergeListDetail:any[]=[] //投放申请详情
@@ -685,8 +686,8 @@ getElement() {
                         this.nznot.create('error',error.json().msg,'');
                     }
                 });
-        } else if (event.names.key == 'copy') {
-            console.log('点我干嘛')
+        } else if (event.names.key === 'copy') {
+            this.copyVisible = true;
         }
 
 
