@@ -537,7 +537,7 @@ subProject(){
                     (val) => {
                         this.nznot.create('success', val.msg , val.msg);
                         this.getData();
-
+                     this.modalVisible = false;
                     },
                     error => {
                         this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
@@ -585,10 +585,7 @@ subProject(){
 
     // 关联分支
     assSave() {
-        console.log(this.exitInfo)
         let url = '';
-        console.log(this.assbranch);
-
         if(this.active == true){//选择已有分支
          if(this.assbranch == undefined){
               this.nznot.create('error', '请输入完整分支信息', '');

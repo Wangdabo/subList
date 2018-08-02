@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions , Response , URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
-import {HttpParams, HttpHeaders} from '_@angular_common@5.2.11@@angular/common/http';
+// import {HttpParams, HttpHeaders} from '_@angular_common@5.2.11@@angular/common/http';
 
 
 /*export class  HttpExport {

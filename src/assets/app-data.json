@@ -10,12 +10,13 @@
     },
     "menu": [
         {
-         "text": "主导航",
+        "text": "主导航",
         "i18n": "dashboard/v1",
         "link": "/dashboard/v1",
-        "group": true,
-         "hideInBreadcrumb": true,
+        "group": true, 
+        "hideInBreadcrumb": true,
         "children": [
+         
             {
                 "text": "清单管理",
                 "i18n": "listManagement",
