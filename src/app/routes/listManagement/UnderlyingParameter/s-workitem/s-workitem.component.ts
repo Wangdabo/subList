@@ -462,7 +462,6 @@ subProject(){
 
 
     }
-
           this.utilityService.postData(appConfig.testUrl  + appConfig.API.sWorkitem + '/' + this.workId + '/project' ,{projectGuids:projectGuids}, {Authorization: this.token})
                              .map(res => res.json())
                             .subscribe(
