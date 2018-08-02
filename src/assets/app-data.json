@@ -13,8 +13,9 @@
          "text": "主导航",
         "i18n": "dashboard/v1",
         "link": "/dashboard/v1",
-        "group": true,
-         "hideInBreadcrumb": true,
+        "group": false,
+        "hideInBreadcrumb": false,
+        "target": "/dashboard/v1",
         "children": [
             {
                 "text": "清单管理",
