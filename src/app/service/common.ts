@@ -3,7 +3,7 @@ export let appConfig = {
     RootUrl: 'http://localhost:30001', // 其他地址
     testUrl: 'http://106.15.103.14:28080',
     // testUrl: 'http://192.168.43.136:28080',
-    // testUrl: 'http://10.251.37.19:28080',
+    // testUrl: 'http://10.242.125.115:28080',
 
     // 所有接口名
     API: {
@@ -18,6 +18,7 @@ export let appConfig = {
         sDeliveryList: '/sDeliveryList', // 整理清单
         sProfiles: '/sProfiles/list',  // 投放申请查询
         sProfiless: '/sProfiles/packTimeVerify',  // 投放申请查询
+        copyProfiless: '/sProfiles/addToNewProfiles',  // 拷贝申请查询
         allsProfiles: '/sProfiles/all',  // 投放申请查询
 
         getBranch: '/sProfiles/relevanceBranch', // 未支配的分支
@@ -49,7 +50,7 @@ export let appConfig = {
         // 导出清单
         export: '/deliveries/excels', // 查询可导出工作项
         excel: '/checks/delivery', // 导出接口
-
+        newProfiles: '/deliveries/newProfiles' // 克隆投放
 
     },
 
