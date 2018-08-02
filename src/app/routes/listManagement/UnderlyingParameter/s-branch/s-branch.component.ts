@@ -92,7 +92,6 @@ export class SBranchComponent implements OnInit {
             console.log(page);
 
             this.utilityService.postData(appConfig.testUrl + appConfig.API.sBranch, page, {Authorization: this.token})
-                .map(res => res.json())
                 .subscribe(
                     (val) => {
                         if (val.code == 200) {
@@ -136,9 +135,9 @@ export class SBranchComponent implements OnInit {
 
                     },
                 (error)=>{
-                    if(error){
-                          this.nznot.create('error', error.json().msg,'');
-                    }
+                    // console.log(error)
+                    this.nznot.create('error', error.msg,'');
+                    
                 }
                 );
     }
@@ -227,18 +226,14 @@ export class SBranchComponent implements OnInit {
         }  else if (event.names.key === 'details') {
           this.detailsVisible = true
             this.utilityService.getData(appConfig.testUrl  + appConfig.API.sBranchadd +'/'+ obj,{}, {Authorization: this.token})
-                .map(res => res.json())
                 .subscribe(
                     (val) => {
                         console.log(val);
                         this.details = val.result;
                     },
-                (error)=>{
-                    if(error){
-                          this.nznot.create('error', error.json().msg,'');
-                         
+                    (error)=>{
+                      this.nznot.create('error', error.msg,'');
                     }
-                }
                 );
         }
 
@@ -253,7 +248,6 @@ export class SBranchComponent implements OnInit {
           }
            console.log(item)
          this.utilityService.postData(appConfig.testUrl  + appConfig.API.sBranchadd +'/'+ 'path',{svnUrl:item}, {Authorization: this.token})
-                .map(res => res.json())
                 .subscribe(
                     (val) => {
                         console.log(val);
@@ -264,13 +258,9 @@ export class SBranchComponent implements OnInit {
                         }
                     },
                 (error)=>{
-                    if(error){
-                          this.isShowbranch = false
-                          this.checkmsg = error.json().msg;
+                       this.isShowbranch = false
                             this.tag = '验证'
-                        //   this.nznot.create('error', error.json().msg,'');
-                            this.nznot.html("<strong>自定义通知栏内HTML</strong><br><p style='width:300px;word-break:normal;white-space:pre-warp;word-wrapL:break-word;'>"+error.json().msg+"</p>");
-                    }
+                           this.nznot.create('error', error.msg,'');
                 }
                 );
         }
@@ -297,7 +287,6 @@ change(){
 
         if ( !obj.guid ) {
               this.utilityService.postData(appConfig.testUrl  + appConfig.API.sBranchadd ,obj, {Authorization: this.token})
-            .map(res => res.json())
            .subscribe(
             (val) => {
                 console.log(this.branch);
@@ -313,9 +302,8 @@ change(){
              }
             }   ,
                 (error)=>{
-                    if(error){
-                          this.nznot.create('error', error.json().msg,'');
-                    }
+                  
+             this.nznot.create('error', error.msg,'');
                 }
 
         );
@@ -323,8 +311,7 @@ change(){
 
                   console.log(this.branch);
 
-             this.utilityService.putData(appConfig.testUrl  + appConfig.API.sBranchadd, obj,{Authorization: this.token})
-      .map(res => res.json())
+    this.utilityService.putData(appConfig.testUrl  + appConfig.API.sBranchadd, obj,{Authorization: this.token})
         .subscribe(
             (val) => {
 
@@ -339,9 +326,8 @@ change(){
              }
             }   ,
                 (error)=>{
-                    if(error){
-                          this.nznot.create('error', error.json().msg,'');
-                    }
+                    
+                     this.nznot.create('error', error.msg,'');
                 }
 
         );

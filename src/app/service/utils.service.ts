@@ -1,11 +1,16 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
+import { Router } from '@angular/router';
 import { Http, Headers, RequestOptions , Response , URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
+import 'rxjs/add/operator/catch';
 
 @Injectable()
 export class UtilityService {
-    constructor(private http: Http) { }
+    constructor(private http: Http,
+    private injector: Injector,
+     private router: Router,
+    ) { }
     /**
      * @param {string} url地址
      * @param {any} [options]可选提交的参数
@@ -13,6 +18,16 @@ export class UtilityService {
      * @memberof ServiceBaseService
      * @title: 封装一个get请求的基础类
      */
+
+
+  public httpErrorFun(err:any) { /* new */
+    let res:string = ''; // 处理后的结果 /* new */
+    let data:any = err.json(); // 需要处理的值 /* new */
+     if(data.code == 'AUTH-401'){
+     this.router.navigateByUrl('/passport/login');
+     }
+    return Observable.throw(data); /* new */
+   }
     getData(url: string, options?: any, myheaders?: any): Observable<any> {
         // 配置请求头
         const myHeaders: Headers = new Headers();
@@ -23,7 +38,10 @@ export class UtilityService {
         };
 
         url += (url.indexOf('?') < 0 ? '?' : '&') + this.param(options);
-        return this.http.get(url,{ headers: myHeaders }).map(res => res.json());
+        return this.http.get(url,{ headers: myHeaders })
+        .catch(res => this.httpErrorFun(res))
+        .map(res => res.json());
+  
     }
 
 
@@ -39,7 +57,9 @@ export class UtilityService {
         for (const key in myheaders) {
             myHeaders.append(key, myheaders[key]);
         }
-        return this.http.post(url, options, { headers: myHeaders });
+        return this.http.post(url, options, { headers: myHeaders })
+        .catch(res => this.httpErrorFun(res))
+        .map(res => res.json());
 
     }
 
@@ -52,7 +72,9 @@ export class UtilityService {
         for (const key in myheaders) {
             myHeaders.append(key, myheaders[key]);
         }
-        return this.http.put(url, options, { headers: myHeaders });
+        return this.http.put(url, options, { headers: myHeaders }) 
+         .catch(res => this.httpErrorFun(res))
+        .map(res => res.json());;
     }
 
     // 删除封装
@@ -64,7 +86,9 @@ export class UtilityService {
             myHeaders.append(key, myheaders[key]);
         }
 
-        return  this.http.delete(url, { headers: myHeaders });
+        return  this.http.delete(url, { headers: myHeaders })  
+        .catch(res => this.httpErrorFun(res))
+        .map(res => res.json());;
 
     }
 
@@ -88,6 +112,8 @@ export class UtilityService {
     getBillTypes() {
         console.log('调用服务方法');
     }
+
+    
 
 
 }

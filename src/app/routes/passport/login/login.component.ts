@@ -92,7 +92,6 @@ export class UserLoginComponent implements OnDestroy {
         };
 
         this.utilityService.postData(appConfig.testUrl  + appConfig.API.login, obj)
-            .map(res => res.json())
             .subscribe(
                 (val) => {
                     if (val.code === '200') {

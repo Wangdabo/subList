@@ -111,7 +111,6 @@ export class AdRecordComponent implements OnInit {
             }
         };
         this.utilityService.postData(appConfig.testUrl  + appConfig.API.checklist, page, { Authorization: this.token})
-            .map(res => res.json())
             .subscribe(
                 (val) => {
                     this.data = val.result.records;
@@ -125,11 +124,8 @@ export class AdRecordComponent implements OnInit {
                        this.data[i].buttonData = this.buttonData;
                     }
 
-
                 },(error)=>{
-                     if(error){
-                        this.nznot.create('error', error.json().msg,'');
-                        }
+                        this.nznot.create('error', error.msg,'');
                 }
             );
     }
@@ -192,7 +188,6 @@ export class AdRecordComponent implements OnInit {
              this.detailVisible = true;
               this.checkloading = true;
              this.utilityService.getData( appConfig.testUrl +'/checks/'+event.guid, {}, {Authorization: this.token})
-                        // .map(res => res.json())
                          .subscribe(
                          (val) => {
                          
@@ -285,9 +280,7 @@ export class AdRecordComponent implements OnInit {
                                 }
                                 ,(error)=>{
                                     console.log(error)
-                                  if(error){
-                                    this.nznot.create('error', error.json().msg,'');
-                                      }
+                                    this.nznot.create('error', error.msg,'');
                                 }) 
 
           
@@ -389,7 +382,6 @@ mergeClick(index){
             }else{
 
               this.utilityService.putData( appConfig.testUrl +'/checkLists/'+id+'/status/'+type, {}, {Authorization: this.token})
-                        .map(res => res.json())
                          .subscribe(
                          (val) => {
                           if(val.code == 200) {
@@ -400,9 +392,9 @@ mergeClick(index){
                            }
                           }
                          },(error)=>{
-                              if(error){
-                                    this.nznot.create('error', error.json().msg,'');
-                              }
+
+                          this.nznot.create('error', error.msg,'');
+
                          });
                           }
             }
@@ -492,9 +484,7 @@ mergeClick(index){
                                   
                           }
                          },(error)=>{
-                              if(error){
-                                    this.nznot.create('error', error.json().msg,'');
-                              }
+                                 this.nznot.create('error', error.msg,'');
                          });
     }
 
@@ -539,7 +529,6 @@ mergeClick(index){
 
 
        this.utilityService.putData( url, obj, {Authorization: this.token})
-           .map(res => res.json())
            .subscribe(
                (val) => {
 
@@ -556,7 +545,6 @@ mergeClick(index){
                            event.it.deliveryResult = '核对失败'
                        }
                  
-             console.log(this.istextVisible )
                        this.nznot.create('success', val.msg, val.msg);
                    }else{
                          this.nznot.create('error', val.msg,'');
@@ -565,10 +553,7 @@ mergeClick(index){
                }
                ,
                (error) => {
-             
-                  if(error){
-                          this.nznot.create('error', error.json().msg,'');
-                    }
+                this.nznot.create('error', error.msg,'');
                }
            );
    

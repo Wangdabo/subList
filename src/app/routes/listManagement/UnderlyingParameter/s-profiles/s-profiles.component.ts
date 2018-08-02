@@ -167,7 +167,6 @@ export class SProfilesComponent implements OnInit {
         if ( ! this.profiles.guid ) {
             // this.profiles.isAllowDelivery = ' ';
             this.utilityService.postData(appConfig.testUrl  + appConfig.API.sProfilesadd, this.profiles, {Authorization: this.token})
-                .map(res => res.json())
                 .subscribe(
                     (val) => {
 
@@ -195,9 +194,7 @@ export class SProfilesComponent implements OnInit {
                         }
                     }  ,
                 (error)=>{
-                    if(error){
-                          this.nznot.create('error', error.json().msg,'');
-                    }
+                     this.nznot.create('error', error.msg,'');
                 }
                     );
                      this.getData();
@@ -205,7 +202,6 @@ export class SProfilesComponent implements OnInit {
             console.log(this.profiles)
             //   this.profiles.isAllowDelivery = ' ';
             this.utilityService.putData(appConfig.testUrl  + appConfig.API.sProfilesadd, this.profiles, {Authorization: this.token})
-                .map(res => res.json())
                 .subscribe(
                     (val) => {
                         this.getData();
@@ -218,9 +214,7 @@ export class SProfilesComponent implements OnInit {
                         }
                     } ,
                 (error)=>{
-                    if(error){
-                          this.nznot.create('error', error.json().msg,'');
-                    }
+                     this.nznot.create('error', error.msg,'');
                 }
 
                 );
@@ -272,9 +266,7 @@ export class SProfilesComponent implements OnInit {
                         }
                     }  ,
                 (error)=>{
-                    if(error){
-                          this.nznot.create('error', error.json().msg,'');
-                    }
+                     this.nznot.create('error', error.msg,'');
                 }
                 );
 
@@ -338,7 +330,6 @@ export class SProfilesComponent implements OnInit {
         console.log(page)
     
         this.utilityService.postData(appConfig.testUrl  + appConfig.API.allsProfiles, page, {Authorization: this.token})
-            .map(res => res.json())
             .subscribe(
                 (val) => {
                     
@@ -381,9 +372,7 @@ export class SProfilesComponent implements OnInit {
                     }
                     // 拼接
                 },(error)=>{
-                     if(error){
-                        this.nznot.create('error', error.json().msg,'');
-                        }
+                      this.nznot.create('error', error.msg,'');
                 }
             );
     }
@@ -403,9 +392,9 @@ export class SProfilesComponent implements OnInit {
 
         } else if (event === 'export') {
             this.isVisible = true;
-        } else if(event === 'ces'){
+        } else if (event === 'ces') {
             this.isCancel= true;
-            console.log(event)
+            console.log(event);
             console.log('详情界面');
         }
     }
@@ -464,7 +453,6 @@ workId:string;//工作项ID
                 showConfirmLoading: true,
                 onOk() {
                     self.utilityService.deleatData(appConfig.testUrl  + appConfig.API.delSprofiles + self.profilesGuid,  {Authorization: self.token})
-                        .map(res => res.json())
                         .subscribe(
                             (val) => {
                                 if(val.code == 200) {
@@ -481,9 +469,7 @@ workId:string;//工作项ID
                                 }
                             }   ,
                             (error) => {
-                                if(error){
-                                       self.nznot.create('error',error.json().msg,'');
-                                }
+                                 this.nznot.create('error', error.msg,'');
                              
                             }
                         );
@@ -585,9 +571,7 @@ workId:string;//工作项ID
                         }
                     }  ,
                 (error)=>{
-                    if(error){
-                          this.nznot.create('error', error.json().msg,'');
-                    }
+                     this.nznot.create('error', error.msg,'');
                 }
                 );
 
@@ -605,9 +589,7 @@ workId:string;//工作项ID
                              this.branchData.createTime = moment(this.branchData.createTime).format('YYYY-MM-DD');
                         },
                         (error) => {
-                            if(error){
-                          this.nznot.create('error', error.json().msg,'');
-                             }
+                             this.nznot.create('error', error.msg,'');
                         });
             }    else if (event.names.key  === 'detail') {
 
@@ -641,7 +623,6 @@ subProject(){
     }
      
           this.utilityService.postData(appConfig.testUrl  + appConfig.API.sProfilesadd + '/' + this.profilesGuid + '/project' ,{projectGuids:projectGuids}, {Authorization: this.token})
-                             .map(res => res.json())
                             .subscribe(
                                 (val) => {
                                     this.projectInfo = false;
@@ -649,9 +630,7 @@ subProject(){
                                     this.getData();
                                 } ,
                             (error) => {
-                                if(error){
-                                       this.nznot.create('error',error.json().msg,'');
-                                }
+                                 this.nznot.create('error', error.msg,'');
                              
                             }
                             );
@@ -675,8 +654,6 @@ subProject(){
                   id = this.profilesGuid
              };
            this.utilityService.postData(appConfig.testUrl  + appConfig.API.sProfilesadd + '/' + id + '/branch',  this.addBranch, {Authorization: this.token})
-            .timeout(5000)
-            .map(res => res.json())
             .subscribe(
                 (val) => {
                     this.getData();
@@ -685,7 +662,7 @@ subProject(){
                 }
                 ,
                     error => {
-                        this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
+                         this.nznot.create('error', error.msg,'');
                     }
             );
         }else{
@@ -708,9 +685,7 @@ subProject(){
                     }
                 }  ,
                 (error)=>{
-                    if(error){
-                          this.nznot.create('error', error.json().msg,'');
-                    }
+                     this.nznot.create('error', error.msg,'');
                 }
             );  
             }
@@ -733,9 +708,7 @@ subProject(){
                     }
                 }  ,
                 (error)=>{
-                    if(error){
-                          this.nznot.create('error', error.json().msg,'');
-                    }
+                     this.nznot.create('error', error.msg,'');
                 }
             );
 
@@ -769,7 +742,6 @@ subProject(){
         }
         // console.log(obj)
         this.utilityService.putData(appConfig.testUrl  + appConfig.API.getStatus, obj,{Authorization: this.token})
-            .map(res => res.json())
             .subscribe(
                 (val) => {
                      event.switch = false
@@ -785,13 +757,10 @@ subProject(){
                     // console.log(event)
                 }   ,
                 (error)=>{
+                       console.log(error)
+                    this.nznot.create('error',error.msg,'');
                      event.switch = false
-                    //   event.isAllowDelivery = true
-                    //   console.log( event)
-                    if(error){
-                      
-                          this.nznot.create('error', error.json().msg,'');
-                    }
+                  
                 }
             );
 
