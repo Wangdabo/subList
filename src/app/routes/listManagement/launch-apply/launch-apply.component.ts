@@ -180,7 +180,7 @@ export class LaunchApplyComponent implements OnInit {
                 {key:'detail',value:'详情'},
             ]
             this.utilityService.postData(appConfig.testUrl  + appConfig.API.list, page, { Authorization: this.token})
-                .map(res => res.json())
+                // .map(res => res.json())
                 .subscribe(
                     (val) => {
 
@@ -211,7 +211,7 @@ export class LaunchApplyComponent implements OnInit {
                     },
                     (error)=>{
                      if(error){
-                        this.nznot.create('error', error.json().msg,'');
+                        this.nznot.create('error', error.msg,'');
                         }
                 }
                 );
@@ -478,7 +478,7 @@ getElement() {
                              let indexs = '';
 
             this.utilityService.postData(url, {}, {Authorization: this.token})
-                        .map(res => res.json())
+                        // .map(res => res.json())
                          .subscribe(
                          (val) => {
                               this.loadingnext = false;
@@ -555,7 +555,7 @@ getElement() {
                                 ,(error)=>{
                                      this.loadingnext = false;
                                   if(error){
-                                   this.nznot.create('error', error.json().msg,'');
+                                   this.nznot.create('error', error.msg, '');
                                       }
                                 })
                     }
@@ -599,7 +599,7 @@ getElement() {
 
       let url =appConfig.testUrl + '/deliveries/'+event.guid+'/merge'
         this.utilityService.putData( url, {}, {Authorization: this.token})
-           .map(res => res.json())
+           // .map(res => res.json())
            .subscribe(
                (val) => {
                    if (val.code == 200){
@@ -618,7 +618,7 @@ getElement() {
                (error) => {
 
                   if(error){
-                          this.nznot.create('error', error.json().msg,'');
+                          this.nznot.create('error', error.msg,'');
                     }
                }
            );
@@ -638,7 +638,7 @@ getElement() {
                 showConfirmLoading: true,
                 onOk() {
                     self.utilityService.deleatData(appConfig.testUrl  + appConfig.API.deliveries + '/' + event.guid ,  {Authorization: self.token})
-                        .map(res => res.json())
+                        // .map(res => res.json())
                         .subscribe(
                             (val) => {
                                 if(val.code == 200) {
@@ -838,7 +838,7 @@ getElement() {
      let index = '';
         let indexs = '';
         this.utilityService.postData( url, {}, {Authorization: this.token})
-            .map(res => res.json())
+            // .map(res => res.json())
             .subscribe(
                 (val) => {
 
@@ -872,7 +872,7 @@ getElement() {
                 ,
                 (error) => {
                    if(error){
-                          this.nznot.create('error', error.json().msg,'');
+                          this.nznot.create('error', error.msg,'');
                     }
                 }
             );
@@ -912,7 +912,7 @@ getElement() {
         this.mergeisVisible = false;
        let index = 0;
         this.utilityService.postData(appConfig.testUrl  + appConfig.API.mergeInfo, obj, { Authorization: this.token})
-            .map(res => res.json())
+            // .map(res => res.json())
             .subscribe(
                 (val) => {
                     if (val.code == 200) {
@@ -925,7 +925,7 @@ getElement() {
                 },
                 (error)=>{
                     if(error){
-                          this.nznot.create('error', error.json().msg,'');
+                          this.nznot.create('error', error.msg,'');
                     }
                 }
 
@@ -961,7 +961,7 @@ getElement() {
 
 
        this.utilityService.postData( url, obj, {Authorization: this.token})
-           .map(res => res.json())
+           // .map(res => res.json())
            .subscribe(
                (val) => {
                    if (val.code == 200){
@@ -975,7 +975,7 @@ getElement() {
                ,
                (error) => {
                   if(error){
-                          this.nznot.create('error', error.json().msg,'');
+                          this.nznot.create('error', error.msg,'');
                     }
                }
            );
@@ -998,7 +998,7 @@ getElement() {
         this.checkVisible = false;
         this.mergeVisible = false;
         this.utilityService.postData(appConfig.testUrl  + appConfig.API.merge, this.profilesData, { Authorization: this.token})
-            .map(res => res.json())
+            // .map(res => res.json())
             .subscribe(
                 (val) => {
 
@@ -1012,7 +1012,7 @@ getElement() {
                 },
                 (error)=>{
                     if(error){
-                          this.nznot.create('error', error.json().msg,'');
+                          this.nznot.create('error', error.msg,'');
                     }
                 }
             );
@@ -1041,7 +1041,7 @@ getElement() {
             }else{
 
               this.utilityService.putData( appConfig.testUrl +'/checkLists/'+id+'/status/'+type, {}, {Authorization: this.token})
-                        .map(res => res.json())
+                        // .map(res => res.json())
                          .subscribe(
                          (val) => {
                           if(val.code == 200) {
@@ -1055,7 +1055,7 @@ getElement() {
                           }
                          },(error)=>{
                               if(error){
-                                    this.nznot.create('error', error.json().msg,'');
+                                    this.nznot.create('error', error.msg,'');
                               }
                          });
                           }
@@ -1087,7 +1087,7 @@ loading2 = false
                 showConfirmLoading: true,
                 onOk() {
                     self.utilityService.putData( appConfig.testUrl +'/checks/'+self.checkId+'/status/'+status, {}, {Authorization: self.token})
-                                    .map(res => res.json())
+                                    // .map(res => res.json())
                                     .subscribe(
                                 (val) => {
                                          self.loading1 = false;
@@ -1103,7 +1103,7 @@ loading2 = false
                                     self.loading1 = false;
                                     self.loading2 = false;
                                         if(error){
-                                                self.nznot.create('error', error.json().msg,'');
+                                                self.nznot.create('error', error.msg,'');
                                         }
                                     })
                 },
@@ -1189,7 +1189,7 @@ loading2 = false
 
 
        this.utilityService.putData( url, obj, {Authorization: this.token})
-           .map(res => res.json())
+           // .map(res => res.json())
            .subscribe(
                (val) => {
                    if (val.code == 200){
@@ -1232,7 +1232,7 @@ loading2 = false
             deployWhere:objs.deployWhere
         }
           this.utilityService.putData( appConfig.testUrl +'/checkLists/'+event.errorId+'/delivery', obj, {Authorization: this.token})
-                        .map(res => res.json())
+                        // .map(res => res.json())
                          .subscribe(
                          (val) => {
                           if(val.code == 200) {
@@ -1248,7 +1248,7 @@ loading2 = false
                           }
                          },(error)=>{
                               if(error){
-                                    this.nznot.create('error', error.json().msg,'');
+                                    this.nznot.create('error', error.msg,'');
                               }
                          });
     }
@@ -1329,7 +1329,7 @@ loading2 = false
         if (this.importCurrent === 0) {
             // 测试接口,先测试
             this.utilityService.postData( url, exportObj,  {Authorization: this.token})
-                .map(res => res.json())
+                // .map(res => res.json())
                 .subscribe(
                     (val) => {
                         this.appendSelect = val.result;
@@ -1338,7 +1338,7 @@ loading2 = false
                     },
                     (error) => {
                         this.importCurrent = 0;
-                        this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
+                        this.nznot.create('error', error.code , error.msg);
                     }
                 );
         }
@@ -1428,7 +1428,7 @@ loading2 = false
         };
 
         this.utilityService.postData(appConfig.testUrl  + appConfig.API.newProfiles, splicingObj, {Authorization: this.token})
-            .map(res => res.json())
+            // .map(res => res.json())
             .subscribe(
                 (val) => {
                     this.nznot.create('success', val.code , val.msg);
@@ -1438,7 +1438,7 @@ loading2 = false
                     this.detailInfo = val.result; // 返回的数据有问题
                 },
                 (error) => {
-                    this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
+                    this.nznot.create('error', error.code , error.msg);
                     // this.getData();
                  }
             );

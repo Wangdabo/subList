@@ -23,7 +23,8 @@ export class UtilityService {
         };
 
         url += (url.indexOf('?') < 0 ? '?' : '&') + this.param(options);
-        return this.http.get(url,{ headers: myHeaders }).map(res => res.json());
+        return this.http.get(url,{ headers: myHeaders })
+            .map(res => res.json());
     }
 
 
