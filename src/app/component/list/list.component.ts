@@ -105,6 +105,7 @@ export class ListComponent implements OnInit {
         this.headerDate = this.headerDate;
         this.moreData = this.moreData; // 绑定更多数据
         // this.isShowTotalhead = true
+        this.loading = true;
         this.checkTotal()
         
 

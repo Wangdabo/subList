@@ -145,7 +145,7 @@ export class LaunchApplyComponent implements OnInit {
     mergeListDetail:any[]=[] //投放申请详情
     pageIndex: 1;
    search = {
-        guidWorkitem:'',
+        itemName:'',
         proposer:'',
         deliveryResult:'',
         guidProfiles:''
@@ -164,6 +164,7 @@ export class LaunchApplyComponent implements OnInit {
                     asc: false // asc 默认是true  升序排序，时间类型 用false， 降序
                 }
             };
+          
             let button =[
                
                  {key:'detail',value:'详情'},
@@ -212,7 +213,7 @@ export class LaunchApplyComponent implements OnInit {
     }
     reset(){
          this.search = {
-        guidWorkitem:'',
+        itemName:'',
         proposer:'',
         deliveryResult:'',
         guidProfiles:''
