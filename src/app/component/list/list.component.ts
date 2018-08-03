@@ -106,6 +106,7 @@ export class ListComponent implements OnInit {
         this.moreData = this.moreData; // 绑定更多数据
         // this.isShowTotalhead = true
         this.checkTotal()
+        
 
     }
 

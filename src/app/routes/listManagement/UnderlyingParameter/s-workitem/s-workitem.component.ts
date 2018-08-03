@@ -137,37 +137,24 @@ export class SWorkitemComponent implements OnInit {
         }
 
         this.utilityService.postData(appConfig.testUrl  + appConfig.API.workItemList , this.page, {Authorization: this.token})
-            // .map(res => res.json())
+            .map(res => res.json())
             .subscribe(
                 (val) => {
                     this.data = val.result.records;
                     this.total = val.result.total;
                     this.pageTotal = val.result.pages * 10;
                     this.pageIndex = val.result.current;
-                    _.forEach(this.data , function (value) {
-                        let star = '';
-                                let end = '';
-                                let str = ''
-                                if(value.itemName.length > 20){
-                                       star = value.itemName.substr(0, 10)
-                                end = value.itemName.substr(value.itemName.length - 10)
-                                value.itemNamestr = star + '...' + end;
-                                }else{
-                                    value.itemNamestr = value.itemName
+                    _.forEach(this.data , function (value) {      
+                                 value.itemNamestr = value.itemName
+                                if(value.itemName.length > 20){   
+                                value.itemNamestr = appConfig.subString(value.itemName,10);
                                 }
 
 
 
                         if (value.itemStatus === '开发中') {
                             if (value.fullPath !== '') { // 说明存在分支
-                                // 截取
-                               /* let star = '';
-                                let end = '';
-                                let str = ''
-                                star = value.fullPath.substr(0, 20)
-                                end = value.fullPath.substr(value.fullPath.length - 20)
-                                value.fullPathstr = star + '...' + end;
-                                console.log(value)*/
+                             
                                 value.buttonData = [
                                     {key: 'upd', value: '修改'},
                                     {key: 'cenel', value: '关闭'},
@@ -194,7 +181,7 @@ export class SWorkitemComponent implements OnInit {
 
                 },
                 error => {
-                    this.nznot.create('error', error.code , error.msg);
+                    this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
                 }
             );
     }
@@ -219,7 +206,7 @@ export class SWorkitemComponent implements OnInit {
     // 查询人员
     getOper() {
         this.utilityService.postData(appConfig.testUrl  + appConfig.API.svncount , {}, {Authorization: this.token})
-            // .map(res => res.json())
+            .map(res => res.json())
             .subscribe(
                 (val) => {
                     this.owner = val.result
@@ -355,7 +342,7 @@ workId:string;//工作项ID
                             );
 
             } else if (event.names.key  === 'association') {
-
+             
                 this.assbranch = undefined;
                 this.branchdataInfo = false;
                 this.getBranch();
@@ -364,8 +351,8 @@ workId:string;//工作项ID
                 this.assVisible = true;
               console.log(this.active)
                 this.exitInfo = event;
-
-
+                
+            
             } else if (event.names.key  === 'putProductStatus') {
                 this.modal.open({
                     title: '已投产',
@@ -374,7 +361,7 @@ workId:string;//工作项ID
                     cancelText: '取消',
                     onOk: () => {
                         this.utilityService.putData(appConfig.testUrl  + appConfig.API.sWorkitem + '/' +  event.guid + '/putProductStatus',  {},  {Authorization: this.token})
-                            // .map(res => res.json())
+                            .map(res => res.json())
                             .subscribe(
                                 (val) => {
                                     console.log(val)
@@ -382,7 +369,7 @@ workId:string;//工作项ID
                                     this.getData();
                                 },
                                 (error) => {
-                                    this.nznot.create('error', error.code , error.msg);
+                                    this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
                                 }
                             );
                     },
@@ -435,7 +422,7 @@ workId:string;//工作项ID
                     cancelText: '取消',
                     onOk: () => {
                         this.utilityService.putData(appConfig.testUrl  + appConfig.API.sWorkitem + '/' + event.guid + '/status' ,{}, {Authorization: this.token})
-                            // .map(res => res.json())
+                            .map(res => res.json())
                             .subscribe(
                                 (val) => {
                                     this.nznot.create('success', val.msg , val.msg);
@@ -463,7 +450,7 @@ subProject(){
 
     }
           this.utilityService.postData(appConfig.testUrl  + appConfig.API.sWorkitem + '/' + this.workId + '/project' ,{projectGuids:projectGuids}, {Authorization: this.token})
-                             // .map(res => res.json())
+                             .map(res => res.json())
                             .subscribe(
                                 (val) => {
                                     this.projectInfo = false;
@@ -472,7 +459,7 @@ subProject(){
                                 } ,
                             (error) => {
                                 if(error){
-                                       this.nznot.create('error', error.msg,'');
+                                       this.nznot.create('error',error.json().msg,'');
                                 }
 
                             }
@@ -532,7 +519,7 @@ subProject(){
         }
         if (this.isEdit) { // 修改
             this.utilityService.putData(appConfig.testUrl  + appConfig.API.sWorkitem , this.workAdd, {Authorization: this.token})
-                // .map(res => res.json())
+                .map(res => res.json())
                 .subscribe(
                     (val) => {
                         this.nznot.create('success', val.msg , val.msg);
@@ -540,13 +527,13 @@ subProject(){
                      this.modalVisible = false;
                     },
                     error => {
-                        this.nznot.create('error', error.code , error.msg);
+                        this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
                     }
                 )
             ;
         } else {
             this.utilityService.postData(appConfig.testUrl  + appConfig.API.sWorkitem, this.workAdd,  {Authorization: this.token})
-                // .map(res => res.json())
+                .map(res => res.json())
                 .subscribe(
                     (val) => {
                       console.log(val)
@@ -573,7 +560,7 @@ subProject(){
                         this.getData();
                     },
                     error => {
-                        this.nznot.create('error', error.code , error.msg);
+                        this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
                     }
                 );
 
@@ -618,7 +605,7 @@ subProject(){
              };
            this.utilityService.postData(appConfig.testUrl  + appConfig.API.sWorkitem + '/' + id + '/branch',  this.addBranch, {Authorization: this.token})
             .timeout(5000)
-            // .map(res => res.json())
+            .map(res => res.json())
             .subscribe(
                 (val) => {
                       this.assVisible = false;
@@ -627,12 +614,12 @@ subProject(){
                 }
                 ,
                     error => {
-                        this.nznot.create('error', error.code , error.msg);
+                        this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
                     }
             );
         }
 
-
+        
 
     }
 }
