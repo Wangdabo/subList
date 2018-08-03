@@ -210,7 +210,7 @@ export class SProjectComponent implements OnInit {
                 (error)=>{
                     if(error){
                           this.isShowbranch = false
-                          this.checkmsg = error.json().msg;
+                          this.checkmsg = error.msg;
                           this.tag  = '验证'
                           this.nznot.create('error', '', error.msg);
                     }

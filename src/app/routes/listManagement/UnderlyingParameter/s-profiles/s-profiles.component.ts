@@ -187,7 +187,6 @@ export class SProfilesComponent implements OnInit {
                                 }
                             });
                            
-
                             this.nznot.create('success', val.msg, val.msg);
                         }else {
                             this.nznot.create('error',val.msg, val.msg);
