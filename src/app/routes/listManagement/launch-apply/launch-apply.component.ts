@@ -165,7 +165,7 @@ export class LaunchApplyComponent implements OnInit {
                 }
             };
             let button =[
-                 {key:'dels',value:'删除' },
+               
                  {key:'detail',value:'详情'},
 
                        ]
@@ -176,9 +176,7 @@ export class LaunchApplyComponent implements OnInit {
                  {key:'copy',value:'投放新环境'},
                        ]
 
-            let buttonsuccess =[
-                {key:'detail',value:'详情'},
-            ]
+        
             this.utilityService.postData(appConfig.testUrl  + appConfig.API.list, page, { Authorization: this.token})
                 .subscribe(
                     (val) => {
@@ -197,9 +195,7 @@ export class LaunchApplyComponent implements OnInit {
 
                                 if(this.data[i].deliveryResult == '申请中'){
                                      this.data[i].buttonData = buttonupd
-                                } else if(this.data[i].deliveryResult == '投放成功') {
-                                    this.data[i].buttonData = buttonsuccess
-                                } else{
+                                }else{
                                     this.data[i].buttonData = button
                                 }
 
