@@ -27,12 +27,12 @@ export class SWorkitemComponent implements OnInit {
         @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
     ) { }
 
+
+    // 变量
     isPagination = true; // 是否有分页
     showAdd: boolean; // 是否有修改
-
     workItem: WorkitemModule = new  WorkitemModule(); // 信息
     workAdd: WorkitemModule = new  WorkitemModule(); // 信息
-
     data: any[] = []; // 表格数据
     modalVisible = false; // 默认弹出框关闭
     assVisible = false; // 默认关闭
@@ -46,10 +46,12 @@ export class SWorkitemComponent implements OnInit {
         { value: '计划投产时间', key: 'deliveryPlanTime', isclick: false },
         { value: '工作项状态', key: 'itemStatus', isclick: false },
     ];
-     checkOptionsOne = [
+    checkOptionsOne = [
         { label: '新建分支', value: 'branch', checked: true },
         { label: '新建工程', value: 'project', checked: false },
     ];
+    projectInfo = false;
+    prolist: any[] = []; //工程列表
     // 传入按钮层
     moreData = {
         morebutton: true,
@@ -59,17 +61,8 @@ export class SWorkitemComponent implements OnInit {
     pageIndex = 1
     expand = false;
     tabs = [
-    {
-      active: true,
-      name  : '选择已有分支',
-
-    },
-    {
-      active: false,
-      name  : '新增分支',
-
-    }
-  ];
+        {active: true, name  : '选择已有分支'},
+        {active: false, name  : '新增分支'}];
     test: string;
     page: any;
     token: any; // token
@@ -81,29 +74,26 @@ export class SWorkitemComponent implements OnInit {
     ];
     assbranch: any; // 分支信息
     exitInfo: any;
-    // 枚举值
-    owner = [
-        {key: '汪波', value: 'ljh'},
-        {key: '赵春海', value: 'ljh'},
-        {key: '郭柿彤', value: 'ljh'},
-        {key: '来哥', value: 'ljh'},
-    ];
-
-    branch: any; // 查询分支
     isEdit = false; // 默认是新增
-
     isShowTotal: boolean;
+    subPro = []
     branchInfo = false; // 弹出框 默认为false
     branchData: BranchModule = new BranchModule();
     branchdataInfo: boolean; // 分支详情
- branchType = [
-        {key: 'feature', value: 'F',selector:false},
-        {key: 'hot', value: 'H' ,selector:false},
+    // 枚举值
+    owner: any; // 人员
+    branch: any; // 查询分支
+    branchType = [
+        {key: 'feature', value: 'F', selector:false},
+        {key: 'hot', value: 'H' , selector:false},
     ]
      addBranch = {
         branchType: null,
         branchFor: null
     };
+    active = true;
+    list = [];
+    // 初始化方法
     ngOnInit() {
         this.showAdd = true;
         this.isShowTotal = true;
@@ -114,7 +104,7 @@ export class SWorkitemComponent implements OnInit {
         this.initDate(); // 默认时间
     }
     getData(option?) {
-        if(option) {
+        if (option) {
             this.page = {
                 condition: option, // 搜索内容
                 page: {
@@ -207,11 +197,11 @@ export class SWorkitemComponent implements OnInit {
         this.utilityService.postData(appConfig.testUrl  + appConfig.API.svncount , {}, {Authorization: this.token})
             .subscribe(
                 (val) => {
-                    this.owner = val.result
+                    this.owner = val.result;
                 });
     }
 
-    // 默认时间
+    // 初始化时间
     initDate() {
         this.workAdd.receiveTime =  moment(new Date()).format('YYYY-MM-DD');
         this.workAdd.developStartTime =  moment(new Date()).format('YYYY-MM-DD');
@@ -245,37 +235,27 @@ export class SWorkitemComponent implements OnInit {
         this.getData();
     }
 
+      filterOption(inputValue, option) {
+        return option.description.indexOf(inputValue) > -1;
+      }
 
-projectInfo = false;
-prolist: any[] = [];//工程列表
-// 工程穿梭框
+      searchpro(ret: any) {
+      }
 
+      select(ret: any) {
+      }
 
-filterOption(inputValue, option) {
-    return option.description.indexOf(inputValue) > -1;
-  }
+      change(ret: any) {
+         for (let i = 0 ; i < ret.list.length; i++){
+             ret.list[i]['status'] =  ret.to
+         }
+      }
 
-  searchpro(ret: any) {
-    console.log('nzSearchChange', ret);
-  }
+    tabChange(obj){
+        this.active = obj;
+    }
 
-  select(ret: any) {
-    console.log('nzSelectChange', ret);
-  }
-  subPro = []
-  change(ret: any) {
-     for(let i = 0 ; i < ret.list.length; i++){
-         ret.list[i]['status'] =  ret.to
-     }
-    console.log('nzChange', ret);
-  }
-active = true;
-tabChange(obj){
-    this.active = obj;
-}
-list = [];
-
-workId:string;//工作项ID
+    workId: string; //工作项ID
     // 按钮点击事件方法
     buttonEvent(event) {
         this.workId = event.guid;
@@ -286,51 +266,44 @@ workId:string;//工作项ID
                 this.workAdd = event;
                 this.isEdit = true;
 
-            } else if(event.names.key ==='project'){
+            } else if(event.names.key === 'project') {
                    this.utilityService.getData(appConfig.testUrl  + appConfig.API.sWorkitem + '/' +  event.guid + '/project',  {},  {Authorization: this.token})
                             .subscribe(
                                 (val) => {
                                let others = [];
                                let own = []
-                                   if(val.result.others.length > 0){
-                                        for(let j= 0; j < val.result.others.length;j++){
-                                          val.result.others[j]['exit']='left'
+                                   if (val.result.others.length > 0) {
+                                        for (let j = 0; j < val.result.others.length; j++){
+                                          val.result.others[j]['exit'] = 'left';
                                    }
                                 }
-                                    if(val.result.own.length > 0){
-                                   for(let j= 0; j < val.result.own.length;j++){
-
-                                          val.result.own[j]['exit']='right'
-                                   }
+                                  if (val.result.own.length > 0) {
+                                       for(let j = 0; j < val.result.own.length; j++) {
+                                              val.result.own[j]['exit'] = 'right';
+                                       }
                                     }
-                                    console.log(val.result.own.length)
-                                    console.log(val.result.others.length)
                                     others = val.result.others;
                                     own = val.result.own;
-                                    if(own.length > 0 && others.length > 0){
-                                           others = others.concat(own)
-                                    }else if(others.length == 0 && own.length > 0 ){
-                                         others = own
+                                    if (own.length > 0 && others.length > 0) {
+                                           others = others.concat(own);
+                                    }else if (others.length === 0 && own.length > 0 ) {
+                                         others = own;
                                     }
                                const ret = [];
                                 for (let i = 0; i < others.length; i++) {
 
                                 ret.push({
                                     key: i.toString(),
-                                    title:others[i]['projectName'],
-                                    guid:others[i]['guid'],
+                                    title: others[i]['projectName'],
+                                    guid: others[i]['guid'],
                                     status: others[i]['exit'],
                                     description: others[i]['projectName'],
-                                    direction: others[i]['exit'] =='left' ? 'left' : 'right',
-                                    disabled:others[i]['exit'] =='right'
+                                    direction: others[i]['exit'] === 'left' ? 'left' : 'right',
+                                    disabled: others[i]['exit'] === 'right'
                                 });
                                 }
                                 this.list = ret;
-
-
-                                     this.projectInfo = true
-                                  console.log(this.list);
-
+                                     this.projectInfo = true;
                                     // this.nznot.create('success',val.msg,val.msg);
                                     // this.getData();
                                 },
@@ -347,10 +320,7 @@ workId:string;//工作项ID
                 this.addBranch.branchFor = null;
                 this.addBranch.branchType = null;
                 this.assVisible = true;
-              console.log(this.active)
                 this.exitInfo = event;
-
-
             } else if (event.names.key  === 'putProductStatus') {
                 this.modal.open({
                     title: '已投产',
@@ -434,18 +404,15 @@ workId:string;//工作项ID
         }
     }
 
-subProject(){
-    console.log(this.list);
-    let projectGuids = []
-    // this.projectInfo = false;
-    for(let i = 0 ; i < this.list.length; i ++){
-            if(this.list[i].status == 'right'&&this.list[i].disabled == false){
-            projectGuids.push(this.list[i].guid);
+    subProject(){
+        let projectGuids = []
+        // this.projectInfo = false;
+        for (let i = 0 ; i < this.list.length; i ++) {
+                if (this.list[i].status === 'right' && this.list[i].disabled === false) {
+                projectGuids.push(this.list[i].guid);
+            }
         }
-
-
-    }
-          this.utilityService.postData(appConfig.testUrl  + appConfig.API.sWorkitem + '/' + this.workId + '/project' ,{projectGuids:projectGuids}, {Authorization: this.token})
+          this.utilityService.postData(appConfig.testUrl  + appConfig.API.sWorkitem + '/' + this.workId + '/project' ,{projectGuids: projectGuids}, {Authorization: this.token})
                             .subscribe(
                                 (val) => {
                                     this.projectInfo = false;
@@ -453,25 +420,22 @@ subProject(){
                                     this.getData();
                                 } ,
                             (error) => {
-                                if(error){
-                                       this.nznot.create('error',error.json().msg,'');
-                                }
-
-                            }
+                                if (error) {
+                                       this.nznot.create('error', error.msg, '');
+                                }}
                             );
-}
-
-
-           isShowIp = false;
-            checkArtf(event){
-              let MOBILE_REGEXP =/^\+?[1-9][0-9]*$/;
-              console.log(MOBILE_REGEXP.test(event));
-              if(MOBILE_REGEXP.test(event)==true){
-                      this.isShowIp = false
-              }else{
-                  this.isShowIp = true;
-              }
             }
+    isShowIp = false;
+
+    checkArtf(event){
+        let MOBILE_REGEXP =/^\+?[1-9][0-9]*$/;
+        console.log(MOBILE_REGEXP.test(event));
+        if(MOBILE_REGEXP.test(event)==true){
+            this.isShowIp = false
+        }else{
+            this.isShowIp = true;
+        }
+    }
     // 选中复选框方法
     selectedRow(event) {
 
@@ -502,12 +466,11 @@ subProject(){
             this.workAdd.developers = this.workAdd.developers.join( ',' );
         } else {
         }
-        if(this.isShowIp == true){
+        if(this.isShowIp === true) {
             this.nznot.create('error', 'ARTF格式不正确', '请检查ARTF');
             return;
         }
 
-       console.log(this.workAdd);
         if (!this.workAdd.itemName || !this.workAdd.seqno || !this.workAdd.developers || !this.workAdd.owner || !this.workAdd.requirementDesc ) {
             this.nznot.create('error', '信息不全！', '请检查信息是否完整');
             return;
@@ -530,11 +493,11 @@ subProject(){
                 .subscribe(
                     (val) => {
                       console.log(val)
-                        if(val.code == 200){
+                        if (val.code === 200) {
                              this.modalVisible = false;
                               this.modal.open({
                                 title: '信息提示',
-                                content: val.msg+'是否需要立即关联分支？',
+                                content: val.msg + '是否需要立即关联分支？',
                                 okText: '确定',
                                 cancelText: '取消',
                                 onOk: () => {
@@ -566,8 +529,8 @@ subProject(){
     // 关联分支
     assSave() {
         let url = '';
-        if(this.active == true){//选择已有分支
-         if(this.assbranch == undefined){
+        if (this.active === true){ // 选择已有分支
+         if (this.assbranch == undefined){
               this.nznot.create('error', '请输入完整分支信息', '');
              return;
          }
@@ -577,7 +540,7 @@ subProject(){
                 (val) => {
                  this.getData();
                  this.assVisible = false;
-                 this.nznot.create('success',val.msg,val.msg);
+                 this.nznot.create('success', val.msg, val.msg);
                 }
                 ,
                     error => {
@@ -585,16 +548,16 @@ subProject(){
                     }
             );
         }else{
-            let id =''
+            let id ='';
             console.log(this.addBranch)
             if(this.addBranch.branchFor == null || this.addBranch.branchType == null){
                  this.nznot.create('error', '请输入完整分支信息', '');
                  return;
             }
-             if(this.workId){
-                 id =this.workId
-             }else{
-                  id = this.exitInfo.guid
+             if  (this.workId) {
+                 id = this.workId;
+             }else {
+                  id = this.exitInfo.guid;
              };
            this.utilityService.postData(appConfig.testUrl  + appConfig.API.sWorkitem + '/' + id + '/branch',  this.addBranch, {Authorization: this.token})
             .timeout(5000)
@@ -602,7 +565,7 @@ subProject(){
                 (val) => {
                       this.assVisible = false;
                     this.getData();
-                    this.nznot.create('success',val.msg,val.msg);
+                    this.nznot.create('success', val.msg, val.msg);
                 }
                 ,
                     error => {
@@ -610,8 +573,6 @@ subProject(){
                     }
             );
         }
-
-
 
     }
 }
