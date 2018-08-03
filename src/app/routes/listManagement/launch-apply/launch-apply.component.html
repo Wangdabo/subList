@@ -3,212 +3,205 @@
     table tr th, table tr td { border:1px solid #ccc; height: 30px;line-height: 30px}
 </style>
 
-<pro-header></pro-header>
+        <pro-header></pro-header>
 
-<!--引入list组件-->
-<nz-card [nzBordered]="false">
-    <!--  form表单搜索 -->
-    <form nz-form (ngSubmit)="getData('search')" [nzLayout]="'inline'">
-        <div nz-row  [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
-             <div nz-col [nzSpan]="8" class="mb-md">
-                    <div nz-form-item class="d-flex">
-                        <div nz-form-label><label>工作项</label></div>
-                        <div nz-form-control class="flex-1">
-                            <nz-input [(ngModel)]="search.itemName" name="itemName" [nzSize]="'large'" [nzPlaceHolder]="'工作项'" nzId="itemName"></nz-input>
-                        </div>
-                    </div>
-                </div>
-             <div nz-col [nzSpan]="8" class="mb-md">
-                    <div nz-form-item class="d-flex">
-                        <div nz-form-label><label>运行环境</label></div>
-                        <div nz-form-control class="flex-1">
-
-                             <nz-select style="width:100%"   nzAllowClear  nzShowSearch  [(ngModel)]="search.guidProfiles"  name="deliveryResult" [nzSize]="'large'" [nzPlaceHolder]="'运行环境'" nzId="deliveryResult">
-                                <nz-option  *ngFor="let i of elementScice;" [nzLabel]="i.profilesName" [nzValue]="i.guid"></nz-option>
-                            </nz-select>
-                            <!--<nz-input [(ngModel)]="search.guidProfiles" name="guidProfiles" [nzSize]="'large'" [nzPlaceHolder]="'运行环境'" nzId="guidProfiles"></nz-input>-->
-                        </div>
-                    </div>
-                </div>
-             <div nz-col [nzSpan]="8" class="mb-md">
-                    <div nz-form-item class="d-flex">
-                        <div nz-form-label><label>申请人</label></div>
-                        <div nz-form-control class="flex-1">
-                            <nz-input [(ngModel)]="search.proposer" name="proposer" [nzSize]="'large'" [nzPlaceHolder]="'申请人'" nzId="proposer"></nz-input>
-                        </div>
-                    </div>
-                </div>
-             <div *ngIf="expandForm" nz-col [nzSpan]="8" class="mb-md">
-                    <div nz-form-item class="d-flex">
-                        <div nz-form-label><label>投放结果</label></div>
-                        <div nz-form-control class="flex-1">
-                            <nz-select style="width:100%" [(ngModel)]="search.deliveryResult"  name="deliveryResult" [nzSize]="'large'" [nzPlaceHolder]="'投放结果'" nzId="deliveryResult">
-                                <nz-option  *ngFor="let i of deliveryResult;" [nzLabel]="i.value" [nzValue]="i.key"></nz-option>
-                            </nz-select>
-                        </div>
-                    </div>
-                </div>
-             <div nz-col [nzSpan]="5"  class="mb-md" [class.text-right]="expandForm">
-                    <button nz-button type="submit" [nzType]="'primary'"  [nzSize]="'large'">查询</button>
-                    <button nz-button type="reset" (click)="reset()" [nzSize]="'large'" class="mx-sm">重置</button>
-                    <a (click)="expandForm=!expandForm">
-                        {{expandForm ? '收起' : '展开'}}
-                        <i class="anticon" [class.anticon-down]="!expandForm" [class.anticon-up]="expandForm"></i>
-                    </a>
-                </div>
-        </div>
-    </form>
-    <!--列表组件-->
-
-    <app-list #child [initDate]="data"
-              [isShowTotal]="isShowTotal"
-              [configTitle]="configTitle"
-              [showAdd]="showAdd"
-              [isPagination]="isPagination"
-              [buttons] ='buttons'
-              [pageindex]='pageIndex'
-              (addCreat)="addHandler($event)"
-              (buttonData)="buttonData($event)"
-              (pageNumber)="monitorHandler($event)"
-              (deleatData)="deleatData($event)"
-              (isActive)="isActive($event)" (buttonEvent)="buttonEventlist($event)" (selectedRow)="selectedRow($event)" [headerDate]="headerDate"
-              [moreData]="moreData" [total]="total"  [pageTotal] = 'pageTotal'  >
-    </app-list>
-</nz-card>
-
-<!-- 核对合并清单 -->
-<nz-modal [nzVisible]="checkModalVisible"  [nzWidth]="1024" [nzTitle]="'核对合并清单'"   [nzContent]="dictModals"
-          (nzOnCancel)="checkModalVisible=false" (nzOnOk)="saveCheck()">
-    <ng-template #dictModals>
-        <div nz-row [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
-            <div nz-col [nzSpan]="24" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label><label for="itemType">与运行环境</label></div>
-                    <div nz-form-control class="flex-1">
-                        <div nz-col [nzSpan]="24" class="mb-md" *ngFor="let s of elementScice ;let l = index">
-                            <div nz-col [nzSpan]="6">
-                                <label  nz-checkbox    [(ngModel)]="s.check" (ngModelChange)="onChange(s.guid)">&nbsp;&nbsp;<span>{{s.profilesName}}</span></label>
-                            </div>
-                            <div nz-col [nzSpan]="18">
-                                <div nz-col [nzSpan]="6" *ngFor="let t of s.Timing; let d = index" >
-                                    <input style="margin-top: 10px;" [disabled]="!s.check"   [(ngModel)]="s.times"   [value]="t.time"   [name]="s.profilesName"
-                                           type="radio" />&nbsp;{{t.time}}
+        <!--引入list组件-->
+        <nz-card [nzBordered]="false">
+            <!--  form表单搜索 -->
+            <form nz-form (ngSubmit)="getData('search')" [nzLayout]="'inline'">
+                <div nz-row  [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
+                     <div nz-col [nzSpan]="8" class="mb-md">
+                            <div nz-form-item class="d-flex">
+                                <div nz-form-label><label>工作项</label></div>
+                                <div nz-form-control class="flex-1">
+                                    <nz-input [(ngModel)]="search.itemName" name="itemName" [nzSize]="'large'" [nzPlaceHolder]="'工作项'" nzId="itemName"></nz-input>
                                 </div>
                             </div>
                         </div>
-                        <div nz-form-label><label for="itemType">的发版分支进行核对！</label></div>
+                     <div nz-col [nzSpan]="8" class="mb-md">
+                            <div nz-form-item class="d-flex">
+                                <div nz-form-label><label>运行环境</label></div>
+                                <div nz-form-control class="flex-1">
+
+                                     <nz-select style="width:100%"   nzAllowClear  nzShowSearch  [(ngModel)]="search.guidProfiles"  name="deliveryResult" [nzSize]="'large'" [nzPlaceHolder]="'运行环境'" nzId="deliveryResult">
+                                        <nz-option  *ngFor="let i of elementScice;" [nzLabel]="i.profilesName" [nzValue]="i.guid"></nz-option>
+                                    </nz-select>
+                                    <!--<nz-input [(ngModel)]="search.guidProfiles" name="guidProfiles" [nzSize]="'large'" [nzPlaceHolder]="'运行环境'" nzId="guidProfiles"></nz-input>-->
+                                </div>
+                            </div>
+                        </div>
+                     <div nz-col [nzSpan]="8" class="mb-md">
+                            <div nz-form-item class="d-flex">
+                                <div nz-form-label><label>申请人</label></div>
+                                <div nz-form-control class="flex-1">
+                                    <nz-input [(ngModel)]="search.proposer" name="proposer" [nzSize]="'large'" [nzPlaceHolder]="'申请人'" nzId="proposer"></nz-input>
+                                </div>
+                            </div>
+                        </div>
+                     <div *ngIf="expandForm" nz-col [nzSpan]="8" class="mb-md">
+                            <div nz-form-item class="d-flex">
+                                <div nz-form-label><label>投放结果</label></div>
+                                <div nz-form-control class="flex-1">
+                                    <nz-select style="width:100%" [(ngModel)]="search.deliveryResult"  name="deliveryResult" [nzSize]="'large'" [nzPlaceHolder]="'投放结果'" nzId="deliveryResult">
+                                        <nz-option  *ngFor="let i of deliveryResult;" [nzLabel]="i.value" [nzValue]="i.key"></nz-option>
+                                    </nz-select>
+                                </div>
+                            </div>
+                        </div>
+                     <div nz-col [nzSpan]="5"  class="mb-md" [class.text-right]="expandForm">
+                            <button nz-button type="submit" [nzType]="'primary'"  [nzSize]="'large'">查询</button>
+                            <button nz-button type="reset" (click)="reset()" [nzSize]="'large'" class="mx-sm">重置</button>
+                            <a (click)="expandForm=!expandForm">
+                                {{expandForm ? '收起' : '展开'}}
+                                <i class="anticon" [class.anticon-down]="!expandForm" [class.anticon-up]="expandForm"></i>
+                            </a>
+                        </div>
+                </div>
+            </form>
+            <!--列表组件-->
+
+            <app-list #child [initDate]="data"
+                      [isShowTotal]="isShowTotal"
+                      [configTitle]="configTitle"
+                      [showAdd]="showAdd"
+                      [isPagination]="isPagination"
+                      [buttons] ='buttons'
+                      [pageindex]='pageIndex'
+                      (addCreat)="addHandler($event)"
+                      (buttonData)="buttonData($event)"
+                      (pageNumber)="monitorHandler($event)"
+                      (deleatData)="deleatData($event)"
+                      (isActive)="isActive($event)" (buttonEvent)="buttonEventlist($event)" (selectedRow)="selectedRow($event)" [headerDate]="headerDate"
+                      [moreData]="moreData" [total]="total"  [pageTotal] = 'pageTotal'  >
+            </app-list>
+        </nz-card>
+
+        <!-- 核对合并清单 -->
+        <nz-modal [nzVisible]="checkModalVisible"  [nzWidth]="1024" [nzTitle]="'核对合并清单'"   [nzContent]="dictModals"
+                  (nzOnCancel)="checkModalVisible=false" (nzOnOk)="saveCheck()">
+            <ng-template #dictModals>
+                <div nz-row [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
+                    <div nz-col [nzSpan]="24" class="mb-md">
+                        <div nz-form-item class="d-flex">
+                            <div nz-form-label><label for="itemType">与运行环境</label></div>
+                            <div nz-form-control class="flex-1">
+                                <div nz-col [nzSpan]="24" class="mb-md" *ngFor="let s of elementScice ;let l = index">
+                                    <div nz-col [nzSpan]="6">
+                                        <label  nz-checkbox    [(ngModel)]="s.check" (ngModelChange)="onChange(s.guid)">&nbsp;&nbsp;<span>{{s.profilesName}}</span></label>
+                                    </div>
+                                    <div nz-col [nzSpan]="18">
+                                        <div nz-col [nzSpan]="6" *ngFor="let t of s.Timing; let d = index" >
+                                            <input style="margin-top: 10px;" [disabled]="!s.check"   [(ngModel)]="s.times"   [value]="t.time"   [name]="s.profilesName"
+                                                   type="radio" />&nbsp;{{t.time}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div nz-form-label><label for="itemType">的发版分支进行核对！</label></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </ng-template>
-</nz-modal>
+            </ng-template>
+        </nz-modal>
 
 
-<!-- 比对  修改，可能改成list形式-->
+        <!-- 比对  修改，可能改成list形式-->
+        <!--<nz-modal [nzVisible]="istextVisible"  [nzWidth]="600" [nzTitle]="'请输入打回理由（选填）'"   [nzContent]="modaltextTitle"
+                  (nzOnCancel)="istextVisible=false" (nzOnOk)="returns(guid,2)" >
+            <ng-template #modaltextTitle>
+                <textarea rows="6"  nz-input [(ngModel)]="inputValue" ></textarea>
+
+            </ng-template>
+        </nz-modal>-->
+
+        <nz-modal [nzVisible]="isMergeList"  [nzWidth]="1000" [nzTitle]="'合并列表'"   [nzContent]="modaltextTitle"
+                  (nzOnCancel)="isMergeList=false" (nzOnOk)="returns(guid,2)" >
+            <ng-template #modaltextTitle>
+                <app-list #child [initDate]="data" [configTitle]="configTitle" [showAdd]="showAdd" [isPagination]="isPagination"  [buttons] ='buttons'  (buttonData)="buttonDataHandler($event)"
+                          (deleatData)="deleatData($event)"  (buttonEvent)="buttonEvent($event)" (selectedRow)="selectedRow($event)" [headerDate]="headerDate"
+                          [moreData]="moreData"  >
+                </app-list>
+            </ng-template>
+        </nz-modal>
+
+        <!-- 打印-->
+        <!--<nz-modal [nzVisible]="isVisible" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter">
+            <ng-template #modalTitle>
+                导出投放清单
+            </ng-template>
+            <ng-template #modalContent>
+                <div nz-col [nzSpan]="24" class="mb-md">
+                    <div *ngIf="!workItem" nz-form-item class="d-flex">
+                        <div nz-form-label><label for="itemType">请选要导出清单的运行环境:</label></div>
+                        <div nz-form-control class="flex-1">
+                            <nz-radio-group [(ngModel)]="deliverItem.environment">
+                                      <span  *ngFor="let i of environment;" >
+                                            <label  nz-radio   [nzValue]='i.key' class="radio">
+                                                <span>{{i.text}}</span>
+                                            </label>
+                                        </span>
+                            </nz-radio-group>
+                        </div>
+                    </div>
+
+                    <div  *ngIf="workItem" nz-form-item class="d-flex">
+                        <div nz-form-label><label for="itemType">请选择要投放的工作项:</label></div>
+                        <div nz-form-control class="flex-1">
+                            <nz-checkbox-group [(ngModel)]="checkOptionsOne"></nz-checkbox-group>
+                        </div>
+                    </div>
 
 
-<!--<nz-modal [nzVisible]="istextVisible"  [nzWidth]="600" [nzTitle]="'请输入打回理由（选填）'"   [nzContent]="modaltextTitle"
-          (nzOnCancel)="istextVisible=false" (nzOnOk)="returns(guid,2)" >
-    <ng-template #modaltextTitle>
-        <textarea rows="6"  nz-input [(ngModel)]="inputValue" ></textarea>
-
-    </ng-template>
-</nz-modal>-->
-
-<nz-modal [nzVisible]="isMergeList"  [nzWidth]="1000" [nzTitle]="'合并列表'"   [nzContent]="modaltextTitle"
-          (nzOnCancel)="isMergeList=false" (nzOnOk)="returns(guid,2)" >
-    <ng-template #modaltextTitle>
-        <app-list #child [initDate]="data" [configTitle]="configTitle" [showAdd]="showAdd" [isPagination]="isPagination"  [buttons] ='buttons'  (buttonData)="buttonDataHandler($event)"
-                  (deleatData)="deleatData($event)"  (buttonEvent)="buttonEvent($event)" (selectedRow)="selectedRow($event)" [headerDate]="headerDate"
-                  [moreData]="moreData"  >
-        </app-list>
-    </ng-template>
-</nz-modal>
-
-<!-- 打印-->
-<!--<nz-modal [nzVisible]="isVisible" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter">
-    <ng-template #modalTitle>
-        导出投放清单
-    </ng-template>
-    <ng-template #modalContent>
-        <div nz-col [nzSpan]="24" class="mb-md">
-            <div *ngIf="!workItem" nz-form-item class="d-flex">
-                <div nz-form-label><label for="itemType">请选要导出清单的运行环境:</label></div>
-                <div nz-form-control class="flex-1">
-                    <nz-radio-group [(ngModel)]="deliverItem.environment">
-                              <span  *ngFor="let i of environment;" >
-                                    <label  nz-radio   [nzValue]='i.key' class="radio">
-                                        <span>{{i.text}}</span>
+                </div>
+            </ng-template>
+            <ng-template #modalFooter>
+                <button nz-button [nzType]="'default'" [nzSize]="'large'" (click)="isVisible=false">
+                    取消
+                </button>
+                <button nz-button *ngIf="!workItem"  [nzType]="'primary'" [nzSize]="'large'" (click)="workItem = true">
+                    下一步
+                </button>
+                <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="handleOk($event)">
+                    确定
+                </button>
+            </ng-template>
+        </nz-modal>-->
+        <nz-modal [nzVisible]="updEnvironment"   [nzWidth]="1024" [nzTitle]="'修改当前工作项的投放时间与窗口'"   [nzContent]="updModal"
+                  (nzOnCancel)="updEnvironment=false" (nzOnOk)="submitUpd()"  nzZIndex = '20' >
+                <ng-template #updModal>
+                    <div  nz-form-item class="d-flex">
+                            <div nz-form-label><label for="itemType">当前运行环境</label></div>
+                            <div nz-form-control class="flex-1">
+                                {{updPackTiming.profilesName}}
+                            </div>
+                        </div>
+                    <div  nz-form-item class="d-flex">
+                            <div nz-form-label><label for="itemType">可选时间</label></div>
+                            <div nz-form-control class="flex-1">
+                                <nz-datepicker [(ngModel)]="updPackTiming.deliveryTime"      (ngModelChange)="onChange(updPackTiming)" [nzPlaceHolder]="'请选择日期'" [nzDisabledDate]="_disabledDate"></nz-datepicker>
+                                <!--{{updPackTiming.profilesName}}-->
+                            </div>
+                        </div>
+                    <div  nz-form-item class="d-flex">
+                            <div nz-form-label><label for="itemType">可选窗口</label></div>
+                            <div nz-form-control class="flex-1">
+                                <!--<label nz-radio [(ngModel)]="updPackTiming.PackTiming" *ngFor="let t of updPackTiming.packTimeDetails; let d = index">
+                                         <span>{{t.packTime}}</span>
+                                     </label>-->
+                                <nz-radio-group [(ngModel)]="updPackTiming.packTiming">
+                                    <label *ngFor="let i of updPackTiming['packTimeDetails'];"  [nzDisabled]="i.isOptions ==='N'" nz-radio [nzValue]="i.packTime">
+                                        <span>{{i.packTime}}</span>
                                     </label>
-                                </span>
-                    </nz-radio-group>
-                </div>
-            </div>
-
-            <div  *ngIf="workItem" nz-form-item class="d-flex">
-                <div nz-form-label><label for="itemType">请选择要投放的工作项:</label></div>
-                <div nz-form-control class="flex-1">
-                    <nz-checkbox-group [(ngModel)]="checkOptionsOne"></nz-checkbox-group>
-                </div>
-            </div>
-
-
-        </div>
-    </ng-template>
-    <ng-template #modalFooter>
-        <button nz-button [nzType]="'default'" [nzSize]="'large'" (click)="isVisible=false">
-            取消
-        </button>
-        <button nz-button *ngIf="!workItem"  [nzType]="'primary'" [nzSize]="'large'" (click)="workItem = true">
-            下一步
-        </button>
-        <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="handleOk($event)">
-            确定
-        </button>
-    </ng-template>
-</nz-modal>-->
-
-
-<nz-modal [nzVisible]="updEnvironment"   [nzWidth]="1024" [nzTitle]="'修改当前工作项的投放时间与窗口'"   [nzContent]="updModal"
-          (nzOnCancel)="updEnvironment=false" (nzOnOk)="submitUpd()"  nzZIndex = '20' >
-    <ng-template #updModal>
-
-
-            <div  nz-form-item class="d-flex">
-                <div nz-form-label><label for="itemType">当前运行环境</label></div>
-                <div nz-form-control class="flex-1">
-                   {{updPackTiming.profilesName}}
-                </div>
-            </div>
-             <div  nz-form-item class="d-flex">
-                <div nz-form-label><label for="itemType">可选时间</label></div>
-                 <div nz-form-control class="flex-1">
-               <nz-datepicker [(ngModel)]="updPackTiming.deliveryTime"      (ngModelChange)="onChange(updPackTiming)" [nzPlaceHolder]="'请选择日期'" [nzDisabledDate]="_disabledDate"></nz-datepicker>
-                   <!--{{updPackTiming.profilesName}}-->
-                </div>
-            </div>
-              <div  nz-form-item class="d-flex">
-                <div nz-form-label><label for="itemType">可选窗口</label></div>
-                 <div nz-form-control class="flex-1">
-                       <!--<label nz-radio [(ngModel)]="updPackTiming.PackTiming" *ngFor="let t of updPackTiming.packTimeDetails; let d = index">
-                                <span>{{t.packTime}}</span>
-                            </label>-->
-                            <nz-radio-group [(ngModel)]="updPackTiming.packTiming">
-                                <label *ngFor="let i of updPackTiming['packTimeDetails'];"  [nzDisabled]="i.isOptions ==='N'" nz-radio [nzValue]="i.packTime">
-                                    <span>{{i.packTime}}</span>
-                                </label>
-                              </nz-radio-group>
+                                </nz-radio-group>
 
 
 
-            </div>
-       </div>
+                            </div>
+                        </div>
+                </ng-template>
+        </nz-modal>
 
-   </ng-template>
-</nz-modal>
-
-<nz-modal [nzVisible]="mergeisVisible"   [nzWidth]="1024" [nzTitle]="'请指定投放日期和环境'"   [nzContent]="dictModal"
+        <nz-modal [nzVisible]="mergeisVisible"   [nzWidth]="1024" [nzTitle]="'请指定投放日期和环境'"   [nzContent]="dictModal"
           (nzOnCancel)="mergeisVisible=false" (nzOnOk)="savemergeisInfo()" [nzFooter]="is" nzZIndex = '20' >
     <ng-template #dictModal>
 
@@ -269,8 +262,8 @@
 </nz-modal>
 
 
-<!--导出步骤-->
-<nz-modal [nzVisible]="isVisible"  [nzWidth]="1024" [nzTitle]="'导出类型'"   [nzContent]="modalContent"
+         <!--导出步骤-->
+        <nz-modal [nzVisible]="isVisible"  [nzWidth]="1024" [nzTitle]="'导出类型'"   [nzContent]="modalContent"
           (nzOnCancel)="isVisible=false" (nzOnOk)="savemergeisInfo()" [nzFooter]="is" >
     <ng-template #modalContent>
 
@@ -350,275 +343,275 @@
     </ng-template>
 </nz-modal>
 
-  <!--核对清单详细-->
+        <!--核对清单详细-->
 
-<!--合并投放-->
-<nz-modal [nzVisible]="mergeVisible"  [nzWidth]="1324" [nzTitle]="'查看申请清单明细'"  [nzContent]="mergeModal"
-          (nzOnCancel)="mergeVisible=false" [nzFooter]="ewqewq">
-    <ng-template #mergeModal>
-        <div nz-row [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
-
-
-            <div nz-col [nzSpan]="24" class="mb-md">
-
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label><label>分支地址</label></div>
-                    <div nz-form-control class="flex-1">
-                        {{mergeListDetail.fullPath}}
-                    </div>
-                </div>
-             <div nz-form-item class="d-flex">
-                    <div nz-form-label><label>代码清单总计</label></div>
-                    <div nz-form-control class="flex-1">
-                        {{mergeListDetail.count}}
-                    </div>
-                </div>
-            </div>
-
-              <div  nz-col [nzSpan]="24" class="mb-md" *ngFor="let s of mergeListDetail.deliveryProjectDetails ; let l = index">
-                <div *ngFor="let j of s.deliveryPatchDetails" style="margin-bottom: 2rem;">
-
-                        <nz-table #nzTables   nzBordered  [nzIsPagination]="false" [nzDataSource]="s.deliveryPatchDetails">
-                            <tbody nz-tbody nz-col [nzSpan]="24"  >
-                            <tr  nz-tbody-tr nz-col [nzSpan]="24" class="trborder">
-                                <td class="bcolor" nz-td nz-col [nzSpan]="8">工程名</td>
-                                <td nz-td nz-col [nzSpan]="16">{{s.projectName}}</td>
-                            </tr>
-
-                            <tr nz-tbody-tr nz-col [nzSpan]="24" class="trborder">
-                                <td class="bcolor"  nz-td nz-col [nzSpan]="8">编译为</td>
-                                <td nz-td nz-col [nzSpan]="16">{{j.patchType }}</td>
-                            </tr>
-                            <tr  nz-tbody-tr nz-col [nzSpan]="24" class="trborder">
-                                <td class="bcolor"  nz-td nz-col [nzSpan]="8">部署到</td>
-                                <td nz-td nz-col [nzSpan]="16">{{j.deployWhere}}</td>
-                            </tr>
-                              <!--<tr  nz-tbody-tr nz-col [nzSpan]="24" class="trborder">
-                                <td class="bcolor"  nz-td nz-col [nzSpan]="8">svn地址</td>
-                                <td nz-td nz-col [nzSpan]="16">{{j.deployWhere}}</td>
-                            </tr>-->
-                            <tr nz-tbody-tr nz-col [nzSpan]="24">
-                                <td class="bcolor"  nz-td nz-col [nzSpan]="18">代码</td>
-                                <td class="bcolor"  nz-td nz-col [nzSpan]="3">变动类型</td>
-                                <td class="bcolor"  nz-td nz-col [nzSpan]="3">清单来源</td>
-
-                            </tr>
-                            <tr nz-tbody-tr nz-col [nzSpan]="24"  *ngFor="let k of j.fileList" [ngClass]="(k%2) != 0 ? 'active' : ''" >
-                                <td nz-td nz-col [nzSpan]="18" title="{{mergeListDetail.fullPath}}{{k.fullPath}}">{{k.fullPath}}  </td>
-                                <td nz-td nz-col [nzSpan]="3" >{{k.commitType}}</td>
-                                <td nz-td nz-col [nzSpan]="3">{{k.fromType}}</td>
-
-                            </tr>
-                            </tbody>
-                        </nz-table>
-
-                    </div>
-            </div>
+        <!--合并投放-->
+        <nz-modal [nzVisible]="mergeVisible"  [nzWidth]="1324" [nzTitle]="'查看申请清单明细'"  [nzContent]="mergeModal"
+                  (nzOnCancel)="mergeVisible=false" [nzFooter]="ewqewq">
+            <ng-template #mergeModal>
+                <div nz-row [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
 
 
-        </div>
+                    <div nz-col [nzSpan]="24" class="mb-md">
 
-    </ng-template>
-</nz-modal>
-
-
-<!--复制投放-->
-<nz-modal [nzVisible]="copyVisible"  [nzWidth]="1024" [nzTitle]="'投放申请 请指定投放日期和环境'"   [nzContent]="copyModal"
-          (nzOnCancel)="copyVisible=false" (nzOnOk)="copySave()">
-    <ng-template #copyModal>
-        <div nz-row [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
-            <div nz-col [nzSpan]="24" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label><label for="itemType">投放到:</label></div>
-                    <div nz-form-control class="flex-1">
-                        <div nz-col [nzSpan]="24" class="mb-md" *ngFor="let s of elementCopy ;let l = index">
-                            <div nz-col [nzSpan]="7">
-                                <label  nz-checkbox  [(ngModel)]="s.check" [nzDisabled]="s.disabled" >&nbsp;&nbsp;<span>{{s.profilesName}}</span></label>
+                        <div nz-form-item class="d-flex">
+                            <div nz-form-label><label>分支地址</label></div>
+                            <div nz-form-control class="flex-1">
+                                {{mergeListDetail.fullPath}}
                             </div>
-                            <div nz-col [nzSpan]="4">
-                                <nz-datepicker
-                                    [(ngModel)]="s.deliveryTime"
-                                    [nzDisabled]="!s.check"
-                                    [nzFormat]="'YYYY-MM-DD'"
-                                    [nzSize]="'large'"
-                                    [nzPlaceHolder]="'选择时间'"
-                                    (ngModelChange)="oncopyChange(s.deliveryTime, s)"
-                                    class="d-block">
-                                </nz-datepicker>
+                        </div>
+                     <div nz-form-item class="d-flex">
+                            <div nz-form-label><label>代码清单总计</label></div>
+                            <div nz-form-control class="flex-1">
+                                {{mergeListDetail.count}}
                             </div>
-                            <div nz-col [nzSpan]="9">
-                                <div nz-col [nzSpan]="6" *ngFor="let t of s.packTimeDetails; let d = index" >
-                                    <!--   <input style="margin-top: 10px;"  [disabled]="!s.check || t.isOptions ==='N'"   [(ngModel)]="s.times"   [value]="t.packTime"   [name]="s.profilesName"
-                                              type="radio" />&nbsp;{{t.packTime}}-->
-                                    <nz-radio-group [(ngModel)]="s.times">
-                                        <label  [nzDisabled]="!s.check || t.isOptions ==='N'" nz-radio [nzValue]="t.packTime">
-                                            <span>{{t.packTime}}</span>
-                                        </label>
-                                    </nz-radio-group>
+                        </div>
+                    </div>
+
+                      <div  nz-col [nzSpan]="24" class="mb-md" *ngFor="let s of mergeListDetail.deliveryProjectDetails ; let l = index">
+                        <div *ngFor="let j of s.deliveryPatchDetails" style="margin-bottom: 2rem;">
+
+                                <nz-table #nzTables   nzBordered  [nzIsPagination]="false" [nzDataSource]="s.deliveryPatchDetails">
+                                    <tbody nz-tbody nz-col [nzSpan]="24"  >
+                                    <tr  nz-tbody-tr nz-col [nzSpan]="24" class="trborder">
+                                        <td class="bcolor" nz-td nz-col [nzSpan]="8">工程名</td>
+                                        <td nz-td nz-col [nzSpan]="16">{{s.projectName}}</td>
+                                    </tr>
+
+                                    <tr nz-tbody-tr nz-col [nzSpan]="24" class="trborder">
+                                        <td class="bcolor"  nz-td nz-col [nzSpan]="8">编译为</td>
+                                        <td nz-td nz-col [nzSpan]="16">{{j.patchType }}</td>
+                                    </tr>
+                                    <tr  nz-tbody-tr nz-col [nzSpan]="24" class="trborder">
+                                        <td class="bcolor"  nz-td nz-col [nzSpan]="8">部署到</td>
+                                        <td nz-td nz-col [nzSpan]="16">{{j.deployWhere}}</td>
+                                    </tr>
+                                      <!--<tr  nz-tbody-tr nz-col [nzSpan]="24" class="trborder">
+                                        <td class="bcolor"  nz-td nz-col [nzSpan]="8">svn地址</td>
+                                        <td nz-td nz-col [nzSpan]="16">{{j.deployWhere}}</td>
+                                    </tr>-->
+                                    <tr nz-tbody-tr nz-col [nzSpan]="24">
+                                        <td class="bcolor"  nz-td nz-col [nzSpan]="18">代码</td>
+                                        <td class="bcolor"  nz-td nz-col [nzSpan]="3">变动类型</td>
+                                        <td class="bcolor"  nz-td nz-col [nzSpan]="3">清单来源</td>
+
+                                    </tr>
+                                    <tr nz-tbody-tr nz-col [nzSpan]="24"  *ngFor="let k of j.fileList" [ngClass]="(k%2) != 0 ? 'active' : ''" >
+                                        <td nz-td nz-col [nzSpan]="18" title="{{mergeListDetail.fullPath}}{{k.fullPath}}">{{k.fullPath}}  </td>
+                                        <td nz-td nz-col [nzSpan]="3" >{{k.commitType}}</td>
+                                        <td nz-td nz-col [nzSpan]="3">{{k.fromType}}</td>
+
+                                    </tr>
+                                    </tbody>
+                                </nz-table>
+
+                            </div>
+                    </div>
+
+
+                </div>
+
+            </ng-template>
+        </nz-modal>
+
+
+        <!--复制投放-->
+        <nz-modal [nzVisible]="copyVisible"  [nzWidth]="1024" [nzTitle]="'投放申请 请指定投放日期和环境'"   [nzContent]="copyModal"
+                  (nzOnCancel)="copyVisible=false" (nzOnOk)="copySave()">
+            <ng-template #copyModal>
+                <div nz-row [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
+                    <div nz-col [nzSpan]="24" class="mb-md">
+                        <div nz-form-item class="d-flex">
+                            <div nz-form-label><label for="itemType">投放到:</label></div>
+                            <div nz-form-control class="flex-1">
+                                <div nz-col [nzSpan]="24" class="mb-md" *ngFor="let s of elementCopy ;let l = index">
+                                    <div nz-col [nzSpan]="7">
+                                        <label  nz-checkbox  [(ngModel)]="s.check" [nzDisabled]="s.disabled" >&nbsp;&nbsp;<span>{{s.profilesName}}</span></label>
+                                    </div>
+                                    <div nz-col [nzSpan]="4">
+                                        <nz-datepicker
+                                            [(ngModel)]="s.deliveryTime"
+                                            [nzDisabled]="!s.check"
+                                            [nzFormat]="'YYYY-MM-DD'"
+                                            [nzSize]="'large'"
+                                            [nzPlaceHolder]="'选择时间'"
+                                            (ngModelChange)="oncopyChange(s.deliveryTime, s)"
+                                            class="d-block">
+                                        </nz-datepicker>
+                                    </div>
+                                    <div nz-col [nzSpan]="9">
+                                        <div nz-col [nzSpan]="6" *ngFor="let t of s.packTimeDetails; let d = index" >
+                                            <!--   <input style="margin-top: 10px;"  [disabled]="!s.check || t.isOptions ==='N'"   [(ngModel)]="s.times"   [value]="t.packTime"   [name]="s.profilesName"
+                                                      type="radio" />&nbsp;{{t.packTime}}-->
+                                            <nz-radio-group [(ngModel)]="s.times">
+                                                <label  [nzDisabled]="!s.check || t.isOptions ==='N'" nz-radio [nzValue]="t.packTime">
+                                                    <span>{{t.packTime}}</span>
+                                                </label>
+                                            </nz-radio-group>
+                                        </div>
+                                    </div>
+                                    <div nz-col [nzSpan]="4">
+                                        <nz-input [(ngModel)]="s.deliveryName" name="deliveryName"  [disabled]="!s.check" [nzSize]="'large'" [nzPlaceHolder]="'投放代号'" nzId="deliveryName"></nz-input>
+                                    </div>
                                 </div>
                             </div>
-                            <div nz-col [nzSpan]="4">
-                                <nz-input [(ngModel)]="s.deliveryName" name="deliveryName"  [disabled]="!s.check" [nzSize]="'large'" [nzPlaceHolder]="'投放代号'" nzId="deliveryName"></nz-input>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </nz-modal>
+
+
+        <!--投放成功-->
+        <!--成功之后的界面完整修改-->
+        <nz-modal [nzVisible]="launchVisible"  [nzWidth]="1400" [nzTitle]="'工作项投放申请'"   [nzContent]="lanunModal"
+                  (nzOnCancel)="copyCancel()" (nzOnOk)="copyCancel()">
+            <ng-template #lanunModal>
+                <div nz-row [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
+                    <!--重做-->
+                    <div nz-col [nzSpan]="24" class="mb-md" style="text-align: center;margin-top:10px;">
+                        <img style="width: 70px;" src="./assets/img/success.svg" alt="">
+                    </div>
+
+                    <div nz-col [nzSpan]="24" class="mb-md" style="text-align: center">
+                        <h2>{{copyTitle}}</h2>
+                    </div>
+
+                    <div nz-col [nzSpan]="24" class="mb-md" style="text-align: center">
+                        <div nz-col [nzSpan]="12"  [nzOffset]="6" class="mb-md">
+                            <div style="border: 1px solid #000000; display: block; line-height: 50px; height: 50px;">
+                                本次投放明细如下
+                            </div>
+                            <div nz-col [nzSpan]="24" style="border:1px solid #cccccc;" >
+                                <div style="margin: 20px 0px;" nz-col [nzSpan]="24">
+                                    <div nz-col [nzSpan]="5">工作项名称</div>
+                                    <div nz-col [nzSpan]="6">工作项别名</div>
+                                    <div nz-col [nzSpan]="4">投放时间</div>
+                                    <div nz-col [nzSpan]="7">打包窗口即环境</div>
+                                </div>
+
+                                <div  nz-col [nzSpan]="24" *ngFor = 'let i of detailInfo' style="margin:10px 0px;">
+                                    <div nz-col [nzSpan]="5">{{i.guidWorkitem.target}}</div>
+                                    <div nz-col [nzSpan]="6">{{i.applyAlias}}</div>
+                                    <div nz-col [nzSpan]="4">{{i.deliveryTime  | date:'yyyy-MM-dd'}}</div>
+                                    <div nz-col [nzSpan]="7">{{i.guidProfiles.target}}@{{i.packTiming}}</div>
+                                </div>
+
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </ng-template>
-</nz-modal>
 
-
-<!--投放成功-->
-<!--成功之后的界面完整修改-->
-<nz-modal [nzVisible]="launchVisible"  [nzWidth]="1400" [nzTitle]="'工作项投放申请'"   [nzContent]="lanunModal"
-          (nzOnCancel)="copyCancel()" (nzOnOk)="copyCancel()">
-    <ng-template #lanunModal>
-        <div nz-row [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
-            <!--重做-->
-            <div nz-col [nzSpan]="24" class="mb-md" style="text-align: center;margin-top:10px;">
-                <img style="width: 70px;" src="./assets/img/success.svg" alt="">
-            </div>
-
-            <div nz-col [nzSpan]="24" class="mb-md" style="text-align: center">
-                <h2>{{copyTitle}}</h2>
-            </div>
-
-            <div nz-col [nzSpan]="24" class="mb-md" style="text-align: center">
-                <div nz-col [nzSpan]="12"  [nzOffset]="6" class="mb-md">
-                    <div style="border: 1px solid #000000; display: block; line-height: 50px; height: 50px;">
-                        本次投放明细如下
-                    </div>
-                    <div nz-col [nzSpan]="24" style="border:1px solid #cccccc;" >
-                        <div style="margin: 20px 0px;" nz-col [nzSpan]="24">
-                            <div nz-col [nzSpan]="5">工作项名称</div>
-                            <div nz-col [nzSpan]="6">工作项别名</div>
-                            <div nz-col [nzSpan]="4">投放时间</div>
-                            <div nz-col [nzSpan]="7">打包窗口即环境</div>
-                        </div>
-
-                        <div  nz-col [nzSpan]="24" *ngFor = 'let i of detailInfo' style="margin:10px 0px;">
-                            <div nz-col [nzSpan]="5">{{i.guidWorkitem.target}}</div>
-                            <div nz-col [nzSpan]="6">{{i.applyAlias}}</div>
-                            <div nz-col [nzSpan]="4">{{i.deliveryTime  | date:'yyyy-MM-dd'}}</div>
-                            <div nz-col [nzSpan]="7">{{i.guidProfiles.target}}@{{i.packTiming}}</div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-            <!--  <div nz-col [nzSpan]="22" [nzOffset]="2" class="mb-md">
-                  <div  nz-form-item class="d-flex">
-                      <div class="ad-desc-list__term ng-star-inserted">投放明细:</div>
-                  </div>
-              </div>
-              &lt;!&ndash; 列表 &ndash;&gt;
-              <div  nz-col [nzSpan]="24" class="mb-md" *ngFor="let s of detailInfo ; let l = index">
-                  <div *ngFor="let j of s.deliveryPatchDetails">
-                      <div>
-                          <table style="margin:30px 0px;" >
-                              <tbody nz-col [nzSpan]="24" style="text-align: center;" >
-                              <tr nz-col [nzSpan]="24">
-                                  <td nz-col [nzSpan]="8">工程名</td>
-                                  <td nz-col [nzSpan]="16">{{s.projectName}}</td>
-                              </tr>
-                              <tr nz-col [nzSpan]="24">
-                                  <td nz-col [nzSpan]="8">导出为</td>
-                                  <td nz-col [nzSpan]="16">{{j.patchType }}</td>
-                              </tr>
-                              <tr nz-col [nzSpan]="24">
-                                  <td nz-col [nzSpan]="8">部署到</td>
-                                  <td nz-col [nzSpan]="16">{{j.deployWhere}}</td>
-                              </tr>
-                              <tr nz-col [nzSpan]="24">
-                                  <td nz-col [nzSpan]="15">代码</td>
-                                  <td nz-col [nzSpan]="3">变动类型</td>
-                                  <td nz-col [nzSpan]="3">最新版本</td>
-                                  <td nz-col [nzSpan]="3">开发人员</td>
-                              </tr>
-                              <tr nz-col [nzSpan]="24"  *ngFor="let k of j.fileList">
-                                  <td nz-col [nzSpan]="15">{{k.fullPath}}</td>
-                                  <td nz-col [nzSpan]="3">{{k.commitType}}</td>
-                                  <td nz-col [nzSpan]="3">{{k.deliveryVersion}}</td>
-                                  <td nz-col [nzSpan]="3">{{k.author}}</td>
-                              </tr>
-                              </tbody>
-                          </table>
+                    <!--  <div nz-col [nzSpan]="22" [nzOffset]="2" class="mb-md">
+                          <div  nz-form-item class="d-flex">
+                              <div class="ad-desc-list__term ng-star-inserted">投放明细:</div>
+                          </div>
                       </div>
-                  </div>
+                      &lt;!&ndash; 列表 &ndash;&gt;
+                      <div  nz-col [nzSpan]="24" class="mb-md" *ngFor="let s of detailInfo ; let l = index">
+                          <div *ngFor="let j of s.deliveryPatchDetails">
+                              <div>
+                                  <table style="margin:30px 0px;" >
+                                      <tbody nz-col [nzSpan]="24" style="text-align: center;" >
+                                      <tr nz-col [nzSpan]="24">
+                                          <td nz-col [nzSpan]="8">工程名</td>
+                                          <td nz-col [nzSpan]="16">{{s.projectName}}</td>
+                                      </tr>
+                                      <tr nz-col [nzSpan]="24">
+                                          <td nz-col [nzSpan]="8">导出为</td>
+                                          <td nz-col [nzSpan]="16">{{j.patchType }}</td>
+                                      </tr>
+                                      <tr nz-col [nzSpan]="24">
+                                          <td nz-col [nzSpan]="8">部署到</td>
+                                          <td nz-col [nzSpan]="16">{{j.deployWhere}}</td>
+                                      </tr>
+                                      <tr nz-col [nzSpan]="24">
+                                          <td nz-col [nzSpan]="15">代码</td>
+                                          <td nz-col [nzSpan]="3">变动类型</td>
+                                          <td nz-col [nzSpan]="3">最新版本</td>
+                                          <td nz-col [nzSpan]="3">开发人员</td>
+                                      </tr>
+                                      <tr nz-col [nzSpan]="24"  *ngFor="let k of j.fileList">
+                                          <td nz-col [nzSpan]="15">{{k.fullPath}}</td>
+                                          <td nz-col [nzSpan]="3">{{k.commitType}}</td>
+                                          <td nz-col [nzSpan]="3">{{k.deliveryVersion}}</td>
+                                          <td nz-col [nzSpan]="3">{{k.author}}</td>
+                                      </tr>
+                                      </tbody>
+                                  </table>
+                              </div>
+                          </div>
 
 
 
-              </div>-->
-            <!--  <div  nz-col [nzSpan]="24" class="mb-md" *ngFor="let d of copytextList" >
-                  <ng-container *ngIf = "d.projectType === 'C'">
-                      <ng-container *ngFor="let t of d.deliveryPatchDetails">
-                          <table style="margin:30px 0px;"  *ngIf="t.fileList.length > 0">
-                              <tbody nz-col [nzSpan]="24" style="text-align: center;" >
-                              <tr nz-col [nzSpan]="24">
-                                  <td nz-col [nzSpan]="8">工程名</td>
-                                  <td nz-col [nzSpan]="16">{{d.projectName}}</td>
-                              </tr>
-                              <tr nz-col [nzSpan]="24">
-                                  <td nz-col [nzSpan]="8">编译为</td>
-                                  <td nz-col [nzSpan]="16">{{t.deployWhere}}</td>
-                              </tr>
-                              <tr nz-col [nzSpan]="24">
-                                  <td nz-col [nzSpan]="8">部署到</td>
-                                  <td nz-col [nzSpan]="16">{{t.patchType}}</td>
-                              </tr>
-                              <tr nz-col [nzSpan]="24">
-                                  <td nz-col [nzSpan]="15">代码</td>
-                                  <td nz-col [nzSpan]="3">变动类型</td>
-                                  <td nz-col [nzSpan]="3">最新版本</td>
-                                  <td nz-col [nzSpan]="3">开发人员</td>
-                              </tr>
-                              <tr nz-col [nzSpan]="24"  *ngFor="let s of t.fileList">
-                                  <td style="text-overflow: ellipsis; overflow: hidden;white-space: nowrap" nz-col [nzSpan]="15">{{s.fullName}}</td>
-                                  <td nz-col [nzSpan]="3"> {{s.commitType}}</td>
-                                  <td nz-col [nzSpan]="3">{{s.deliveryVersion}}</td>
-                                  <td nz-col [nzSpan]="3">{{s.author}}</td>
-                              </tr>
-                              </tbody>
-                          </table>
-                      </ng-container>
-                  </ng-container>
-                  <ng-container *ngIf = "d.projectType === 'S' || d.projectType === 'D'">
-                      <ng-container *ngFor="let a of d.groupArray; let i = index">
-                          <table style="margin:30px 0px;">
-                              <tbody nz-col [nzSpan]="24" style="text-align: center;" >
-                              <tr nz-col [nzSpan]="24">
-                                  <td nz-col [nzSpan]="8">工程名1</td>
-                                  <td nz-col [nzSpan]="16">{{d.projectName}}</td>
-                              </tr>
-                              <tr nz-col [nzSpan]="24">
-                                  <td nz-col [nzSpan]="8">编译为</td>
-                                  <td nz-col [nzSpan]="16">{{a[0].deploySelect}}</td>
-                              </tr>
-                              <tr nz-col [nzSpan]="24">
-                                  <td nz-col [nzSpan]="8">部署到</td>
-                                  <td nz-col [nzSpan]="16">{{a[0].patchSelect}}</td>
-                              </tr>
-                              <tr nz-col [nzSpan]="24">
-                                  <td nz-col [nzSpan]="15">代码</td>
-                                  <td nz-col [nzSpan]="3">变动类型</td>
-                                  <td nz-col [nzSpan]="3">最新版本</td>
-                                  <td nz-col [nzSpan]="3">开发人员</td>
-                              </tr>
-                              <tr nz-col [nzSpan]="24"  *ngFor="let s of a">
-                                  <td style="text-overflow: ellipsis; overflow: hidden;white-space: nowrap" nz-col [nzSpan]="15">{{s.fullName}}</td>
-                                  <td nz-col [nzSpan]="3"> {{s.commitType}}</td>
-                                  <td nz-col [nzSpan]="3">{{s.deliveryVersion}}</td>
-                                  <td nz-col [nzSpan]="3">{{s.author}}</td>
-                              </tr>
-                              </tbody>
-                          </table>
+                      </div>-->
+                    <!--  <div  nz-col [nzSpan]="24" class="mb-md" *ngFor="let d of copytextList" >
+                          <ng-container *ngIf = "d.projectType === 'C'">
+                              <ng-container *ngFor="let t of d.deliveryPatchDetails">
+                                  <table style="margin:30px 0px;"  *ngIf="t.fileList.length > 0">
+                                      <tbody nz-col [nzSpan]="24" style="text-align: center;" >
+                                      <tr nz-col [nzSpan]="24">
+                                          <td nz-col [nzSpan]="8">工程名</td>
+                                          <td nz-col [nzSpan]="16">{{d.projectName}}</td>
+                                      </tr>
+                                      <tr nz-col [nzSpan]="24">
+                                          <td nz-col [nzSpan]="8">编译为</td>
+                                          <td nz-col [nzSpan]="16">{{t.deployWhere}}</td>
+                                      </tr>
+                                      <tr nz-col [nzSpan]="24">
+                                          <td nz-col [nzSpan]="8">部署到</td>
+                                          <td nz-col [nzSpan]="16">{{t.patchType}}</td>
+                                      </tr>
+                                      <tr nz-col [nzSpan]="24">
+                                          <td nz-col [nzSpan]="15">代码</td>
+                                          <td nz-col [nzSpan]="3">变动类型</td>
+                                          <td nz-col [nzSpan]="3">最新版本</td>
+                                          <td nz-col [nzSpan]="3">开发人员</td>
+                                      </tr>
+                                      <tr nz-col [nzSpan]="24"  *ngFor="let s of t.fileList">
+                                          <td style="text-overflow: ellipsis; overflow: hidden;white-space: nowrap" nz-col [nzSpan]="15">{{s.fullName}}</td>
+                                          <td nz-col [nzSpan]="3"> {{s.commitType}}</td>
+                                          <td nz-col [nzSpan]="3">{{s.deliveryVersion}}</td>
+                                          <td nz-col [nzSpan]="3">{{s.author}}</td>
+                                      </tr>
+                                      </tbody>
+                                  </table>
+                              </ng-container>
+                          </ng-container>
+                          <ng-container *ngIf = "d.projectType === 'S' || d.projectType === 'D'">
+                              <ng-container *ngFor="let a of d.groupArray; let i = index">
+                                  <table style="margin:30px 0px;">
+                                      <tbody nz-col [nzSpan]="24" style="text-align: center;" >
+                                      <tr nz-col [nzSpan]="24">
+                                          <td nz-col [nzSpan]="8">工程名1</td>
+                                          <td nz-col [nzSpan]="16">{{d.projectName}}</td>
+                                      </tr>
+                                      <tr nz-col [nzSpan]="24">
+                                          <td nz-col [nzSpan]="8">编译为</td>
+                                          <td nz-col [nzSpan]="16">{{a[0].deploySelect}}</td>
+                                      </tr>
+                                      <tr nz-col [nzSpan]="24">
+                                          <td nz-col [nzSpan]="8">部署到</td>
+                                          <td nz-col [nzSpan]="16">{{a[0].patchSelect}}</td>
+                                      </tr>
+                                      <tr nz-col [nzSpan]="24">
+                                          <td nz-col [nzSpan]="15">代码</td>
+                                          <td nz-col [nzSpan]="3">变动类型</td>
+                                          <td nz-col [nzSpan]="3">最新版本</td>
+                                          <td nz-col [nzSpan]="3">开发人员</td>
+                                      </tr>
+                                      <tr nz-col [nzSpan]="24"  *ngFor="let s of a">
+                                          <td style="text-overflow: ellipsis; overflow: hidden;white-space: nowrap" nz-col [nzSpan]="15">{{s.fullName}}</td>
+                                          <td nz-col [nzSpan]="3"> {{s.commitType}}</td>
+                                          <td nz-col [nzSpan]="3">{{s.deliveryVersion}}</td>
+                                          <td nz-col [nzSpan]="3">{{s.author}}</td>
+                                      </tr>
+                                      </tbody>
+                                  </table>
 
-                      </ng-container>
-                  </ng-container>
-              </div>
-  -->
-        </div>
-    </ng-template>
-</nz-modal>
+                              </ng-container>
+                          </ng-container>
+                      </div>
+          -->
+                </div>
+            </ng-template>
+        </nz-modal>
