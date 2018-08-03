@@ -10,6 +10,11 @@ import { NzMessageService } from 'ng-zorro-antd';
     styleUrls: ['./mergelist.component.less']
     })
 export class MergelistComponent implements OnInit {
+
+    // 变量
+    errorId: any;
+
+    // 输入属性
     @Input() // 输入属性,接受父组件传入的数据
     elementScice: any[];
     @Input()
@@ -21,46 +26,45 @@ export class MergelistComponent implements OnInit {
     @Input()
     iStouchan: boolean;
     @Input()
-    istextVisible:boolean;
+    istextVisible: boolean;
     @Input()
-    checkStatus:boolean;
+    checkStatus: boolean;
     @Input()
-    title:any;
-    // @Input()
-    //  loading:boolean;
+    title: any;
     @Input()
-    checkModalData:any[];
+    checkModalData: any[];
     @Input()
-    mergeListData:any[];
+    mergeListData: any[];
     @Input()
-    guidprent:any[];
+    guidprent: any[];
     @Input()
-    guid:any;
+    guid: any;
     @Input()
-    checkloading:boolean;
+    checkloading: boolean;
     @Input()
-    loading1:boolean;
+    loading1: boolean;
      @Input()
-    loading2:boolean;
+    loading2: boolean;
     @Output()
 
+    // 输出属性
     isActive: EventEmitter<any> = new EventEmitter(); // 定义一个输出属性，当点击按钮的时候 发射出去
     @Output()
     buttonClick: EventEmitter<any> = new EventEmitter();
     @Output()
     mergeClick: EventEmitter<any> = new EventEmitter(); // 定义一个输出属性，当点击按钮的时候 发射出去
     @Output()
-    returnsclick:EventEmitter<any> = new EventEmitter();
+    returnsclick: EventEmitter<any> = new EventEmitter();
     @Output()
-    checkSave:EventEmitter<any> = new EventEmitter();
+    checkSave: EventEmitter<any> = new EventEmitter();
 
     arr = [{
-        guidDelivery:'',
-        deployWhere:'',
-        patchType:''
+        guidDelivery: '',
+        deployWhere: '',
+        patchType: ''
 
     }]
-   returnID:any;
+   returnID: any;
 
     // deliveryTime
     constructor(private http: _HttpClient,
@@ -71,18 +75,17 @@ export class MergelistComponent implements OnInit {
     ngOnInit() {
         this.elementScice = this.elementScice;
         this.checkloading = false;
-        // this.title =  this.title;
-         console.log(this.guidprent);
     }
 
-      isClick(d,i) {
+    // 点击方法
+    isClick(d, i) {
 
-          if(d == true && i == true){
-            this.isActive.emit(i)
+          if (d === true && i === true) {
+            this.isActive.emit(i);
           }
-            // 此时，代表允许有行为，至于是路由跳转还是弹出框 父组件中进行定义和修改
-        
-    };
+
+
+    }
 
      onChange(item) {
         for (let i = 0; i < this.elementScice.length; i ++) {
@@ -92,46 +95,41 @@ export class MergelistComponent implements OnInit {
         }
 
     }
-    sonmergeClick(index) {
-         
-        this.mergeClick.emit(index)
-    }
-     errorId:any;
-    sonbuttonClick(index,it,suoyin) {
-          console.log(it)
-         this.arr = [{
-        guidDelivery:'',
-        deployWhere:'',
-        patchType:''
 
+    sonmergeClick(index) {
+        this.mergeClick.emit(index);
+    }
+
+    sonbuttonClick(index, it, suoyin) {
+         this.arr = [{
+            guidDelivery: '',
+            deployWhere: '',
+            patchType: ''
     }]
 
-   
+
         switch(index){
             case 1:
                it.buttons = true;
              it.confirmStatus = '已合并'
-            
-             
+
+
              break;
               case 2:
                it.buttons = false;
              it.confirmStatus = '不投产'
-            
+
              break;
               case 3:
-           
-            this.errorId=it.guid
+
+            this.errorId = it.guid
              break;
               case 4:
-            this.errorId=it.guid
-                // it.checkbuttons = true;
-                //   it.confirmStatus = '加入投放'
+            this.errorId = it.guid
          this.iStouchan = true;
              break;
         }
-          console.log(it)
-        
+
         let obj = {
             index:index,
             id : it.guid,
@@ -140,41 +138,32 @@ export class MergelistComponent implements OnInit {
         }
         this.buttonClick.emit(obj)
     }
-    sonreturnsclick(index,it){
+
+    sonreturnsclick(index, it) {
         // let guid = it
-        if(index == 0){
+        if (index === 0) {
             this.istextVisible = true
-            this.returnID = it
-            // guid = it.guid;
-        }else{
-        //   if(index == 1){
-        //     guid = it.guid;
-        //     }
+            this.returnID = it;
+        }else {
             let obj = {
-                index:index,
+                index: index,
                 it : it,
                         }
-            // console.log(obj)
             this.returnsclick.emit(obj)
-            if(index == 2 ){
-            this.istextVisible = false
-                  }
+            if (index === 2 ) {
+            this.istextVisible = false;
+           }
         }
-       
-     
+
+
     }
 
- 
     soncheckSave(){
-      
           this.errorId;
-          let obj=
-              {
-                  arr:this.arr,
-                  errorId:this.errorId
-              }
-          
-            this.checkSave.emit(obj)
+          let obj = {
+                  arr: this.arr,
+                  errorId: this.errorId
+              };
+            this.checkSave.emit(obj);
     }
-
  }

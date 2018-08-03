@@ -19,80 +19,83 @@ export class ListComponent implements OnInit {
         statusList: []
     };
 
-    // 拿到table的实例，获取table的方法和属性
+    // 使用子组件的方法
     @ViewChild('nzTable')
     table: ListComponent;
 
-
+    // 变量
     loading = false;
     selectedRows: any[] = [];
     curRows: any[] = [];
     totalCallNo = 0;
     allChecked = false;
     indeterminate = false;
-    // isShowTotal = true;
-
     header: any[]; // 表头数据
     obj: any[];
-   @Input()
-   nzShowIcon:boolean
-    @Input() // 输入属性,接受父组件传入的数据
-    initDate: any[];
-    @Input() // 输入属性,接受父组件传递的表头
-    headerDate: any[];
-    @Input() // 输入属性,接受按钮层方法
-    moreData: any[];
-    @Input() // 输入属性,数据总条数
-    total: number;
-    @Input() // 输入属性,接受父组件传入的数据
-    showAdd: boolean;
-    @Input() // 输入属性,接受父组件传入的数据
-    configTitle: string;
-    @Input() // 输入属性,接受父组件传入的数据
-    buttons: any;
-    @Input() // 输入属性,接受父组件传入的数据
-    isPagination: any;
-    @Input() // 输入属性,接受父组件传入的数据
-    parsentList: any;
-    @Input() // 输入属性,接受父组件传入的数据
-    parsentbool: any;
-    @Input() // 输入属性,接受父组件传入的数据
-    pageTotal: number;
-    @Input() // 输入属性,接受父组件传入的数据
-    pageindex: number;
-    @Input() // 输入属性,接受父组件传入的数据
-    deleteTitle: string;
-    @Input() // 输入属性,接受父组件传入的数据
-    isShowTotal: boolean;
-    @Input()
-    isShowTotalhead:boolean
-   @Input()
-   switch:boolean
     data: any[] = [];
+    deplayArray = [];
+    isshow = false;
+
+    // 输入属性
+    @Input()
+    nzShowIcon: boolean; // 图标是否显示
+    @Input()
+    initDate: any[]; // 初始化列表数据
+    @Input()
+    headerDate: any[]; // 初始化头部数据
+    @Input()
+    moreData: any[]; // 初始化上方按钮数据
+    @Input()
+    total: number; // 列表总数
+    @Input()
+    showAdd: boolean; // 是否有新增、修改默认按钮
+    @Input()
+    configTitle: string; // 配置按钮
+    @Input()
+    buttons: any; // 操作栏按钮
+    @Input()
+    isPagination: any; //
+    @Input()
+    parsentList: any; // 传输对象
+    @Input()
+    parsentbool: any; // 传递单个/多个
+    @Input()
+    pageTotal: number; // list页码总数
+    @Input()
+    pageindex: number; // list 当前页码
+    @Input()
+    deleteTitle: string;
+    @Input()
+    isShowTotal: boolean; // 是否显示总数
+    @Input()
+    isShowTotalhead: boolean; // 是否显示头部
+    @Input()
+     switch: boolean; // switch开关
+
+    // 输出属性
+    @Output()
+    addCreat: EventEmitter<string> = new EventEmitter(); // 新增、修改按钮方法输出
 
     @Output()
-    addCreat: EventEmitter<string> = new EventEmitter(); // 定义一个输出属性，当点击按钮的时候 发射出去
+    pageNumber: EventEmitter<number> = new EventEmitter(); // 翻页方法输出
 
     @Output()
-    pageNumber: EventEmitter<number> = new EventEmitter(); // 定义一个输出属性，当点击按钮的时候 发射出去
+    deleatData: EventEmitter<any> = new EventEmitter(); // 删除方法输出
 
     @Output()
-    deleatData: EventEmitter<any> = new EventEmitter(); // 定义一个输出属性，当点击按钮的时候 发射出去
-
-    @Output()
-    isActive: EventEmitter<any> = new EventEmitter(); // 定义一个输出属性，当点击按钮的时候 发射出去
+    isActive: EventEmitter<any> = new EventEmitter(); // 点击list字段内容跳转方法
 
      @Output()
-     buttonData: EventEmitter<any> = new EventEmitter(); // 定义一个输出属性，按钮点击事件，非必选
+     buttonData: EventEmitter<any> = new EventEmitter(); // 按钮方法
 
     @Output()
-    selectedRow: EventEmitter<any> = new EventEmitter(); // 定义一个输出属性，按钮点击事件，非必选
+    selectedRow: EventEmitter<any> = new EventEmitter(); // 选中checkbox方法
 
     @Output()
-    buttonEvent: EventEmitter<any> = new EventEmitter(); // 定义一个输出属性，按钮点击事件，非必选
+    buttonEvent: EventEmitter<any> = new EventEmitter(); // 自定义按钮方法
 
     @Output()
-    getStatus: EventEmitter<any> = new EventEmitter(); // 定义一个输出属性，按钮点击事件，非必选
+    getStatus: EventEmitter<any> = new EventEmitter(); // 改变状态方法
 
     constructor(
         private http: _HttpClient,
@@ -100,19 +103,18 @@ export class ListComponent implements OnInit {
     ) {
     }
 
-
+    // 初始化方法
     ngOnInit() {
         this.headerDate = this.headerDate;
         this.moreData = this.moreData; // 绑定更多数据
-        // this.isShowTotalhead = true
-        this.checkTotal()
+        this.checkTotal();
 
 
     }
 
-    checkTotal(){
-     console.log(this.isShowTotalhead)
-     if(this.isShowTotalhead == undefined){
+    // 是否显示总数
+    checkTotal() {
+     if (this.isShowTotalhead === undefined){
          this.isShowTotalhead = true;
      }
     }
@@ -124,17 +126,17 @@ export class ListComponent implements OnInit {
         }
     }
 
+
+    // 点击按钮方法
     buttonClick(event, Name, index) {
         if (Name) {
             event.names = Name;
-            if (this.parsentbool ) { // 如果是true则传递两个
+            if (this.parsentbool ) { // 判断标识是否为true，如果是true则传递两个
                 const obj = {
                     data: event,
                     parList: this.parsentList,
                     index: index,
-                }
-
-
+                };
                 this.buttonEvent.emit(obj); // 点击了修改，打开弹出框，把修改的数据传递过去
             } else {
                 this.buttonEvent.emit(event); // 点击了修改，打开弹出框，把修改的数据传递过去
@@ -158,11 +160,10 @@ export class ListComponent implements OnInit {
     // 移除数据方法
     remove() {
         this.deleatData.emit(this.selectedRows); // 把要删除的内容发射给父组件
-        // this.getData();
         this.clear();
     }
 
-
+    // 点击list更多操作按钮方法
     moreclick(event) {
         const obj = {
             key: this.selectedRows[0],
@@ -188,10 +189,13 @@ export class ListComponent implements OnInit {
         });
         this.refreshStatus();
     }
-    status(i,event) {
-        i.status = event
-        i.switch = false
-   this.getStatus.emit(i); // 把要删除的内容发射给父组件
+
+
+    // switch 状态改变方法
+    status(i, event) {
+        i.status = event;
+        i.switch = false;
+        this.getStatus.emit(i); // 把要删除的内容发射给父组件
     }
 
 
@@ -237,9 +241,8 @@ export class ListComponent implements OnInit {
         // this.getData();
     }
 
-    deplayArray = [];
-    isshow = false;
 
+    // 比较方法，提清单config 工程级联方法
     onChanges(p, d, a, l) { // 选择值和完整json数组
         l.isshow = true; // 显示部署为
         let obj = {}

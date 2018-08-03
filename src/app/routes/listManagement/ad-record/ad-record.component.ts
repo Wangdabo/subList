@@ -24,7 +24,7 @@ export class AdRecordComponent implements OnInit {
         private modal: NzModalService,
         private nznot: NzNotificationService,
        @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
-  
+
         // private MergelistComponent : MergelistComponent
     ) { }
 
@@ -90,7 +90,7 @@ export class AdRecordComponent implements OnInit {
         // {key: 'dels', value: '删除',if:false },
         //  {key: 'details', value: '详情',if:false }
     ]
-     
+
 
     test: string;
     page: any;
@@ -138,7 +138,7 @@ export class AdRecordComponent implements OnInit {
         if (event === 'merge') {
 
 
-            
+
             // this.mergeVisible = true;
         } else if (event === 'checking') {
             this.modalVisible = true; // 打开核对弹出框
@@ -167,11 +167,11 @@ export class AdRecordComponent implements OnInit {
             // { guid:'',
             //  guidWorkitem:''
             //    }
-            
+
          ]
-         
-        
-         
+
+
+
     // 按钮点击事件
     idcheck:any
     checkloading:any;
@@ -181,7 +181,7 @@ export class AdRecordComponent implements OnInit {
         this.mergeId = event.guid;
 
         if (event.names.key === 'merge') {
-              
+
             this.idcheck = event.guid;
               let index = '';
               let indexs = '';
@@ -190,20 +190,20 @@ export class AdRecordComponent implements OnInit {
              this.utilityService.getData( appConfig.testUrl +'/checks/'+event.guid, {}, {Authorization: this.token})
                          .subscribe(
                          (val) => {
-                         
+
                             this.checkloading = false;
                           this.detailVisible = true;
                           this.checkModalData = val.result.deliveryDetails;
                           console.log(val)
                           if(val.result.check.checkStatus == '正在核对'){
                                 this.checkStatus = true
-                               
+
                           }else{
                                this.title = val.result.check.checkStatus
                                 this.checkStatus = false
                           }
-                         
-                        
+
+
                           this.mergeListData  = val.result.mergeLists;
                           let star = '';
                           let end = '';
@@ -213,7 +213,7 @@ export class AdRecordComponent implements OnInit {
                             }else{
                                 this.mergeListData[i]['checkbuttons'] = false;
                             }
-                          
+
                             if (this.mergeListData[i].fullPath) {
                                 indexs = this.mergeListData[i].fullPath.indexOf(this.mergeListData[i].partOfProject);
                                 this.mergeListData[i].fullPath = this.mergeListData[i].fullPath.substring(indexs, this.mergeListData[i].fullPath.length);
@@ -224,7 +224,7 @@ export class AdRecordComponent implements OnInit {
                                                         }else{
                                                             this.mergeListData[i].fullPathstr =this.mergeListData[i].fullPath
                                                      }
-                                                    
+
 
                          }
                            if(this.mergeListData[i].programName.length > 40){
@@ -236,7 +236,7 @@ export class AdRecordComponent implements OnInit {
                                                      }
                         }
                          for  (let i = 0; i < this.checkModalData.length; i ++) {
-                             
+
                               let obj = {
                                   guid:this.checkModalData[i].delivery.guid,
                                   guidWorkitem:this.checkModalData[i].delivery.guidWorkitem.target
@@ -244,18 +244,18 @@ export class AdRecordComponent implements OnInit {
                                     //  let checkingloading = {checkingloading:false}
                                       this.guidprent.push(obj);
                                     //    this.checkModalData[i].delivery.push(checkingloading);
-                                       this.checkModalData[i].delivery.checkingloading = false; 
+                                       this.checkModalData[i].delivery.checkingloading = false;
                                      if(  this.checkModalData[i].delivery.deliveryResult =='核对中' ){
-                                          this.checkModalData[i].delivery.disabledS = false; 
+                                          this.checkModalData[i].delivery.disabledS = false;
                                      }else{
-                                         this.checkModalData[i].delivery.disabledS = true; 
+                                         this.checkModalData[i].delivery.disabledS = true;
                                      }
-                                      
 
 
-                            for (let j = 0; j < this.checkModalData[i].detailList.length; j ++) {                                   
+
+                            for (let j = 0; j < this.checkModalData[i].detailList.length; j ++) {
                                 for (let x = 0; x < this.checkModalData[i].detailList[j].deliveryPatchDetails.length; x ++) {
- 
+
                                     for (let  y = 0; y < this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList.length; y ++) {
                                            this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y]['buttons'] = null
                                         if (this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath) {
@@ -268,22 +268,22 @@ export class AdRecordComponent implements OnInit {
                                                         }else{
                                                            this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPathstr =this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath
                                                      }
-                                                  
+
                               }
                                     }
                                 }
                             }
                         }
                         console.log(this.checkModalData);
-                        //   
-                        
+                        //
+
                                 }
                                 ,(error)=>{
                                     console.log(error)
                                     this.nznot.create('error', error.msg,'');
-                                }) 
+                                })
 
-          
+
         } else if (event.names.key  === 'details') {
             //  this.modal.open({
             //     title          : '对话框标题',
@@ -309,12 +309,12 @@ loading1 = false
 loading2 = false
 mergeClick(index){
     let status = '';
-    
+
    switch(index){
        case 0 :
        this.detailVisible = false
        return;
-    
+
          case 1 :
          this.loading1 = true;
        status  = 'F'
@@ -324,10 +324,10 @@ mergeClick(index){
        this.loading2 = true;
        break;
    }
-  
-    let self = this; 
+
+    let self = this;
     this.modal.confirm({
-      title  : '您是否确认要进行这项操作!',     
+      title  : '您是否确认要进行这项操作!',
       showConfirmLoading: true,
       onOk() {
            self.utilityService.putData( appConfig.testUrl +'/checks/'+self.mergeId+'/status/'+status, {}, {Authorization: self.token})
@@ -339,9 +339,9 @@ mergeClick(index){
                            self.loading1 = false;
                            self.loading2 = false;
                           if(val.code == 200) {
-                       
+
                            self.nznot.create('success',val.msg,'');
-                             self.detailVisible =false;     
+                             self.detailVisible =false;
                           }else{
                                 self.nznot.create('error', val.msg,'');
                           }
@@ -356,19 +356,19 @@ mergeClick(index){
       onCancel() {
       }
     });
-      
 
-} 
-   
+
+}
+
     // 列表按钮方法
     buttonDataHandler(event) {
-      
-        
+
+
 
 
     }
      iStouchan = false
-    
+
         buttonClick(event){
             let type = event.index;
             let id = event.id;
@@ -376,16 +376,16 @@ mergeClick(index){
             console.log(type);
             console.log(id);
             if(type=='4'){
-         
+
            this.iStouchan =true
-         
+
             }else{
 
               this.utilityService.putData( appConfig.testUrl +'/checkLists/'+id+'/status/'+type, {}, {Authorization: this.token})
                          .subscribe(
                          (val) => {
                           if(val.code == 200) {
-                       
+
                            this.nznot.create('success',val.msg,'');
                            if(type == 3){
                              this.mergeListData.splice(soyin,1)// 删除数组
@@ -455,18 +455,17 @@ mergeClick(index){
     // 关闭核对清单
     checkSave(event) {
         let objs =event.arr
-         
+
         this.iStouchan = false;
-     
-           
+
+
         const obj ={
             guidDelivery:String(objs.guidDelivery),
             patchType:objs.patchType,
             deployWhere:objs.deployWhere
         }
-    
+
           this.utilityService.putData( appConfig.testUrl +'/checkLists/'+event.errorId+'/delivery', obj, {Authorization: this.token})
-                        .map(res => res.json())
                          .subscribe(
                          (val) => {
                           if(val.code == 200) {
@@ -479,12 +478,12 @@ mergeClick(index){
                                  }
                              })
                                  console.log(this.mergeListData)
-                           this.nznot.create('success',val.msg,'');
-                                //    
-                                  
+                           this.nznot.create('success', val.msg, '');
+                                //
+
                           }
                          },(error)=>{
-                                 this.nznot.create('error', error.msg,'');
+                                 this.nznot.create('error', error.msg, '');
                          });
     }
 
@@ -514,11 +513,11 @@ mergeClick(index){
        let item = event.index
        this.guid=event.it.guid
        let S = '';
-    
+
 
        let  url = appConfig.testUrl + '/checks/delivery/' + this.guid + '/result';
        if (item === 1) {
-           S = 'S';              
+           S = 'S';
        }else {
            S = 'F';
        }
@@ -534,9 +533,9 @@ mergeClick(index){
 
                    if (val.code == 200){
                          console.log(this.istextVisible )
-                            
+
                        this.istextVisible = false;
-                         
+
                        if(item === 1 ){
                            event.it.disabledS = true
                            event.it.deliveryResult = '核对成功'
@@ -544,7 +543,7 @@ mergeClick(index){
                            event.it.disabledS = true
                            event.it.deliveryResult = '核对失败'
                        }
-                 
+
                        this.nznot.create('success', val.msg, val.msg);
                    }else{
                          this.nznot.create('error', val.msg,'');
@@ -556,7 +555,7 @@ mergeClick(index){
                 this.nznot.create('error', error.msg,'');
                }
            );
-   
+
 
 
     }
