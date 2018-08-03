@@ -89,7 +89,7 @@ export let appConfig = {
     },
 
     // 公共截取字符串方法
-    subString(str,length){
+    subString(str, length){
         let star = '';
         let end = '';
       star = str.substr(0,length)
