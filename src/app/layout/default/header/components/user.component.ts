@@ -50,7 +50,7 @@ export class HeaderUserComponent implements OnInit {
  this.router.navigateByUrl(this.tokenService.login_url);
 
        this.utilityService.postData(appConfig.testUrl  + appConfig.API.logout, {}, {Authorization: this.tokenService.get().token })
-            .map(res => res.json())
+        
             .subscribe(
                 (val) => {
                 

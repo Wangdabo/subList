@@ -1,34 +1,88 @@
-<pro-header ></pro-header>
+    <pro-header ></pro-header>
 
 
-<nz-card [nzBordered]="false">
-    <!--  form表单搜索 -->
-    <form nz-form (ngSubmit)="search()" [nzLayout]="'inline'">
-        <div nz-row  [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
-            <div nz-col [nzSpan]="8" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label><label for="name">工作项名称</label></div>
-                    <div nz-form-control class="flex-1">
-                        <nz-input [(ngModel)]="workItem.itemName" name="itemName" [nzSize]="'large'" [nzPlaceHolder]="'工作项名称'" nzId="itemName"></nz-input>
+    <nz-card [nzBordered]="false">
+        <!--  form表单搜索 -->
+        <form nz-form (ngSubmit)="search()" [nzLayout]="'inline'">
+            <div nz-row  [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="24">
+                <div nz-col [nzSpan]="8" class="mb-md">
+                    <div nz-form-item class="d-flex">
+                        <div nz-form-label><label for="name">工作项名称</label></div>
+                        <div nz-form-control class="flex-1">
+                            <nz-input [(ngModel)]="workItem.itemName" name="itemName" [nzSize]="'large'" [nzPlaceHolder]="'工作项名称'" nzId="itemName"></nz-input>
+                        </div>
                     </div>
+                </div>
+               <div  nz-col [nzSpan]="8" class="mb-md">
+                        <div nz-form-item class="d-flex">
+                            <div nz-form-label><label for="name">项目负责人</label></div>
+                            <div nz-form-control class="flex-1">
+                                <nz-select [(ngModel)]="workItem.owner" name="owner" nzId="owner" [nzPlaceHolder]="'工作项负责人'" [nzShowSearch]="true" [nzSize]="'large'">
+                                    <nz-option *ngFor="let i of owner; let idx = index" [nzLabel]="i.svnUser" [nzValue]="i.userId"></nz-option>
+                                </nz-select>
+                            </div>
+                        </div>
+               </div>
+                    <div nz-col [nzSpan]="expandForm ? 24 : 8" class="mb-md" [class.text-right]="expandForm">
+                    <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="loading" [nzSize]="'large'">查询</button>
+                    <button nz-button type="reset" (click)="reset()" [nzSize]="'large'" class="mx-sm">重置</button>
+                    <!--<a (click)="expandForm=!expandForm">
+                        {{expandForm ? '收起' : '展开'}}
+                        <i class="anticon" [class.anticon-down]="!expandForm" [class.anticon-up]="expandForm"></i>
+                    </a>-->
                 </div>
             </div>
-            <!--<div nz-col [nzSpan]="8" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label><label for="name">需求编号</label></div>
-                    <div nz-form-control class="flex-1">
-                        <nz-input [(ngModel)]="workItem.seqNo" name="seqNo" [nzSize]="'large'" [nzPlaceHolder]="'需求编号'" nzId="seqNo"></nz-input>
+        </form>
+        <!-- 监听列表组件，如果点击了则告诉弹出框组件，打开弹出框,监听addCreat方法-->
+        <app-list
+            [initDate]="data"
+            [isPagination]="isPagination"
+            [buttons] ='buttons'
+            (addCreat)="addHandler($event)"
+            (buttonData)="buttonDataHandler($event)"
+            (pageNumber)="monitorHandler($event)"
+            (buttonEvent)="buttonEvent($event)"
+            (selectedRow)="selectedRow($event)"
+            [headerDate]="headerDate"
+             [moreData]="moreData"
+            [pageindex]='pageIndex'
+            [total]="total"
+            [isShowTotal]="isShowTotal"
+            [showAdd]="showAdd"
+            [pageTotal] = 'pageTotal'></app-list>
+    </nz-card>
+
+
+    <!--新增工作项内容-->
+    <nz-modal [nzVisible]="modalVisible" [nzWidth]="1024" [nzTitle]="modelTitle" [nzConfirmLoading]="loading" [nzContent]="modalContent"
+              (nzOnCancel)="modalVisible=false" (nzOnOk)="save()">
+        <ng-template #modalContent>
+            <div nz-row  [nzType]="'flex'" [nzJustify]="'end'" [nzGutter]="24">
+                <div nz-col [nzSpan]="24" class="mb-md">
+                    <div nz-form-item class="d-flex">
+                        <div nz-col [nzSpan]="3" nz-form-label class="alignment"><label for="name">工作项名称</label></div>
+                        <div nz-col [nzSpan]="21" nz-form-control >
+                            <nz-input [(ngModel)]="workAdd.itemName" name="itemName" [nzSize]="'large'" [nzPlaceHolder]="'工作项名称'" nzId="itemName"></nz-input>
+                        </div>
+
                     </div>
                 </div>
-            </div>-->
-         <!--  <div *ngIf="expandForm" nz-col [nzSpan]="8" class="mb-md">
+                <div nz-col [nzSpan]="24" class="mb-md">
                     <div nz-form-item class="d-flex">
-                        <div nz-form-label><label for="name">开发人员</label></div>
-                        <div nz-form-control class="flex-1">
+                        <div nz-form-label nz-col [nzSpan]="3"><label for="name">需求编号</label></div>
+                        <div nz-form-control  nz-col [nzSpan]="21">
+                            <nz-input [(ngModel)]="workAdd.seqno" name="seqno" [nzSize]="'large'" [nzPlaceHolder]="'需求编号'" nzId="seqno"></nz-input>
+                        </div>
+                    </div>
+                </div>
+                <div nz-col [nzSpan]="24" class="mb-md">
+                    <div nz-form-item class="d-flex">
+                        <div nz-form-label nz-col [nzSpan]="3"><label>开发人员</label></div>
+                        <div nz-form-control nz-col [nzSpan]="21">
                             <nz-select style="width: 100%;"
                                        [nzMode]="'multiple'"
                                        [nzPlaceHolder]="'开发人员'"
-                                       [(ngModel)]="workItem.developers"
+                                       [(ngModel)]="workAdd.developers"
                                        [nzNotFoundContent]="'无法找到'"
                                        name='开发人员'>
                                 <nz-option
@@ -39,390 +93,270 @@
                             </nz-select>
                         </div>
                     </div>
-                </div>-->
-           <div  nz-col [nzSpan]="8" class="mb-md">
+                </div>
+                <div nz-col [nzSpan]="24" class="mb-md">
                     <div nz-form-item class="d-flex">
-                        <div nz-form-label><label for="name">项目负责人</label></div>
-                        <div nz-form-control class="flex-1">
-                            <nz-select [(ngModel)]="workItem.owner" name="owner" nzId="owner" [nzPlaceHolder]="'工作项负责人'" [nzShowSearch]="true" [nzSize]="'large'">
+                        <div nz-form-label nz-col [nzSpan]="3"><label for="name">项目负责人</label></div>
+                        <div nz-form-control nz-col [nzSpan]="21" >
+                            <nz-select style="width:100%;" [(ngModel)]="workAdd.owner" name="owner" nzId="owner" [nzPlaceHolder]="'工作项负责人'" [nzShowSearch]="true" [nzSize]="'large'">
                                 <nz-option *ngFor="let i of owner; let idx = index" [nzLabel]="i.svnUser" [nzValue]="i.userId"></nz-option>
                             </nz-select>
                         </div>
                     </div>
-           </div>
-            <!--<div *ngIf="expandForm" nz-col [nzSpan]="8" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label class="alignment"><label for="no">开发时间</label></div>
-                    <div nz-form-control class="flex-1">
-                        <nz-datepicker [(ngModel)]="workItem.developStartTime" [nzFormat]="'YYYY-MM-DD'"    name="developStartTime" [nzSize]="'large'" [nzPlaceHolder]="'启动开发时间'" nzId="developStartTime" class="d-block"></nz-datepicker>
+                </div>
+                <div nz-col [nzSpan]="24" class="mb-md">
+                    <div nz-form-item class="d-flex">
+                        <div nz-form-label nz-col [nzSpan]="3" class="alignment"><label for="no">需求时间</label></div>
+                        <div nz-form-control nz-col [nzSpan]="21">
+                            <nz-datepicker [(ngModel)]="workAdd.receiveTime"  [nzFormat]="'YYYY-MM-DD'"     name="receiveTime" [nzSize]="'large'" [nzPlaceHolder]="'收到需求时间'" nzId="receiveTime" class="d-block"></nz-datepicker>
+                        </div>
+                    </div>
+                </div>
+                <div nz-col [nzSpan]="24" class="mb-md">
+                    <div nz-form-item class="d-flex">
+                        <div nz-form-label nz-col [nzSpan]="3" class="alignment"><label for="no">开发时间</label></div>
+                        <div nz-form-control nz-col [nzSpan]="21">
+                            <nz-datepicker [(ngModel)]="workAdd.developStartTime" [nzFormat]="'YYYY-MM-DD'"    name="developStartTime" [nzSize]="'large'" [nzPlaceHolder]="'启动开发时间'" nzId="developStartTime" class="d-block"></nz-datepicker>
+                        </div>
+                    </div>
+                </div>
+
+                <div nz-col [nzSpan]="24" class="mb-md">
+                    <div nz-form-item class="d-flex">
+                        <div nz-form-label nz-col [nzSpan]="3" class="alignment"><label for="no">计划时间</label></div>
+                        <div nz-form-control nz-col [nzSpan]="21">
+                            <nz-datepicker [(ngModel)]="workAdd.deliveryPlanTime" [nzFormat]="'YYYY-MM-DD'"    name="deliveryPlanTime" [nzSize]="'large'" [nzPlaceHolder]="'计划投产时间'" nzId="deliveryPlanTime" class="d-block"></nz-datepicker>
+                        </div>
+                    </div>
+                </div>
+
+                <div nz-col [nzSpan]="24" class="mb-md">
+                    <div nz-form-item class="d-flex">
+                        <div nz-form-label nz-col [nzSpan]="3" class="alignment"><label for="no">实际时间</label></div>
+                        <div nz-form-control nz-col [nzSpan]="21">
+                            <nz-datepicker [(ngModel)]="workAdd.deliveryTime" [nzFormat]="'YYYY-MM-DD'"    name="deliveryTime" [nzSize]="'large'" [nzPlaceHolder]="'实际投产时间'" nzId="deliveryTime" class="d-block"></nz-datepicker>
+                        </div>
+                    </div>
+                </div>
+                <div nz-col [nzSpan]="24" class="mb-md">
+                    <div nz-form-item class="d-flex">
+                        <div nz-form-label nz-col [nzSpan]="3" class="alignment">
+                            <label for="no">需求描述</label>
+                        </div>
+                        <div nz-form-control nz-col [nzSpan]="21">
+                            <nz-input [(ngModel)]="workAdd.requirementDesc" nzAutosize=true nzType="textarea" name="requirementDesc" [nzSize]="'large'" [nzPlaceHolder]="'需求描述'"
+                                      nzId="requirementDesc"></nz-input>
+                        </div>
+                    </div>
+                </div>
+                   <div nz-col [nzSpan]="24" class="mb-md">
+                    <div nz-form-item class="d-flex">
+                        <div nz-form-label nz-col [nzSpan]="3" class="alignment">
+                            <label for="no">ARTF</label>
+                        </div>
+                         <div nz-form-control nz-col [nzSpan]="21">
+                            <nz-input [(ngModel)]="workAdd.artf" nzAutosize=true  (ngModelChange)="checkArtf(workAdd.artf)"  name="artf" [nzSize]="'large'" [nzPlaceHolder]="'请输入ARTF'"
+                                      nzId="artf"></nz-input>
+                                      <nz-alert *ngIf='isShowIp == true' nzBanner nzMessage="只能输入数字类型"></nz-alert>
+                        </div>
+
                     </div>
                 </div>
             </div>
-            <div *ngIf="expandForm" nz-col [nzSpan]="8" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label class="alignment"><label for="no">计划时间</label></div>
-                    <div nz-form-control class="flex-1">
-                        <nz-datepicker [(ngModel)]="workItem.deliveryPlanTime" [nzFormat]="'YYYY-MM-DD'"    name="deliveryPlanTime" [nzSize]="'large'" [nzPlaceHolder]="'计划投产时间'" nzId="deliveryPlanTime" class="d-block"></nz-datepicker>
+        </ng-template>
+    </nz-modal>
+
+
+    <!--关联分支弹框-->
+    <nz-modal [nzVisible]="assVisible" [nzWidth]="1024" [nzTitle]="'关联分支'" [nzConfirmLoading]="loading" [nzContent]="assContent"
+              (nzOnCancel)="assVisible=false" (nzOnOk)="assSave()">
+        <ng-template #assContent>
+                <nz-tabset  >
+                <nz-tab *ngFor="let tab of tabs" (nzSelect)="tabChange(tab.active)">
+                <ng-template #nzTabHeading>
+                {{tab.name}}
+                </ng-template>
+                <div *ngIf="tab.active == true">
+                        <div nz-row [nzGutter]="24">
+                    <div nz-col [nzSpan]="24"  class="mb-md">
+                        <div nz-form-item class="d-flex">
+                            <div nz-form-label><label for="name">开发分支</label></div>
+                            <div nz-form-control class="flex-1">
+                                <nz-select style="width: 90%;" [(ngModel)]="assbranch" name="branch" (ngModelChange)="checkBranch(assbranch)" nzId="branch" [nzPlaceHolder]="'开发分支'" [nzShowSearch]="true" [nzSize]="'large'">
+                                    <nz-option *ngFor="let i of branch; let idx = index" [nzLabel]="i.fullPath" [nzValue]="i.guid"></nz-option>
+                                </nz-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div nz-col [nzSpan]="24"  class="mb-md"  *ngIf="branchdataInfo">
+                        <div nz-col [nzSpan]="12" class="mb-md">
+                            <div nz-form-item class="d-flex">
+                                <div nz-form-label class="alignment"><label for="name">分支类型</label></div>
+                                <div nz-form-control class="flex-1">
+                                    {{branchData.branchType}}
+                                    <!--<nz-input [(ngModel)]="branchData.branchType" name="branchType" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'分支类型'" nzId="branchType"></nz-input>-->
+                                </div>
+                            </div>
+                        </div>
+                        <div nz-col [nzSpan]="12" class="mb-md">
+                            <div nz-form-item class="d-flex">
+                                <div nz-form-label class="alignment"><label for="name">创建人</label></div>
+                                <div nz-form-control class="flex-1">
+                                    {{branchData.creater}}
+                                    <!--<nz-input [(ngModel)]="branchData.creater" name="creater" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'分支创建人'" nzId="creater"></nz-input>-->
+                                </div>
+                            </div>
+                        </div>
+                        <div nz-col [nzSpan]="12" class="mb-md">
+                            <div nz-form-item class="d-flex">
+                                <div nz-form-label class="alignment"><label for="name">创建时间</label></div>
+                                <div nz-form-control class="flex-1">
+                                    {{branchData.createTime}}
+                                    <!--<nz-input [(ngModel)]="branchData.createTime" name="createTime" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'创建时间'" nzId="createTime"></nz-input>-->
+                                </div>
+                            </div>
+                        </div>
+                        <div nz-col [nzSpan]="12" class="mb-md">
+                            <div nz-form-item class="d-flex">
+                                <div nz-form-label class="alignment"><label for="name">当前版本</label></div>
+                                <div nz-form-control class="flex-1">
+                                    {{branchData.currVersion}}
+                                    <!--<nz-input [(ngModel)]="branchData.currVersion" name="currVersion" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'当前版本'" nzId="currVersion"></nz-input>-->
+                                </div>
+                            </div>
+                        </div>
+                        <div nz-col [nzSpan]="12" class="mb-md">
+                            <div nz-form-item class="d-flex">
+                                <div nz-form-label class="alignment"><label for="name">上次版本</label></div>
+                                <div nz-form-control class="flex-1">
+                                    {{branchData.lastVersion}}
+                                    <!--<nz-input [(ngModel)]="branchData.lastVersion" name="lastVersion" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'上次投产版本'" nzId="lastVersion"></nz-input>-->
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                     </div>
+                </div>
+                <div *ngIf="tab.active == false">
+                    <div nz-col [nzSpan]="22" class="mb-md">
+                        <div nz-form-item class="d-flex">
+                            <div nz-form-label><label for="name">分支作用</label></div>
+                            <div nz-form-control class="flex-1"  >
+                                <nz-input [(ngModel)]="addBranch.branchFor" name="branchFor"   type='text' aria-required="true" [nzSize]="'large'" [nzPlaceHolder]="'分支作用说明'" nzId="branchFor"></nz-input>
+                            </div>
+                        </div>
+                    </div>
+                     <div  nz-col [nzSpan]="24" class="mb-md">
+                        <div nz-form-item class="d-flex">
+                            <div nz-form-label><label>分支类型</label></div>
+                            <div nz-form-control class="flex-1">
+                                <nz-select style="width: 300px;"
+                                           [nzPlaceHolder]="'分支类型'"
+                                           [(ngModel)]="addBranch.branchType"
+                                           name='branchType'>
+                                    <nz-option
+                                        *ngFor="let option of branchType"
+                                        [nzLabel]="option.key"
+                                        [nzValue]="option.value">
+                                    </nz-option>
+                                </nz-select>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>-->
-               <!-- <div *ngIf="expandForm" nz-col [nzSpan]="8" class="mb-md">
+                </nz-tab>
+                </nz-tabset>
+
+        </ng-template>
+    </nz-modal>
+    <!--工程-->
+    <nz-modal [nzVisible]="projectInfo" [nzWidth]="1024" [nzTitle]="'工程管理'" [nzConfirmLoading]="loading" [nzContent]="projectContent"
+              (nzOnCancel)="projectInfo=false" (nzOnOk)="subProject()">
+        <ng-template #projectContent>
+                  <nz-transfer
+                        [nzDataSource]="list"
+                        nzShowSearch
+                        [nzTitles]="['可拉工程', '已选工程']"
+                        [nzListStyle]="{'width.%': 45, 'height.px': 300}"
+                        [nzFilterOption]="filterOption"
+                        (nzSearchChange)="searchpro($event)"
+                        (nzSelectChange)="select($event)"
+                        (nzChange)="change($event)"
+                        >
+                        <ng-template #render let-item>
+                        {{item.description}}
+                        </ng-template>
+
+                    </nz-transfer>
+                </ng-template>
+    </nz-modal>
+
+    <!--查看分支详情-->
+    <nz-modal [nzVisible]="branchInfo" [nzWidth]="1024" [nzTitle]="'分支详情'" [nzConfirmLoading]="loading" [nzContent]="branchContent"
+              (nzOnCancel)="branchInfo=false" (nzOnOk)="branchInfo=false">
+        <ng-template #branchContent>
+            <div nz-row [nzGutter]="24">
+                <div nz-col [nzSpan]="24" class="mb-md">
                     <div nz-form-item class="d-flex">
-                        <div nz-form-label class="alignment"><label for="no">需求时间</label></div>
+                        <div nz-form-label class="alignment"><label for="name">分支类型</label></div>
                         <div nz-form-control class="flex-1">
-                            <nz-datepicker [(ngModel)]="workItem.receiveTime" [nzFormat]="'YYYY-MM-DD'"    name="receiveTime" [nzSize]="'large'" [nzPlaceHolder]="'收到需求时间'" nzId="receiveTime" class="d-block"></nz-datepicker>
+                            <nz-input [(ngModel)]="branchData.branchType" name="branchType" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'分支类型'" nzId="branchType"></nz-input>
                         </div>
                     </div>
                 </div>
-
-
-                <div *ngIf="expandForm" nz-col [nzSpan]="8" class="mb-md">
+                <div nz-col [nzSpan]="12" class="mb-md">
                     <div nz-form-item class="d-flex">
-                        <div nz-form-label class="alignment"><label for="no">实际时间</label></div>
+                        <div nz-form-label class="alignment"><label for="name">创建人</label></div>
                         <div nz-form-control class="flex-1">
-                            <nz-datepicker [(ngModel)]="workItem.deliveryTime" [nzFormat]="'YYYY-MM-DD'"    name="deliveryTime" [nzSize]="'large'" [nzPlaceHolder]="'实际投产时间'" nzId="deliveryTime" class="d-block"></nz-datepicker>
+                            <nz-input [(ngModel)]="branchData.creater" name="creater" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'分支创建人'" nzId="creater"></nz-input>
                         </div>
                     </div>
-                </div>-->
-
-
-                <div nz-col [nzSpan]="expandForm ? 24 : 8" class="mb-md" [class.text-right]="expandForm">
-                <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="loading" [nzSize]="'large'">查询</button>
-                <button nz-button type="reset" (click)="reset()" [nzSize]="'large'" class="mx-sm">重置</button>
-                <!--<a (click)="expandForm=!expandForm">
-                    {{expandForm ? '收起' : '展开'}}
-                    <i class="anticon" [class.anticon-down]="!expandForm" [class.anticon-up]="expandForm"></i>
-                </a>-->
-            </div>
-        </div>
-    </form>
-    <!-- 监听列表组件，如果点击了则告诉弹出框组件，打开弹出框,监听addCreat方法-->
-    <app-list
-        [initDate]="data"
-        [isPagination]="isPagination"
-        [buttons] ='buttons'
-        (addCreat)="addHandler($event)"
-        (buttonData)="buttonDataHandler($event)"
-        (pageNumber)="monitorHandler($event)"
-        (buttonEvent)="buttonEvent($event)"
-        (selectedRow)="selectedRow($event)"
-        [headerDate]="headerDate"
-         [moreData]="moreData"
-        [pageindex]='pageIndex'
-        [total]="total"
-        [isShowTotal]="isShowTotal"
-        [showAdd]="showAdd"
-        [pageTotal] = 'pageTotal'></app-list>
-</nz-card>
-
-
-<!--新增工作项内容-->
-<nz-modal [nzVisible]="modalVisible" [nzWidth]="1024" [nzTitle]="modelTitle" [nzConfirmLoading]="loading" [nzContent]="modalContent"
-          (nzOnCancel)="modalVisible=false" (nzOnOk)="save()">
-    <ng-template #modalContent>
-        <div nz-row  [nzType]="'flex'" [nzJustify]="'end'" [nzGutter]="24">
-            <div nz-col [nzSpan]="24" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-col [nzSpan]="3" nz-form-label class="alignment"><label for="name">工作项名称</label></div>
-                    <div nz-col [nzSpan]="21" nz-form-control >
-                        <nz-input [(ngModel)]="workAdd.itemName" name="itemName" [nzSize]="'large'" [nzPlaceHolder]="'工作项名称'" nzId="itemName"></nz-input>
-                    </div>
-
                 </div>
-            </div>
-            <div nz-col [nzSpan]="24" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label nz-col [nzSpan]="3"><label for="name">需求编号</label></div>
-                    <div nz-form-control  nz-col [nzSpan]="21">
-                        <nz-input [(ngModel)]="workAdd.seqno" name="seqno" [nzSize]="'large'" [nzPlaceHolder]="'需求编号'" nzId="seqno"></nz-input>
-                    </div>
-                </div>
-            </div>
-            <div nz-col [nzSpan]="24" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label nz-col [nzSpan]="3"><label>开发人员</label></div>
-                    <div nz-form-control nz-col [nzSpan]="21">
-                        <nz-select style="width: 100%;"
-                                   [nzMode]="'multiple'"
-                                   [nzPlaceHolder]="'开发人员'"
-                                   [(ngModel)]="workAdd.developers"
-                                   [nzNotFoundContent]="'无法找到'"
-                                   name='开发人员'>
-                            <nz-option
-                                *ngFor="let option of owner"
-                                [nzLabel]="option.svnUser"
-                                [nzValue]="option.userId">
-                            </nz-option>
-                        </nz-select>
-                    </div>
-                </div>
-            </div>
-            <div nz-col [nzSpan]="24" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label nz-col [nzSpan]="3"><label for="name">项目负责人</label></div>
-                    <div nz-form-control nz-col [nzSpan]="21" >
-                        <nz-select style="width:100%;" [(ngModel)]="workAdd.owner" name="owner" nzId="owner" [nzPlaceHolder]="'工作项负责人'" [nzShowSearch]="true" [nzSize]="'large'">
-                            <nz-option *ngFor="let i of owner; let idx = index" [nzLabel]="i.svnUser" [nzValue]="i.userId"></nz-option>
-                        </nz-select>
-                    </div>
-                </div>
-            </div>
-            <div nz-col [nzSpan]="24" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label nz-col [nzSpan]="3" class="alignment"><label for="no">需求时间</label></div>
-                    <div nz-form-control nz-col [nzSpan]="21">
-                        <nz-datepicker [(ngModel)]="workAdd.receiveTime"  [nzFormat]="'YYYY-MM-DD'"     name="receiveTime" [nzSize]="'large'" [nzPlaceHolder]="'收到需求时间'" nzId="receiveTime" class="d-block"></nz-datepicker>
-                    </div>
-                </div>
-            </div>
-            <div nz-col [nzSpan]="24" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label nz-col [nzSpan]="3" class="alignment"><label for="no">开发时间</label></div>
-                    <div nz-form-control nz-col [nzSpan]="21">
-                        <nz-datepicker [(ngModel)]="workAdd.developStartTime" [nzFormat]="'YYYY-MM-DD'"    name="developStartTime" [nzSize]="'large'" [nzPlaceHolder]="'启动开发时间'" nzId="developStartTime" class="d-block"></nz-datepicker>
-                    </div>
-                </div>
-            </div>
-
-            <div nz-col [nzSpan]="24" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label nz-col [nzSpan]="3" class="alignment"><label for="no">计划时间</label></div>
-                    <div nz-form-control nz-col [nzSpan]="21">
-                        <nz-datepicker [(ngModel)]="workAdd.deliveryPlanTime" [nzFormat]="'YYYY-MM-DD'"    name="deliveryPlanTime" [nzSize]="'large'" [nzPlaceHolder]="'计划投产时间'" nzId="deliveryPlanTime" class="d-block"></nz-datepicker>
-                    </div>
-                </div>
-            </div>
-
-            <div nz-col [nzSpan]="24" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label nz-col [nzSpan]="3" class="alignment"><label for="no">实际时间</label></div>
-                    <div nz-form-control nz-col [nzSpan]="21">
-                        <nz-datepicker [(ngModel)]="workAdd.deliveryTime" [nzFormat]="'YYYY-MM-DD'"    name="deliveryTime" [nzSize]="'large'" [nzPlaceHolder]="'实际投产时间'" nzId="deliveryTime" class="d-block"></nz-datepicker>
-                    </div>
-                </div>
-            </div>
-            <div nz-col [nzSpan]="24" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label nz-col [nzSpan]="3" class="alignment">
-                        <label for="no">需求描述</label>
-                    </div>
-                    <div nz-form-control nz-col [nzSpan]="21">
-                        <nz-input [(ngModel)]="workAdd.requirementDesc" nzAutosize=true nzType="textarea" name="requirementDesc" [nzSize]="'large'" [nzPlaceHolder]="'需求描述'"
-                                  nzId="requirementDesc"></nz-input>
-                    </div>
-                </div>
-            </div>
-               <div nz-col [nzSpan]="24" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label nz-col [nzSpan]="3" class="alignment">
-                        <label for="no">ARTF</label>
-                    </div>
-                     <div nz-form-control nz-col [nzSpan]="21">
-                        <nz-input [(ngModel)]="workAdd.artf" nzAutosize=true  (ngModelChange)="checkArtf(workAdd.artf)"  name="artf" [nzSize]="'large'" [nzPlaceHolder]="'请输入ARTF'"
-                                  nzId="artf"></nz-input>
-                                  <nz-alert *ngIf='isShowIp == true' nzBanner nzMessage="只能输入数字类型"></nz-alert>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </ng-template>
-</nz-modal>
-
-
-<!--关联分支弹框-->
-<nz-modal [nzVisible]="assVisible" [nzWidth]="1024" [nzTitle]="'关联分支'" [nzConfirmLoading]="loading" [nzContent]="assContent"
-          (nzOnCancel)="assVisible=false" (nzOnOk)="assSave()">
-    <ng-template #assContent>
-
-
-
-            <nz-tabset  >
-            <nz-tab *ngFor="let tab of tabs" (nzSelect)="tabChange(tab.active)">
-            <ng-template #nzTabHeading>
-            {{tab.name}}
-            </ng-template>
-            <div *ngIf="tab.active == true">
-                    <div nz-row [nzGutter]="24">
-                <div nz-col [nzSpan]="24"  class="mb-md">
+                <div nz-col [nzSpan]="12" class="mb-md">
                     <div nz-form-item class="d-flex">
-                        <div nz-form-label><label for="name">开发分支</label></div>
+                        <div nz-form-label class="alignment"><label for="name">创建时间</label></div>
                         <div nz-form-control class="flex-1">
-                            <nz-select style="width: 90%;" [(ngModel)]="assbranch" name="branch" (ngModelChange)="checkBranch(assbranch)" nzId="branch" [nzPlaceHolder]="'开发分支'" [nzShowSearch]="true" [nzSize]="'large'">
-                                <nz-option *ngFor="let i of branch; let idx = index" [nzLabel]="i.fullPath" [nzValue]="i.guid"></nz-option>
-                            </nz-select>
+                            <nz-input [(ngModel)]="branchData.createTime" name="createTime" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'创建时间'" nzId="createTime"></nz-input>
                         </div>
                     </div>
                 </div>
-                <div nz-col [nzSpan]="24"  class="mb-md"  *ngIf="branchdataInfo">
-                    <div nz-col [nzSpan]="12" class="mb-md">
-                        <div nz-form-item class="d-flex">
-                            <div nz-form-label class="alignment"><label for="name">分支类型</label></div>
-                            <div nz-form-control class="flex-1">
-                                {{branchData.branchType}}
-                                <!--<nz-input [(ngModel)]="branchData.branchType" name="branchType" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'分支类型'" nzId="branchType"></nz-input>-->
-                            </div>
-                        </div>
-                    </div>
-                    <div nz-col [nzSpan]="12" class="mb-md">
-                        <div nz-form-item class="d-flex">
-                            <div nz-form-label class="alignment"><label for="name">创建人</label></div>
-                            <div nz-form-control class="flex-1">
-                                {{branchData.creater}}
-                                <!--<nz-input [(ngModel)]="branchData.creater" name="creater" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'分支创建人'" nzId="creater"></nz-input>-->
-                            </div>
-                        </div>
-                    </div>
-                    <div nz-col [nzSpan]="12" class="mb-md">
-                        <div nz-form-item class="d-flex">
-                            <div nz-form-label class="alignment"><label for="name">创建时间</label></div>
-                            <div nz-form-control class="flex-1">
-                                {{branchData.createTime}}
-                                <!--<nz-input [(ngModel)]="branchData.createTime" name="createTime" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'创建时间'" nzId="createTime"></nz-input>-->
-                            </div>
-                        </div>
-                    </div>
-                    <div nz-col [nzSpan]="12" class="mb-md">
-                        <div nz-form-item class="d-flex">
-                            <div nz-form-label class="alignment"><label for="name">当前版本</label></div>
-                            <div nz-form-control class="flex-1">
-                                {{branchData.currVersion}}
-                                <!--<nz-input [(ngModel)]="branchData.currVersion" name="currVersion" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'当前版本'" nzId="currVersion"></nz-input>-->
-                            </div>
-                        </div>
-                    </div>
-                    <div nz-col [nzSpan]="12" class="mb-md">
-                        <div nz-form-item class="d-flex">
-                            <div nz-form-label class="alignment"><label for="name">上次版本</label></div>
-                            <div nz-form-control class="flex-1">
-                                {{branchData.lastVersion}}
-                                <!--<nz-input [(ngModel)]="branchData.lastVersion" name="lastVersion" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'上次投产版本'" nzId="lastVersion"></nz-input>-->
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-                 </div>
-            </div>
-            <div *ngIf="tab.active == false">
-                <div nz-col [nzSpan]="22" class="mb-md">
+                <div nz-col [nzSpan]="12" class="mb-md">
                     <div nz-form-item class="d-flex">
-                        <div nz-form-label><label for="name">分支作用</label></div>
-                        <div nz-form-control class="flex-1"  >
-                            <nz-input [(ngModel)]="addBranch.branchFor" name="branchFor"   type='text' aria-required="true" [nzSize]="'large'" [nzPlaceHolder]="'分支作用说明'" nzId="branchFor"></nz-input>
-                        </div>
-                    </div>
-                </div>
-                 <div  nz-col [nzSpan]="24" class="mb-md">
-                    <div nz-form-item class="d-flex">
-                        <div nz-form-label><label>分支类型</label></div>
+                        <div nz-form-label class="alignment"><label for="name">当前版本</label></div>
                         <div nz-form-control class="flex-1">
-                            <nz-select style="width: 300px;"
-                                       [nzPlaceHolder]="'分支类型'"
-                                       [(ngModel)]="addBranch.branchType"
-                                       name='branchType'>
-                                <nz-option
-                                    *ngFor="let option of branchType"
-                                    [nzLabel]="option.key"
-                                    [nzValue]="option.value">
-                                </nz-option>
-                            </nz-select>
+                            <nz-input [(ngModel)]="branchData.currVersion" name="currVersion" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'当前版本'" nzId="currVersion"></nz-input>
                         </div>
                     </div>
                 </div>
-            </div>
-            </nz-tab>
-            </nz-tabset>
+                <div nz-col [nzSpan]="12" class="mb-md">
+                    <div nz-form-item class="d-flex">
+                        <div nz-form-label class="alignment"><label for="name">上次投产版本</label></div>
+                        <div nz-form-control class="flex-1">
+                            <nz-input [(ngModel)]="branchData.lastVersion" name="lastVersion" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'上次投产版本'" nzId="lastVersion"></nz-input>
+                        </div>
+                    </div>
+                </div>
+                <div nz-col [nzSpan]="24" class="mb-md">
+                    <div nz-form-item class="d-flex">
+                        <div nz-form-label class="alignment"><label for="name">分支全路径</label></div>
+                        <div nz-form-control class="flex-1">
+                            <nz-input [(ngModel)]="branchData.fullPath" name="fullPath" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'分支全路径'" nzId="fullPath"></nz-input>
+                        </div>
+                    </div>
+                </div>
 
-    </ng-template>
-</nz-modal>
-<!--工程-->
-<nz-modal [nzVisible]="projectInfo" [nzWidth]="1024" [nzTitle]="'工程管理'" [nzConfirmLoading]="loading" [nzContent]="projectContent"
-          (nzOnCancel)="projectInfo=false" (nzOnOk)="subProject()">
-    <ng-template #projectContent>
-              <nz-transfer
-                    [nzDataSource]="list"
-                    nzShowSearch
-                    [nzTitles]="['可拉工程', '已选工程']"
-                    [nzListStyle]="{'width.%': 45, 'height.px': 300}"
-                    [nzFilterOption]="filterOption"
-                    (nzSearchChange)="searchpro($event)"
-                    (nzSelectChange)="select($event)"
-                    (nzChange)="change($event)"
-                    >
-                    <ng-template #render let-item>
-                    {{item.description}}
-                    </ng-template>
+                <div nz-col [nzSpan]="24" class="mb-md">
+                    <div nz-form-item class="d-flex">
+                        <div nz-form-label class="alignment"><label for="name">分支作用说明</label></div>
+                        <div nz-form-control class="flex-1">
+                            <nz-input [(ngModel)]="branchData.branchFor" name="branchFor" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'分支作用说明'" nzId="branchFor"></nz-input>
+                        </div>
+                    </div>
+                </div>
 
-                </nz-transfer>
-            </ng-template>
-</nz-modal>
-
-<!--查看分支详情-->
-<nz-modal [nzVisible]="branchInfo" [nzWidth]="1024" [nzTitle]="'分支详情'" [nzConfirmLoading]="loading" [nzContent]="branchContent"
-          (nzOnCancel)="branchInfo=false" (nzOnOk)="branchInfo=false">
-    <ng-template #branchContent>
-        <div nz-row [nzGutter]="24">
-            <div nz-col [nzSpan]="24" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label class="alignment"><label for="name">分支类型</label></div>
-                    <div nz-form-control class="flex-1">
-                        <nz-input [(ngModel)]="branchData.branchType" name="branchType" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'分支类型'" nzId="branchType"></nz-input>
-                    </div>
-                </div>
             </div>
-            <div nz-col [nzSpan]="12" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label class="alignment"><label for="name">创建人</label></div>
-                    <div nz-form-control class="flex-1">
-                        <nz-input [(ngModel)]="branchData.creater" name="creater" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'分支创建人'" nzId="creater"></nz-input>
-                    </div>
-                </div>
-            </div>
-            <div nz-col [nzSpan]="12" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label class="alignment"><label for="name">创建时间</label></div>
-                    <div nz-form-control class="flex-1">
-                        <nz-input [(ngModel)]="branchData.createTime" name="createTime" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'创建时间'" nzId="createTime"></nz-input>
-                    </div>
-                </div>
-            </div>
-            <div nz-col [nzSpan]="12" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label class="alignment"><label for="name">当前版本</label></div>
-                    <div nz-form-control class="flex-1">
-                        <nz-input [(ngModel)]="branchData.currVersion" name="currVersion" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'当前版本'" nzId="currVersion"></nz-input>
-                    </div>
-                </div>
-            </div>
-            <div nz-col [nzSpan]="12" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label class="alignment"><label for="name">上次投产版本</label></div>
-                    <div nz-form-control class="flex-1">
-                        <nz-input [(ngModel)]="branchData.lastVersion" name="lastVersion" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'上次投产版本'" nzId="lastVersion"></nz-input>
-                    </div>
-                </div>
-            </div>
-            <div nz-col [nzSpan]="24" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label class="alignment"><label for="name">分支全路径</label></div>
-                    <div nz-form-control class="flex-1">
-                        <nz-input [(ngModel)]="branchData.fullPath" name="fullPath" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'分支全路径'" nzId="fullPath"></nz-input>
-                    </div>
-                </div>
-            </div>
-
-            <div nz-col [nzSpan]="24" class="mb-md">
-                <div nz-form-item class="d-flex">
-                    <div nz-form-label class="alignment"><label for="name">分支作用说明</label></div>
-                    <div nz-form-control class="flex-1">
-                        <nz-input [(ngModel)]="branchData.branchFor" name="branchFor" [disabled]="true" [nzSize]="'large'" [nzPlaceHolder]="'分支作用说明'" nzId="branchFor"></nz-input>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </ng-template>
-</nz-modal>
+        </ng-template>
+    </nz-modal>
 
 
 

@@ -23,6 +23,8 @@ export class SProjectComponent implements OnInit {
         @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
     ) { }
 
+
+    // 变量
     isPagination = true; // 是否有分页
     showAdd: boolean; // 是否有修改
     productItem: ProductModule = new  ProductModule(); // 信息
@@ -37,45 +39,41 @@ export class SProjectComponent implements OnInit {
     ];
     modelTitle: string;
     isEdit = false;
-
     // 传入按钮层
     moreData = {
         morebutton: true,
         buttonData: [
         ]
     }
-
     test: string;
     total: number;
     pageTotal: number;
     isShowTotal: boolean;
+    isShowbranch: boolean;
+    checkmsg: any;
     // 枚举值
     projectType = [
         {key: '普通工程', value: 'C'},
         {key: '可选工程', value: 'S'},
         {key: 'IBS工程', value: 'I'},
     ]
-
-
     buttons = [
         {key: 'add', value: '新建工程', if: true}
     ];
     token: any; // token值
-    // 枚举值
     exportType: any;
     deployType: any;
     page: any;
-
+    diconArray: any;
     // 部署类型
-
-    diconArray : any;
     diconfig: any = [{
         'exportType': '' ,
         'depolySelect': [{ depoly: ''}],
         'error': false
     }];
 
-    pageIndex = 1
+    pageIndex = 1;
+    tag = '验证'
 
 
     ngOnInit() {
@@ -109,7 +107,6 @@ export class SProjectComponent implements OnInit {
 
 
         this.utilityService.postData(appConfig.testUrl  + appConfig.API.sProjectList , this.page, {Authorization: this.token})
-            // .map(res => res.json())
             .subscribe(
                 (val) => {
                     this.data = val.result.records;
@@ -121,7 +118,6 @@ export class SProjectComponent implements OnInit {
                             if (value.deployConfig !== 'default') {
                                 let jsonPar = JSON.parse(value.deployConfig);
                                 var str = ''
-                                // console.log(jsonPar)
                                 _.forEach(jsonPar , function (json) {
                                     // 把exportType拼接逻辑 如果是空，那就添加exportType
                                     if (str === '') {
@@ -131,32 +127,17 @@ export class SProjectComponent implements OnInit {
                                     }
                                     value.exportShow = str;
                                     value.deployShow = json.deployType;
-                                })
+                                });
                             } else {
                                 value.deployShow = value.deployConfig;
                                 value.exportShow = value.deployConfig;
                             }
-
                         }
-
-
                         value.buttonData = [
-                            // {key: 'details', value: '详情'},
                             {key: 'dels', value: '删除'},
                             {key: 'upd', value: '修改'}
                         ];
-                      /*  if (!_.isNull(value.deployConfig)) {
-                            console.log(value)
-                            let jsonPar = JSON.parse(value.deployConfig)
-                            _.forEach(jsonPar , function (json) {
-                                // 先这样。如果想严谨  利用冒泡函数 两两相加即可,然后赋值
-                                value.exportShow = json.exportType;
-                                value.deployShow = json.deployType;
-                            })
-                        }*/
                     });
-
-
                 }
                 , error => {
                     this.nznot.create('error', error.code , error.msg);
@@ -169,10 +150,12 @@ export class SProjectComponent implements OnInit {
         this.getData(this.productItem);
     }
 
+    // 重置
     reset() {
         this.productItem = new ProductModule();
         this.getData();
     }
+
     // 新增方法
     addHandler(event) {
         if (event === 'add') {
@@ -188,38 +171,32 @@ export class SProjectComponent implements OnInit {
         }
     }
 
-  isShowbranch:boolean;
-    checkmsg:any;
-
-       checkversion(item){
-            console.log(item)
-           if(this.tag == '通过'){
+    // 验证版本
+    checkversion(item) {
+           if (this.tag === '通过'){
                return;
            }
-         this.utilityService.postData(appConfig.testUrl  + appConfig.API.sBranchadd +'/'+ 'path',{svnUrl:item}, {Authorization: this.token})
-                // .map(res => res.json())
+         this.utilityService.postData(appConfig.testUrl  + appConfig.API.sBranchadd + '/' + 'path',{svnUrl: item}, {Authorization: this.token})
                 .subscribe(
                     (val) => {
-                        console.log(val);
-                        if(val.code == 200){
-
+                        if (val.code === 200) {
                            this.isShowbranch = true
-                           this.tag = '通过'
+                           this.tag = '通过';
                         }
                     },
-                (error)=>{
-                    if(error){
+                (error) => {
+                    if (error) {
                           this.isShowbranch = false
-                          this.checkmsg = error.json().msg;
+                          this.checkmsg = error.msg;
                           this.tag  = '验证'
                           this.nznot.create('error', '', error.msg);
                     }
                 }
                 );
         }
-   checkagin(item){
-      this.tag  = '验证'
-        }
+       checkagin(item) {
+          this.tag  = '验证';
+       }
 
 
 
@@ -239,7 +216,7 @@ export class SProjectComponent implements OnInit {
         this.getData();
     }
 
-    tag = '验证'
+
     // 按钮点击事件方法
     buttonEvent(event) {
         if (!_.isNull(event.names)) {
@@ -247,6 +224,7 @@ export class SProjectComponent implements OnInit {
                 this.tag = '验证'
                 this.modelTitle = '修改工程';
                 this.productAdd = event; // 修改类型问题
+                // 枚举值转换
                 if (event.projectType === '可选工程') {
                     event.projectType = 'S';
                 } else if (event.projectType === 'IBS工程') {
@@ -254,8 +232,6 @@ export class SProjectComponent implements OnInit {
                 } else {
                     event.projectType = 'C';
                 }
-
-                console.log(event)
                 if (event.deployConfig !== 'default') {
                     this.diconArray =  _.cloneDeep(JSON.parse(event.deployConfig));
 
