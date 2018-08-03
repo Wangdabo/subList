@@ -88,14 +88,18 @@ export let appConfig = {
         return false;
     },
 
-    subString(str,length){
+    // 公共截取方法
+    subString(str, length) {
         let star = '';
         let end = '';
-      star = str.substr(0,length)
+      star = str.substr(0, length)
        end = str.substr(str.length - length)
       str = star + '...' + end;
       return str;
     }
+
+
+
 
 
 }

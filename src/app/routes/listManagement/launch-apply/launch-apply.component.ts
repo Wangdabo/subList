@@ -6,9 +6,7 @@ import {appConfig} from '../../../service/common';
 import {NzModalService, NzNotificationService} from 'ng-zorro-antd';
 import {Router} from '@angular/router';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
-import { ResponseContentType } from '@angular/http';
 import * as $ from 'jquery';
-
 import * as moment from 'moment';
 import * as _ from 'lodash';
 @Component({
@@ -17,7 +15,6 @@ import * as _ from 'lodash';
     styleUrls: ['./launch-apply.component.less'],
 })
 export class LaunchApplyComponent implements OnInit {
-
     constructor(
         private http: _HttpClient,
         private router: Router,
@@ -25,24 +22,10 @@ export class LaunchApplyComponent implements OnInit {
         private modal: NzModalService,
         private nznot: NzNotificationService,
        private confirmServ: NzModalService,
-
         @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
     ) { }
-    token: any;
-    userName: string;
-    isNext = true;
-    initDate:any;
-      elementScice: any; // 环境数据
-    elementCopy: any; // copy环境接口
-
-    ngOnInit() {
-        this.token  = this.tokenService.get().token;
-        this.userName = this.tokenService.get().name;
-        this.getElement();
-        this.getData();
-        this.showAdd = true;
-    }
-    loadingnext =false;
+    // 界面变量
+    loadingnext = false;
     showAdd: boolean; // 是否有修改
     isStatus = true;
     configTitle = '详情'
@@ -61,20 +44,13 @@ export class LaunchApplyComponent implements OnInit {
     pageTotal: number; // 翻页总数
     checkStatus = true;
     copyseniorGuid: string;
-    deliveryResult = [
-        {key: '0', value: '申请中',color:'skyblue'},
-        {key: 'M', value: '已合并',color:'orange'},
-        {key: 'C', value: '核对中',color:'orange'},
-        {key: 'S', value: '核对成功',color:'green'},
-        {key: 'F', value: '核对失败',color:'red'},
-        {key: 'D', value: '投放成功',color:'green'},
-    ]
-    buttons = [
-        // {key: 'merge', value: '合并投放', if: true},
-        {key: 'checking', value: '去核对',  if: false},
-        {key: 'export', value: '导出投放清单',  if: true},
-    ]
 
+    token: any;
+    userName: string;
+    isNext = true;
+    initDate: any;
+    elementScice: any; // 环境数据
+    elementCopy: any; // copy环境接口
 
     data: any[] = []; // 表格数据
     mergeList: any[] = [];
@@ -82,6 +58,7 @@ export class LaunchApplyComponent implements OnInit {
     profiles: any[] = [];
     updEnvironment = false;
     isloading = true;
+    // 表头
     headerDate = [  // 配置表头内容
         { value: '别名', key: 'applyAlias', isclick: false, radio: false},
         { value: '工作项', key: 'guidWorkitem', isclick: false, radio: false },
@@ -90,12 +67,9 @@ export class LaunchApplyComponent implements OnInit {
         { value: '打包窗口', key: 'packTiming', isclick: false, radio: false },
         { value: '申请人', key: 'proposer', isclick: false, radio: false },
         { value: '投放结果', key: 'deliveryResult', isclick: false, radio: false },
-        { value: '投放类型', key: 'deliveryType', isclick: false, radio: false },
-        // { value: '程序数量', key: 'number', isclick: false, radio: false },
-
     ];
-
-     mergeHeader = [  // 配置表头内容
+    // 配置表头内容
+    mergeHeader = [
 
         { value: '工作项', key: 'guidWorkitem', isclick: false, radio: false },
         { value: '分支', key: 'branch', isclick: false, radio: false },
@@ -103,11 +77,7 @@ export class LaunchApplyComponent implements OnInit {
         { value: '投放申请(别名)', key: 'applyAlias', isclick: false, radio: false },
         { value: '投放时间', key: 'deliveryTime', isclick: false, radio: false },
         { value: '投放结果', key: 'deliveryResult', isclick: false, radio: false },
-        // { value: '申请类型', key: 'deliveryType', isclick: false, radio: false },
     ];
-
-
-
 
     // 传入按钮层
     moreData = {
@@ -120,14 +90,11 @@ export class LaunchApplyComponent implements OnInit {
     buttonData = [
         {key: 'details', value: '详情'},
         // {check: false, value: '未确认合并'},
-
     ];
-
     test: string;
     page: any;
     total: number;
     pages: number;
-
     branches: any[] = []; // 合并清单分支数组
     patchCount: any[] = []; // 投放小计
     detailList: any[] = []; // 合并清单代码数组
@@ -140,20 +107,50 @@ export class LaunchApplyComponent implements OnInit {
     launchVisible = false;
     detailInfo: any; // 投放之后的详情
     copyTitle: string;
-     currentpage = 1;
+    currentpage = 1;
     inputValue = '';
-    mergeListDetail:any[]=[] //投放申请详情
+    mergeListDetail: any[] = []; // 投放申请详情
     pageIndex: 1;
-   search = {
-        itemName:'',
-        proposer:'',
-        deliveryResult:'',
-        guidProfiles:''
+    search = {
+        itemName: '',
+        proposer: '',
+        deliveryResult: '',
+        guidProfiles: ''
     };
-        getData(type?) {
+    checkId: any;
+    current = 0;
+    loading: any;
+    index = 'First-content';
+    updPackTiming = {}
+    guidDelivery: any;
+    guid: any;
+    deliveryResult = [
+        {key: '0', value: '申请中', color: 'skyblue'},
+        {key: 'M', value: '已合并', color: 'orange'},
+        {key: 'C', value: '核对中', color: 'orange'},
+        {key: 'S', value: '核对成功', color: 'green'},
+        {key: 'F', value: '核对失败', color: 'red'},
+        {key: 'D', value: '投放成功', color: 'green'},
+    ]
+    buttons = [
+        // {key: 'merge', value: '合并投放', if: true},
+        {key: 'checking', value: '去核对',  if: false},
+        {key: 'export', value: '导出投放清单',  if: true},
+    ]
 
-           if(type == 'search'){
-               this.currentpage = 1
+    // 初始化
+    ngOnInit() {
+        this.token  = this.tokenService.get().token;
+        this.userName = this.tokenService.get().name;
+        this.getElement();
+        this.getData();
+        this.showAdd = true;
+    }
+
+
+        getData(type?) {
+           if (type === 'search') {
+               this.currentpage = 1;
            }
             const page = {
                 condition: this.search,
@@ -164,25 +161,21 @@ export class LaunchApplyComponent implements OnInit {
                     asc: false // asc 默认是true  升序排序，时间类型 用false， 降序
                 }
             };
-          
-            let button =[
-               
-                 {key:'detail',value:'详情'},
 
-                       ]
-              let buttonupd =[
-                 {key:'dels',value:'删除' },
-                 {key:'detail',value:'详情'},
-                 {key:'upd',value:'修改'},
-                 {key:'copy',value:'投放新环境'},
-                       ]
+            let button = [{key: 'detail', value: '详情'}]
+            let buttonupd = [
+                 {key: 'dels', value: '删除' },
+                 {key: 'detail', value: '详情'},
+                 {key: 'upd', value: '修改'},
+                 {key: 'copy', value: '投放新环境'},
+            ]
 
-        
+
             this.utilityService.postData(appConfig.testUrl  + appConfig.API.list, page, { Authorization: this.token})
                 .subscribe(
                     (val) => {
 
-                        if (val.code == 200) {
+                        if (val.code === 200) {
                             this.data = val.result.records;
                             this.total = val.result.total; // 总数
                             this.pageTotal = val.result.pages * 10; // 页码
@@ -193,11 +186,10 @@ export class LaunchApplyComponent implements OnInit {
                                 this.data[i].guidProfiles = this.data[i].guidProfiles.target;
                                 this.data[i].workGuid = this.data[i].guidWorkitem.source;
                                 this.data[i].guidWorkitem = this.data[i].guidWorkitem.target;
-
-                                if(this.data[i].deliveryResult == '申请中'){
-                                     this.data[i].buttonData = buttonupd
-                                }else{
-                                    this.data[i].buttonData = button
+                                if (this.data[i].deliveryResult === '申请中') {
+                                     this.data[i].buttonData = buttonupd;
+                                }else {
+                                    this.data[i].buttonData = button;
                                 }
 
                             }
@@ -205,27 +197,28 @@ export class LaunchApplyComponent implements OnInit {
 
 
                     },
-                    (error)=>{
-                      this.nznot.create('error', error.msg,'');
+                    (error) => {
+                      this.nznot.create('error', error.msg, '');
                 }
                 );
 
     }
-    reset(){
-         this.search = {
-        itemName:'',
-        proposer:'',
-        deliveryResult:'',
-        guidProfiles:''
-    };
-    this.getData();
+    // 重置
+    reset() {
+        this.search = {
+        itemName: '',
+        proposer: '',
+        deliveryResult: '',
+        guidProfiles: ''
+        };
+        this.getData();
     }
 
-getElement() {
+    // 请求环境接口
+    getElement() {
       this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfiles, {}, {Authorization: this.token})
                 .subscribe(
                     (val) => {
-
                         this.elementScice = val.result;
                         for (let i = 0; i < this.elementScice.length; i++) {
                             this.elementScice[i].packTiming = this.elementScice[i].packTiming.split(',');
@@ -238,12 +231,11 @@ getElement() {
                             }
                         }
                         // 拼接
-                    },(error)=>{
-                        this.nznot.create('error', error.msg,'');
+                    }, (error) => {
+                        this.nznot.create('error', error.msg,  '');
                     }
                 );
 }
-
     // 调用投放环境接口
     getcheckOptionOne(guid) {
         this.utilityService.getData(appConfig.testUrl  + appConfig.API.copyProfiless + '/' + guid + '/delivered', {}, {Authorization: this.token})
@@ -255,7 +247,6 @@ getElement() {
                         this.elementCopy[i].deliveryTime = new Date(this.elementCopy[i].deliveryTime); // 初始化时间
                         this.elementCopy[i].unixTime = moment(this.elementCopy[i].deliveryTime).format('YYYY-MM-DD 00:00:00.000')
                         if (this.elementCopy[i].delivered) { // 如果为true，那么checkbox即radio全部禁选
-                            console.log(this.elementCopy[i].delivered)
                             this.elementCopy[i].disabled = true;
                         }
                         for (let s = 0; s < this.elementCopy[i].packTimeDetails.length; s ++) {
@@ -263,57 +254,43 @@ getElement() {
                                 this.elementCopy[i].times = this.elementCopy[i].packTimeDetails[s].packTime;
                             }
                         }
-
                     }
-                    console.log( this.elementCopy )
                 }
             );
     }
 
     // 列表组件传过来的内容
     addHandler(event) {
-
-
         if (event === 'merge') {
             this.mergeListInfo = [];
             this.mergeList = [];
-
             for ( let i = 0; i < this.data.length; i++) {
                 // 清空数组
                 if (this.data[i].checked === true) {
                     this.mergeListInfo.push(this.data[i]);
                 }
             }
-            if (this.mergeListInfo.length == 0){
+            if (this.mergeListInfo.length === 0){
                 this.nznot.create('error', '请检查是否勾选工程', '请检查是否勾选工程');
                 return;
             }
-            for ( var i = 0; i < this.mergeListInfo.length; i++) {
-
-                if (this.mergeListInfo[0].guidProfiles != this.mergeListInfo[i].guidProfiles){
+            for ( let i = 0; i < this.mergeListInfo.length; i++) {
+                if (this.mergeListInfo[0].guidProfiles !== this.mergeListInfo[i].guidProfiles){
                     this.nznot.create('error', '合并项目运行环境必须一致', '合并项目运行环境必须一致');
                     return;
                 }
-                if (this.mergeListInfo[i].deliveryResult != '成功'){
+                if (this.mergeListInfo[i].deliveryResult !== '成功') {
                     this.nznot.create('error', '只能合并投放结果为成功的项目', '只能合并投放结果为成功的项目');
                     return;
                 }
                 this.mergeList.push(this.mergeListInfo[i].guid);
             }
              this.mergeisVisible = true;
-
-
-
         } else if (event === 'checking') {
             this.loadingnext = false
               this.getSprofiles();
               this.mergeisVisible = true
               this.current = 0;
-
-
-            // this.changeContent();
-            // this.checkModalVisible = true; // 打开核对弹出框
-
         } else if (event === 'export') {
             this.deliveryTime = moment(new Date()).format('YYYY-MM-DD');
             this.isVisible = true;
@@ -321,8 +298,6 @@ getElement() {
             this.getSprofiles(); // 查询环境和时间
             this.workItem = false;
         } else {
-
-
         }
     }
 
@@ -337,14 +312,11 @@ getElement() {
 
     }
 
-
     getSprofiles() {
         this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfiles, {}, {Authorization: this.token})
                     .subscribe(
                         (val) => {
-
                             this.elementScice = val.result;
-
                             for (let i = 0; i < this.elementScice.length; i++) {
                                 this.elementScice[i].packTiming = this.elementScice[i].packTiming.split(',');
                                 this.elementScice[i].Timing  = []
@@ -357,20 +329,11 @@ getElement() {
                             }
                             // 拼接
 
-                        },(error)=>{
-                            this.nznot.create('error', error.msg,'');
+                        }, (error) => {
+                            this.nznot.create('error', error.msg, '');
                         }
                     );
     }
-    // changeloadingnext(){
-    //     this.loadingnext = false;
-    // }
-
-  checkId:any;
-    current = 0;
-
-    loading:any;
-    index = 'First-content';
 
     pre(): void {
           this.current -= 1;
@@ -463,7 +426,7 @@ getElement() {
                            let index = '';
                              let indexs = '';
 
-            this.utilityService.postData(url, {}, {Authorization: this.token}) 
+            this.utilityService.postData(url, {}, {Authorization: this.token})
                          .subscribe(
                          (val) => {
                               this.loadingnext = false;
@@ -473,7 +436,7 @@ getElement() {
                          this.checkListVisible = true;
                           this.checkModalData = val.result.deliveryDetails;
                           this.mergeListData  = val.result.mergeLists;
-                          
+
                         for  (let i = 0; i < this.mergeListData.length; i ++) {
                               if(this.mergeListData[i].confirmStatus=='加入投放'){
                                 this.mergeListData[i]['checkbuttons'] = true;
@@ -485,10 +448,10 @@ getElement() {
                                 indexs = this.mergeListData[i].fullPath.indexOf(this.mergeListData[i].partOfProject);
                                 this.mergeListData[i].fullPath = this.mergeListData[i].fullPath.substring(indexs, this.mergeListData[i].fullPath.length);
                                 this.mergeListData[i].fullPathstr =this.mergeListData[i].fullPath
-                        if(this.mergeListData[i].fullPath.length > 40){                  
+                        if(this.mergeListData[i].fullPath.length > 40){
                                this.mergeListData[i].fullPathstr = appConfig.subString(this.mergeListData[i].fullPath,20);
                                }
-                         } 
+                         }
                                this.mergeListData[i].programNamestr =this.mergeListData[i].programName
                            if(this.mergeListData[i].programName.length > 40){
                                this.mergeListData[i].programNamestr =appConfig.subString(this.mergeListData[i].programName,10);
@@ -500,7 +463,7 @@ getElement() {
                                   guid:this.checkModalData[i].delivery.guid,
                                   guidWorkitem:this.checkModalData[i].delivery.guidWorkitem.target
                               }
-                             
+
                               this.guidprent.push(obj);
                             //   if(  this.checkModalData[i].delivery.deliveryResult =='核对成功' || this.checkModalData[i].delivery.deliveryResult =='核对失败' ){
                             //               this.checkModalData[i].delivery.disabledS = true;
@@ -563,44 +526,38 @@ getElement() {
         }
     }
 
-   hide(){
+   hide() {
 
    }
 
    buttonEventMerge(event){
-
-      let url =appConfig.testUrl + '/deliveries/'+event.guid+'/merge'
+        let url = appConfig.testUrl + '/deliveries/' + event.guid + '/merge'; // 请求地址
         this.utilityService.putData( url, {}, {Authorization: this.token})
            .subscribe(
                (val) => {
-                   if (val.code == 200){
+                   if (val.code === 200) {
                        event.event.check = true
                        event.event.value = '已确认合并'
                        this.loadingnext = false;
-                    //    this.istextVisible = false;
-                    //    this.detailVisible = false;
                        this.nznot.create('success', val.msg, val.msg);
-                   }else{
-                         this.nznot.create('error', val.msg,'');
+                   }else {
+                         this.nznot.create('error', val.msg, '');
                   }
 
                }
                ,
                (error) => {
-
-                  this.nznot.create('error', error.msg,'');
+                  this.nznot.create('error', error.msg, '');
                }
            );
 
 
 
    }
-  updPackTiming = {}
-  guidDelivery :any;
+
     // 按钮点击事件
     buttonEventlist(event) {
-
-        if(event.names.key == 'dels'){
+        if (event.names.key === 'dels') {
          let self = this;
             this.confirmServ.confirm({
                 title  : '您是否确认要删除这项内容!',
@@ -609,7 +566,7 @@ getElement() {
                     self.utilityService.deleatData(appConfig.testUrl  + appConfig.API.deliveries + '/' + event.guid ,  {Authorization: self.token})
                         .subscribe(
                             (val) => {
-                                if(val.code == 200) {
+                                if (val.code === 200) {
                                      if ( !(( self.total - 1) % 10)) {
                                         self.pageTotal = self.pageTotal - 10 ;
                                         self.getData();
@@ -618,11 +575,11 @@ getElement() {
 
                                     self.nznot.create('success', val.msg, val.msg);
                                 }else {
-                                    self.nznot.create('error',val.msg,'');
+                                    self.nznot.create('error', val.msg, '');
                                 }
                             }   ,
                             (error) => {
-                               self.nznot.create('error', error.msg,'');
+                               self.nznot.create('error', error.msg, '');
 
                             }
                         );
@@ -631,34 +588,32 @@ getElement() {
                 }
             });
 
-        }else if(event.names.key == 'detail'){
-          
+        } else if (event.names.key === 'detail') {
         this.utilityService.getData( appConfig.testUrl + appConfig.API.deliveries + '/' + event.guid + '/deliveryLists', {}, {Authorization: this.token})
             .subscribe(
                 (val) => {
-                   if(val.code == 200){
+                   if(val.code === 200){
                         this.mergeListDetail = val.result
                         this.mergeVisible = true;
                    }
-                },(error)=>{
-                     this.nznot.create('error',error.msg,'');
+                }, (error) => {
+                     this.nznot.create('error', error.msg, '');
                 });
 
 
-        }else if(event.names.key == 'upd'){
+        }else if(event.names.key === 'upd'){
 
         this.guidDelivery = event.guid;
-         this.utilityService.getData( appConfig.testUrl +'/deliveries/'+event.guid + '/profileDateilVerify', {}, {Authorization: this.token})
+         this.utilityService.getData( appConfig.testUrl + '/deliveries/' + event.guid + '/profileDateilVerify', {}, {Authorization: this.token})
             .subscribe(
                 (val) => {
 
-                   if(val.code == 200){
+                   if(val.code === 200){
                        this.updPackTiming  = val.result
                       this.updPackTiming['unixTime'] = moment(this.updPackTiming['deliveryTime']).format('YYYY-MM-DD 00:00:00.000')
                        localStorage.setItem('time',this.updPackTiming['unixTime']);
-                      for(let i =0;i<this.updPackTiming['packTimeDetails'].length;i++){
-
-                          if(this.updPackTiming['packTimeDetails'][i]['isOptions']=='D'){
+                      for (let i = 0; i < this.updPackTiming['packTimeDetails'].length; i++) {
+                          if (this.updPackTiming['packTimeDetails'][i]['isOptions'] === 'D'){
                             //  this.updPackTiming['packTimeDetails'][i]['check'] = true
                              this.updPackTiming['packTiming']   =   this.updPackTiming['packTimeDetails'][i]['packTime']
                           }else{
@@ -669,14 +624,12 @@ getElement() {
                            this.updEnvironment = true;
                    }
 
-                },(error)=>{
+                }, (error) => {
                      this.nznot.create('error', error.msg, '');
                 });
         } else if (event.names.key === 'copy') {
             this.copyseniorGuid = event.guid;
             this.getcheckOptionOne(event.workGuid);
-
-
            /* this.utilityService.putData( appConfig.testUrl + appConfig.API.newProfiles, {}, {Authorization: this.token})
 
                 .subscribe(
@@ -688,18 +641,14 @@ getElement() {
                             this.nznot.create('error', error.json().msg, '');
                         }
                     });*/
-
             this.copyVisible = true;
         }
-
-
-
-
     }
-      _disabledDate(current: Date): boolean {
-        let time = localStorage.getItem('time');
-    return current && current.getTime() < new Date(time).getTime();
-  }
+     _disabledDate(current: Date): boolean {
+            let time = localStorage.getItem('time');
+            return current && current.getTime() < new Date(time).getTime();
+     }
+
     onChange(updPackTiming) {
         if (updPackTiming.deliveryTime.getTime() !== new Date(updPackTiming.unixTime).getTime()) {
            for (let i = 0; i < updPackTiming.packTimeDetails.length; i++) {
@@ -716,26 +665,25 @@ getElement() {
 
         }
     }
-    submitUpd(){
-        let obj ={
-            guidDelivery:this.guidDelivery,
-            deliveryTime:this.updPackTiming['deliveryTime'],
-            packTiming:this.updPackTiming['packTiming']
+    submitUpd() {
+        let obj = {
+            guidDelivery: this.guidDelivery,
+            deliveryTime: this.updPackTiming['deliveryTime'],
+            packTiming: this.updPackTiming['packTiming']
         }
 
-
-          this.utilityService.putData( appConfig.testUrl +'/deliveries/deliveryTimePackTime', obj, {Authorization: this.token})
+          this.utilityService.putData( appConfig.testUrl + '/deliveries/deliveryTimePackTime', obj, {Authorization: this.token})
             .subscribe(
                 (val) => {
                        this.updEnvironment = false;
                     this.getData();
-                   if(val.code == 200){
-                           this.nznot.create('success',val.msg,'');
+                   if (val.code === 200){
+                           this.nznot.create('success', val.msg, '');
                    }
 
-                },(error)=>{
-                 this.nznot.create('error',error.msg,'');
-                  
+                },(error) => {
+                 this.nznot.create('error', error.msg, '');
+
                 });
     }
 
@@ -796,7 +744,6 @@ getElement() {
         this.utilityService.postData( url, {}, {Authorization: this.token})
             .subscribe(
                 (val) => {
-
                     if (val.code === '200') {
                           this.checkListVisible = true;
                           this.checkModalData = val.result.deliveryDetails;
@@ -826,7 +773,7 @@ getElement() {
                 }
                 ,
                 (error) => {
-                   this.nznot.create('error', error.msg,'');
+                   this.nznot.create('error', error.msg, '');
                 }
             );
         this.checkModalVisible = false; // 打开核对弹出框
@@ -849,7 +796,7 @@ getElement() {
             }
         }
 
-        if ( this.profiles.length == 0) {
+        if ( this.profiles.length === 0) {
             this.nznot.create('error', '请选择投放环境', '请选择投放环境');
             return;
         }
@@ -867,7 +814,7 @@ getElement() {
         this.utilityService.postData(appConfig.testUrl  + appConfig.API.mergeInfo, obj, { Authorization: this.token})
             .subscribe(
                 (val) => {
-                    if (val.code == 200) {
+                    if (val.code === 200) {
 
 
                      }else {
@@ -875,8 +822,8 @@ getElement() {
                      }
 
                 },
-                (error)=>{
-                    this.nznot.create('error', error.msg,'');
+                (error) => {
+                    this.nznot.create('error', error.msg, '');
                 }
 
 
@@ -887,44 +834,41 @@ getElement() {
     getdatas() {
 
     }
-    guid: any;
+
 
     // 状态
     returns(item , S ) {
 
-   if ( S === 0) {
-       this.guid = item;
+       if ( S === 0) {
+           this.guid = item;
 
-       this.istextVisible = true;
+           this.istextVisible = true;
 
-   }else {
-       let  url = appConfig.testUrl + '/checks/delivery/' + item + '/result';
-       if (S === 1) {
-           S = 'S';
        }else {
-           S = 'F';
-       }
-       const obj = {
-               result : S,
-               desc : this.inputValue
-       };
-
+           let  url = appConfig.testUrl + '/checks/delivery/' + item + '/result';
+           if (S === 1) {
+               S = 'S';
+           }else {
+               S = 'F';
+           }
+           const obj = {
+                   result : S,
+                   desc : this.inputValue
+           };
 
        this.utilityService.postData( url, obj, {Authorization: this.token})
-
            .subscribe(
                (val) => {
-                   if (val.code == 200){
+                   if (val.code === 200) {
                        this.istextVisible = false;
                        this.checkListVisible = false;
                        this.nznot.create('success', val.msg, val.msg);
                    }else{
-                         this.nznot.create('error', val.msg,'');
+                         this.nznot.create('error', val.msg,  '');
                   }
-           }
-               ,
+                },
                (error) => {
-                   this.nznot.create('error', error.msg,'');
+                   this.nznot.create('error', error.msg,  '');
                }
            );
    }
@@ -957,59 +901,49 @@ getElement() {
                     }
 
                 },
-                (error)=>{
-                   this.nznot.create('error', error.msg,'');
+                (error) => {
+                   this.nznot.create('error', error.msg, '');
                 }
             );
     }
 
 
 
-//子组件核对详情的方法
+    // 子组件核对详情的方法
     iStouchan = false;
-    idcheck:any
-    mergeId :any;
-    mergeguid:any
-    guidprent=[ {
-           guid:'',
-           guidWorkitem:''
-              } ]
+    idcheck: any
+    mergeId: any;
+    mergeguid: any
+    guidprent = [{guid: '', guidWorkitem: ''}];
      mergeData: any[] = []; // 核查有异议的数据
-    buttonClick(event){
+    buttonClick(event) {
             let type = event.index;
             let id = event.id;
             let soyin = event.soyin;
-            if(type=='4'){
-
-           this.iStouchan =true
-
-            }else{
-
-              this.utilityService.putData( appConfig.testUrl +'/checkLists/'+id+'/status/'+type, {}, {Authorization: this.token})
-                      
+            if ( type === '4') {
+                 this.iStouchan = true;
+            }else {
+              this.utilityService.putData( appConfig.testUrl + '/checkLists/' + id + '/status/' + type, {}, {Authorization: this.token})
                          .subscribe(
                          (val) => {
-                          if(val.code == 200) {
-
-                           this.nznot.create('success',val.msg,'');
-                          if(type == 3){
-                             this.mergeListData.splice(soyin,1)// 删除数组
+                          if (val.code === 200) {
+                                this.nznot.create('success', val.msg,  '');
+                              if (type === 3) {
+                                 this.mergeListData.splice(soyin, 1); // 删除数组
+                               }
                            }
-                                //
-
-                          }
-                         },(error)=>{
-                            this.nznot.create('error', error.msg,'');
+                         }, (error) => {
+                            this.nznot.create('error', error.msg, '');
                          });
                           }
             }
 
 
-loading1 = false
-loading2 = false
-    mergeClick(index){
+    loading1 = false
+    loading2 = false
+    mergeClick(index) {
             let status = '';
-                switch(index){
+                switch (index) {
                     case 0 :
                     this.mergeisVisible = false
                     return;
@@ -1029,22 +963,22 @@ loading2 = false
                 title  : '您是否确认要进行这项操作!',
                 showConfirmLoading: true,
                 onOk() {
-                    self.utilityService.putData( appConfig.testUrl +'/checks/'+self.checkId+'/status/'+status, {}, {Authorization: self.token})
+                    self.utilityService.putData( appConfig.testUrl + '/checks/' + self.checkId + '/status/' + status, {}, {Authorization: self.token})
                                     .subscribe(
                                 (val) => {
-                                         self.loading1 = false;
+                                       self.loading1 = false;
                                        self.loading2 = false;
-                                    if(val.code == 200) {
-                                    self.nznot.create('success',val.msg,'');
+                                    if (val.code === 200) {
+                                    self.nznot.create('success', val.msg,  '');
                                     //  self.detailVisible =false;
-                                     self.mergeisVisible =false;
-                                    }else{
-                                            self.nznot.create('error', val.msg,'');
+                                     self.mergeisVisible = false;
+                                    }else {
+                                            self.nznot.create('error', val.msg, '');
                                     }
-                                },(error)=>{
+                                },(error) => {
                                     self.loading1 = false;
                                     self.loading2 = false;
-                                      self.nznot.create('error', error.msg,'');
+                                      self.nznot.create('error', error.msg, '');
                                     })
                 },
                 onCancel() {
@@ -1057,14 +991,12 @@ loading2 = false
 
     buttonEvent(event) {
         this.mergeId = event.guid;
-
         if (event.names.key === 'merge') {
-
             this.idcheck = event.guid;
               let index = '';
               let indexs = '';
              this.detailVisible = true;
-             this.utilityService.getData( appConfig.testUrl +'/checks/'+event.guid, {}, {Authorization: this.token})
+             this.utilityService.getData( appConfig.testUrl + '/checks/' + event.guid, {}, {Authorization: this.token})
                          .subscribe(
                          (val) => {
                           this.detailVisible = true;
@@ -1077,8 +1009,8 @@ loading2 = false
                             }
                         }
                          for  (let i = 0; i < this.checkModalData.length; i ++) {
-                                      this.guidprent[i]['guid']=this.checkModalData[i].delivery.guid;
-                                      this.guidprent[i]['guidWorkitem']=this.checkModalData[i].delivery.guidWorkitem.target
+                                      this.guidprent[i]['guid'] = this.checkModalData[i].delivery.guid;
+                                      this.guidprent[i]['guidWorkitem'] = this.checkModalData[i].delivery.guidWorkitem.target
                             for (let j = 0; j < this.checkModalData[i].detailList.length; j ++) {
                                 for (let x = 0; x < this.checkModalData[i].detailList[j].deliveryPatchDetails.length; x ++) {
                                     for (let  y = 0; y < this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList.length; y ++) {
@@ -1086,16 +1018,14 @@ loading2 = false
                                         if (this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath) {
                                             index = this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.indexOf(this.checkModalData[i].detailList[j].projectName);
                                             this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath = this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.substring(index, this.checkModalData[i].detailList[j].deliveryPatchDetails[x].fileList[y].fullPath.length);
-
-
                               }
                                     }
                                 }
                             }
                         }
                                 }
-                                ,(error)=>{
-                                    this.nznot.create('error', error.msg,'');
+                                , (error) => {
+                                    this.nznot.create('error', error.msg, '');
                                 })
 
 
@@ -1111,7 +1041,7 @@ loading2 = false
 
    returnsclick(event) {
        let item = event.index
-       this.mergeguid=event.it.guid
+       this.mergeguid = event.it.guid
          let S = '';
         let  url = appConfig.testUrl + '/checks/delivery/' + this.mergeguid + '/result';
         if (item === 1) {
@@ -1128,26 +1058,26 @@ loading2 = false
        this.utilityService.putData( url, obj, {Authorization: this.token})
            .subscribe(
                (val) => {
-                   if (val.code == 200){
+                   if (val.code === 200) {
 
-                        if(item === 1 ){
+                        if (item === 1 ) {
                            event.it.disabledS = true
-                           event.it.deliveryResult = '核对成功'
-                       }else  if(item === 2 ){
+                           event.it.deliveryResult = '核对成功';
+                       }else  if (item === 2 ) {
                           this.istextVisible = false;
                            event.it.disabledS = true
-                           event.it.deliveryResult = '核对失败'
+                           event.it.deliveryResult = '核对失败';
                        }
                        this.nznot.create('success', val.msg, val.msg);
-                   }else{
-                         this.nznot.create('error', val.msg,'');
+                   }else {
+                         this.nznot.create('error', val.msg, '');
                   }
 
                }
                ,
                (error) => {
 
-                    this.nznot.create('error', error.msg,'');
+                    this.nznot.create('error', error.msg, '');
                }
            );
     //    }
@@ -1157,30 +1087,28 @@ loading2 = false
 
        checkSavemerge(event) {
         this.iStouchan = false;
-         let objs =event.arr
-
+         let objs = event.arr
         this.iStouchan = false;
         const obj ={
-            guidDelivery:String(objs.guidDelivery),
-            patchType:objs.patchType,
-            deployWhere:objs.deployWhere
+            guidDelivery: String(objs.guidDelivery),
+            patchType: objs.patchType,
+            deployWhere: objs.deployWhere
         }
-          this.utilityService.putData( appConfig.testUrl +'/checkLists/'+event.errorId+'/delivery', obj, {Authorization: this.token})
+          this.utilityService.putData( appConfig.testUrl + '/checkLists/' + event.errorId + '/delivery', obj, {Authorization: this.token})
                          .subscribe(
                          (val) => {
-                          if(val.code == 200) {
-                    this.mergeListData.forEach((result,i)=>{
-                                 if(result.guid == event.errorId){
+                          if (val.code === 200) {
+                    this.mergeListData.forEach((result,i) => {
+                                 if (result.guid === event.errorId) {
                                      this.mergeListData[i].checkbuttons = true;
                                        this.mergeListData[i].confirmStatus = '加入投放';
                                  }
                              })
-                           this.nznot.create('success',val.msg,'');
-                                //
+                           this.nznot.create('success', val.msg,  '');
 
                           }
-                         },(error)=>{
-                              this.nznot.create('error', error.msg,'');
+                         }, (error) => {
+                              this.nznot.create('error', error.msg, '');
                          });
     }
 
@@ -1188,11 +1116,9 @@ loading2 = false
 
 
     // 打印界面
-
     isVisible = false; // 默认关闭
     workItem = false;
     mergeisVisible = false;
-
     checkOptionsOne  = [
         { label: 'TWS改版', value: 'TWS' },
         { label: '1618 国际结算', value: '1618' },
