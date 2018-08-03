@@ -164,11 +164,7 @@ export class LaunchApplyComponent implements OnInit {
                     asc: false // asc 默认是true  升序排序，时间类型 用false， 降序
                 }
             };
-            let button =[
-                 {key:'dels',value:'删除' },
-                 {key:'detail',value:'详情'},
-
-                       ]
+       
               let buttonupd =[
                  {key:'dels',value:'删除' },
                  {key:'detail',value:'详情'},
@@ -197,10 +193,8 @@ export class LaunchApplyComponent implements OnInit {
 
                                 if(this.data[i].deliveryResult == '申请中'){
                                      this.data[i].buttonData = buttonupd
-                                } else if(this.data[i].deliveryResult == '投放成功') {
-                                    this.data[i].buttonData = buttonsuccess
                                 } else{
-                                    this.data[i].buttonData = button
+                                    this.data[i].buttonData = buttonsuccess
                                 }
 
                             }
