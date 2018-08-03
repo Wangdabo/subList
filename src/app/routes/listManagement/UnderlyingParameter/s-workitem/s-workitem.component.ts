@@ -493,7 +493,7 @@ export class SWorkitemComponent implements OnInit {
                 .subscribe(
                     (val) => {
                       console.log(val)
-                        if (val.code === 200) {
+                        if (val.code === '200') {
                              this.modalVisible = false;
                               this.modal.open({
                                 title: '信息提示',

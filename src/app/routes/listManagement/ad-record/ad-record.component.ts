@@ -516,7 +516,7 @@ mergeClick(index){
 
 
        let  url = appConfig.testUrl + '/checks/delivery/' + this.guid + '/result';
-       if (item === 1) {
+       if (item == 1) {
            S = 'S';
        }else {
            S = 'F';
@@ -531,15 +531,15 @@ mergeClick(index){
            .subscribe(
                (val) => {
 
-                   if (val.code == 200){
+                   if (val.code === '200') {
                          console.log(this.istextVisible )
 
                        this.istextVisible = false;
 
-                       if(item === 1 ){
+                       if(item == 1 ) {
                            event.it.disabledS = true
                            event.it.deliveryResult = '核对成功'
-                       }else  if(item === 2 ){
+                       }else  if(item == 2 ){
                            event.it.disabledS = true
                            event.it.deliveryResult = '核对失败'
                        }

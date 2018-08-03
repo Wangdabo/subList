@@ -534,7 +534,7 @@ export class LaunchApplyComponent implements OnInit {
         this.utilityService.putData( url, {}, {Authorization: this.token})
             .subscribe(
                 (val) => {
-                    if (val.code === 200) {
+                    if (val.code === '200') {
                         event.event.check = true
                         event.event.value = '已确认合并'
                         this.loadingnext = false;
@@ -676,7 +676,7 @@ export class LaunchApplyComponent implements OnInit {
                 (val) => {
                     this.updEnvironment = false;
                     this.getData();
-                    if (val.code === 200){
+                    if (val.code === '200') {
                         this.nznot.create('success', val.msg, '');
                     }
 
