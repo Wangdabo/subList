@@ -109,7 +109,7 @@ export class SProjectComponent implements OnInit {
 
 
         this.utilityService.postData(appConfig.testUrl  + appConfig.API.sProjectList , this.page, {Authorization: this.token})
-            .map(res => res.json())
+            // .map(res => res.json())
             .subscribe(
                 (val) => {
                     this.data = val.result.records;
@@ -159,7 +159,7 @@ export class SProjectComponent implements OnInit {
 
                 }
                 , error => {
-                    this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
+                    this.nznot.create('error', error.code , error.msg);
                 }
             );
     }
@@ -197,7 +197,7 @@ export class SProjectComponent implements OnInit {
                return;
            }
          this.utilityService.postData(appConfig.testUrl  + appConfig.API.sBranchadd +'/'+ 'path',{svnUrl:item}, {Authorization: this.token})
-                .map(res => res.json())
+                // .map(res => res.json())
                 .subscribe(
                     (val) => {
                         console.log(val);
@@ -212,7 +212,7 @@ export class SProjectComponent implements OnInit {
                           this.isShowbranch = false
                           this.checkmsg = error.json().msg;
                           this.tag  = '验证'
-                          this.nznot.create('error', '',error.json().msg);
+                          this.nznot.create('error', '', error.msg);
                     }
                 }
                 );
@@ -291,7 +291,6 @@ export class SProjectComponent implements OnInit {
                     cancelText: '取消',
                     onOk: () => {
                         this.utilityService.deleatData(appConfig.testUrl  + appConfig.API.sProject + '/' + event.guid , {Authorization: this.token})
-                            .map(res => res.json())
                             .subscribe(
                                 (val) => {
                                     this.nznot.create('success', val.msg , val.msg);
@@ -338,26 +337,26 @@ export class SProjectComponent implements OnInit {
         this.productAdd.deployConfig = JSON.stringify(splicing);
         if (this.isEdit) { // 修改
             this.utilityService.putData(appConfig.testUrl  + appConfig.API.sProject, this.productAdd, {Authorization: this.token})
-                .map(res => res.json())
+                // .map(res => res.json())
                 .subscribe(
                     (val) => {
                         this.nznot.create('success', val.msg , val.msg);
                         this.getData();
                     },
                     error => {
-                        this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
+                        this.nznot.create('error', error.code , error.msg);
                     }
                 );
         } else {
             this.utilityService.postData(appConfig.testUrl  + appConfig.API.sProject, this.productAdd, {Authorization: this.token})
-                .map(res => res.json())
+                // .map(res => res.json())
                 .subscribe(
                     (val) => {
                         this.nznot.create('success', val.msg , val.msg);
                         this.getData();
                     },
                     error => {
-                        this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
+                        this.nznot.create('error', error.code , error.msg);
                     }
                 );
         }

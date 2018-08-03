@@ -652,7 +652,7 @@ export class SubListComponent implements OnInit {
             }
         }
         this.utilityService.postData(appConfig.testUrl  + appConfig.API.sDeliveryList +  '/deliveryAndDeliveryList', this.splicingObj, {Authorization: this.token})
-            .map(res => res.json())
+            // .map(res => res.json())
             .subscribe(
                 (suc) => {
                     this.nznot.create('success', suc.code , suc.msg);
@@ -665,7 +665,7 @@ export class SubListComponent implements OnInit {
                     this.textcssList = [];
                 },
                 (error) => {
-                    this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
+                    this.nznot.create('error', error.code , error.msg);
                     // this.getData();
                 }
             );
@@ -837,7 +837,7 @@ export class SubListComponent implements OnInit {
             }
         }
         this.utilityService.postData(appConfig.testUrl  + '/sDeliveryList/superadditionDeliverylist', this.splicingObj, {Authorization: this.token})
-            .map(res => res.json())
+            // .map(res => res.json())
             .subscribe(
                 (val) => {
                     this.nznot.create('success', val.code , val.msg);
