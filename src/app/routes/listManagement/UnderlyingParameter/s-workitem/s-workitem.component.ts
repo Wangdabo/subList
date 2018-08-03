@@ -144,30 +144,17 @@ export class SWorkitemComponent implements OnInit {
                     this.total = val.result.total;
                     this.pageTotal = val.result.pages * 10;
                     this.pageIndex = val.result.current;
-                    _.forEach(this.data , function (value) {
-                        let star = '';
-                                let end = '';
-                                let str = ''
-                                if(value.itemName.length > 20){
-                                       star = value.itemName.substr(0, 10)
-                                end = value.itemName.substr(value.itemName.length - 10)
-                                value.itemNamestr = star + '...' + end;
-                                }else{
-                                    value.itemNamestr = value.itemName
+                    _.forEach(this.data , function (value) {      
+                                 value.itemNamestr = value.itemName
+                                if(value.itemName.length > 20){   
+                                value.itemNamestr = appConfig.subString(value.itemName,10);
                                 }
 
 
 
                         if (value.itemStatus === '开发中') {
                             if (value.fullPath !== '') { // 说明存在分支
-                                // 截取
-                               /* let star = '';
-                                let end = '';
-                                let str = ''
-                                star = value.fullPath.substr(0, 20)
-                                end = value.fullPath.substr(value.fullPath.length - 20)
-                                value.fullPathstr = star + '...' + end;
-                                console.log(value)*/
+                             
                                 value.buttonData = [
                                     {key: 'upd', value: '修改'},
                                     {key: 'cenel', value: '关闭'},

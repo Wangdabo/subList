@@ -88,6 +88,15 @@ export let appConfig = {
         return false;
     },
 
+    subString(str,length){
+        let star = '';
+        let end = '';
+      star = str.substr(0,length)
+       end = str.substr(str.length - length)
+      str = star + '...' + end;
+      return str;
+    }
+
 
 }
 
