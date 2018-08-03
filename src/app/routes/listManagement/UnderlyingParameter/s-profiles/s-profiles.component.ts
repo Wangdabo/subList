@@ -336,21 +336,32 @@ export class SProfilesComponent implements OnInit {
                       console.log(val)
                     if (val.code == 200) {
                         this.data = val.result.records;
+                        console.log(this.data);
                         this.total = val.result.total; // 总数
                         this.pageTotal = val.result.pages * 10; // 页码
                          this.pageIndex = val.result.current;
+                        let star = '';
+                        let end = '';
                         for ( let i = 0; i < this.data.length; i++) {
                             this.data[i].itemName = this.data[i].fullPath
-                             this.data[i].fullPathstr = this.data[i].fullPath
                             if(this.data[i].fullPath.length > 60){
-                              this.data[i].fullPathstr = appConfig.subString(this.data[i].fullPath,20)
+                                   star = this.data[i].fullPath.substr(0,20)
+                                   end = this.data[i].fullPath.substr(this.data[i].fullPath.length - 20)
+                                      this.data[i].fullPathstr = star + '...' + end;
+                                  
+                                }else{
+                                     this.data[i].fullPathstr = this.data[i].fullPath
                                 }
                            
+                            // this.data[i].buttonDataBranch = this.buttonDataBranch
                             if(this.data[i].fullPath == ''){
                                   this.data[i].buttonData = this.buttonData
+                                //   this.buttonData.push({key:'correlation',value:'关联分支'})
                             }else{
-                              this.data[i].buttonData = this.buttonDataBranch                
-                           }  
+                              this.data[i].buttonData = this.buttonDataBranch
+                         
+                           }
+                           
                             if(this.data[i].isAllowDelivery == '1'){
                                 this.data[i].isAllowDelivery = true
                             }else{
