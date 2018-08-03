@@ -179,18 +179,18 @@ export class SProjectComponent implements OnInit {
          this.utilityService.postData(appConfig.testUrl  + appConfig.API.sBranchadd + '/' + 'path',{svnUrl: item}, {Authorization: this.token})
                 .subscribe(
                     (val) => {
-                        if (val.code === 200) {
+                        if (val.code === '200') {
                            this.isShowbranch = true
                            this.tag = '通过';
                         }
                     },
                 (error) => {
-                    if (error) {
+                
                           this.isShowbranch = false
                           this.checkmsg = error.msg;
                           this.tag  = '验证'
                           this.nznot.create('error', '', error.msg);
-                    }
+                   
                 }
                 );
         }
