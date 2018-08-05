@@ -87,12 +87,12 @@ export class SBranchComponent implements OnInit {
             this.utilityService.postData(appConfig.testUrl + appConfig.API.sBranch, page, {Authorization: this.token})
                 .subscribe(
                     (val) => {
-                        if (val.code == 200) {
+                        if (val.code === '200') {
                             this.data = val.result.records;
                             this.total = val.result.total; // 总数
                             this.pageTotal = val.result.pages * 10; // 页码
                             this.pageIndex = val.result.current;
-                        
+
                             for (let i = 0 ; i <  this.data.length; i ++) {
                                 this.data[i].branchTypeText =  this.data[i].branchType;
                                this.data[i].branchForstr = this.data[i].branchFor;
@@ -120,7 +120,7 @@ export class SBranchComponent implements OnInit {
                 (error)=>{
                     // console.log(error)
                     this.nznot.create('error', error.msg,'');
-                    
+
                 }
                 );
     }
@@ -163,11 +163,11 @@ export class SBranchComponent implements OnInit {
       showConfirmLoading: true,
       onOk() {
             self.utilityService.deleatData(appConfig.testUrl  + appConfig.API.sBranchadd +'/'+ obj, {Authorization: self.token})
-                  .map(res => res.json())
+                  // .map(res => res.json())
                 .subscribe(
                     (val) => {
                         let arr = [];
-                      if(val.code == 200) {
+                      if (val.code === '200') {
 
                               if ( !(( self.total - 1) % 10)) {
                                         self.pageTotal = self.pageTotal - 10 ;
@@ -196,7 +196,7 @@ export class SBranchComponent implements OnInit {
         } else if (event.names.key === 'upd') {
             let a = event
             this.detailsVisible = true;
-                 this.branch = event;   
+                 this.branch = event;
                  this.branchType.forEach(i=>{
                             console.log(i)
                             if(  this.branch.branchType == i.key) {
@@ -204,8 +204,8 @@ export class SBranchComponent implements OnInit {
                             }
                  })
             this.ptitle = '修改分支'
-          
-            
+
+
         }  else if (event.names.key === 'details') {
           this.detailsVisible = true
             this.utilityService.getData(appConfig.testUrl  + appConfig.API.sBranchadd +'/'+ obj,{}, {Authorization: this.token})
@@ -225,8 +225,8 @@ export class SBranchComponent implements OnInit {
     checkmsg:any;
     tag = '验证';
        checkversion(item){
-           
-          if(this.tag == '通过'){
+
+          if (this.tag === '通过') {
               return;
           }
            console.log(item)
@@ -234,13 +234,13 @@ export class SBranchComponent implements OnInit {
                 .subscribe(
                     (val) => {
                         console.log(val);
-                        if(val.code == 200){
+                        if(val.code === '200') {
                            this.branch.lastVersion = val.result;
                            this.isShowbranch = true
-                           this.tag = '通过'
+                           this.tag = '通过';
                         }
                     },
-                (error)=>{
+                (error) => {
                        this.isShowbranch = false
                             this.tag = '验证'
                            this.nznot.create('error', error.msg,'');
@@ -248,9 +248,9 @@ export class SBranchComponent implements OnInit {
                 );
         }
         checkagin(item){
-         
+
                 this.tag = '验证'
-           
+
         }
 
 change(){
@@ -273,20 +273,20 @@ change(){
            .subscribe(
             (val) => {
                 console.log(this.branch);
-            
-             if(val.code == 200) {
+
+             if(val.code === '200') {
                    this.getData();
                   this.detailsVisible = false;
-               
+
 
                   this.nznot.create('success', val.msg, val.msg);
              }else {
                 this.nznot.create('error', '异常', '异常');
              }
             }   ,
-                (error)=>{
-                  
-             this.nznot.create('error', error.msg,'');
+                (error) => {
+
+             this.nznot.create('error', error.msg, '');
                 }
 
         );
@@ -298,7 +298,7 @@ change(){
         .subscribe(
             (val) => {
 
-             if(val.code == 200) {
+             if (val.code === '200') {
                 this.getData();
 
                   console.log(this.branch);
@@ -309,7 +309,7 @@ change(){
              }
             }   ,
                 (error)=>{
-                    
+
                      this.nznot.create('error', error.msg,'');
                 }
 

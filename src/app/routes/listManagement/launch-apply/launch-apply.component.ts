@@ -379,14 +379,14 @@ export class LaunchApplyComponent implements OnInit {
 
                             this.current += 1;
 
-                            for(let i = 0;i<val.result.length;i++){
-                                arr[i]=val.result[i].delivery
-                                arr[i]['branch']=val.result[i].branch
+                            for (let i = 0; i < val.result.length; i++) {
+                                arr[i] = val.result[i].delivery
+                                arr[i]['branch'] = val.result[i].branch
                                 arr[i]['projectList'] = val.result[i].projectList;
-                                arr[i]['expand'] =false;
+                                arr[i]['expand'] = false;
                                 arr[i]['check'] = true;
                                 arr[i]['deliveryTime'] = moment(val.result[i].deliveryTime).format('YYYY-MM-DD');
-                                if(val.result[i].delivery.deliveryResult === "申请中"){
+                                if (val.result[i].delivery.deliveryResult === '申请中') {
                                     arr[i]['buttonData']= [ {check: false, value: '未确认合并'}];
                                 }else{
                                     arr[i]['buttonData']= [ {check: true, value: '已确认合并'}];
@@ -397,8 +397,8 @@ export class LaunchApplyComponent implements OnInit {
                             this.initDate = arr;
 
 
-                        }else{
-                            this.nznot.create('error',val.msg,val.msg);
+                        }else {
+                            this.nznot.create('error', val.msg, val.msg);
 
                         }
                     },
@@ -409,18 +409,18 @@ export class LaunchApplyComponent implements OnInit {
                         //
                     })
             // step2
-        }else if(this.current == 1){
+        }else if (this.current === 1){
 
             let flage = true;
             for (let i = 0; i < this.initDate.length; i++) {
-                if(this.initDate[i].buttonData[0].check == false) {
+                if (this.initDate[i].buttonData[0].check === false) {
                     flage = false;
-                    this.nznot.create('error','请确认去合并！！','');
+                    this.nznot.create('error', '请确认去合并！！', '');
                     return;
                 }
             }
 
-            if( flage == true ) {
+            if ( flage === true ) {
 
                 let index = '';
                 let indexs = '';
@@ -437,30 +437,30 @@ export class LaunchApplyComponent implements OnInit {
                             this.mergeListData  = val.result.mergeLists;
 
                             for  (let i = 0; i < this.mergeListData.length; i ++) {
-                                if(this.mergeListData[i].confirmStatus=='加入投放'){
+                                if (this.mergeListData[i].confirmStatus === '加入投放'){
                                     this.mergeListData[i]['checkbuttons'] = true;
-                                }else{
+                                }else {
                                     this.mergeListData[i]['checkbuttons'] = false;
                                 }
                                 if (this.mergeListData[i].fullPath) {
 
                                     indexs = this.mergeListData[i].fullPath.indexOf(this.mergeListData[i].partOfProject);
                                     this.mergeListData[i].fullPath = this.mergeListData[i].fullPath.substring(indexs, this.mergeListData[i].fullPath.length);
-                                    this.mergeListData[i].fullPathstr =this.mergeListData[i].fullPath
+                                    this.mergeListData[i].fullPathstr = this.mergeListData[i].fullPath
                                     if(this.mergeListData[i].fullPath.length > 40){
                                         this.mergeListData[i].fullPathstr = appConfig.subString(this.mergeListData[i].fullPath,20);
                                     }
                                 }
-                                this.mergeListData[i].programNamestr =this.mergeListData[i].programName
-                                if(this.mergeListData[i].programName.length > 40){
-                                    this.mergeListData[i].programNamestr =appConfig.subString(this.mergeListData[i].programName,10);
+                                this.mergeListData[i].programNamestr = this.mergeListData[i].programName
+                                if (this.mergeListData[i].programName.length > 40) {
+                                    this.mergeListData[i].programNamestr = appConfig.subString(this.mergeListData[i].programName,10);
                                 }
                             }
 
                             for  (let i = 0; i < this.checkModalData.length; i ++) {
                                 let obj = {
-                                    guid:this.checkModalData[i].delivery.guid,
-                                    guidWorkitem:this.checkModalData[i].delivery.guidWorkitem.target
+                                    guid: this.checkModalData[i].delivery.guid,
+                                    guidWorkitem: this.checkModalData[i].delivery.guidWorkitem.target
                                 }
 
                                 this.guidprent.push(obj);
@@ -488,9 +488,9 @@ export class LaunchApplyComponent implements OnInit {
                             }
 
                         }
-                        ,(error)=>{
+                        , (error) => {
                             this.loadingnext = false;
-                            this.nznot.create('error', error.msg,'');
+                            this.nznot.create('error', error.msg, '');
                         })
             }
 
@@ -529,7 +529,7 @@ export class LaunchApplyComponent implements OnInit {
 
     }
 
-    buttonEventMerge(event){
+    buttonEventMerge(event) {
         let url = appConfig.testUrl + '/deliveries/' + event.guid + '/merge'; // 请求地址
         this.utilityService.putData( url, {}, {Authorization: this.token})
             .subscribe(
@@ -565,7 +565,7 @@ export class LaunchApplyComponent implements OnInit {
                     self.utilityService.deleatData(appConfig.testUrl  + appConfig.API.deliveries + '/' + event.guid ,  {Authorization: self.token})
                         .subscribe(
                             (val) => {
-                                if (val.code === 200) {
+                                if (val.code === '200') {
                                     if ( !(( self.total - 1) % 10)) {
                                         self.pageTotal = self.pageTotal - 10 ;
                                         self.getData();
@@ -591,8 +591,8 @@ export class LaunchApplyComponent implements OnInit {
             this.utilityService.getData( appConfig.testUrl + appConfig.API.deliveries + '/' + event.guid + '/deliveryLists', {}, {Authorization: this.token})
                 .subscribe(
                     (val) => {
-                        if(val.code === 200){
-                            this.mergeListDetail = val.result
+                        if (val.code === '200') {
+                            this.mergeListDetail = val.result;
                             this.mergeVisible = true;
                         }
                     }, (error) => {
@@ -607,7 +607,7 @@ export class LaunchApplyComponent implements OnInit {
                 .subscribe(
                     (val) => {
 
-                        if(val.code === 200){
+                        if(val.code === '200'){
                             this.updPackTiming  = val.result
                             this.updPackTiming['unixTime'] = moment(this.updPackTiming['deliveryTime']).format('YYYY-MM-DD 00:00:00.000')
                             localStorage.setItem('time',this.updPackTiming['unixTime']);
@@ -615,7 +615,7 @@ export class LaunchApplyComponent implements OnInit {
                                 if (this.updPackTiming['packTimeDetails'][i]['isOptions'] === 'D'){
                                     //  this.updPackTiming['packTimeDetails'][i]['check'] = true
                                     this.updPackTiming['packTiming']   =   this.updPackTiming['packTimeDetails'][i]['packTime']
-                                }else{
+                                }else {
                                     //  this.updPackTiming['packTimeDetails'][i]['check'] = false
                                 }
                             }
@@ -813,7 +813,7 @@ export class LaunchApplyComponent implements OnInit {
         this.utilityService.postData(appConfig.testUrl  + appConfig.API.mergeInfo, obj, { Authorization: this.token})
             .subscribe(
                 (val) => {
-                    if (val.code === 200) {
+                    if (val.code === '200') {
 
 
                     }else {
@@ -858,7 +858,7 @@ export class LaunchApplyComponent implements OnInit {
             this.utilityService.postData( url, obj, {Authorization: this.token})
                 .subscribe(
                     (val) => {
-                        if (val.code === 200) {
+                        if (val.code === '200') {
                             this.istextVisible = false;
                             this.checkListVisible = false;
                             this.nznot.create('success', val.msg, val.msg);
@@ -892,7 +892,7 @@ export class LaunchApplyComponent implements OnInit {
             .subscribe(
                 (val) => {
 
-                    if (val.code == 200) {
+                    if (val.code === '200') {
 
                         this.nznot.create('success', val.msg, val.msg);
                     }else {
@@ -925,7 +925,7 @@ export class LaunchApplyComponent implements OnInit {
             this.utilityService.putData( appConfig.testUrl + '/checkLists/' + id + '/status/' + type, {}, {Authorization: this.token})
                 .subscribe(
                     (val) => {
-                        if (val.code === 200) {
+                        if (val.code === '200') {
                             this.nznot.create('success', val.msg,  '');
                             if (type === 3) {
                                 this.mergeListData.splice(soyin, 1); // 删除数组
@@ -967,7 +967,7 @@ export class LaunchApplyComponent implements OnInit {
                         (val) => {
                             self.loading1 = false;
                             self.loading2 = false;
-                            if (val.code === 200) {
+                            if (val.code === '200') {
                                 self.nznot.create('success', val.msg,  '');
                                 //  self.detailVisible =false;
                                 self.mergeisVisible = false;
@@ -1057,7 +1057,7 @@ export class LaunchApplyComponent implements OnInit {
         this.utilityService.putData( url, obj, {Authorization: this.token})
             .subscribe(
                 (val) => {
-                    if (val.code === 200) {
+                    if (val.code === '200') {
 
                         if (item === 1 ) {
                             event.it.disabledS = true
@@ -1096,8 +1096,8 @@ export class LaunchApplyComponent implements OnInit {
         this.utilityService.putData( appConfig.testUrl + '/checkLists/' + event.errorId + '/delivery', obj, {Authorization: this.token})
             .subscribe(
                 (val) => {
-                    if (val.code === 200) {
-                        this.mergeListData.forEach((result,i) => {
+                    if (val.code === '200') {
+                        this.mergeListData.forEach((result, i) => {
                             if (result.guid === event.errorId) {
                                 this.mergeListData[i].checkbuttons = true;
                                 this.mergeListData[i].confirmStatus = '加入投放';
@@ -1216,7 +1216,7 @@ export class LaunchApplyComponent implements OnInit {
             let xhr = new XMLHttpRequest();
             xhr.open('GET', url, true);    // 也可以使用POST方式，根据接口
             xhr.responseType = 'blob';  // 返回类型blob
-            xhr.setRequestHeader('Authorization',token); // 可以定义请求头带给后端
+            xhr.setRequestHeader('Authorization', token); // 可以定义请求头带给后端
             // 定义请求完成的处理函数，请求前也可以增加加载框/禁用下载按钮逻辑
             xhr.onload = function () {
 
@@ -1289,7 +1289,7 @@ export class LaunchApplyComponent implements OnInit {
                     this.detailInfo = val.result; // 返回的数据有问题
                 },
                 (error) => {
-                    this.nznot.create('error', error.msg,'');
+                    this.nznot.create('error', error.msg, '');
                     // this.getData();
                 }
             );

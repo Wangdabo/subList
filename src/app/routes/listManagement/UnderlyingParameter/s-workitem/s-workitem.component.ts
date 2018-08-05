@@ -308,7 +308,7 @@ export class SWorkitemComponent implements OnInit {
                                     // this.getData();
                                 },
                                 (error) => {
-                                    this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
+                                    this.nznot.create('error', error.code , error.msg);
                                 }
                             );
 
@@ -336,7 +336,7 @@ export class SWorkitemComponent implements OnInit {
                                     this.getData();
                                 },
                                 (error) => {
-                                    this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
+                                    this.nznot.create('error', error.code , error.msg);
                                 }
                             );
                     },
@@ -355,11 +355,11 @@ export class SWorkitemComponent implements OnInit {
                             .subscribe(
                                 (val) => {
                                     console.log(val)
-                                    this.nznot.create('success',val.msg,val.msg);
+                                    this.nznot.create('success', val.msg, val.msg);
                                     this.getData();
                                 },
                                 (error) => {
-                                    this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
+                                    this.nznot.create('error', error.code , error.msg);
                                 }
                             );
                     },
@@ -378,7 +378,7 @@ export class SWorkitemComponent implements OnInit {
                              this.branchData.createTime = moment(this.branchData.createTime).format('YYYY-MM-DD');
                         },
                         (error) => {
-                            this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
+                            this.nznot.create('error', error.code , error.msg);
                         });
             } else {
 

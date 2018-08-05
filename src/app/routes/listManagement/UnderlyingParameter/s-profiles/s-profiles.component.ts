@@ -22,7 +22,7 @@ import * as moment from 'moment';
     templateUrl: './s-profiles.component.html',
 })
 export class SProfilesComponent implements OnInit {
-//    @ViewChild('time') private d1: ElementRef;   
+//    @ViewChild('time') private d1: ElementRef;
     constructor(
         private http: _HttpClient,
         private router: Router,
@@ -34,15 +34,15 @@ export class SProfilesComponent implements OnInit {
         private confirmServ: NzModalService,
         private renderer: Renderer2
     ) {
-        
+
      }
     token: any;
 
     profiles:SprofilesModule = new SprofilesModule();
 
 
-     
- 
+
+
 
     showAdd: boolean; // 是否有修改
     isShowTotal = true;
@@ -61,7 +61,7 @@ export class SProfilesComponent implements OnInit {
         {key: '0', value: '否'},
         {key: '1', value: '是'}
     ]
-   
+
 
 
 
@@ -107,11 +107,11 @@ export class SProfilesComponent implements OnInit {
 
     }
 
-          
+
        inputVisible = false;
        inputValue = '';
             // @ViewChild('input') input: NzInputDirectiveComponent;
-            @ViewChild('input') private input: ElementRef;   
+            @ViewChild('input') private input: ElementRef;
             handleClose(removedTag: any): void {
                 this.tags = this.tags.filter(tag => tag !== removedTag);
             }
@@ -137,7 +137,7 @@ export class SProfilesComponent implements OnInit {
             }
 
             // 管理分支
-            active = true; 
+            active = true;
             tabChange(obj){
                this.active = obj;
                console.log(this.active);
@@ -161,8 +161,8 @@ export class SProfilesComponent implements OnInit {
                this.nznot.create('error', '请检查信息是否完整！', '');
               return;
           }
-        
-  
+
+
         this.profiles.packTiming = this.tags.join(',')
         if ( ! this.profiles.guid ) {
             // this.profiles.isAllowDelivery = ' ';
@@ -170,30 +170,30 @@ export class SProfilesComponent implements OnInit {
                 .subscribe(
                     (val) => {
 
-                       
-                        if(val.code == 200) {
+
+                        if (val.code === '200') {
                             this.workId = val.result.guid
                              this.mergeVisible = false;
                                 this.modal.open({
                                 title: '信息提示',
-                                content: val.msg+'是否需要立即关联分支？',
+                                content: val.msg + '是否需要立即关联分支？',
                                 okText: '确定',
                                 cancelText: '取消',
                                 onOk: () => {
                                     this.isCorrelation = true;
                                 },
                                 onCancel: () => {
-                                     
+
                                 }
                             });
-                           
+
                             this.nznot.create('success', val.msg, val.msg);
                         }else {
-                            this.nznot.create('error',val.msg, val.msg);
+                            this.nznot.create('error', val.msg, val.msg);
                         }
                     }  ,
-                (error)=>{
-                     this.nznot.create('error', error.msg,'');
+                (error) => {
+                     this.nznot.create('error', error.msg, '');
                 }
                     );
                      this.getData();
@@ -204,16 +204,16 @@ export class SProfilesComponent implements OnInit {
                 .subscribe(
                     (val) => {
                         this.getData();
-                        if(val.code == 200) {
+                        if (val.code === '200') {
 
                             this.mergeVisible = false;
                             this.nznot.create('success', val.msg, val.msg);
                         }else {
-                            this.nznot.create('error',val.msg, val.msg);
+                            this.nznot.create('error', val.msg, val.msg);
                         }
                     } ,
                 (error)=>{
-                     this.nznot.create('error', error.msg,'');
+                     this.nznot.create('error', error.msg, '');
                 }
 
                 );
@@ -233,7 +233,7 @@ export class SProfilesComponent implements OnInit {
     isShowIp = false;
             checkIp(ip){
               let MOBILE_REGEXP =/^(?:(?:1[0-9][0-9]\.)|(?:2[0-4][0-9]\.)|(?:25[0-5]\.)|(?:[1-9][0-9]\.)|(?:[0-9]\.)){3}(?:(?:1[0-9][0-9])|(?:2[0-4][0-9])|(?:25[0-5])|(?:[1-9][0-9])|(?:[0-9]))$/;
-              console.log(); 
+              console.log();
               if(MOBILE_REGEXP.test(ip)==true){
                       this.isShowIp = false
               }else{
@@ -258,14 +258,14 @@ export class SProfilesComponent implements OnInit {
                 .subscribe(
                     (val) => {
                         console.log(val)
-                        if(val.code == 200) {
+                        if (val.code === '200') {
                             this.branchDetali = val.result;
                         }else {
-                            this.nznot.create('error', val.msg ,val.msg);
+                            this.nznot.create('error', val.msg , val.msg);
                         }
                     }  ,
                 (error)=>{
-                     this.nznot.create('error', error.msg,'');
+                     this.nznot.create('error', error.msg, '');
                 }
                 );
 
@@ -277,8 +277,8 @@ export class SProfilesComponent implements OnInit {
         {key: 'dels', value: '删除' },
         {key: 'upd', value: '修改'},
         {key: 'correlation', value: '关联分支'},
-      
-        
+
+
     ];
    buttonDataBranch = [
         {key: 'dels', value: '删除' },
@@ -299,22 +299,22 @@ export class SProfilesComponent implements OnInit {
     {
       active: true,
       name  : '选择已有分支',
-  
+
     },
     {
       active: false,
       name  : '新增分支',
-      
+
     }
   ];
-   
+
     search = {
         profilesName:'',
         manager:'',
         isAllowDelivery:''
     };
     pageIndex = 1
-    
+
     getData(type?) {
            if(type == 'search'){
               this.page = 1
@@ -327,13 +327,13 @@ export class SProfilesComponent implements OnInit {
             }
         };
         console.log(page)
-    
+
         this.utilityService.postData(appConfig.testUrl  + appConfig.API.allsProfiles, page, {Authorization: this.token})
             .subscribe(
                 (val) => {
-                    
+
                       console.log(val)
-                    if (val.code == 200) {
+                    if (val.code === '200') {
                         this.data = val.result.records;
                         this.total = val.result.total; // 总数
                         this.pageTotal = val.result.pages * 10; // 页码
@@ -341,16 +341,16 @@ export class SProfilesComponent implements OnInit {
                         for ( let i = 0; i < this.data.length; i++) {
                             this.data[i].itemName = this.data[i].fullPath
                              this.data[i].fullPathstr = this.data[i].fullPath
-                            if(this.data[i].fullPath.length > 60){
+                            if(this.data[i].fullPath.length > 60) {
                               this.data[i].fullPathstr = appConfig.subString(this.data[i].fullPath,20)
                                 }
-                           
-                            if(this.data[i].fullPath == ''){
+
+                            if(this.data[i].fullPath === ''){
                                   this.data[i].buttonData = this.buttonData
                             }else{
-                              this.data[i].buttonData = this.buttonDataBranch                
-                           }  
-                            if(this.data[i].isAllowDelivery == '1'){
+                              this.data[i].buttonData = this.buttonDataBranch
+                           }
+                            if(this.data[i].isAllowDelivery === '1'){
                                 this.data[i].isAllowDelivery = true
                             }else{
                                 this.data[i].isAllowDelivery = false
@@ -359,8 +359,8 @@ export class SProfilesComponent implements OnInit {
                         console.log( this.data)
                     }
                     // 拼接
-                },(error)=>{
-                      this.nznot.create('error', error.msg,'');
+                },(error) => {
+                      this.nznot.create('error', error.msg, '');
                 }
             );
     }
@@ -381,7 +381,7 @@ export class SProfilesComponent implements OnInit {
         } else if (event === 'export') {
             this.isVisible = true;
         } else if (event === 'ces') {
-            this.isCancel= true;
+            this.isCancel = true;
             console.log(event);
             console.log('详情界面');
         }
@@ -430,8 +430,8 @@ workId:string;//工作项ID
     // 按钮点击事件
     buttonEvent(event) {
 
-     
-    
+
+
         this.profilesGuid = event.guid
         if (event.names.key === 'dels') { // 按钮传入删除方法
 
@@ -443,22 +443,22 @@ workId:string;//工作项ID
                     self.utilityService.deleatData(appConfig.testUrl  + appConfig.API.delSprofiles + self.profilesGuid,  {Authorization: self.token})
                         .subscribe(
                             (val) => {
-                                if(val.code == 200) {
+                                if(val.code === '200') {
                                      if ( !(( self.total - 1) % 10)) {
                                         self.pageTotal = self.pageTotal - 10 ;
                                         self.getData();
                                     }
                                     self.getData();
                                     //
-                                   
+
                                     self.nznot.create('success', val.msg, val.msg);
                                 }else {
-                                    self.nznot.create('error',val.msg,'');
+                                    self.nznot.create('error', val.msg, '');
                                 }
                             }   ,
                             (error) => {
-                                 this.nznot.create('error', error.msg,'');
-                             
+                                 this.nznot.create('error', error.msg, '');
+
                             }
                         );
                 },
@@ -474,7 +474,7 @@ workId:string;//工作项ID
                                 (val) => {
                                let others = [];
                                let own = []
-                                  
+
                                    if(val.result.others.length > 0){
 
                                         for(let j= 0; j < val.result.others.length;j++){
@@ -484,11 +484,11 @@ workId:string;//工作项ID
                                     if(val.result.own.length > 0){
 
                                    for(let j= 0; j < val.result.own.length;j++){
-                                   
+
                                           val.result.own[j]['exit']='right'
                                    }
                                     }
-                           
+
                                     others = val.result.others;
                                     own = val.result.own;
                                       if(own.length > 0 && others.length > 0){
@@ -500,16 +500,16 @@ workId:string;//工作项ID
                                 for (let i = 0; i < others.length; i++) {
                                 ret.push({
                                     key: i.toString(),
-                                    title:others[i]['projectName'],
-                                    guid:others[i]['guid'],
+                                    title: others[i]['projectName'],
+                                    guid: others[i]['guid'],
                                     status: others[i]['exit'],
                                     description: others[i]['projectName'],
-                                    direction: others[i]['exit'] =='left' ? 'left' : 'right',
-                                    disabled:others[i]['exit'] =='right'
+                                    direction: others[i]['exit'] === 'left' ? 'left' : 'right',
+                                    disabled: others[i]['exit'] === 'right'
                                 });
                                 }
                                 this.list = ret;
-                                
+
 
                                      this.projectInfo = true
                                   console.log(this.list);
@@ -518,10 +518,10 @@ workId:string;//工作项ID
                                     // this.getData();
                                 },
                                 (error) => {
-                                    this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
+                                    this.nznot.create('error', error.code , error.msg);
                                 }
                             );
-               
+
             } else if (event.names.key === 'upd') {
             this.Ptitle = '修改运行环境'
             let arr = [];
@@ -530,24 +530,24 @@ workId:string;//工作项ID
             event.checkOptionsOne =  this.profiles.checkOptionsOne;
             this.profiles = event
             this.tags = event.packTiming.split(',')
-      
+
             this.mergeVisible = true;
         }
         else if (event.names.key === 'correlation') {
             this.addBranch.branchFor = '';
             this.addBranch.fullPath = ''
-            this.Ptitle='关联分支'
+            this.Ptitle = '关联分支'
             this.utilityService.getData(appConfig.testUrl  + appConfig.API.getBranch, {},{Authorization: this.token})
 
                 .subscribe(
                     (val) => {
                         console.log(val)
-                        if(val.code == 200) {
+                        if (val.code === '200') {
                             this.branshList = val.result
                             this.isShowDetail = false;
                             this.isCorrelation = true;
-                            this.Ptitle='关联Release分支'
-                          if(this.branshList.length == 0){
+                            this.Ptitle = '关联Release分支'
+                          if(this.branshList.length === 0){
                                      this.tips = true;
                           }else{
                                this.tips = false;
@@ -558,16 +558,16 @@ workId:string;//工作项ID
                             this.nznot.create('error', val.msg, val.msg);
                         }
                     }  ,
-                (error)=>{
+                (error) =>{
                      this.nznot.create('error', error.msg,'');
                 }
                 );
 
 
         }
-      
+
        else if (event.names.key  === 'branchDDetail') {
-           let url='/'+event.guid+'/branchDetail'
+           let url= '/' + event.guid + '/branchDetail'
                 this.utilityService.getData(appConfig.testUrl  + appConfig.API.sProfilesadd + url ,{}, {Authorization: this.token})
                     .subscribe(
                         (val) => {
@@ -577,11 +577,11 @@ workId:string;//工作项ID
                              this.branchData.createTime = moment(this.branchData.createTime).format('YYYY-MM-DD');
                         },
                         (error) => {
-                             this.nznot.create('error', error.msg,'');
+                             this.nznot.create('error', error.msg, '');
                         });
             }    else if (event.names.key  === 'detail') {
 
-           
+
             let self = this;
             this.confirmServ.confirm({
                 title  : '您是否确认要取消关联分支!',
@@ -603,13 +603,13 @@ subProject(){
     let projectGuids = []
     // this.projectInfo = false;
     for(let i = 0 ; i < this.list.length; i ++){
-            if(this.list[i].status == 'right'&&this.list[i].disabled == false){ 
+            if(this.list[i].status == 'right'&&this.list[i].disabled == false){
             projectGuids.push(this.list[i].guid);
         }
-       
-        
+
+
     }
-     
+
           this.utilityService.postData(appConfig.testUrl  + appConfig.API.sProfilesadd + '/' + this.profilesGuid + '/project' ,{projectGuids:projectGuids}, {Authorization: this.token})
                             .subscribe(
                                 (val) => {
@@ -619,7 +619,7 @@ subProject(){
                                 } ,
                             (error) => {
                                  this.nznot.create('error', error.msg,'');
-                             
+
                             }
                             );
 }
@@ -629,7 +629,7 @@ subProject(){
         let url = ''
         if (item === 'C'){
             console.log(this.active);
-       
+
             if(this.active == false){ //选择新增分支
                     let id =''
             if(this.addBranch.branchFor =='' || this.addBranch.fullPath == ''){
@@ -663,21 +663,21 @@ subProject(){
             .subscribe(
                 (val) => {
                     console.log(val)
-                    if(val.code == 200) {
+                    if(val.code === '200') {
                         this.getData()
                         this.nznot.create('success', val.msg, val.msg);
-                        this.branch = null;// 清空
+                        this.branch = null; // 清空
                         this.isCorrelation = false;
                     }else {
                         this.nznot.create('error', val.msg, '');
                     }
                 }  ,
-                (error)=>{
+                (error) => {
                      this.nznot.create('error', error.msg,'');
                 }
-            );  
+            );
             }
-      
+
 
 
         }else {
@@ -686,23 +686,23 @@ subProject(){
             .subscribe(
                 (val) => {
                     console.log(val)
-                    if(val.code == 200) {
+                    if (val.code === '200') {
                         this.getData()
                         this.nznot.create('success', val.msg, val.msg);
-                        this.branch = null;// 清空
+                        this.branch = null; // 清空
                         this.isCorrelation = false;
                     }else {
                         this.nznot.create('error', val.msg, '');
                     }
                 }  ,
-                (error)=>{
-                     this.nznot.create('error', error.msg,'');
+                (error) => {
+                     this.nznot.create('error', error.msg, '');
                 }
             );
 
         }
 
-     
+
             this.branch=''
     }
     //
@@ -736,7 +736,7 @@ subProject(){
                         this.getData()
                         event.isAllowDelivery = event.status
                         console.log(event)
-                    if(val.code == 200) {
+                    if(val.code === '200') {
                         this.nznot.create('success', val.msg, val.msg);
                     }else {
                         // event.isAllowDelivery = true
@@ -744,11 +744,11 @@ subProject(){
                     }
                     // console.log(event)
                 }   ,
-                (error)=>{
+                (error) => {
                        console.log(error)
-                    this.nznot.create('error',error.msg,'');
-                     event.switch = false
-                  
+                    this.nznot.create('error', error.msg, '');
+                     event.switch = false;
+
                 }
             );
 

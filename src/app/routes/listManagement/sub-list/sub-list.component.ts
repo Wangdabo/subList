@@ -122,11 +122,10 @@ export class SubListComponent implements OnInit {
                 (src) => {
                     this.active = false; // 显示清单整理按钮
                     this.reset = false; // 分支信息关闭
-                    this.nznot.create('error', JSON.parse(src._body).code , JSON.parse(src._body).msg);
+                    this.nznot.create('error', src.code , src.msg);
                     this.selectApply = false; // 投放和补录按钮按钮隐藏
                 }
             );
-        this.getcheckOptionOne(event);
         this.reset  = false;
     }
 
@@ -255,9 +254,8 @@ export class SubListComponent implements OnInit {
                 },
                 (error) => {
                     this.loading = false;
-                    console.log(JSON.parse(error._body).code)
                     this.textcssList = []
-                    this.nznot.create('error', JSON.parse(error._body).code , JSON.parse(error._body).msg);
+                    this.nznot.create('error', error.code , error.msg);
                 }
             );
     }
@@ -290,6 +288,9 @@ export class SubListComponent implements OnInit {
 
     // 投放申请
     Serve() {
+
+        this.getcheckOptionOne(this.workItemInfo.guid); // 调用清单
+
         this.modalVisible = false;
         if (_.isUndefined(this.textcssList) || this.textcssList.length === 0) {
             this.modalVisible = true;
@@ -625,7 +626,7 @@ export class SubListComponent implements OnInit {
                     this.appendTitle = '投放成功';
                     this.modalVisible = false; // 关闭
                     this.launchVisible  = true; // 显示详情
-                    this.getData();
+                    // this.getData();
                     this.reset = false;
                     this.textcssList = [];
                 },
@@ -682,7 +683,6 @@ export class SubListComponent implements OnInit {
         }
 
     }
-
 
     // 追加代码确认
     appendsave() {
@@ -810,7 +810,7 @@ export class SubListComponent implements OnInit {
                     this.detailInfo = val.result; // 返回的数据有问题
                     this.appendVisible = false;
                     this.reset = false;
-                    this.getData();
+                    // this.getData();
                     this.launchVisible = true; // 查看追加详情
                 }
             );

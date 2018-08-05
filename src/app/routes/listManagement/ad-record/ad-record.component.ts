@@ -330,26 +330,26 @@ mergeClick(index){
       title  : '您是否确认要进行这项操作!',
       showConfirmLoading: true,
       onOk() {
-           self.utilityService.putData( appConfig.testUrl +'/checks/'+self.mergeId+'/status/'+status, {}, {Authorization: self.token})
-                        .map(res => res.json())
+           self.utilityService.putData( appConfig.testUrl + '/checks/' + self.mergeId + '/status/' + status, {}, {Authorization: self.token})
+                        // .map(res => res.json())
                          .subscribe(
                        (val) => {
                            console.log(self.mergeId);
                            self.getData()
                            self.loading1 = false;
                            self.loading2 = false;
-                          if(val.code == 200) {
+                          if (val.code === '200') {
 
-                           self.nznot.create('success',val.msg,'');
-                             self.detailVisible =false;
+                           self.nznot.create('success', val.msg,  '');
+                             self.detailVisible = false;
                           }else{
-                                self.nznot.create('error', val.msg,'');
+                                self.nznot.create('error', val.msg, '');
                           }
-                         },(error)=>{
+                         }, (error) => {
                            self.loading1 = false;
                            self.loading2 = false;
-                              if(error){
-                                    self.nznot.create('error', error.json().msg,'');
+                              if (error) {
+                                    self.nznot.create('error', error.msg, '');
                               }
                          })
       },
@@ -375,25 +375,25 @@ mergeClick(index){
             let soyin = event.soyin;
             console.log(type);
             console.log(id);
-            if(type=='4'){
+            if (type ==='4') {
 
-           this.iStouchan =true
+           this.iStouchan = true
 
-            }else{
+            }else {
 
-              this.utilityService.putData( appConfig.testUrl +'/checkLists/'+id+'/status/'+type, {}, {Authorization: this.token})
+              this.utilityService.putData( appConfig.testUrl + '/checkLists/' + id + '/status/' + type, {}, {Authorization: this.token})
                          .subscribe(
                          (val) => {
-                          if(val.code == 200) {
+                          if (val.code === '200') {
 
-                           this.nznot.create('success',val.msg,'');
-                           if(type == 3){
-                             this.mergeListData.splice(soyin,1)// 删除数组
+                           this.nznot.create('success', val.msg, '');
+                           if (type === 3){
+                             this.mergeListData.splice(soyin, 1) // 删除数组
                            }
                           }
-                         },(error)=>{
+                         }, (error) => {
 
-                          this.nznot.create('error', error.msg,'');
+                          this.nznot.create('error', error.msg, '');
 
                          });
                           }
@@ -454,7 +454,7 @@ mergeClick(index){
       deployWhere:any;
     // 关闭核对清单
     checkSave(event) {
-        let objs =event.arr
+        let objs = event.arr
 
         this.iStouchan = false;
 
@@ -465,14 +465,14 @@ mergeClick(index){
             deployWhere:objs.deployWhere
         }
 
-          this.utilityService.putData( appConfig.testUrl +'/checkLists/'+event.errorId+'/delivery', obj, {Authorization: this.token})
+          this.utilityService.putData( appConfig.testUrl + '/checkLists/' + event.errorId + '/delivery', obj, {Authorization: this.token})
                          .subscribe(
                          (val) => {
-                          if(val.code == 200) {
+                          if (val.code === '200') {
                                 //   this.mergeListData[event.errorId]
-                             this.mergeListData.forEach((result,i)=>{
+                             this.mergeListData.forEach((result,i) => {
 
-                                 if(result.guid == event.errorId){
+                                 if(result.guid === event.errorId){
                                      this.mergeListData[i].checkbuttons = true;
                                        this.mergeListData[i].confirmStatus = '加入投放';
                                  }
@@ -482,7 +482,7 @@ mergeClick(index){
                                 //
 
                           }
-                         },(error)=>{
+                         }, (error) => {
                                  this.nznot.create('error', error.msg, '');
                          });
     }
@@ -511,12 +511,12 @@ mergeClick(index){
     guid:any;
    returnsclick(event) {
        let item = event.index
-       this.guid=event.it.guid
+       this.guid = event.it.guid
        let S = '';
 
 
        let  url = appConfig.testUrl + '/checks/delivery/' + this.guid + '/result';
-       if (item == 1) {
+       if (item === 1) {
            S = 'S';
        }else {
            S = 'F';
@@ -536,17 +536,17 @@ mergeClick(index){
 
                        this.istextVisible = false;
 
-                       if(item == 1 ) {
+                       if (item === 1 ) {
                            event.it.disabledS = true
                            event.it.deliveryResult = '核对成功'
-                       }else  if(item == 2 ){
+                       }else  if (item === 2 ){
                            event.it.disabledS = true
                            event.it.deliveryResult = '核对失败'
                        }
 
                        this.nznot.create('success', val.msg, val.msg);
                    }else{
-                         this.nznot.create('error', val.msg,'');
+                         this.nznot.create('error', val.msg, '');
                   }
 
                }
