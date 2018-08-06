@@ -12,19 +12,19 @@
 
     <app-list #child [initDate]="data" [configTitle]="configTitle" [showAdd]="showAdd" [isPagination]="isPagination"  [buttons] ='buttons' (addCreat)="addHandler($event)" (buttonData)="buttonDataHandler($event)" (pageNumber)="monitorHandler($event)"
               (deleatData)="deleatData($event)" (isActive)="isActive($event)" (buttonEvent)="buttonEvent($event)" (selectedRow)="selectedRow($event)" [headerDate]="headerDate"
-              [moreData]="moreData"  [total]="total" [pageTotal] = 'pageTotal'></app-list>
+              [moreData]="moreData" [isShowTotalhead]="isShowTotalhead" [total]="total" [pageTotal] = 'pageTotal'  [pageindex]='pageIndex'></app-list>
 </nz-card>
 
 
 
  <!--核对详情-->
-<nz-modal [nzVisible]="detailVisible" [nzMaskClosable]="false" [nzWidth]="1024" [nzTitle]="'核对详情'"   [nzContent]="modals"
+<nz-modal [nzVisible]="detailVisible" [nzMaskClosable]="false" [nzWidth]="1124" [nzTitle]="'核对详情'"   [nzContent]="modals"
           (nzOnCancel)="detailVisible=false"  (nzOnOk)="returnsclick(2,guid)" [nzFooter]="foor" nzZIndex=800>
     <ng-template #modals>
         <nz-card [nzBordered]="false">
             <div nz-row [nzGutter]="24">
                  <app-mergelist  #child
-                            [iStouchan]="iStouchan"
+                            [iStouchan]="iStouchanRecord"
                             [guid]="guid"
                             [istextVisible]="istextVisible"
                             (checkSave)="checkSave($event)"
@@ -38,6 +38,7 @@
                             [deliveryResult]='deliveryResults'
                             [checkStatus]='checkStatus'
                             [title]='title'
+                           
             >
             </app-mergelist>
             </div>

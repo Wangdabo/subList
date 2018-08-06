@@ -893,7 +893,7 @@ export class LaunchApplyComponent implements OnInit {
                 (val) => {
 
                     if (val.code === '200') {
-
+                          
                         this.nznot.create('success', val.msg, val.msg);
                     }else {
                         this.nznot.create('error', val.msg, val.msg);
@@ -919,13 +919,15 @@ export class LaunchApplyComponent implements OnInit {
         let type = event.index;
         let id = event.id;
         let soyin = event.soyin;
-        if ( type === '4') {
+        if ( type === 4) {
             this.iStouchan = true;
         }else {
             this.utilityService.putData( appConfig.testUrl + '/checkLists/' + id + '/status/' + type, {}, {Authorization: this.token})
                 .subscribe(
                     (val) => {
+                         
                         if (val.code === '200') {
+                           
                             this.nznot.create('success', val.msg,  '');
                             if (type === 3) {
                                 this.mergeListData.splice(soyin, 1); // 删除数组
@@ -934,6 +936,7 @@ export class LaunchApplyComponent implements OnInit {
                     }, (error) => {
                         this.nznot.create('error', error.msg, '');
                     });
+                   
         }
     }
 
@@ -1085,18 +1088,20 @@ export class LaunchApplyComponent implements OnInit {
     }
 
     checkSavemerge(event) {
-        this.iStouchan = false;
+      
         let objs = event.arr
-        this.iStouchan = false;
+      
         const obj ={
             guidDelivery: String(objs.guidDelivery),
             patchType: objs.patchType,
             deployWhere: objs.deployWhere
         }
+      
         this.utilityService.putData( appConfig.testUrl + '/checkLists/' + event.errorId + '/delivery', obj, {Authorization: this.token})
             .subscribe(
                 (val) => {
                     if (val.code === '200') {
+                        
                         this.mergeListData.forEach((result, i) => {
                             if (result.guid === event.errorId) {
                                 this.mergeListData[i].checkbuttons = true;
@@ -1104,11 +1109,12 @@ export class LaunchApplyComponent implements OnInit {
                             }
                         })
                         this.nznot.create('success', val.msg,  '');
-
+                        this.iStouchan = false;
                     }
                 }, (error) => {
                     this.nznot.create('error', error.msg, '');
                 });
+                console.log(this.iStouchan);
     }
 
 
