@@ -112,9 +112,9 @@
         <td nz-td>
             <!--<a *ngIf="!showAdd" style="color:#108ee9;" (click)="add(i)">修改</a>&nbsp;-->
             <!--<a *ngIf="showAdd" style="color:#108ee9;" (click)="add(i)">{{configTitle}}</a>&nbsp;-->
-            <a *ngFor="let c of i.buttonData" style="color:#108ee9;" (click)="buttonClick(i, c, l)">
+            <a *ngFor="let c of i.buttonData" style="color:#108ee9;"  (click)="buttonClick(i, c, l)">
                    {{c.value}} &nbsp;
-                </a>
+            </a>
         </td>
     </tr>
     <!-- 是否是折叠list， 折叠list显示内容-->
