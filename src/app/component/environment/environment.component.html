@@ -14,11 +14,11 @@
             <div nz-form-label><label for="itemType">投放到</label></div>
             <div nz-form-control class="flex-1">
                 <div nz-col [nzSpan]="24" class="mb-md" *ngFor="let s of elementScice ;let l = index">
-                    <div nz-col [nzSpan]="5">
+                    <div nz-col [nzSpan]="9">
                         <label  nz-checkbox  [(ngModel)]="s.check" (ngModelChange)="onChange(s.guid)" (click)="isClick(s.check,s.times)">&nbsp;&nbsp;<span>{{s.profilesName}}</span></label>
                     </div>
-                    <div nz-col [nzSpan]="18">
-                        <div nz-col [nzSpan]="6" *ngFor="let t of s.Timing; let d = index" >
+                    <div nz-col [nzSpan]="15">
+                        <div nz-col [nzSpan]="5" *ngFor="let t of s.Timing; let d = index" >
                             <input style="margin-top: 10px;" [disabled]="!s.check" (click)="isClick(s.check,true)"  [(ngModel)]="s.times"   [value]="t.time"   [name]="s.profilesName"
                                    type="radio" />&nbsp;{{t.time}}
                         </div>
