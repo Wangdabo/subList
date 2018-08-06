@@ -186,12 +186,12 @@ export class SProjectComponent implements OnInit {
                         }
                     },
                 (error) => {
-                
+
                           this.isShowbranch = false
                           this.checkmsg = error.msg;
                           this.tag  = '验证'
                           this.nznot.create('error', '', error.msg);
-                   
+
                 }
                 );
         }
@@ -225,7 +225,7 @@ export class SProjectComponent implements OnInit {
             if (event.names.key === 'upd') {
                 this.tag = '验证'
                 this.modelTitle = '修改工程';
-                this.productAdd = event; // 修改类型问题
+                this.productAdd = _.cloneDeep(event); // 深拷贝修改
                 // 枚举值转换
                 if (event.projectType === '可选工程') {
                     event.projectType = 'S';

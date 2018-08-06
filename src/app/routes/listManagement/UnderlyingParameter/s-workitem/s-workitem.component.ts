@@ -264,7 +264,7 @@ export class SWorkitemComponent implements OnInit {
             if (event.names.key === 'upd') {
                 this.modelTitle = '修改工程';
                 this.modalVisible = true;
-                this.workAdd = event;
+                this.workAdd = _.cloneDeep(event);
                 this.isEdit = true;
 
             } else if(event.names.key === 'project') {
