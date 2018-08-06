@@ -16,7 +16,7 @@ import { SprofilesModule} from '../../../../service/delivent/sprofilesModule';
 import { BranchModule} from '../../../../service/delivent/brachModule';
 import { Observable, Observer } from 'rxjs';
 import * as moment from 'moment';
-
+import * as _ from 'lodash';
 @Component({
     selector: 'app-s-profiles',
     templateUrl: './s-profiles.component.html',
@@ -526,12 +526,10 @@ workId:string;//工作项ID
 
             } else if (event.names.key === 'upd') {
             this.Ptitle = '修改运行环境'
+            this.isShowartf = false;
             let arr = [];
-             
-            this.profiles = new SprofilesModule();
-        
             event.checkOptionsOne =  this.profiles.checkOptionsOne;
-            this.profiles = event
+            this.profiles =  _.cloneDeep(event);
             this.tags = event.packTiming.split(',')
             this.mergeVisible = true;
         }

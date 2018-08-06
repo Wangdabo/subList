@@ -8,7 +8,7 @@ import {Router} from '@angular/router';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
 // import { MergelistComponent } from '../../../component/mergelist/mergelist.component';
 import * as moment from 'moment';
-
+import * as _ from 'lodash';
 
 @Component({
     selector: 'app-ad-record',

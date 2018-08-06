@@ -9,7 +9,7 @@ import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
 import * as moment from 'moment';
 import {ProductModule} from '../../../../service/delivent/projectModule';
 import {SbranchModule} from '../../../../service/delivent/sbranchModule';
-
+import * as _ from 'lodash';
 
 @Component({
     selector: 'app-s-branch',
@@ -197,7 +197,7 @@ export class SBranchComponent implements OnInit {
         } else if (event.names.key === 'upd') {
                  this.branch =  new SbranchModule();
                  this.detailsVisible = true;
-                 this.branch = event;
+                 this.branch = _.cloneDeep(event);;
                  this.branchType.forEach(i=>{
                             console.log(i)
                             if(  this.branch.branchType == i.key) {
