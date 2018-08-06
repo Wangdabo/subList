@@ -160,6 +160,7 @@ export class SProjectComponent implements OnInit {
     addHandler(event) {
         if (event === 'add') {
             this.productAdd = new ProductModule(); // 清空
+              this.isShowbranch = true
             this.modalVisible = true;
             this.modelTitle = '新建工程';
             this.diconfig = [{
@@ -196,6 +197,7 @@ export class SProjectComponent implements OnInit {
         }
        checkagin(item) {
           this.tag  = '验证';
+            this.isShowbranch = true
        }
 
 

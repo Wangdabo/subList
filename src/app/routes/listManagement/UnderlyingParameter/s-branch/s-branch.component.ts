@@ -146,6 +146,7 @@ export class SBranchComponent implements OnInit {
         if (event === 'add') {
             this.tag = '验证'
              this.branch = new  SbranchModule();
+              this.isShowbranch = true
              console.log()
               this.detailsVisible = true;
               this.ptitle = '补录分支'
@@ -243,6 +244,7 @@ export class SBranchComponent implements OnInit {
                 (error) => {
                        this.isShowbranch = false
                             this.tag = '验证'
+                             this.branch.lastVersion = ''
                            this.nznot.create('error', error.msg,'');
                 }
                 );
@@ -250,7 +252,7 @@ export class SBranchComponent implements OnInit {
         checkagin(item){
 
                 this.tag = '验证'
-
+           this.isShowbranch = true
         }
 
 change(){
