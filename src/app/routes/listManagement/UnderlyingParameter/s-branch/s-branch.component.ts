@@ -25,7 +25,7 @@ export class SBranchComponent implements OnInit {
                 private confirmServ: NzModalService
                 ) {
     }
-    branch: SbranchModule = new  SbranchModule();
+    branch: SbranchModule = new SbranchModule();
 
     token: any;
     showAdd = true;
@@ -195,8 +195,8 @@ export class SBranchComponent implements OnInit {
 
 
         } else if (event.names.key === 'upd') {
-            let a = event
-            this.detailsVisible = true;
+                 this.branch =  new SbranchModule();
+                 this.detailsVisible = true;
                  this.branch = event;
                  this.branchType.forEach(i=>{
                             console.log(i)
@@ -204,7 +204,7 @@ export class SBranchComponent implements OnInit {
                                  this.branch.branchType = i.value;
                             }
                  })
-            this.ptitle = '修改分支'
+                 this.ptitle = '修改分支'
 
 
         }  else if (event.names.key === 'details') {

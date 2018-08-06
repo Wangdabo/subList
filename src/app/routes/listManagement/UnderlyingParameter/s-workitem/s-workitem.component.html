@@ -157,7 +157,7 @@
                          <div nz-form-control nz-col [nzSpan]="21">
                             <nz-input [(ngModel)]="workAdd.artf" nzAutosize=true  (ngModelChange)="checkArtf(workAdd.artf)"  name="artf" [nzSize]="'large'" [nzPlaceHolder]="'请输入ARTF'"
                                       nzId="artf"></nz-input>
-                                      <nz-alert *ngIf='isShowIp == true' nzBanner nzMessage="只能输入数字类型"></nz-alert>
+                                      <nz-alert *ngIf='isShowArtf == true' nzBanner nzMessage="只能输入数字类型"></nz-alert>
                         </div>
 
                     </div>

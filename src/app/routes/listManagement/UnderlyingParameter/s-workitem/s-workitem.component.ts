@@ -212,6 +212,7 @@ export class SWorkitemComponent implements OnInit {
     addHandler(event) {
         if (event === 'add') {
             this.workAdd = new WorkitemModule(); // 清空
+            this.isShowArtf = false;
             this.modalVisible = true;
             this.isEdit = false;
             this.modelTitle = '新建工作项';
@@ -425,15 +426,15 @@ export class SWorkitemComponent implements OnInit {
                                 }}
                             );
             }
-    isShowIp = false;
+    isShowArtf = false;
 
     checkArtf(event){
         let MOBILE_REGEXP =/^\+?[1-9][0-9]*$/;
         console.log(MOBILE_REGEXP.test(event));
         if(MOBILE_REGEXP.test(event)==true){
-            this.isShowIp = false
+            this.isShowArtf = false
         }else{
-            this.isShowIp = true;
+            this.isShowArtf = true;
         }
     }
     // 选中复选框方法
@@ -466,7 +467,7 @@ export class SWorkitemComponent implements OnInit {
             this.workAdd.developers = this.workAdd.developers.join( ',' );
         } else {
         }
-        if(this.isShowIp === true) {
+        if(this.isShowArtf === true) {
             this.nznot.create('error', 'ARTF格式不正确', '请检查ARTF');
             return;
         }

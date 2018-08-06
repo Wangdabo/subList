@@ -373,6 +373,8 @@ export class SProfilesComponent implements OnInit {
         if (event === 'add') {
             this.profiles = new SprofilesModule();
             this.Ptitle = '新增运行环境';
+            this.isShowIp =false;
+            this.isShowartf = false
             this.tags = [];
             this.mergeVisible = true;
         } else if (event === 'checking') {
@@ -525,12 +527,12 @@ workId:string;//工作项ID
             } else if (event.names.key === 'upd') {
             this.Ptitle = '修改运行环境'
             let arr = [];
-
+             
             this.profiles = new SprofilesModule();
+        
             event.checkOptionsOne =  this.profiles.checkOptionsOne;
             this.profiles = event
             this.tags = event.packTiming.split(',')
-
             this.mergeVisible = true;
         }
         else if (event.names.key === 'correlation') {
