@@ -48,7 +48,7 @@ export class AdRecordComponent implements OnInit {
     deliveryTime: any; // 投放日期
     pageTotal: number;
     isShow = false;
-
+    pageIndex = 1
     dliveryResult = [
         {key: '0', value: '否'},
         {key: '1', value: '是'}
@@ -91,7 +91,7 @@ export class AdRecordComponent implements OnInit {
         //  {key: 'details', value: '详情',if:false }
     ]
 
-
+isShowTotalhead = false;
     test: string;
     page: any;
     total: number;
@@ -99,9 +99,7 @@ export class AdRecordComponent implements OnInit {
     index = 1;
 
     getData() {
-        //   if(type == 'search'){
-        //        this.index = 1
-        //    }
+   
         const page = {
             page : {
                 size: 10,
@@ -114,10 +112,10 @@ export class AdRecordComponent implements OnInit {
             .subscribe(
                 (val) => {
                     this.data = val.result.records;
-                    console.log(this.data)
 
                     this.total = val.result.total; // 总数
                     this.pageTotal = val.result.pages * 10; // 页码
+                      this.pageIndex = val.result.current;
                     for ( let i = 0; i < this.data.length; i++) {
                         this.data[i].checkDate = moment(this.data[i].checkDate).format('YYYY-MM-DD');
                        this.data[i].guidProfiles =  this.data[i].guidProfiles.target;
@@ -367,26 +365,22 @@ mergeClick(index){
 
 
     }
-     iStouchan = false
-
+     iStouchanRecord = false
+     
         buttonClick(event){
             let type = event.index;
             let id = event.id;
             let soyin = event.soyin;
-            console.log(type);
-            console.log(id);
-            if (type ==='4') {
-
-           this.iStouchan = true
-
+            if (type === 4) {
+           this.iStouchanRecord = true
             }else {
-
               this.utilityService.putData( appConfig.testUrl + '/checkLists/' + id + '/status/' + type, {}, {Authorization: this.token})
                          .subscribe(
                          (val) => {
                           if (val.code === '200') {
 
                            this.nznot.create('success', val.msg, '');
+                           this.iStouchanRecord = false;
                            if (type === 3){
                              this.mergeListData.splice(soyin, 1) // 删除数组
                            }
@@ -456,9 +450,6 @@ mergeClick(index){
     checkSave(event) {
         let objs = event.arr
 
-        this.iStouchan = false;
-
-
         const obj ={
             guidDelivery:String(objs.guidDelivery),
             patchType:objs.patchType,
@@ -468,19 +459,19 @@ mergeClick(index){
           this.utilityService.putData( appConfig.testUrl + '/checkLists/' + event.errorId + '/delivery', obj, {Authorization: this.token})
                          .subscribe(
                          (val) => {
+                             
+                    
                           if (val.code === '200') {
-                                //   this.mergeListData[event.errorId]
+                                 this.iStouchanRecord = false;
                              this.mergeListData.forEach((result,i) => {
-
                                  if(result.guid === event.errorId){
                                      this.mergeListData[i].checkbuttons = true;
                                        this.mergeListData[i].confirmStatus = '加入投放';
                                  }
                              })
-                                 console.log(this.mergeListData)
                            this.nznot.create('success', val.msg, '');
-                                //
 
+                   
                           }
                          }, (error) => {
                                  this.nznot.create('error', error.msg, '');

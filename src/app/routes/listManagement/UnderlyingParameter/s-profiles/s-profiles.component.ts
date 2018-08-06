@@ -136,6 +136,14 @@ export class SProfilesComponent implements OnInit {
                 this.inputVisible = false;
             }
 
+            reset() {
+                 this.search = {
+                        profilesName:'',
+                        manager:'',
+                        isAllowDelivery:''
+                    };
+                    this.getData('search');
+                }
             // 管理分支
             active = true;
             tabChange(obj){
@@ -313,7 +321,7 @@ export class SProfilesComponent implements OnInit {
         manager:'',
         isAllowDelivery:''
     };
-    pageIndex = 1
+   pageIndex = 1
 
     getData(type?) {
            if(type == 'search'){
@@ -326,7 +334,7 @@ export class SProfilesComponent implements OnInit {
                 current: this.page
             }
         };
-        console.log(page)
+     
 
         this.utilityService.postData(appConfig.testUrl  + appConfig.API.allsProfiles, page, {Authorization: this.token})
             .subscribe(

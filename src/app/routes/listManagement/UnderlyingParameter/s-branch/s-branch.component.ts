@@ -147,7 +147,7 @@ export class SBranchComponent implements OnInit {
             this.tag = '验证'
              this.branch = new  SbranchModule();
               this.isShowbranch = true
-             console.log()
+          
               this.detailsVisible = true;
               this.ptitle = '补录分支'
         }
@@ -259,7 +259,14 @@ change(){
     this.getData()
     this.detailsVisible=false
 }
-
+  reset() {
+       this.search = {
+                    branchType:'',
+                    fullPath:'',
+                    branchFor:''
+                };
+       this.getData('search');
+          }
     addsubmit(){
 
 

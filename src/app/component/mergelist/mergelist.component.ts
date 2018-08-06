@@ -126,7 +126,6 @@ export class MergelistComponent implements OnInit {
              break;
               case 4:
             this.errorId = it.guid
-         this.iStouchan = true;
              break;
         }
 
@@ -137,6 +136,7 @@ export class MergelistComponent implements OnInit {
 
         }
         this.buttonClick.emit(obj)
+     
     }
 
     sonreturnsclick(index, it) {
@@ -165,5 +165,6 @@ export class MergelistComponent implements OnInit {
                   errorId: this.errorId
               };
             this.checkSave.emit(obj);
+            console.log(this.iStouchan);
     }
  }
